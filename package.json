@@ -7,7 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "secrets:linux": "echo Enter Bitwarden Password: && read BW_PASSWORD && (bw logout || exit 0) && export BW_SESSION=`bw login product@bitsofgood.org $BW_PASSWORD --raw` && npm run secrets:get",
+    "secrets:windows": "set /p BW_PASSWORD=Enter Bitwarden Password:&& (bw logout || VER>NUL) && npm run secrets:login",
+    "secrets:login": "FOR /F %a IN ('bw login product@bitsofgood.org %BW_PASSWORD% --raw') DO SET BW_SESSION=%a && npm run secrets:get",
+    "secrets:get": "bw sync && bw get item 9fcf4612-f7d3-4fca-986d-b06000148a5a | fx .notes > \".env.development.local\""
   },
   "dependencies": {
     "autoprefixer": "10.4.15",
@@ -22,7 +26,9 @@
     "zod": "^3.22.1"
   },
   "devDependencies": {
+    "@bitwarden/cli": "^2023.7.0",
     "eslint-config-prettier": "^9.0.0",
+    "fx": "^28.0.0",
     "husky": "^8.0.3",
     "lint-staged": "^14.0.0",
     "prettier": "^3.0.1"
