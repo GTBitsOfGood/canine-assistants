@@ -1,38 +1,50 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Canine Assistants 🐶
 
-## Getting Started
+## Overview
 
-First, run the development server:
+Canine Assistants is a nonprofit dedicated to educating people and dogs so they may enhance the lives of one another. They specialize in placing service dogs with people who have difficulty with mobility, epilepsy/seizure disorders, or Type 1 Diabetes as well as dogs in pediatric hospitals and similar facilities.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+## Repo Walkthrough
+
+Find a full explanation of this repo [here](https://www.notion.so/gtbitsofgood/Repo-Walkthrough-491ed6b3b4a24052a6b6e331a4307f66?pvs=4).
+
+## Onboarding
+
+### MongoDB
+
+Install [MongoDB Community Server](https://www.mongodb.com/docs/manual/administration/install-community/) to host a local instance of MongoDB. It may also be helpful to download [MongoDB Compass](https://www.mongodb.com/try/download/compass#compass) to view the state of your database.
+
+### Dependencies
+
+Make sure you have [Node.js 18](https://nodejs.org/en) installed. Check by running `node -v`. If your Node version is less than 18, either reinstall Node from the prior link or manage _multiple_ versions of Node with a tool like [nvm](https://github.com/nvm-sh/nvm).
+
+In the root directory of the project, run:
+
+```sh
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This command should have installed all necessary dependencies for the app to run.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+### Environment Variables
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+In the root directory, run one of these commands based on your OS:
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+```sh
+npm run secrets:linux # mac / linux
+npm run secrets:windows # windows
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+You should be prompted for a master password. Ask your Engineering leadership to continue. Once the password has been verified, your `.env.development.local` file should have been created automatically for you.
 
-## Learn More
+### Development
 
-To learn more about Next.js, take a look at the following resources:
+To start the Next.js dev server, run:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```sh
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Code Formatting
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Install and enable [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) in VSCode. This repository is also configured with a pre-commit hook that automatically formats any code you commit to ensure formatting consistency throughout the codebase.
