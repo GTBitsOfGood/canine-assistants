@@ -31,7 +31,7 @@ async function dbConnect() {
     };
 
     cached.promise = mongoose
-      .connect(DB_URL + DB_NAME, opts)
+      .connect(`${DB_URL}${DB_NAME}?retryWrites=true&w=majority`, opts)
       .then((mongoose) => {
         return mongoose;
       });
