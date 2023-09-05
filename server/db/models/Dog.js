@@ -13,8 +13,32 @@ const DogSchema = new Schema({
     required: true,
   },
   breed: {
-    type: String, // potentially change to enum
+    type: String,
     required: true,
+  },
+  behavior: {
+    type: String,
+    enum: ["No concern", "Some concern", "High concern"],
+    required: true,
+  },
+  medical: {
+    type: String,
+    enum: ["No concern", "Some concern", "High concern"],
+    required: true,
+  },
+  other: {
+    type: String,
+    enum: ["No concern", "Some concern", "High concern"],
+    required: true,
+  },
+  recentLogs: {
+    // only the 2 most recent logs
+    type: [
+      {
+        type: SchemaTypes.ObjectId,
+        ref: "Log",
+      },
+    ],
   },
   parents: {
     type: [
@@ -40,8 +64,9 @@ const DogSchema = new Schema({
     type: String,
     enum: ["Happy", "Sad", "Fearful"], // placeholders
   },
-  placed: {
-    type: Boolean,
+  location: {
+    type: String,
+    enum: ["At facility", "Placed"],
     required: true,
   },
   rolePlacedAs: {
@@ -66,7 +91,7 @@ const DogSchema = new Schema({
         },
         relationshipToPartner: {
           type: String,
-          enum: ["Sister", "Brother", "Mother", "Father", "Partner", "Friend"],
+          enum: ["Sibling", "Parent", "Partner", "Friend", "Child", "Other"],
         },
       },
     ],
@@ -74,6 +99,7 @@ const DogSchema = new Schema({
   petmates: {
     type: [
       {
+        animal: String,
         age: Number,
         gender: {
           type: String,
@@ -81,6 +107,14 @@ const DogSchema = new Schema({
         },
       },
     ],
+    people: {
+      type: [
+        {
+          type: SchemaTypes.ObjectId,
+          ref: "User",
+        },
+      ],
+    },
   },
 });
 
