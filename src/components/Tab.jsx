@@ -1,0 +1,7 @@
+export default function Tab({ activeTab, label, onTabClick }) {
+    return (
+        <li className={`${activeTab.toLowerCase() === label.toLowerCase() ? "border-red-300" : ""} text-sm px-10 border-b-2 text-gray-400 uppercase hover:bg-gray-50`} onClick={onTabClick}>
+            <a href="#">{label}</a>
+        </li>
+    )
+}
