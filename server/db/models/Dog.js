@@ -107,14 +107,14 @@ const DogSchema = new Schema({
         },
       },
     ],
-    people: {
-      type: [
-        {
-          type: SchemaTypes.ObjectId,
-          ref: "User",
-        },
-      ],
-    },
+  },
+  people: {
+    type: [
+      {
+        type: SchemaTypes.ObjectId,
+        ref: "User",
+      },
+    ],
   },
 });
 
