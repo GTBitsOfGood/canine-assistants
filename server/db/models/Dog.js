@@ -16,6 +16,10 @@ const DogSchema = new Schema({
     type: String,
     required: true,
   },
+  weight: {
+    type: Number,
+    required: true,
+  },
   behavior: {
     type: String,
     enum: ["No concern", "Some concern", "High concern"],
@@ -66,7 +70,7 @@ const DogSchema = new Schema({
   },
   location: {
     type: String,
-    enum: ["At facility", "Placed"],
+    enum: ["Facility 1", "Facility 2", "Placed"],
     required: true,
   },
   rolePlacedAs: {
@@ -108,13 +112,18 @@ const DogSchema = new Schema({
       },
     ],
   },
-  people: {
+  instructors: {
+    // Dogs can only have up to 3 instructors
     type: [
       {
         type: SchemaTypes.ObjectId,
         ref: "User",
       },
     ],
+  },
+  volunteer: {
+    type: SchemaTypes.ObjectId,
+    ref: "User",
   },
 });
 

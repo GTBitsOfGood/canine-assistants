@@ -12,6 +12,10 @@ const LogSchema = new Schema({
     enum: ["Medical", "Behavioral", "Other"],
     required: true,
   },
+  tags: {
+    // validate for these: "auditory", "heartworm", "fleas/ticks"
+    type: [String],
+  },
   severity: {
     type: String,
     enum: ["No concern", "Some concern", "High concern"],
