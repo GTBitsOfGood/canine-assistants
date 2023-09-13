@@ -10,7 +10,7 @@ const DogSchema = new Schema({
   },
   gender: {
     type: String,
-    enum: consts.genderArray,
+    enum: consts.genderPetArray,
     required: true,
   },
   breed: {
@@ -92,7 +92,7 @@ const DogSchema = new Schema({
         age: Number,
         gender: {
           type: String,
-          enum: consts.genderOtherArray,
+          enum: consts.genderPersonArray,
         },
         relationshipToPartner: {
           type: String,
@@ -108,7 +108,7 @@ const DogSchema = new Schema({
         age: Number,
         gender: {
           type: String,
-          enum: consts.genderArray,
+          enum: consts.genderPetArray,
         },
       },
     ],

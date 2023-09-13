@@ -14,8 +14,8 @@ const LogSchema = new Schema({
     required: true,
   },
   tags: {
-    // validate for these: "auditory", "heartworm", "fleas/ticks"
     type: [String],
+    enum: consts.tagsArray,
   },
   severity: {
     type: String,

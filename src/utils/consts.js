@@ -11,8 +11,8 @@ const pages = {
 const consts = {
   baseUrl: process.env.BASE_URL ?? "http://localhost:3000",
 
-  genderArray: ["Female", "Male"],
-  genderOtherArray: ["Female", "Male", "Other"],
+  genderPetArray: ["Female", "Male"],
+  genderPersonArray: ["Female", "Male", "Other"],
   concernArray: ["No concern", "Some concern", "High concern"],
   demeanorArray: ["Happy", "Sad", "Fearful"], // placeholders
   locationArray: ["Facility 1", "Facility 2", "Placed"],
@@ -27,6 +27,7 @@ const consts = {
     "Other",
   ],
   topicArray: ["Medical", "Behavioral", "Other"],
+  tagsArray: ["auditory", "heartworm", "fleas/ticks"],
 };
 
 export { pages, consts };
