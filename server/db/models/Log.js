@@ -1,4 +1,5 @@
 import mongoose, { SchemaTypes } from "mongoose";
+import { consts } from "@/utils/consts";
 
 const { Schema } = mongoose;
 
@@ -9,7 +10,7 @@ const LogSchema = new Schema({
   },
   topic: {
     type: String,
-    enum: ["Medical", "Behavioral", "Other"],
+    enum: consts.topicArray,
     required: true,
   },
   tags: {
@@ -18,7 +19,7 @@ const LogSchema = new Schema({
   },
   severity: {
     type: String,
-    enum: ["No concern", "Some concern", "High concern"],
+    enum: consts.concernArray,
     required: true,
   },
   description: {
