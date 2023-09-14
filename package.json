@@ -14,6 +14,7 @@
     "secrets:get": "bw sync && bw get item 9fcf4612-f7d3-4fca-986d-b06000148a5a | fx .notes > \".env.development.local\""
   },
   "dependencies": {
+    "@heroicons/react": "^2.0.18",
     "autoprefixer": "10.4.15",
     "eslint": "8.47.0",
     "eslint-config-next": "13.4.13",
