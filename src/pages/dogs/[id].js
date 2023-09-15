@@ -45,6 +45,23 @@ export const getServerSideProps = async (context) => {
 
 /**
  *
+ * Represents a column with a label and value to display on the individual dog page
+ * 
+ * @param {{label: string, value: string}}
+ */
+function DogColumnProperty({ label, value }) {
+  return (
+    <div className="text-gray-600 text-lg mr-24">
+      <div className="flex-col pt-1 items-center">
+        <div className="text-sm text-gray-400 uppercase">{label}</div>
+        <div>{value}</div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ *
  * @param {{ dog: Dog }}
  * @returns {React.ReactElement} The individual Dog page
  */
@@ -63,41 +80,12 @@ export default function IndividualDogPage({ dog }) {
             </div>
           </div>
 
-          <div className="text-gray-600 pt-1 text-lg mr-24">
-            <div className="text-sm text-gray-400">LOCATION</div>
-
-            <div>{dog.location}</div>
-          </div>
-          <div className="text-gray-600 text-lg mr-24">
-            <div className="flex-col pt-1 items-center">
-              <div className="text-sm text-gray-400">GENDER</div>
-              <div>{dog.gender}</div>
-            </div>
-          </div>
-          <div className="text-gray-600 text-lg mr-24">
-            <div className="flex-col pt-1 items-center">
-              <div className="text-sm text-gray-400">ROLE</div>
-              <div>{dog.rolePlacedAs}</div>
-            </div>
-          </div>
-          <div className="text-gray-600 text-lg mr-24">
-            <div className="flex-col pt-1 items-center">
-              <div className="text-sm text-gray-400">BREED</div>
-              <div>{dog.breed}</div>
-            </div>
-          </div>
-          <div className="text-gray-600 text-lg mr-24">
-            <div className="flex-col pt-1 items-center">
-              <div className="text-sm text-gray-400">WEIGHT</div>
-              <div>{dog.weight}lb.</div>
-            </div>
-          </div>
-          <div className="text-gray-600 text-lg">
-            <div className="flex-col pt-1 items-center">
-              <div className="text-sm text-gray-400">DOB</div>
-              <div>{new Date(dog.dateOfBirth).toLocaleDateString("en-US")}</div>
-            </div>
-          </div>
+          <DogColumnProperty label="location" value={dog.location}/>
+          <DogColumnProperty label="gender" value={dog.gender}/>
+          <DogColumnProperty label="role" value={dog.rolePlacedAs}/>
+          <DogColumnProperty label="breed" value={dog.breed}/>
+          <DogColumnProperty label="weight" value={dog.weight + "lb"}/>
+          <DogColumnProperty label="dob" value={new Date(dog.dateOfBirth).toLocaleDateString("en-US")}/>
         </div>
 
         <TabSection defaultTab={"info"}>
