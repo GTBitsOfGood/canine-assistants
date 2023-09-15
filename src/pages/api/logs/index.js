@@ -37,10 +37,6 @@ export default async function handler(req, res) {
       res.status(500).json({ error: error.message });
       return;
     }
-    // TODO:
-    // The severity + topic of the log should change that specific status on the associated Dog
-    // Ex. A log with severity of High concern for topic Medical should change the medical attribute on the Dog to High concern
-    // The new log should replace the oldest log on the Dog's recentLogs attribute. If there are less than 2 logs in recentLogs, just append the new log
 
     res.status(200).json({ id: logId });
   }
