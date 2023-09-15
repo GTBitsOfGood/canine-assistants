@@ -11,11 +11,13 @@ const dogSchema = z.object({
   behavior: z.enum(consts.concernArray),
   medical: z.enum(consts.concernArray),
   other: z.enum(consts.concernArray),
-  recentLogs: z.array(
-    z.string().refine((id) => {
-      return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
-    }),
-  ),
+  recentLogs: z
+    .array(
+      z.string().refine((id) => {
+        return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+      }),
+    )
+    .default([]),
   parents: z
     .array(
       z.string().refine((id) => {
@@ -74,17 +76,24 @@ export default function handler(req, res) {
 
   if (req.method == "POST") {
     if (!success) {
-      return res
-        .status(422)
-        .send("The field " + Object.keys(error.format())[1] + " is invalid");
+      return res.status(422).send({
+        success: false,
+        message: "The field " + Object.keys(error.format())[1] + " is invalid",
+      });
     }
 
     return createDog(data)
       .then(() => {
-        return res.status(200).send("New dog successfully created!");
+        return res.status(200).send({
+          success: true,
+          messge: "New dog successfully created!",
+        });
       })
       .catch((error) => {
-        return res.status(500).send(error.message);
+        return res.status(500).send({
+          success: false,
+          message: error.message,
+        });
       });
   }
 }

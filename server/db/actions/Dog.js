@@ -12,9 +12,11 @@ export async function createDog(dogData) {
   await dbConnect();
 
   // recentLogs array
-  for (let i = 0; i < dogData.recentLogs.length; i++) {
-    if (!(await Log.findById(dogData.recentLogs[i]))) {
-      throw new Error("Log ID is not present in database");
+  if (dogData.recentLogs.length) {
+    for (let i = 0; i < dogData.recentLogs.length; i++) {
+      if (!(await Log.findById(dogData.recentLogs[i]))) {
+        throw new Error("Log ID is not present in database");
+      }
     }
   }
 
