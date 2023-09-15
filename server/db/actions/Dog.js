@@ -4,7 +4,7 @@ import Dog from "../models/Dog";
 /**
  * Deletes a dog from the database based on an ObjectId
  * @param {*} id ObjectId of dog to delete
- * @returns the ObjectId of the deleted dog if deleted, null if id
+ * @returns deleted dog object if deleted successfully, null if id
  *          not found, or an error if there is a server/database error
  */
 export async function deleteDog(id) {
