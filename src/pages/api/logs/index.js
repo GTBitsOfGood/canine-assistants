@@ -25,11 +25,9 @@ export default async function handler(req, res) {
 
   if (req.method == "POST") {
     if (!success) {
-      res
-        .status(422)
-        .json({
-          error: "Invalid query parameter" + Object.keys(error.format())[1],
-        });
+      res.status(422).json({
+        error: "Invalid parameter: " + Object.keys(error.format())[1],
+      });
     }
 
     let logId;
