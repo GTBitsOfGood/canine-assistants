@@ -1,11 +1,11 @@
 import dbConnect from "../dbConnect";
 import Dog from "../models/Dog";
 
-export async function getDogs() {
+export async function getDogs(filter = null) {
   await dbConnect();
 
   try {
-    return Dog.find({});
+    return Dog.find({ filter });
   } catch (e) {
     throw new Error("Unable to get dogs at this time, please try again");
   }
