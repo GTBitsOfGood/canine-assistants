@@ -30,4 +30,62 @@ const consts = {
   tagsArray: ["auditory", "heartworm", "fleas/ticks"],
 };
 
-export { pages, consts };
+/**
+ * Mock data for testing without any backend interaction
+ */
+const mocks = {
+  mockDogs: [
+    {
+      recentLogs: [],
+      instructors: [],
+      _id: "dog1",
+      name: "Rufus",
+      gender: "Male",
+      breed: "Poodle",
+      behavior: "No concern",
+      medical: "No concern",
+      other: "No concern",
+      parents: [],
+      dateOfBirth: new Date("2023-09-06T21:37:38.975Z").toLocaleDateString(
+        "en-US"
+      ),
+      litterSize: 3,
+      birthOrder: 4,
+      maternalDemeanor: "Happy",
+      location: "Facility 1",
+      rolePlacedAs: "Service",
+      housemates: [],
+      petmates: [],
+      __v: 0,
+      weight: 48.7,
+      toiletArea: "Leashed",
+    },
+    {
+      recentLogs: [],
+      instructors: [],
+      _id: "dog2",
+      name: "Turnip",
+      gender: "Male",
+      breed: "Poodle",
+      behavior: "No concern",
+      medical: "No concern",
+      other: "No concern",
+      parents: [],
+      dateOfBirth: new Date("2023-09-06T21:37:38.975Z").toLocaleDateString(
+        "en-US"
+      ),
+      litterSize: 3,
+      birthOrder: 4,
+      maternalDemeanor: "Happy",
+      location: "Facility 1",
+      rolePlacedAs: "Service",
+      housemates: [],
+      petmates: [],
+      __v: 0,
+      weight: 48.7,
+      toiletArea: "Leashed",
+    },
+  ],
+};
+
+export { pages, consts, mocks };
