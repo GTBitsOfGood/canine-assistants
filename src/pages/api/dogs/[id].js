@@ -21,7 +21,7 @@ export default function handler(req, res) {
           return res.status(200).send({
             success: true,
             message: "Dog sucessfully deleted",
-            data: results,
+            data: results._id,
           });
         }
       })

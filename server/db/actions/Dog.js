@@ -8,9 +8,8 @@ import Dog from "../models/Dog";
  *          not found, or an error if there is a server/database error
  */
 export async function deleteDog(id) {
-  await dbConnect();
-
   try {
+    await dbConnect();
     return await Dog.findByIdAndDelete({ _id: id });
   } catch (e) {
     throw new Error("Unable to delete dog");
