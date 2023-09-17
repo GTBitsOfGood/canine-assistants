@@ -72,6 +72,12 @@ const dogSchema = z.object({
 });
 
 export default function handler(req, res) {
+  if (!mongoose.isValidObjectId(req.query.id)) {
+    return res.status(422).send({
+      success: false,
+      message: "Unable to update because dog ID is not in valid format.",
+    });
+  }
   const { success, error, data } = dogSchema
     .partial()
     .strict()
@@ -96,11 +102,6 @@ export default function handler(req, res) {
           message: error.errors[0].message,
         });
       }
-    } else if (!mongoose.isValidObjectId(req.query.id)) {
-      return res.status(422).send({
-        success: false,
-        message: "Unable to update because dog ID is not in valid format.",
-      });
     }
 
     return updateDog(req.query.id, data)
