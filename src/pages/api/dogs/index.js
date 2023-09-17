@@ -82,11 +82,19 @@ export default function handler(req, res) {
       });
     }
 
+    if (data.birthOrder > data.litterSize) {
+      return res.status(422).send({
+        success: false,
+        message: "Dog birth order cannot be greater than litter size",
+      });
+    }
+
     return createDog(data)
-      .then(() => {
-        return res.status(200).send({
+      .then((id) => {
+        return res.status(201).send({
           success: true,
-          messge: "New dog successfully created!",
+          message: "New dog successfully created!",
+          data: id,
         });
       })
       .catch((error) => {
@@ -95,5 +103,10 @@ export default function handler(req, res) {
           message: error.message,
         });
       });
+  } else {
+    return res.status(405).send({
+      success: false,
+      message: `Request method ${req.method} is not allowed`,
+    });
   }
 }

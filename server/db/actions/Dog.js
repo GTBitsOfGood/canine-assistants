@@ -9,7 +9,11 @@ import User from "../models/User";
  * @returns string id of the dog if successfully saved, error otherwise
  */
 export async function createDog(dogData) {
-  await dbConnect();
+  try {
+    await dbConnect();
+  } catch (e) {
+    throw new Error("Unable to create dog at this time, please try again");
+  }
 
   // recentLogs array
   if (dogData.recentLogs.length) {
