@@ -1,0 +1,18 @@
+import { getDogById } from "../../../../server/db/actions/Dog";
+
+export default async function handler(req, res) {
+  if (req.method == "GET") {
+    try {
+      const { id } = req.query;
+      const dogs = await getDogById(id);
+
+      return res.status(200).json({
+        success: true,
+        payload: dogs,
+      });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+      return;
+    }
+  }
+}
