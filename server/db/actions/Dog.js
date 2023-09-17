@@ -4,10 +4,10 @@ import Log from "../models/Log";
 import User from "../models/User";
 
 /**
- * Creates a new dog in the database
+ * Updates an existing dog in the database
  * @param {*} dogId ID of the Dog Object to be updated
- * @param {*} dogData Object that has been parsed by Zod for validity
- * @returns string id of the dog if successfully saved, error otherwise
+ * @param {*} dogData Dog Object that has been parsed by Zod for validity
+ * @returns the Dog Object prior to the update; error otherwise
  */
 export async function updateDog(dogId, dogData) {
   await dbConnect();
@@ -52,7 +52,9 @@ export async function updateDog(dogId, dogData) {
   const dog = new Dog(dogData);
 
   try {
-    return await Dog.findByIdAndUpdate({ _id: dogId }, dogData);
+    return await Dog.findByIdAndUpdate({ _id: dogId }, dogData, {
+      runValidators: true,
+    });
   } catch (e) {
     throw new Error("Unable to update dog");
   }

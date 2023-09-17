@@ -78,12 +78,12 @@ export default function handler(req, res) {
     if (!success) {
       return res.status(422).send({
         success: false,
-        message: "The field " + Object.keys(error.format())[1] + " is invalid",
+        message: "The field " + Object.keys(error.format())[1] + " is invalid.",
       });
     } else if (!mongoose.isValidObjectId(req.query.id)) {
       return res.status(422).send({
         success: false,
-        message: "Unable to delete because dog id is not in valid format",
+        message: "Unable to update because dog ID is not in valid format.",
       });
     }
 
@@ -97,7 +97,7 @@ export default function handler(req, res) {
         } else {
           return res.status(200).send({
             success: true,
-            message: "Dog sucessfully updated",
+            message: "Dog sucessfully updated!",
             data: results,
           });
         }
@@ -105,7 +105,7 @@ export default function handler(req, res) {
       .catch(() => {
         return res.status(500).send({
           success: false,
-          message: "Unable to delete dog, please try again",
+          message: "Unable to update dog, please try again.",
         });
       });
   }
