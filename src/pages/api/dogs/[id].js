@@ -72,14 +72,30 @@ const dogSchema = z.object({
 });
 
 export default function handler(req, res) {
-  const { success, error, data } = dogSchema.partial().safeParse(req.body);
-
+  const { success, error, data } = dogSchema
+    .partial()
+    .strict()
+    .safeParse(req.body);
   if (req.method == "PATCH") {
     if (!success) {
-      return res.status(422).send({
-        success: false,
-        message: "The field " + Object.keys(error.format())[1] + " is invalid.",
-      });
+      const code = error.errors[0].code;
+      if (code == "invalid_type") {
+        return res.status(422).send({
+          success: false,
+          message:
+            "For field " +
+            error.errors[0].path +
+            " expected type " +
+            error.errors[0].expected +
+            ", but received " +
+            error.errors[0].received,
+        });
+      } else {
+        return res.status(422).send({
+          success: false,
+          message: error.errors[0].message,
+        });
+      }
     } else if (!mongoose.isValidObjectId(req.query.id)) {
       return res.status(422).send({
         success: false,
