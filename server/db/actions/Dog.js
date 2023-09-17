@@ -49,11 +49,9 @@ export async function updateDog(dogId, dogData) {
     throw new Error("Volunteer ID is not present in database");
   }
 
-  const dog = new Dog(dogData);
-
   try {
     return await Dog.findByIdAndUpdate({ _id: dogId }, dogData, {
-      runValidators: true,
+      returnDocument: "after",
     });
   } catch (e) {
     throw new Error("Unable to update dog");
