@@ -94,7 +94,7 @@ export default function handler(req, res) {
         return res.status(201).send({
           success: true,
           message: "New dog successfully created!",
-          data: id,
+          data: { _id: id },
         });
       })
       .catch((error) => {
