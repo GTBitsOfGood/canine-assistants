@@ -1,4 +1,5 @@
 import mongoose, { SchemaTypes } from "mongoose";
+import { consts } from "@/utils/consts";
 
 const { Schema } = mongoose;
 
@@ -9,7 +10,7 @@ const DogSchema = new Schema({
   },
   gender: {
     type: String,
-    enum: ["Female", "Male"],
+    enum: consts.genderPetArray,
     required: true,
   },
   breed: {
@@ -22,17 +23,17 @@ const DogSchema = new Schema({
   },
   behavior: {
     type: String,
-    enum: ["No concern", "Some concern", "High concern"],
+    enum: consts.concernArray,
     required: true,
   },
   medical: {
     type: String,
-    enum: ["No concern", "Some concern", "High concern"],
+    enum: consts.concernArray,
     required: true,
   },
   other: {
     type: String,
-    enum: ["No concern", "Some concern", "High concern"],
+    enum: consts.concernArray,
     required: true,
   },
   recentLogs: {
@@ -66,16 +67,16 @@ const DogSchema = new Schema({
   maternalDemeanor: {
     // order: [before, during, after] birth
     type: String,
-    enum: ["Happy", "Sad", "Fearful"], // placeholders
+    enum: consts.demeanorArray,
   },
   location: {
     type: String,
-    enum: ["Facility 1", "Facility 2", "Placed"],
+    enum: consts.locationArray,
     required: true,
   },
   rolePlacedAs: {
     type: String,
-    enum: ["Service", "Companion"],
+    enum: consts.roleArray,
   },
   partner: {
     type: SchemaTypes.ObjectId,
@@ -83,7 +84,7 @@ const DogSchema = new Schema({
   },
   toiletArea: {
     type: String,
-    enum: ["Leashed", "Off-leash"],
+    enum: consts.leashArray,
   },
   housemates: {
     type: [
@@ -91,11 +92,11 @@ const DogSchema = new Schema({
         age: Number,
         gender: {
           type: String,
-          enum: ["Female", "Male", "Other"],
+          enum: consts.genderPersonArray,
         },
         relationshipToPartner: {
           type: String,
-          enum: ["Sibling", "Parent", "Partner", "Friend", "Child", "Other"],
+          enum: consts.relationshipArray,
         },
       },
     ],
@@ -107,7 +108,7 @@ const DogSchema = new Schema({
         age: Number,
         gender: {
           type: String,
-          enum: ["Female", "Male"],
+          enum: consts.genderPetArray,
         },
       },
     ],
