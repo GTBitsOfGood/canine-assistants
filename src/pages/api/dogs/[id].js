@@ -1,7 +1,6 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 import { deleteDog, updateDog } from "../../../../server/db/actions/Dog";
 import { z } from "zod";
-import mongoose, { Types } from "mongoose";
 import { consts } from "@/utils/consts";
 
 const dogSchema = z.object({
@@ -102,8 +101,7 @@ export default function handler(req, res) {
           message: "Unable to delete dog, please try again",
         });
       });
-  }
-  else if (req.method == "PATCH") {
+  } else if (req.method == "PATCH") {
     if (!mongoose.isValidObjectId(req.query.id)) {
       return res.status(422).send({
         success: false,
@@ -159,5 +157,10 @@ export default function handler(req, res) {
         });
       });
   }
-  return res.status(405).send({success: false, message: `Request method ${req.method} is not allowed`})
+  return res
+    .status(405)
+    .send({
+      success: false,
+      message: `Request method ${req.method} is not allowed`,
+    });
 }
