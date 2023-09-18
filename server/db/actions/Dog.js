@@ -10,7 +10,11 @@ import User from "../models/User";
  * @returns the Dog Object prior to the update; error otherwise
  */
 export async function updateDog(dogId, dogData) {
-  await dbConnect();
+  try {
+    await dbConnect();
+  } catch (e) {
+    throw new Error("Unable to update dog, please try again");
+  }
 
   // recentLogs array
   if (dogData.recentLogs && dogData.recentLogs.length) {
