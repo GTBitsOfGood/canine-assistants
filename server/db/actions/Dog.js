@@ -13,7 +13,7 @@ export async function getDogs(filter = {}) {
       filter.instructors = { $in: filter.instructors };
     }
 
-    return Dog.find(filter);
+    return Dog.find(filter).populate("recentLogs");
   } catch (e) {
     throw new Error("Unable to get dogs at this time, please try again");
   }
@@ -22,7 +22,10 @@ export async function getDogs(filter = {}) {
 export async function getDogById(id) {
   try {
     await dbConnect();
-    return Dog.findById(id);
+    return Dog.findById(id)
+      .populate("instructors")
+      .populate("partner")
+      .populate("parents");
   } catch (e) {
     throw new Error("Unable to get dog by Id at this time, please try again");
   }
