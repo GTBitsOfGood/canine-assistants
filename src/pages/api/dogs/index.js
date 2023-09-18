@@ -1,7 +1,6 @@
-import mongoose from "mongoose";
-import { deleteDog, updateDog } from "../../../../server/db/actions/Dog";
 import { z } from "zod";
 import mongoose, { Types } from "mongoose";
+import { createDog } from "../../../../server/db/actions/Dog";
 import { consts } from "@/utils/consts";
 
 const dogSchema = z.object({
@@ -73,91 +72,41 @@ const dogSchema = z.object({
 });
 
 export default function handler(req, res) {
-  if (req.method == "DELETE") {
-    if (!mongoose.isValidObjectId(req.query.id)) {
-      return res.status(422).send({
-        success: false,
-        message: "Unable to delete because dog id is not in valid format",
-      });
-    }
+  const { success, error, data } = dogSchema.safeParse(req.body);
 
-    return deleteDog(req.query.id)
-      .then((results) => {
-        if (!results) {
-          return res.status(404).send({
-            success: false,
-            message: "Cannot delete dog because dog does not exist!",
-          });
-        } else {
-          return res.status(200).send({
-            success: true,
-            message: "Dog sucessfully deleted",
-            data: results._id,
-          });
-        }
-      })
-      .catch(() => {
-        return res.status(500).send({
-          success: false,
-          message: "Unable to delete dog, please try again",
-        });
-      });
-  }
-  else if (req.method == "PATCH") {
-    if (!mongoose.isValidObjectId(req.query.id)) {
-      return res.status(422).send({
-        success: false,
-        message: "Unable to update because dog ID is not in valid format.",
-      });
-    }
-    const { success, error, data } = dogSchema
-      .partial()
-      .strict()
-      .safeParse(req.body);
-
+  if (req.method == "POST") {
     if (!success) {
-      const code = error.errors[0].code;
-      if (code == "invalid_type") {
-        return res.status(422).send({
-          success: false,
-          message:
-            "For field " +
-            error.errors[0].path +
-            " expected type " +
-            error.errors[0].expected +
-            ", but received " +
-            error.errors[0].received,
-        });
-      } else {
-        console.log(error);
-        return res.status(422).send({
-          success: false,
-          message: error.errors[0].message,
-        });
-      }
+      return res.status(422).send({
+        success: false,
+        message: "The field " + Object.keys(error.format())[1] + " is invalid",
+      });
     }
 
-    return updateDog(req.query.id, data)
-      .then((results) => {
-        if (!results) {
-          return res.status(404).send({
-            success: false,
-            message: "Cannot update dog because dog does not exist!",
-          });
-        } else {
-          return res.status(200).send({
-            success: true,
-            message: "Dog sucessfully updated!",
-            data: results,
-          });
-        }
+    if (data.birthOrder > data.litterSize) {
+      return res.status(422).send({
+        success: false,
+        message: "Dog birth order cannot be greater than litter size",
+      });
+    }
+
+    return createDog(data)
+      .then((id) => {
+        return res.status(201).send({
+          success: true,
+          message: "New dog successfully created!",
+          data: { _id: id },
+        });
       })
-      .catch((e) => {
+      .catch((error) => {
         return res.status(500).send({
           success: false,
-          message: e.message,
+          message: error.message,
         });
       });
+  } else {
+    return res.status(405).send({
+      success: false,
+      message: `Request method ${req.method} is not allowed`,
+    });
   }
-  return res.status(405).send({success: false, message: `Request method ${req.method} is not allowed`})
 }
