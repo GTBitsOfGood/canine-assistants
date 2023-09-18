@@ -7,8 +7,6 @@ const dogs = [
     behavior: "No concern",
     medical: "Some concern",
     other: "No concern",
-    recentLogs: [],
-    parents: [],
     dateOfBirth: new Date("2019-03-15"),
     litterSize: 8,
     birthOrder: 2,
@@ -19,7 +17,7 @@ const dogs = [
       {
         age: 40,
         gender: "Male",
-        relationshipToPartner: "Spouse",
+        relationshipToPartner: "Partner",
       },
       {
         age: 10,
@@ -46,9 +44,9 @@ const dogs = [
     gender: "Male",
     breed: "German Shepherd",
     weight: 40,
-    behavior: "Behavior",
-    medical: "Other",
-    other: "Medical",
+    behavior: "No concern",
+    medical: "High concern",
+    other: "No concern",
     recentLogs: [],
     dateOfBirth: new Date("2020-06-20"),
     litterSize: 6,
@@ -56,13 +54,12 @@ const dogs = [
     maternalDemeanor: "Fearful",
     location: "Placed",
     rolePlacedAs: "Service",
-    partner: "",
-    toiletArea: "Back Yard",
+    toiletArea: "Leashed",
     housemates: [
       {
         age: 30,
         gender: "Female",
-        relationshipToPartner: "Spouse",
+        relationshipToPartner: "Partner",
       },
     ],
     petmates: [
@@ -118,33 +115,53 @@ const users = [
 ];
 try {
   seedDb();
+  console.log("Successfully seeded local db");
 } catch (e) {
-  console.log("Failed");
+  console.log("Failed to seed local db");
 }
 
 async function seedDb() {
-  await connect();
-  // clears the db
-  await Dog.deleteMany();
-  await User.deleteMany();
-  await Log.deleteMany();
+  // delete everything
 
-  // start adding documents
-  const dbUsers = await User.insertMany(users);
-  const dbDogs = await Dog.insertMany(dogs);
+  // add dogs
+  for (const dog of dogs) {
+    fetch(`http://localhost:3000/api/dogs`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dog),
+    })
+      .then((result) => result.json())
+      .then((body) => {
+        console.log(body);
+      });
+  }
 
-  // get User _id's and Dog _id's
-  console.log(dbUsers);
-  console.log(dbDogs);
+  // add users
+  for (const dog of dogs) {
+    fetch(`http://localhost:3000/api/dogs`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(dog),
+    })
+      .then((result) => result.json())
+      .then((body) => {
+        console.log(body);
+      });
+  }
 }
-async function connect() {
-  const DB_URL = process.env.DB_URL;
-  const DB_NAME = process.env.DB_NAME;
-  mongoose
-    .connect(`${DB_URL}${DB_NAME}?retryWrites=true&w=majority`, opts)
-    .then((mongoose) => {
-      // mongoose.set('debug', process.env.NODE_ENV === 'development')
 
-      return mongoose;
-    });
-}
+// async function connect() {
+//   const DB_URL = process.env.DB_URL;
+//   const DB_NAME = process.env.DB_NAME;
+//   mongoose
+//     .connect(`${DB_URL}${DB_NAME}?retryWrites=true&w=majority`, opts)
+//     .then((mongoose) => {
+//       // mongoose.set('debug', process.env.NODE_ENV === 'development')
+
+//       return mongoose;
+//     });
+// }

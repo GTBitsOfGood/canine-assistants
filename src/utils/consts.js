@@ -5,6 +5,9 @@ const pages = {
     users: {
       index: "/api/users",
     },
+    dogs: {
+      index: "/api/dogs",
+    },
   },
 };
 
@@ -47,7 +50,7 @@ const mocks = {
       other: "No concern",
       parents: [],
       dateOfBirth: new Date("2023-09-06T21:37:38.975Z").toLocaleDateString(
-        "en-US"
+        "en-US",
       ),
       litterSize: 3,
       birthOrder: 4,
@@ -72,7 +75,7 @@ const mocks = {
       other: "No concern",
       parents: [],
       dateOfBirth: new Date("2023-09-06T21:37:38.975Z").toLocaleDateString(
-        "en-US"
+        "en-US",
       ),
       litterSize: 3,
       birthOrder: 4,
