@@ -45,10 +45,20 @@ export default async function handler(req, res) {
     }
 
     try {
-      const dogs = await getDogs(filter);
-      res.status(200).json({ success: true, payload: dogs });
+      const data = await getDogs(filter);
+
+      if (data.length === 0) {
+        res.status(404).json({
+          success: false,
+          error:
+            "Unable to retrieve dog with these filters because it doesn't exist",
+        });
+        return;
+      }
+
+      res.status(200).json({ success: true, payload: data });
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ success: false, message: error.message });
       return;
     }
   }
