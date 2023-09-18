@@ -1,5 +1,9 @@
 import mongoose, { Types } from "mongoose";
-import { deleteDog, updateDog, getDogById } from "../../../../server/db/actions/Dog";
+import {
+  deleteDog,
+  updateDog,
+  getDogById,
+} from "../../../../server/db/actions/Dog";
 import { z } from "zod";
 import { consts } from "@/utils/consts";
 
@@ -87,7 +91,7 @@ export default async function handler(req, res) {
 
       return res.status(200).json({
         success: true,
-        payload: data,
+        data: data,
       });
     } catch (error) {
       res.status(500).json({ success: false, error: error.message });
@@ -178,10 +182,8 @@ export default async function handler(req, res) {
         });
       });
   }
-  return res
-    .status(405)
-    .send({
-      success: false,
-      message: `Request method ${req.method} is not allowed`,
-    });
+  return res.status(405).send({
+    success: false,
+    message: `Request method ${req.method} is not allowed`,
+  });
 }
