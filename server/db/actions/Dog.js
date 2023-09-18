@@ -4,6 +4,21 @@ import Log from "../models/Log";
 import User from "../models/User";
 
 /**
+ * Deletes a dog from the database based on an ObjectId
+ * @param {*} id ObjectId of dog to delete
+ * @returns deleted dog object if deleted successfully, null if id
+ *          not found, or an error if there is a server/database error
+ */
+export async function deleteDog(id) {
+  try {
+    await dbConnect();
+    return await Dog.findByIdAndDelete({ _id: id });
+  } catch (e) {
+    throw new Error("Unable to delete dog");
+  }
+}
+
+/**
  * Creates a new dog in the database
  * @param {*} dogData Object that has been parsed by Zod for validity
  * @returns string id of the dog if successfully saved, error otherwise
