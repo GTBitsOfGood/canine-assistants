@@ -6,15 +6,12 @@ import { consts } from "@/utils/consts";
 const logSchema = z.object({
   title: z.string(),
   topic: z.enum(consts.topicArray),
-  tags: z.enum(consts.tagsArray).optional(),
+  tags: z.enum(consts.tagsArray).array().optional(),
   severity: z.enum(consts.concernArray),
   description: z.string().optional(),
-  author: z
-    .string()
-    .refine((id) => {
-      return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
-    })
-    .optional(),
+  author: z.string().refine((id) => {
+    return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+  }),
   dog: z.string().refine((id) => {
     return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
   }),
@@ -29,8 +26,8 @@ export default async function handler(req, res) {
         success: false,
         message: "Invalid parameter: " + Object.keys(error.format())[1],
       });
+      return;
     }
-
     let logId;
     try {
       logId = await createLog(data);
@@ -42,14 +39,14 @@ export default async function handler(req, res) {
       return;
     }
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: "Log successfully created",
-      data: logId,
+      data: { _id: logId },
     });
   }
 
-  res.status(405).json({
+  return res.status(405).json({
     success: false,
     message: `Request method ${req.method} is not allowed`,
   });
