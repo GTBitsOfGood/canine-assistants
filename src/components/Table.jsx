@@ -35,15 +35,15 @@ const ALTERNATING_ROW_COLOR_2 = "bg-neutral-50";
 /**
  * Constructs a modular Table taking care of the boilerplate code
  *
- * @param {{ cols: [Array], rows: [Array], filter: string }}
+ * @param {{ cols: [Array], rows: [Array], filter: string, noElements: React.ReactElement }}
  * @returns {React.ReactElement} The Table component
  */
-export default function Table({ cols, rows, filter }) {
+export default function Table({ cols, rows, filter, noElements }) {
   const ids = cols.map((col) => col.id);
 
   /**
    * Formats each value in the table depending on settings provided
-   * 
+   *
    * @param {[Array]} row The row the column value sits on
    * @param {string} value The raw value passed to the column
    * @param {string} type The type
@@ -65,47 +65,53 @@ export default function Table({ cols, rows, filter }) {
   };
 
   return (
-    <table className="shadow-xl rounded-sm divide-y divide-gray-300 text-md w-full text-left relative overflow-hidden">
-      <thead className="">
-        <TableHeader>
-          {cols.map((col) => (
-            <TableColumn key={col.id} col={col} style={col.style} />
-          ))}
-        </TableHeader>
-      </thead>
-      <tbody>
-        {rows
-          .filter((row) =>
-            row.name.toUpperCase().includes(filter.toUpperCase())
-          )
-          .map((row, i) => {
-            return (
-              <tr
-                key={i}
-                className={`text-gray-600 border-b ${
-                  i % 2 === 0
-                    ? ALTERNATING_ROW_COLOR_1
-                    : ALTERNATING_ROW_COLOR_2
-                }`}
-              >
-                {cols.map((col, i) => {
-                  return (
-                    <td key={i}>
-                      <div className="py-3 px-6">
-                        {formatColumnValue(
-                          row,
-                          row[col.id],
-                          col.type,
-                          col.customRender
-                        )}
-                      </div>
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
-      </tbody>
-    </table>
+    <div className="shadow-xl rounded-sm text-md w-full text-left relative overflow-hidden">
+      <table className="divide-y divide-gray-300 text-md w-full text-left relative overflow-hidden">
+        <thead className="">
+          <TableHeader>
+            {cols.map((col) => (
+              <TableColumn key={col.id} col={col} style={col.style} />
+            ))}
+          </TableHeader>
+        </thead>
+        <tbody>
+          {rows
+            .filter((row) =>
+              row.name.toUpperCase().includes(filter.toUpperCase())
+            )
+            .map((row, i) => {
+              return (
+                <tr
+                  key={i}
+                  className={`text-gray-600 border-b ${
+                    i % 2 === 0
+                      ? ALTERNATING_ROW_COLOR_1
+                      : ALTERNATING_ROW_COLOR_2
+                  }`}
+                >
+                  {cols.map((col, i) => {
+                    return (
+                      <td key={i}>
+                        <div className="py-3 px-6">
+                          {formatColumnValue(
+                            row,
+                            row[col.id],
+                            col.type,
+                            col.customRender
+                          )}
+                        </div>
+                      </td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+            
+        </tbody>
+
+      </table>
+      {rows.length == 0 && noElements}
+
+    </div>
   );
 }
