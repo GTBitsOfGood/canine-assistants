@@ -56,14 +56,16 @@ export default function DogTable({ dogs }) {
 
   return (
     <div className="flex-grow flex-col">
-      <div className="flex justify-between">
+      <div className="pl-3 flex justify-between">
         <input
           className="rounded-md bg-gray-50 block mb-4 p-2 pl-4 w-1/2 border border-gray-300"
           placeholder="Search dogs by name..."
           onChange={onInputChange}
         />
       </div>
-      <Table cols={dogTableColumns} rows={dogs} filter={searchFilter}/>
+
+      <Table cols={dogTableColumns} rows={dogs} filter={searchFilter} noElements={<div className=" flex justify-center bg-white py-16 text-gray-500">No dogs were found.</div>}/>
+      
     </div>
   );
 }
