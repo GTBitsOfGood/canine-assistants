@@ -28,6 +28,8 @@ const consts = {
   ],
   topicArray: ["Medical", "Behavioral", "Other"],
   tagsArray: ["auditory", "heartworm", "fleas/ticks"],
+  
+
 };
 
 /**
@@ -36,7 +38,17 @@ const consts = {
 const mocks = {
   mockDogs: [
     {
-      recentLogs: [],
+      recentLogs: [
+        {
+          title: "Log 1 for Mock 1",
+          topic: "Medical",
+          tags: ["auditory", "heartworm"],
+          severity: "High concern",
+          description: "Some other random log I made",
+          author: {},
+          dog: {}
+        }
+      ],
       instructors: [],
       _id: "dog1",
       name: "Rufus",
@@ -61,7 +73,17 @@ const mocks = {
       toiletArea: "Leashed",
     },
     {
-      recentLogs: [],
+      recentLogs: [
+        {
+          title: "Log 1",
+          topic: "Medical",
+          tags: ["auditory", "heartworm"],
+          severity: "High concern",
+          description: "Some random log I made",
+          author: {},
+          dog: {}
+        }
+      ],
       instructors: [],
       _id: "dog2",
       name: "Turnip",

@@ -1,3 +1,4 @@
+import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import React from "react";
 
 /**
@@ -8,7 +9,7 @@ import React from "react";
  */
 function TableHeader({ children }) {
   return (
-    <tr className="border-b border-gray-300 text-gray-400 uppercase text-xs text-left">
+    <tr className="border-b border-gray-300 text-gray-400 text-xs text-left">
       {children}
     </tr>
   );
@@ -20,10 +21,15 @@ function TableHeader({ children }) {
  * @param {{ col: string, style: string }}
  * @returns {React.ReactElement} The TableColumn component
  */
-function TableColumn({ col, style }) {
+function TableColumn({ icon, col, style }) {
   return (
-    <th id={col.id} className={`${style} font-semibold pt-4 pb-1 px-6`}>
-      {col.label}
+    <th id={col.id} className={`${style} text-primary-text font-semibold py-3 px-5 gap-2`}>
+      <div className="items-center inline-flex gap-3 justify-start p-1">
+        <div className="h-4 w-4 relative">
+          {icon}
+        </div>
+        <span className="text-lg">{col.label}</span>
+      </div>
     </th>
   );
 }
@@ -67,10 +73,10 @@ export default function Table({ cols, rows, filter, noElements }) {
   return (
     <div className="shadow-xl rounded-sm text-md w-full text-left relative overflow-hidden">
       <table className="divide-y divide-gray-300 text-md w-full text-left relative overflow-hidden">
-        <thead className="">
+        <thead className="bg-foreground">
           <TableHeader>
             {cols.map((col) => (
-              <TableColumn key={col.id} col={col} style={col.style} />
+              <TableColumn key={col.id} icon={col.icon} col={col} style={col.style} />
             ))}
           </TableHeader>
         </thead>
@@ -106,12 +112,9 @@ export default function Table({ cols, rows, filter, noElements }) {
                 </tr>
               );
             })}
-            
         </tbody>
-
       </table>
       {rows.length == 0 && noElements}
-
     </div>
   );
 }

@@ -68,9 +68,9 @@ function DogColumnProperty({ label, value }) {
 export default function IndividualDogPage({ dog }) {
   return (
     // Artificial spacing until nav is created
-    <div className={`pt-32 ${inter.className} container mx-auto`}>
+    <div className={`${inter.className} container mx-auto`}>
       <Link href="/dogs" className="text-red-800">
-        Go Back
+      Go Back
       </Link>
       <div className="pt-5 text-gray-800 border-t border-b border-gray-300 flex-grow">
         <div className="pl-3 grid sm:grid-cols-2 grid-cols-1 gap-4 lg:grid-cols-8">
