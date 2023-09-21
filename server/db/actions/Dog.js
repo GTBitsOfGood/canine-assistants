@@ -120,7 +120,7 @@ export async function createDog(dogData) {
   }
 
   // recentLogs array
-  if (dogData.recentLogs.length) {
+  if (dogData.recentLogs && dogData.recentLogs.length) {
     for (let i = 0; i < dogData.recentLogs.length; i++) {
       if (!(await Log.findById(dogData.recentLogs[i]))) {
         throw new Error("Log ID is not present in database");
@@ -161,7 +161,8 @@ export async function createDog(dogData) {
   try {
     await dog.save();
   } catch (e) {
-    throw new Error("Unable to create dog at this time, please try again");
+    // throw new Error("Unable to create dog at this time, please try again");
+    throw new Error(e);
   }
   return dog._id;
 }
