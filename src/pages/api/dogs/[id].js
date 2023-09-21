@@ -1,5 +1,9 @@
 import mongoose, { Types } from "mongoose";
-import { deleteDog, updateDog } from "../../../../server/db/actions/Dog";
+import {
+  deleteDog,
+  updateDog,
+  getDogById,
+} from "../../../../server/db/actions/Dog";
 import { z } from "zod";
 import { consts } from "@/utils/consts";
 
@@ -71,8 +75,29 @@ const dogSchema = z.object({
     .optional(),
 });
 
-export default function handler(req, res) {
-  if (req.method == "DELETE") {
+export default async function handler(req, res) {
+  if (req.method == "GET") {
+    try {
+      const { id } = req.query;
+      const data = await getDogById(id);
+
+      if (data.length === 0) {
+        res.status(404).json({
+          success: false,
+          error: "Unable to retrieve dog because it doesn't exist",
+        });
+        return;
+      }
+
+      return res.status(200).json({
+        success: true,
+        data: data,
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, error: error.message });
+      return;
+    }
+  } else if (req.method == "DELETE") {
     if (!mongoose.isValidObjectId(req.query.id)) {
       return res.status(422).send({
         success: false,

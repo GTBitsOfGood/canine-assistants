@@ -1,6 +1,6 @@
+import { getDogs, createDog } from "../../../../server/db/actions/Dog";
 import { z } from "zod";
 import mongoose, { Types } from "mongoose";
-import { createDog } from "../../../../server/db/actions/Dog";
 import { consts } from "@/utils/consts";
 
 const dogSchema = z.object({
@@ -71,10 +71,21 @@ const dogSchema = z.object({
     .optional(),
 });
 
-export default function handler(req, res) {
-  const { success, error, data } = dogSchema.safeParse(req.body);
+export default async function handler(req, res) {
+  if (req.method == "GET") {
+    try {
+      const data = await getDogs();
 
-  if (req.method == "POST") {
+      return res.status(200).json({
+        success: true,
+        data: data,
+      });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+      return;
+    }
+  } else if (req.method == "POST") {
+    const { success, error, data } = dogSchema.safeParse(req.body);
     if (!success) {
       return res.status(422).send({
         success: false,
@@ -103,10 +114,9 @@ export default function handler(req, res) {
           message: error.message,
         });
       });
-  } else {
-    return res.status(405).send({
-      success: false,
-      message: `Request method ${req.method} is not allowed`,
-    });
   }
+  return res.status(405).send({
+    success: false,
+    message: `Request method ${req.method} is not allowed`,
+  });
 }
