@@ -58,11 +58,11 @@ const mocks = {
       gender: "Male",
       breed: "Poodle",
       behavior: "No concern",
-      medical: "No concern",
+      medical: "High concern",
       other: "No concern",
       parents: [],
-      dateOfBirth: new Date("2023-09-06T21:37:38.975Z").toLocaleDateString(
-        "en-US",
+      dateOfBirth: new Date("2021-09-06T21:37:38.975Z").toLocaleDateString(
+        "en-US"
       ),
       litterSize: 3,
       birthOrder: 4,
@@ -91,13 +91,13 @@ const mocks = {
       _id: "dog2",
       name: "Turnip",
       gender: "Male",
-      breed: "Poodle",
+      breed: "Golden Doodle",
       behavior: "No concern",
-      medical: "No concern",
+      medical: "Some concern",
       other: "No concern",
       parents: [],
-      dateOfBirth: new Date("2023-09-06T21:37:38.975Z").toLocaleDateString(
-        "en-US",
+      dateOfBirth: new Date("2019-09-06T21:37:38.975Z").toLocaleDateString(
+        "en-US"
       ),
       litterSize: 3,
       birthOrder: 4,

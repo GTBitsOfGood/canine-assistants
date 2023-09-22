@@ -1,11 +1,8 @@
-import { Inter } from "next/font/google";
 import TabSection from "@/components/TabSection";
 import Card from "@/components/Card";
 import PetmateCard from "@/components/PetmateCard";
 import Link from "next/link";
 import { mocks } from "@/utils/consts";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const getServerSideProps = async (context) => {
   try {
@@ -68,7 +65,7 @@ function DogColumnProperty({ label, value }) {
 export default function IndividualDogPage({ dog }) {
   return (
     // Artificial spacing until nav is created
-    <div className={`${inter.className} container mx-auto`}>
+    <div className={`container mx-auto`}>
       <Link href="/dogs" className="text-red-800">
       Go Back
       </Link>
@@ -85,7 +82,7 @@ export default function IndividualDogPage({ dog }) {
           <DogColumnProperty label="role" value={dog.rolePlacedAs}/>
           <DogColumnProperty label="breed" value={dog.breed}/>
           <DogColumnProperty label="weight" value={dog.weight + "lb"}/>
-          <DogColumnProperty label="dob" value={new Date(dog.dateOfBirth).toLocaleDateString("en-US")}/>
+          <DogColumnProperty label="dob" value={(Date.now() - new Date(dog.dateOfBirth)).getFullYear() - 1970}/>
         </div>
 
         <TabSection defaultTab={"info"}>

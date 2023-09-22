@@ -1,5 +1,6 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import React from "react";
+import TablePaginator from "./TablePagination";
 
 /**
  * The main header for the table
@@ -32,6 +33,19 @@ function TableColumn({ icon, col, style }) {
       </div>
     </th>
   );
+}
+
+function TableFooter({  }) {
+  return (
+    <div className="flex  justify-between items-center px-6 py-4">
+      <div className="text-sm font-medium">
+        Showing 10 of 150 Results
+      </div>
+      <div>
+        <TablePaginator/>
+      </div>
+    </div>
+  )
 }
 
 // The alternating row styles
@@ -71,7 +85,7 @@ export default function Table({ cols, rows, filter, noElements }) {
   };
 
   return (
-    <div className="shadow-xl rounded-sm text-md w-full text-left relative overflow-hidden">
+    <div className="shadow-xl rounded-lg text-md w-full text-left relative overflow-hidden">
       <table className="divide-y divide-gray-300 text-md w-full text-left relative overflow-hidden">
         <thead className="bg-foreground">
           <TableHeader>
@@ -113,7 +127,11 @@ export default function Table({ cols, rows, filter, noElements }) {
               );
             })}
         </tbody>
+        <tfoot>
+        </tfoot>
       </table>
+      <TableFooter/>
+
       {rows.length == 0 && noElements}
     </div>
   );

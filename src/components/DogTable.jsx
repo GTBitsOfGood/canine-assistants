@@ -10,7 +10,8 @@ import {
   MapPinIcon,
   TagIcon,
 } from "@heroicons/react/24/solid";
-import Chip from "./Chip";
+import Chip, { ChipTypeStyles } from "./Chip";
+import SearchTagDisplay from "./SearchTagDisplay";
 
 /**
  *
@@ -31,6 +32,17 @@ export default function DogTable({ dogs }) {
     setSearchFilter(e.target.value);
   };
 
+  // TEMPORAY until enum situation is figured out
+  const chipTypeMapping = {
+    ["No concern"]: ChipTypeStyles.NoConcern,
+    ["Some concern"]: ChipTypeStyles.SomeConcern,
+    ["High concern"]: ChipTypeStyles.HighConcern,
+  };
+
+  const getAge = (date) => {
+    return new Date(Date.now() - date).getFullYear() - 1970;
+  };
+
   /**
    * The specified columns for the DogTable
    */
@@ -44,27 +56,70 @@ export default function DogTable({ dogs }) {
       },
     },
     { id: "breed", label: "Breed", icon: <FingerPrintIcon /> },
-    { id: "dateOfBirth", label: "Age", type: "date", icon: <CalendarIcon /> },
-    { id: "location", label: "Location", icon: <MapPinIcon /> },
-    { id: "medical", label: "Medical Status", icon: <ClipboardIcon /> },
-    { id: "behavior", label: "Behavioral Status", icon: <ClipboardIcon /> },
-    { id: "other", label: "Other Status", icon: <ClipboardIcon /> },
-    { id: "other", label: "Recent Log Tags", icon: <TagIcon /> },
+    {
+      id: "dateOfBirth",
+      label: "Age",
+      icon: <CalendarIcon />,
+      customRender: (rowData) => {
+        return <span>{getAge(new Date(rowData.dateOfBirth))} years</span>;
+      },
+    },
+    {
+      id: "location",
+      label: "Location",
+      icon: <MapPinIcon />,
+      customRender: (rowData) => {
+        return <Chip label={rowData.location} type={ChipTypeStyles.Facility} />;
+      },
+    },
+    {
+      id: "medical",
+      label: "Medical Status",
+      icon: <ClipboardIcon />,
+      customRender: (rowData) => {
+        return (
+          <Chip
+            label={rowData.medical}
+            type={chipTypeMapping[rowData.medical]}
+          />
+        );
+      },
+    },
+    {
+      id: "behavior",
+      label: "Behavioral Status",
+      icon: <ClipboardIcon />,
+      customRender: (rowData) => {
+        return (
+          <Chip
+            label={rowData.behavior}
+            type={chipTypeMapping[rowData.behavior]}
+          />
+        );
+      },
+    },
+    {
+      id: "other",
+      label: "Other Status",
+      icon: <ClipboardIcon />,
+      customRender: (rowData) => {
+        return (
+          <Chip label={rowData.other} type={chipTypeMapping[rowData.other]} />
+        );
+      },
+    },
     {
       id: "recentLogs",
       label: "Recent Log Tags",
       style: "flex justify-center",
+      icon: <TagIcon />,
       customRender: (rowData) => {
         const tags = [].concat(...rowData.recentLogs.map((log) => log.tags));
 
         return (
-          <div className="flex justify-center space-x-3">
+          <div className="flex justify-center gap-2">
             {tags.map((tag, i) => (
-              <Chip key={i} label={tag} type={"Tag"} />
-
-              // <div key={i} className="text-xs uppercase text-red-800">
-              //   {tag}
-              // </div>
+              <Chip key={i} label={tag} type={ChipTypeStyles.Tag} />
             ))}
           </div>
         );
@@ -73,8 +128,37 @@ export default function DogTable({ dogs }) {
   ];
 
   return (
-    <div className="flex-grow flex-col">
+    <div className="flex-grow flex-col space-y-6">
       <SearchFilterBar />
+
+      <SearchTagDisplay
+        tags={[
+          {
+            label: (
+              <span>
+                <strong>Feeding Change</strong>
+              </span>
+            ),
+            type: ChipTypeStyles.Tag,
+          },
+          {
+            label: (
+              <span>
+                <strong>Medical</strong>: High Concern
+              </span>
+            ),
+            type: ChipTypeStyles.HighConcern,
+          },
+          {
+            label: (
+              <span>
+                <strong>Medical</strong>: Some Concern
+              </span>
+            ),
+            type: ChipTypeStyles.SomeConcern,
+          },
+        ]}
+      />
 
       <Table
         cols={dogTableColumns}

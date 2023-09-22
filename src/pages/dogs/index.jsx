@@ -1,8 +1,5 @@
-import { Inter } from "next/font/google";
 import DogTable from "@/components/DogTable";
 import { mocks } from "@/utils/consts";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const getServerSideProps = async (context) => {
   try {
@@ -32,7 +29,7 @@ export const getServerSideProps = async (context) => {
  */
 export default function DogsPage({ dogs }) {
   return (
-    <div className={`pt-4 ${inter.className} container mx-auto`}>
+    <div className={`pt-4 container mx-auto`}>
       <div className="pt-5 text-gray-800 order-b border-gray-300 flex-grow">
         <div className="flex">
           <DogTable dogs={dogs} />
