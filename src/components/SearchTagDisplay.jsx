@@ -1,5 +1,5 @@
 import { XMarkIcon } from "@heroicons/react/24/solid";
-import Chip from "./Chip";
+import { Chip } from "./Chip";
 
 export default function SearchTagDisplay({ tags }) {
   return (

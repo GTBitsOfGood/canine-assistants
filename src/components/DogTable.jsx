@@ -10,7 +10,7 @@ import {
   MapPinIcon,
   TagIcon,
 } from "@heroicons/react/24/solid";
-import Chip, { ChipTypeStyles } from "./Chip";
+import { Chip, ChipTypeStyles } from "./Chip";
 import SearchTagDisplay from "./SearchTagDisplay";
 
 /**
@@ -114,12 +114,13 @@ export default function DogTable({ dogs }) {
       style: "flex justify-center",
       icon: <TagIcon />,
       customRender: (rowData) => {
-        const tags = [].concat(...rowData.recentLogs.map((log) => log.tags));
 
         return (
-          <div className="flex justify-center gap-2">
-            {tags.map((tag, i) => (
-              <Chip key={i} label={tag} type={ChipTypeStyles.Tag} />
+          <div className="flex justify-left gap-2">
+            {rowData.recentLogs.map((log) => (
+              log.tags.map((tag, i) => (
+                <Chip link={rowData._id + "/" + log._id} key={i} label={tag} type={ChipTypeStyles.Tag}/>
+              ))
             ))}
           </div>
         );
@@ -164,6 +165,7 @@ export default function DogTable({ dogs }) {
         cols={dogTableColumns}
         rows={dogs}
         filter={searchFilter}
+        elementsPerPage={6}
         noElements={
           <div className=" flex justify-center bg-white py-16 text-gray-500">
             No dogs were found.
