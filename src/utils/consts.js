@@ -17,7 +17,6 @@ const consts = {
   genderPetArray: ["Female", "Male"],
   genderPersonArray: ["Female", "Male", "Other"],
   concernArray: ["No concern", "Some concern", "High concern"],
-  demeanorArray: ["Happy", "Sad", "Fearful"], // placeholders
   locationArray: ["Facility 1", "Facility 2", "Placed"],
   roleArray: ["Service", "Companion"],
   leashArray: ["Leashed", "Off-leash"],
@@ -31,8 +30,8 @@ const consts = {
   ],
   topicArray: ["Medical", "Behavioral", "Other"],
   tagsArray: ["auditory", "heartworm", "fleas/ticks"],
-  
-
+  deliveryArray: ["Natural", "C-section", "Combination"],
+  housingArray: ["Clinic", "Nursery", "BBI"],
 };
 
 /**

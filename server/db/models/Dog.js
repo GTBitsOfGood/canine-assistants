@@ -65,9 +65,13 @@ const DogSchema = new Schema({
     min: 1,
   },
   maternalDemeanor: {
-    // order: [before, during, after] birth
-    type: String,
-    enum: consts.demeanorArray,
+    // Should be size 3 array where each number is from 1 to 5
+    // indicating the dog's demeanor [before, during, after]
+    type: [
+      {
+        type: Number,
+      },
+    ],
   },
   location: {
     type: String,
@@ -79,8 +83,19 @@ const DogSchema = new Schema({
     enum: consts.roleArray,
   },
   partner: {
-    type: SchemaTypes.ObjectId,
-    ref: "User",
+    age: {
+      type: Number,
+    },
+    name: {
+      type: String,
+    },
+    disability: {
+      type: String,
+    },
+    user: {
+      type: SchemaTypes.ObjectId,
+      ref: "User",
+    },
   },
   toiletArea: {
     type: String,
@@ -125,6 +140,64 @@ const DogSchema = new Schema({
   volunteer: {
     type: SchemaTypes.ObjectId,
     ref: "User",
+  },
+  collarColor: {
+    type: String,
+  },
+  coatColor: {
+    type: String,
+  },
+  supplementalFeeding: {
+    type: String,
+  },
+  deliveryInformation: {
+    type: String,
+    enum: consts.deliveryArray,
+  },
+  litterComposition: {
+    type: String,
+  },
+  housing: {
+    place: {
+      type: String,
+      enum: consts.housingArray,
+    },
+    room: {
+      type: String,
+    },
+  },
+  caregivers: {
+    type: [
+      {
+        type: SchemaTypes.ObjectId,
+        ref: "User",
+      },
+    ],
+  },
+  feeding: {
+    amount: {
+      type: String,
+    },
+    firstmeal: {
+      type: String,
+    },
+    secondmeal: {
+      type: String,
+    },
+    thirdmeal: {
+      type: String,
+    },
+  },
+  grooming: {
+    lastBath: {
+      type: Date,
+    },
+  },
+  placement: {
+    type: String,
+  },
+  image: {
+    type: String,
   },
 });
 
