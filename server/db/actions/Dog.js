@@ -89,42 +89,7 @@ export async function updateDog(dogId, dogData) {
     throw new Error("Unable to update dog, please try again");
   }
 
-  // recentLogs array
-  if (dogData.recentLogs && dogData.recentLogs.length) {
-    for (let i = 0; i < dogData.recentLogs.length; i++) {
-      if (!(await Log.findById(dogData.recentLogs[i]))) {
-        throw new Error("Log ID is not present in database");
-      }
-    }
-  }
-
-  // parents array
-  if (dogData.parents) {
-    for (let i = 0; i < dogData.parents.length; i++) {
-      if (!(await Dog.findById(dogData.parents[i]))) {
-        throw new Error("Parent ID is not present in database");
-      }
-    }
-  }
-
-  // partner
-  if (dogData.partner && !(await User.findById(dogData.partner))) {
-    throw new Error("Partner ID is not present in database");
-  }
-
-  // instructors array User
-  if (dogData.instructors) {
-    for (let i = 0; i < dogData.instructors.length; i++) {
-      if (!(await User.findById(dogData.instructors[i]))) {
-        throw new Error("Instructor ID is not present in database");
-      }
-    }
-  }
-
-  // volunteer
-  if (dogData.volunteer && !(await User.findById(dogData.volunteer))) {
-    throw new Error("Volunteer ID is not present in database");
-  }
+  await validateDogData(dogData);
 
   try {
     return await Dog.findByIdAndUpdate({ _id: dogId }, dogData, {
@@ -162,42 +127,7 @@ export async function createDog(dogData) {
     throw new Error("Unable to create dog at this time, please try again");
   }
 
-  // recentLogs array
-  if (dogData.recentLogs && dogData.recentLogs.length) {
-    for (let i = 0; i < dogData.recentLogs.length; i++) {
-      if (!(await Log.findById(dogData.recentLogs[i]))) {
-        throw new Error("Log ID is not present in database");
-      }
-    }
-  }
-
-  // parents array
-  if (dogData.parents) {
-    for (let i = 0; i < dogData.parents.length; i++) {
-      if (!(await Dog.findById(dogData.parents[i]))) {
-        throw new Error("Parent ID is not present in database");
-      }
-    }
-  }
-
-  // partner
-  if (dogData.partner && !(await User.findById(dogData.partner))) {
-    throw new Error("Partner ID is not present in database");
-  }
-
-  // instructors array User
-  if (dogData.instructors) {
-    for (let i = 0; i < dogData.instructors.length; i++) {
-      if (!(await User.findById(dogData.instructors[i]))) {
-        throw new Error("Instructor ID is not present in database");
-      }
-    }
-  }
-
-  // volunteer
-  if (dogData.volunteer && !(await User.findById(dogData.volunteer))) {
-    throw new Error("Volunteer ID is not present in database");
-  }
+  await validateDogData(dogData);
 
   const dog = new Dog(dogData);
 
@@ -208,4 +138,58 @@ export async function createDog(dogData) {
     throw new Error(e);
   }
   return dog._id;
+}
+
+/**
+ * Queries the database for the existence IDs found in dogData object
+ * including the recentLogs, parents, partner, instructors, volunteer, and caregivers
+ * @param {*} dogData Object that has been parsed by Zod for validity
+ * @returns Nothing but throws an error for invalid IDs
+ */
+async function validateDogData(dogData) {
+  // recentLogs array of Log IDs
+  if (dogData.recentLogs && dogData.recentLogs.length) {
+    const logCount = await Log.count({ _id: { $in: dogData.recentLogs } });
+    if (logCount != dogData.recentLogs.length) {
+      throw new Error("Log ID is not present in database");
+    }
+  }
+
+  // parents array of Dog IDs
+  if (dogData.parents) {
+    const dogCount = await Dog.count({ _id: { $in: dogData.parents } });
+    if (dogCount != dogData.parents.length) {
+      throw new Error("Parent ID is not present in database");
+    }
+  }
+
+  // partner Dog ID
+  if (dogData.partner && !(await User.findById(dogData.partner))) {
+    throw new Error("Partner ID is not present in database");
+  }
+
+  // instructors array of User IDs
+  if (dogData.instructors) {
+    const instructorCount = await User.count({
+      _id: { $in: dogData.instructors },
+    });
+    if (instructorCount != dogData.instructors.length) {
+      throw new Error("Instructor ID is not present in database");
+    }
+  }
+
+  // volunteer User ID
+  if (dogData.volunteer && !(await User.findById(dogData.volunteer))) {
+    throw new Error("Volunteer ID is not present in database");
+  }
+
+  // caregivers array of User IDs
+  if (dogData.caregivers) {
+    const caregiversCount = await User.count({
+      _id: { $in: dogData.caregivers },
+    });
+    if (caregiversCount != dogData.caregivers.length) {
+      throw new Error("Caregiver ID is not present in database");
+    }
+  }
 }
