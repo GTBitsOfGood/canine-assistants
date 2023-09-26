@@ -2,6 +2,25 @@ import dbConnect from "../dbConnect";
 import Log from "../models/Log";
 import Dog from "../models/Dog";
 
+export async function getLogs() {
+  try {
+    await dbConnect();
+  } catch (e) {
+    throw new Error("Unable to get logs at this time, please try again");
+  }
+
+  return Log.find();
+}
+
+export async function getLogById(id) {
+  try {
+    await dbConnect();
+    return Log.findById(id);
+  } catch (e) {
+    throw new Error("Unable to get log at this time, please try again");
+  }
+}
+
 export async function createLog(logData) {
   try {
     await dbConnect();
