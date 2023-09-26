@@ -60,3 +60,50 @@ export async function createLog(logData) {
 
   return log._id;
 }
+
+export async function updateLog(dogId, dogData) {
+  // try {
+  //   await dbConnect();
+  // } catch (e) {
+  //   throw new Error("Unable to update dog, please try again");
+  // }
+  // // recentLogs array
+  // if (dogData.recentLogs && dogData.recentLogs.length) {
+  //   for (let i = 0; i < dogData.recentLogs.length; i++) {
+  //     if (!(await Log.findById(dogData.recentLogs[i]))) {
+  //       throw new Error("Log ID is not present in database");
+  //     }
+  //   }
+  // }
+  // // parents array
+  // if (dogData.parents) {
+  //   for (let i = 0; i < dogData.parents.length; i++) {
+  //     if (!(await Dog.findById(dogData.parents[i]))) {
+  //       throw new Error("Parent ID is not present in database");
+  //     }
+  //   }
+  // }
+  // // partner
+  // if (dogData.partner && !(await User.findById(dogData.partner))) {
+  //   throw new Error("Partner ID is not present in database");
+  // }
+  // // instructors array User
+  // if (dogData.instructors) {
+  //   for (let i = 0; i < dogData.instructors.length; i++) {
+  //     if (!(await User.findById(dogData.instructors[i]))) {
+  //       throw new Error("Instructor ID is not present in database");
+  //     }
+  //   }
+  // }
+  // // volunteer
+  // if (dogData.volunteer && !(await User.findById(dogData.volunteer))) {
+  //   throw new Error("Volunteer ID is not present in database");
+  // }
+  // try {
+  //   return await Dog.findByIdAndUpdate({ _id: dogId }, dogData, {
+  //     returnDocument: "after",
+  //   });
+  // } catch (e) {
+  //   throw new Error("Unable to update dog");
+  // }
+}
