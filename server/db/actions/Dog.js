@@ -109,6 +109,7 @@ export async function updateDog(dogId, dogData) {
 export async function deleteDog(id) {
   try {
     await dbConnect();
+    await Log.deleteMany({ dog: id });
     return await Dog.findByIdAndDelete({ _id: id });
   } catch (e) {
     throw new Error("Unable to delete dog");
