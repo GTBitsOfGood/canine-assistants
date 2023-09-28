@@ -36,14 +36,14 @@ function TableColumn({ icon, col, style }) {
   );
 }
 
-function TableFooter({ elementsOnPage, rows }) {
+function TableFooter({ elementsOnPage, rows, paginationFunctions }) {
   return (
     <div className="flex  justify-between items-center px-6 py-4">
       <div className="text-sm font-medium">
         Showing {elementsOnPage} of {rows.length} Results
       </div>
       <div>
-        <TablePaginator />
+        <TablePaginator paginationFunctions = {paginationFunctions} />
       </div>
     </div>
   );
@@ -72,6 +72,23 @@ export default function Table({
   const [currentPage, setCurrentPage] = useState(0);
   const [currentElements, setCurrentElements] = useState([]);
 
+  const pageAmount = Math.ceil(rows.length / elementsPerPage);
+
+  const incrementPage = () => {
+    setCurrentPage(Math.min(pageAmount - 1, currentPage + 1));
+  };
+
+  const decrementPage = () => {
+    setCurrentPage(Math.max(0, currentPage - 1));
+  };
+
+  const gotoLastPage = () => {
+    setCurrentPage(pageAmount - 1);
+  };
+
+  const gotoFirstPage = () => {
+    setCurrentPage(0);
+  };
   /**
    * Formats each value in the table depending on settings provided
    *
@@ -148,7 +165,18 @@ export default function Table({
         </tbody>
         <tfoot></tfoot>
       </table>
-      <TableFooter elementsOnPage={elementsToShow.length} rows={rows} />
+      <TableFooter
+        elementsOnPage={elementsToShow.length}
+        rows={rows}
+        paginationFunctions={{
+          currentPage: currentPage,
+          setPage: setCurrentPage,
+          incrementPage: incrementPage,
+          decrementPage: decrementPage,
+          gotoLastPage: gotoLastPage,
+          gotoFirstPage: gotoFirstPage,
+        }}
+      />
 
       {rows.length == 0 && noElements}
     </div>

@@ -297,7 +297,7 @@ export default async function handler(req, res) {
     // create dogs
     const dogIds = [];
 
-    const dogCount = 10;
+    const dogCount = 100;
 
     
 

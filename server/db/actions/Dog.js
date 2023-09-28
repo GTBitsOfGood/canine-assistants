@@ -6,14 +6,17 @@ import User from "../models/User";
 export async function getDogs(filter = {}) {
   try {
     await dbConnect();
+    
 
-    if (filter["name"]) {
-      filter.name = new RegExp(filter.name, "i");
+    if (filter["name"] !== undefined) {
+      filter.name = { '$regex': filter.name, '$options': 'i' };
     }
 
-    if (filter["instructors"]) {
+    if (filter["instructors"] !== undefined) {
       filter.instructors = { $in: filter.instructors };
     }
+
+    console.log(filter);
 
     return Dog.find(filter).populate("recentLogs");
   } catch (e) {
