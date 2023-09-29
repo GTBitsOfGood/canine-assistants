@@ -19,10 +19,7 @@ export default async function handler(req, res) {
         });
       })
       .catch((error) => {
-        if (
-          error.message ==
-          "TypeError: Cannot read properties of null (reading 'dog')"
-        ) {
+        if (error.message == "Error: Invalid log ID") {
           return res.status(404).send({
             success: false,
             message: "Cannot delete log because log id does not exist",
