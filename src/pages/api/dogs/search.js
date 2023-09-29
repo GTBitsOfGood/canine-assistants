@@ -24,9 +24,16 @@ const dogSchema = z.object({
     })
     .optional(),
   partner: z
-    .string()
-    .refine((id) => {
-      return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+    .object({
+      age: z.number().optional(),
+      name: z.string().optional(),
+      disability: z.string().optional(),
+      user: z
+        .string()
+        .refine((id) => {
+          return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+        })
+        .optional(),
     })
     .optional(),
 });

@@ -58,6 +58,16 @@ export async function getDogs(filter = {}) {
       ]);
     }
 
+    if (filter["partner"]) {
+      for (let field in filter["partner"]) {
+        let data = filter["partner"][field];
+        filter[`partner.${field}`] =
+          typeof data == "string" ? new RegExp(data, "i") : data;
+      }
+
+      delete filter.partner;
+    }
+
     return Dog.find(filter).populate("recentLogs");
   } catch (e) {
     throw new Error("Unable to get dogs at this time, please try again");
