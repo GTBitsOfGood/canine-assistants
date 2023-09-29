@@ -43,7 +43,7 @@ const consts = {
 const dogSchema = z.object({
   name: z.string(),
   gender: z.enum(consts.genderPetArray),
-  breed: z.string().toLowerCase(),
+  breed: z.string(),
   weight: z.number(),
   behavior: z.enum(consts.concernArray),
   medical: z.enum(consts.concernArray),

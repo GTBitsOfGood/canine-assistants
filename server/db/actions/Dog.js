@@ -165,7 +165,7 @@ async function validateDogData(dogData) {
   }
 
   // partner Dog ID
-  if (dogData.partner.user && !(await User.findById(dogData.partner.user))) {
+  if (dogData.partner?.user && !(await User.findById(dogData.partner.user))) {
     throw new Error("Partner ID is not present in database");
   }
 

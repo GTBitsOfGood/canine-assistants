@@ -277,6 +277,12 @@ const dogBreeds = [
   "Dachshund"
 ];
 
+const disabilities = [
+  "epilepsy",
+  "mobility",
+  "diabetes",
+  "PTSD",
+]
 
 
 export default async function handler(req, res) {
@@ -296,10 +302,7 @@ export default async function handler(req, res) {
 
     // create dogs
     const dogIds = [];
-
     const dogCount = 100;
-
-    
 
     for (let i = 0; i < dogCount; i++) {
       dogs[i] = {
@@ -314,7 +317,7 @@ export default async function handler(req, res) {
         litterSize: 8,
         birthOrder: 2,
         parents: [],
-        maternalDemeanor: "Happy",
+        maternalDemeanor: [getRandomInt(1, 5), getRandomInt(1, 5), getRandomInt(1, 5)],
         location: consts.locationArray[getRandomInt(0, consts.locationArray.length - 1)],
         toiletArea: "Leashed",
         housemates: [
@@ -342,10 +345,15 @@ export default async function handler(req, res) {
           },
         ],
         instructors: [],
+        partner: {
+          age: getRandomInt(1, 100),
+          name: dogNames[getRandomInt(0, dogNames.length - 1)],
+          disability: disabilities[getRandomInt(0, disabilities.length - 1)]
+        }
       };
 
       dogs[i].instructors = [userIds[0]];
-      dogs[i].partner = userIds[2];
+      dogs[i].partner.user = userIds[2];
 
       const id = await createDog(dogs[i]);
 
