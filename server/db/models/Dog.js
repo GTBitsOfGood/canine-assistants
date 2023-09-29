@@ -67,11 +67,7 @@ const DogSchema = new Schema({
   maternalDemeanor: {
     // Should be size 3 array where each number is from 1 to 5
     // indicating the dog's demeanor [before, during, after]
-    type: [
-      {
-        type: Number,
-      },
-    ],
+    type: [Number],
   },
   location: {
     type: String,
@@ -83,15 +79,9 @@ const DogSchema = new Schema({
     enum: consts.roleArray,
   },
   partner: {
-    age: {
-      type: Number,
-    },
-    name: {
-      type: String,
-    },
-    disability: {
-      type: String,
-    },
+    age: Number,
+    name: String,
+    disability: String,
     user: {
       type: SchemaTypes.ObjectId,
       ref: "User",
@@ -162,9 +152,7 @@ const DogSchema = new Schema({
       type: String,
       enum: consts.housingArray,
     },
-    room: {
-      type: String,
-    },
+    room: String,
   },
   caregivers: {
     type: [
@@ -175,23 +163,13 @@ const DogSchema = new Schema({
     ],
   },
   feeding: {
-    amount: {
-      type: String,
-    },
-    firstmeal: {
-      type: String,
-    },
-    secondmeal: {
-      type: String,
-    },
-    thirdmeal: {
-      type: String,
-    },
+    amount: String,
+    firstmeal: String,
+    secondmeal: String,
+    thirdmeal: String,
   },
   grooming: {
-    lastBath: {
-      type: Date,
-    },
+    lastBath: Date,
   },
   placement: {
     type: String,
