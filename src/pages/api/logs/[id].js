@@ -4,17 +4,11 @@ import { z } from "zod";
 import { consts } from "@/utils/consts";
 
 const logSchema = z.object({
-  title: z.string(),
-  topic: z.enum(consts.topicArray),
+  title: z.string().optional(),
+  topic: z.enum(consts.topicArray).optional(),
   tags: z.enum(consts.tagsArray).array().optional(),
-  severity: z.enum(consts.concernArray),
-  description: z.string().optional(),
-  author: z.string().refine((id) => {
-    return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
-  }),
-  dog: z.string().refine((id) => {
-    return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
-  }),
+  severity: z.enum(consts.concernArray).optional(),
+  description: z.string().optional().optional(),
 });
 
 export default async function handler(req, res) {
@@ -44,17 +38,26 @@ export default async function handler(req, res) {
             error.errors[0].received,
         });
       } else {
+        let message;
         console.log(error);
+        const erroredKeys = error.errors[0].keys;
+
+        if (erroredKeys.includes("dog") || erroredKeys.includes("author")) {
+          message = "Cannot update dog and/or author field!";
+        } else {
+          message = error.errors[0].message;
+        }
+
         return res.status(422).send({
           success: false,
-          message: error.errors[0].message,
+          message: message,
         });
       }
     }
 
     return updateLog(req.query.id, data)
-      .then((results) => {
-        if (!results) {
+      .then((updatedLogObject) => {
+        if (!updatedLogObject) {
           return res.status(404).send({
             success: false,
             message: "Cannot update log because log does not exist!",
@@ -62,8 +65,8 @@ export default async function handler(req, res) {
         } else {
           return res.status(200).send({
             success: true,
-            message: "log sucessfully updated!",
-            data: results,
+            message: "Sucessfully updated log",
+            data: updatedLogObject,
           });
         }
       })
