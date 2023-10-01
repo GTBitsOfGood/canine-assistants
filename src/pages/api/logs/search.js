@@ -2,7 +2,7 @@ import { getLogs } from "../../../../server/db/actions/Log";
 import { z } from "zod";
 import mongoose, { Types } from "mongoose";
 
-const logSearch = z.object({
+const logParams = z.object({
   author: z.string().refine((id) => {
     return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
   }),
@@ -10,6 +10,8 @@ const logSearch = z.object({
     return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
   }),
 });
+
+const logSearch = logParams.partial();
 
 export default async function handler(req, res) {
   const {
@@ -43,4 +45,9 @@ export default async function handler(req, res) {
       return;
     }
   }
+
+  return res.status(405).json({
+    success: false,
+    message: `Request method ${req.method} is not allowed`,
+  });
 }
