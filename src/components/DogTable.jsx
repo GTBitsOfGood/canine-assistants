@@ -26,18 +26,29 @@ const dogFetcher = (...args) => fetch(...args).then((res) => res.json());
 export default function DogTable() {
   const [searchFilter, setSearchFilter] = useState("");
   const [data, setData] = useState();
-  const [search, setSearch] = useState({})
 
   const [filters, setFilters] = useState({});
 
   useEffect(() => {
     let search = {};
 
-    search.name = searchFilter;
 
     if (filters) {
-      if (filters.location) search.location = Object.values(filters.location);
+      Object.keys(filters).filter(category => category && Object.values(filters[category]).length > 0).forEach(category => {
+        search[category] = Object.values(filters[category])
+      })
     }
+
+    search.name = searchFilter;
+
+
+    // if (filters) {
+    //   if (filters.location && Object.keys(filters.location).length > 0) search.location = Object.values(filters.location);
+    //   if (filters.searchFilter && searchFilter.length > 0) search.name = searchFilter;
+    //   if (filters.medical && Object.keys(filters.medical) > 0) search.medical = Object.values(filters.medical);
+    //   if (filters.behavior && Object.keys(filters.behavior) > 0) search.behavior = Object.values(filters.behavior);
+    //   if (filters.medical && Object.keys(filters.medical) > 0) search.medical = Object.values(filters.medical);
+    // }
     
     console.log({search})
 
@@ -205,7 +216,7 @@ export default function DogTable() {
 
   return (
     <div className="flex-grow flex-col space-y-6">
-      <SearchFilterBar filters={filters} setFilters={setFilters} />
+      <SearchFilterBar filters={filters} setFilters={setFilters} setSearch={setSearchFilter} />
 
       <SearchTagDisplay
         tags={tags}

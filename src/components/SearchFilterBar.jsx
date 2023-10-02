@@ -1,15 +1,11 @@
 import {
-  AdjustmentsVerticalIcon,
-  BeakerIcon,
-  ChevronDownIcon,
   MagnifyingGlassIcon,
   PlusIcon,
 } from "@heroicons/react/24/solid";
 import DropdownMenu, { DropdownMenuOption } from "./DropdownMenu";
 import { consts } from "@/utils/consts";
-import { useState } from "react";
 
-export default function SearchFilterBar({ filters, setFilters }) {
+export default function SearchFilterBar({ filters, setFilters, setSearch }) {
   return (
     <div className="flex items-center gap-4">
       <div className="relative grow justify-start items-center flex">
@@ -21,6 +17,7 @@ export default function SearchFilterBar({ filters, setFilters }) {
           className="w-full h-full rounded bg-foregrund border border-neutral-300 text-neutral-700 text-lg p-2.5 pl-10 font-normal"
           placeholder="Search Dogs..."
           required
+          onChange={(e) => setSearch(e.target.value)}
         />
       </div>
       <div className="text-neutral-700 text-sm font-medium">Filter by</div>
@@ -86,7 +83,7 @@ export default function SearchFilterBar({ filters, setFilters }) {
           }
         }}
       >
-        {consts.concernArray.map((concern, index) => (
+        {consts.tagsArray.map((concern, index) => (
           <DropdownMenuOption
             key={index}
             label={concern}
