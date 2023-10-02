@@ -9,6 +9,8 @@ import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 import { Chip, ChipTypeStyles } from "@/components/Chip";
 import DogsPage from ".";
 import Image from "next/image";
+import maleicon from "../../../public/maleicon.svg";
+import femaleicon from "../../../public/femaleicon.svg";
 
 /**
  *
@@ -92,7 +94,15 @@ export default function IndividualDogPage() {
                   label={dog.location}
                   type={ChipTypeStyles[dog.location] || ChipTypeStyles.Tag}
                 />
-                <div className="pt-2 flex justify-center">Male</div>
+                <div className="flex justify-center items-center space-x-2">
+                  <Image
+                    priority
+                    src={dog.gender === "Male" ? maleicon : femaleicon}
+                    alt="Male Dog"
+                  />
+
+                  <div>Male</div>
+                </div>
               </div>
               <div className="pt-6 pl-1 font-bold text-3xl">{dog.name}</div>
               <div className="flex space-x-16">
