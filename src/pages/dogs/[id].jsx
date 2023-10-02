@@ -129,9 +129,11 @@ export default function IndividualDogPage() {
                     <div className="text-lg">
                       <strong>Birth</strong>
                     </div>
-                    <div>text</div>
-                    <div>text</div>
-                    <div>text</div>
+                    <div>Birth Time: N/A</div>
+                    <div>Collar Color: N/A</div>
+                    <div>Supplemental Feeding: N/A</div>
+                    <div>Delivery Information: N/A</div>
+                    <div>Birth Order: N/A</div>
                   </div>
                 </div>
                 <div className="col">
@@ -139,9 +141,10 @@ export default function IndividualDogPage() {
                     <div className="text-lg">
                       <strong>Family</strong>
                     </div>
-                    <div>text</div>
-                    <div>text</div>
-                    <div>text</div>
+                    <div>Litter Size: N/A</div>
+                    <div>Litter Composition: N/A</div>
+                    <div>Father: N/A</div>
+                    <div>Mother: N/A</div>
                   </div>
                 </div>
               </div>
@@ -151,9 +154,9 @@ export default function IndividualDogPage() {
                     <div className="text-lg">
                       <strong>Maternal Demeanor</strong>
                     </div>
-                    <div>text</div>
-                    <div>text</div>
-                    <div>text</div>
+                    <div>Prior to Whelping</div>
+                    <div>During Whelping</div>
+                    <div>Subsequent to Whelping</div>
                   </div>
                 </div>
                 <div className="col">
@@ -161,9 +164,10 @@ export default function IndividualDogPage() {
                     <div className="text-lg">
                       <strong>Housing</strong>
                     </div>
-                    <div>text</div>
-                    <div>text</div>
-                    <div>text</div>
+                    <div>Housing: N/A</div>
+                    <div>Instructor: N/A</div>
+                    <div>Primary Caregiver(s): N/A</div>
+                    <div>Primary Toileting Area: N/A</div>
                   </div>
                 </div>
               </div>
@@ -173,9 +177,10 @@ export default function IndividualDogPage() {
                     <div className="text-xl">
                       <strong>Feeding</strong>
                     </div>
-                    <div>text</div>
-                    <div>text</div>
-                    <div>text</div>
+                    <div>Amount: N/A</div>
+                    <div>First Meal: N/A</div>
+                    <div>Second Meal: N/A</div>
+                    <div>Third Meal: N/A</div>
                   </div>
                 </div>
                 <div className="col">
@@ -183,9 +188,7 @@ export default function IndividualDogPage() {
                     <div className="text-xl">
                       <strong>Grooming</strong>
                     </div>
-                    <div>text</div>
-                    <div>text</div>
-                    <div>text</div>
+                    <div>Last bath: N/A</div>
                   </div>
                 </div>
               </div>
