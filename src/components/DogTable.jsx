@@ -69,7 +69,7 @@ export default function DogTable() {
     setSearchFilter(e.target.value);
   };
 
-  // TEMPORAY until enum situation is figured out
+  // TEMPORARY until enum situation is figured out
   const chipTypeMapping = {
     ["No concern"]: ChipTypeStyles.NoConcern,
     ["Some concern"]: ChipTypeStyles.SomeConcern,
@@ -208,36 +208,7 @@ export default function DogTable() {
         setSearch={setSearchFilter}
       />
 
-      <SearchTagDisplay
-        tags={tags}
-        removeTag={removeTag}
-        //   [
-        //   {
-        //     label: (
-        //       <span>
-        //         <strong>Feeding Change</strong>
-        //       </span>
-        //     ),
-        //     type: ChipTypeStyles.Tag,
-        //   },
-        //   {
-        //     label: (
-        //       <span>
-        //         <strong>Medical</strong>: High Concern
-        //       </span>
-        //     ),
-        //     type: ChipTypeStyles.HighConcern,
-        //   },
-        //   {
-        //     label: (
-        //       <span>
-        //         <strong>Medical</strong>: Some Concern
-        //       </span>
-        //     ),
-        //     type: ChipTypeStyles.SomeConcern,
-        //   },
-        // ]}
-      />
+      <SearchTagDisplay tags={tags} removeTag={removeTag} />
 
       <Table
         cols={dogTableColumns}
