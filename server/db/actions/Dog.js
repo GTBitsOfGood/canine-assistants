@@ -6,14 +6,25 @@ import User from "../models/User";
 export async function getDogs(filter = {}) {
   try {
     await dbConnect();
-    
 
     if (filter["name"] !== undefined) {
-      filter.name = { '$regex': filter.name, '$options': 'i' };
+      filter.name = { $regex: filter.name, $options: "i" };
     }
 
-    if (filter["instructors"] !== undefined) {
-      filter.instructors = { $in: filter.instructors };
+    const arrayFilters = [
+      "location",
+      "behavior",
+      "medical",
+      "other",
+      "instructors",
+    ];
+
+    for (let i = 0; i < arrayFilters.length; i++) {
+      let field = arrayFilters[i];
+
+      if (filter[field] !== undefined) {
+        filter[field] = { $in: filter[field] };
+      }
     }
 
     console.log(filter);
