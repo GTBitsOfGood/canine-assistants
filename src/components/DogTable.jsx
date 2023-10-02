@@ -26,20 +26,35 @@ const dogFetcher = (...args) => fetch(...args).then((res) => res.json());
 export default function DogTable() {
   const [searchFilter, setSearchFilter] = useState("");
   const [data, setData] = useState();
+  const [search, setSearch] = useState({})
+
+  const [filters, setFilters] = useState({});
 
   useEffect(() => {
+    let search = {};
+
+    search.name = searchFilter;
+
+    if (filters) {
+      if (filters.location) search.location = Object.values(filters.location);
+    }
+    
+    console.log({search})
+
     fetch("/api/dogs/search", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ name: searchFilter }),
+      body: JSON.stringify(search),
     })
       .then((res) => res.json())
       .then((data) => setData(data));
-  }, [searchFilter]);
+  }, [searchFilter, filters]);
 
   if (!data) return <div>loading</div>;
+
+  console.log({data})
 
   if (!data.data) return <div>loading2</div>;
 
@@ -83,7 +98,13 @@ export default function DogTable() {
       label: "Age",
       icon: <CalendarIcon />,
       customRender: (rowData) => {
-        return <span>{getAge(new Date(rowData.dateOfBirth))} years</span>;
+        const age = getAge(new Date(rowData.dateOfBirth));
+
+        return (
+          <span>
+            {age} {age > 1 ? "years" : "year"}
+          </span>
+        );
       },
     },
     {
@@ -154,37 +175,67 @@ export default function DogTable() {
     },
   ];
 
+  const tags = Object.keys(filters)
+    .map((filterGroup, index) =>
+      Object.keys(filters[filterGroup]).map((element) =>
+        filterGroup[element] == null ? (
+          <></>
+        ) : (
+          {
+            group: filterGroup,
+            label: filters[filterGroup][element],
+            index: element,
+            type: ChipTypeStyles.Tag,
+          }
+        )
+      )
+    )
+    .flat(1);
+
+  const removeTag = (group, index) => {
+    const newFilters = { ...filters };
+
+    delete newFilters[group][index];
+
+    setFilters(newFilters);
+  };
+
+  console.log({ filters });
+
+
   return (
     <div className="flex-grow flex-col space-y-6">
-      <SearchFilterBar />
+      <SearchFilterBar filters={filters} setFilters={setFilters} />
 
       <SearchTagDisplay
-        tags={[
-          {
-            label: (
-              <span>
-                <strong>Feeding Change</strong>
-              </span>
-            ),
-            type: ChipTypeStyles.Tag,
-          },
-          {
-            label: (
-              <span>
-                <strong>Medical</strong>: High Concern
-              </span>
-            ),
-            type: ChipTypeStyles.HighConcern,
-          },
-          {
-            label: (
-              <span>
-                <strong>Medical</strong>: Some Concern
-              </span>
-            ),
-            type: ChipTypeStyles.SomeConcern,
-          },
-        ]}
+        tags={tags}
+        removeTag={removeTag}
+        //   [
+        //   {
+        //     label: (
+        //       <span>
+        //         <strong>Feeding Change</strong>
+        //       </span>
+        //     ),
+        //     type: ChipTypeStyles.Tag,
+        //   },
+        //   {
+        //     label: (
+        //       <span>
+        //         <strong>Medical</strong>: High Concern
+        //       </span>
+        //     ),
+        //     type: ChipTypeStyles.HighConcern,
+        //   },
+        //   {
+        //     label: (
+        //       <span>
+        //         <strong>Medical</strong>: Some Concern
+        //       </span>
+        //     ),
+        //     type: ChipTypeStyles.SomeConcern,
+        //   },
+        // ]}
       />
 
       <Table
