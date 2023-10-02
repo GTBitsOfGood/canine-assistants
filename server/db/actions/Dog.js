@@ -27,8 +27,6 @@ export async function getDogs(filter = {}) {
       }
     }
 
-    console.log(filter);
-
     return Dog.find(filter).populate("recentLogs");
   } catch (e) {
     throw new Error("Unable to get dogs at this time, please try again");

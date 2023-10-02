@@ -3,8 +3,6 @@ import { Chip, ChipTypeStyles } from "./Chip";
 import stringUtils from "@/utils/stringutils";
 
 export default function SearchTagDisplay({ tags, removeTag }) {
-  console.log({ tags });
-
   return (
     <div className="flex items-center gap-1">
       <div className="text-sm font-medium mr-1">

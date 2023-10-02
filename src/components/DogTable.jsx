@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Table from "./Table";
-import useSWR from "swr";
 import Link from "next/link";
 import SearchFilterBar from "./SearchFilterBar";
 import {
@@ -32,25 +31,17 @@ export default function DogTable() {
   useEffect(() => {
     let search = {};
 
-
     if (filters) {
-      Object.keys(filters).filter(category => category && Object.values(filters[category]).length > 0).forEach(category => {
-        search[category] = Object.values(filters[category])
-      })
+      Object.keys(filters)
+        .filter(
+          (category) => category && Object.values(filters[category]).length > 0
+        )
+        .forEach((category) => {
+          search[category] = Object.values(filters[category]);
+        });
     }
 
     search.name = searchFilter;
-
-
-    // if (filters) {
-    //   if (filters.location && Object.keys(filters.location).length > 0) search.location = Object.values(filters.location);
-    //   if (filters.searchFilter && searchFilter.length > 0) search.name = searchFilter;
-    //   if (filters.medical && Object.keys(filters.medical) > 0) search.medical = Object.values(filters.medical);
-    //   if (filters.behavior && Object.keys(filters.behavior) > 0) search.behavior = Object.values(filters.behavior);
-    //   if (filters.medical && Object.keys(filters.medical) > 0) search.medical = Object.values(filters.medical);
-    // }
-    
-    console.log({search})
 
     fetch("/api/dogs/search", {
       method: "POST",
@@ -64,8 +55,6 @@ export default function DogTable() {
   }, [searchFilter, filters]);
 
   if (!data) return <div>loading</div>;
-
-  console.log({data})
 
   if (!data.data) return <div>loading2</div>;
 
@@ -211,12 +200,13 @@ export default function DogTable() {
     setFilters(newFilters);
   };
 
-  console.log({ filters });
-
-
   return (
     <div className="flex-grow flex-col space-y-6">
-      <SearchFilterBar filters={filters} setFilters={setFilters} setSearch={setSearchFilter} />
+      <SearchFilterBar
+        filters={filters}
+        setFilters={setFilters}
+        setSearch={setSearchFilter}
+      />
 
       <SearchTagDisplay
         tags={tags}

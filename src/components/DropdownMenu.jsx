@@ -22,10 +22,6 @@ export default function DropdownMenu({
   const [enabledOptions, setEnabledOptions] = useState(selectedOptions || {});
 
   const toggleOption = (option, index) => {
-    console.log({option});
-    console.log({enabledOptions})
-    console.log({index})
-
     const newEnabledOptions = {...enabledOptions};
 
     if (newEnabledOptions[index] !== undefined) {
@@ -33,8 +29,6 @@ export default function DropdownMenu({
     } else {
       newEnabledOptions[index] = option.props.label; 
     }
-
-    console.log({newEnabledOptions})
 
     setEnabledOptions(newEnabledOptions);
   };
