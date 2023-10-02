@@ -9,6 +9,7 @@ const dogSchema = z.object({
   behavior: z.array(z.enum(consts.concernArray)).optional(),
   medical: z.array(z.enum(consts.concernArray)).optional(),
   other: z.array(z.enum(consts.concernArray)).optional(),
+  recentLogTags: z.array(z.enum(consts.tagsArray)).optional(),
   instructors: z
     .string()
     .refine((id) => {
@@ -32,7 +33,7 @@ const dogSchema = z.object({
 
 export default async function handler(req, res) {
   const {
-  success,
+    success,
     error,
     data: filter,
   } = dogSchema.safeParse(req.body ? req.body : {});
