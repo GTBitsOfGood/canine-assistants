@@ -60,13 +60,6 @@ export default function DogTable() {
 
   const dogs = data.data;
 
-  // TEMPORARY until enum situation is figured out
-  const chipTypeMapping = {
-    ["No Concern"]: ChipTypeStyles.NoConcern,
-    ["Some Concern"]: ChipTypeStyles.SomeConcern,
-    ["High Concern"]: ChipTypeStyles.HighConcern,
-  };
-
   /**
    * The specified columns for the DogTable
    */
@@ -110,7 +103,7 @@ export default function DogTable() {
         return (
           <Chip
             label={rowData.medical}
-            type={chipTypeMapping[rowData.medical]}
+            type={ChipTypeStyles[rowData.medical]}
           />
         );
       },
@@ -123,7 +116,7 @@ export default function DogTable() {
         return (
           <Chip
             label={rowData.behavior}
-            type={chipTypeMapping[rowData.behavior]}
+            type={ChipTypeStyles[rowData.behavior]}
           />
         );
       },
@@ -134,7 +127,7 @@ export default function DogTable() {
       icon: <ClipboardIcon />,
       customRender: (rowData) => {
         return (
-          <Chip label={rowData.other} type={chipTypeMapping[rowData.other]} />
+          <Chip label={rowData.other} type={ChipTypeStyles[rowData.other]} />
         );
       },
     },
@@ -201,7 +194,7 @@ export default function DogTable() {
         cols={dogTableColumns}
         rows={dogs}
         filter={searchFilter}
-        elementsPerPage={6}
+        elementsPerPage={10}
         noElements={
           <div className=" flex justify-center bg-white py-16 text-gray-500">
             No dogs were found.
