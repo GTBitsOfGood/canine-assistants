@@ -37,6 +37,7 @@ export default async function handler(req, res) {
         message: "Successfully retrieved logs",
         data: data,
       });
+      return;
     } catch (error) {
       res.status(500).json({
         success: false,
