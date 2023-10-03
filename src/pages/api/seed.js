@@ -261,7 +261,7 @@ const dogNames = [
   "Gigi",
   "Willow",
   "Pippin",
-  "Breezy"
+  "Breezy",
 ];
 
 const dogBreeds = [
@@ -274,19 +274,13 @@ const dogBreeds = [
   "Rottweiler",
   "Yorkshire Terrier",
   "Boxer",
-  "Dachshund"
+  "Dachshund",
 ];
 
-const disabilities = [
-  "epilepsy",
-  "mobility",
-  "diabetes",
-  "PTSD",
-]
-
+const disabilities = ["epilepsy", "mobility", "diabetes", "PTSD"];
 
 export default async function handler(req, res) {
-  if (process.env.NODE_ENV === "development" && req.method === "GET") {
+  if (req.method === "GET") {
     await dbConnect();
     // delete everythin
     await User.deleteMany({});
@@ -310,15 +304,25 @@ export default async function handler(req, res) {
         gender: getRandomInt(0, 1) === 1 ? "Male" : "Female",
         breed: dogBreeds[getRandomInt(0, dogBreeds.length - 1)],
         weight: getRandomInt(15, 30),
-        behavior: consts.concernArray[getRandomInt(0, consts.concernArray.length - 1)],
-        medical: consts.concernArray[getRandomInt(0, consts.concernArray.length - 1)],
-        other: consts.concernArray[getRandomInt(0, consts.concernArray.length - 1)],
+        behavior:
+          consts.concernArray[getRandomInt(0, consts.concernArray.length - 1)],
+        medical:
+          consts.concernArray[getRandomInt(0, consts.concernArray.length - 1)],
+        other:
+          consts.concernArray[getRandomInt(0, consts.concernArray.length - 1)],
         dateOfBirth: new Date("2019-03-15"),
         litterSize: 8,
         birthOrder: 2,
         parents: [],
-        maternalDemeanor: [getRandomInt(1, 5), getRandomInt(1, 5), getRandomInt(1, 5)],
-        location: consts.locationArray[getRandomInt(0, consts.locationArray.length - 1)],
+        maternalDemeanor: [
+          getRandomInt(1, 5),
+          getRandomInt(1, 5),
+          getRandomInt(1, 5),
+        ],
+        location:
+          consts.locationArray[
+            getRandomInt(0, consts.locationArray.length - 1)
+          ],
         toiletArea: "Leashed",
         housemates: [
           {
@@ -348,8 +352,8 @@ export default async function handler(req, res) {
         partner: {
           age: getRandomInt(1, 100),
           name: dogNames[getRandomInt(0, dogNames.length - 1)],
-          disability: disabilities[getRandomInt(0, disabilities.length - 1)]
-        }
+          disability: disabilities[getRandomInt(0, disabilities.length - 1)],
+        },
       };
 
       dogs[i].instructors = [userIds[0]];
