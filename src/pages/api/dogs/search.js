@@ -33,7 +33,7 @@ const dogSchema = z.object({
 
 export default async function handler(req, res) {
   const {
-    success,
+  success,
     error,
     data: filter,
   } = dogSchema.safeParse(req.body ? req.body : {});

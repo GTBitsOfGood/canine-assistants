@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import TablePaginator from "./TablePagination";
 
 /**
@@ -65,8 +65,11 @@ export default function Table({
   filter,
   noElements,
 }) {
+
+
   // CLamped between [1, maxPages]
   const [currentPage, setCurrentPage] = useState(0);
+  const [currentElements, setCurrentElements] = useState([]);
 
   const pageAmount = Math.ceil(rows.length / elementsPerPage);
 
@@ -75,7 +78,7 @@ export default function Table({
   };
 
   const decrementPage = () => {
-    setCurrentPage(Math.max(0, Math.min(pageAmount - 1, currentPage - 1)));
+    setCurrentPage(Math.max(0, currentPage - 1));
   };
 
   const gotoLastPage = () => {

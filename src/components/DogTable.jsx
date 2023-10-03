@@ -12,6 +12,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { Chip, ChipTypeStyles } from "./Chip";
 import SearchTagDisplay from "./SearchTagDisplay";
+import dateutils from "@/utils/dateutils";
 
 /**
  *
@@ -48,6 +49,7 @@ export default function DogTable() {
       },
       body: JSON.stringify(search),
     })
+      .catch((err) => setData([]))
       .then((res) => res.json())
       .then((data) => setData(data));
   }, [searchFilter, filters]);
@@ -63,10 +65,6 @@ export default function DogTable() {
     ["No concern"]: ChipTypeStyles.NoConcern,
     ["Some concern"]: ChipTypeStyles.SomeConcern,
     ["High concern"]: ChipTypeStyles.HighConcern,
-  };
-
-  const getAge = (date) => {
-    return new Date(Date.now() - date).getFullYear() - 1970;
   };
 
   /**
@@ -87,7 +85,7 @@ export default function DogTable() {
       label: "Age",
       icon: <CalendarIcon />,
       customRender: (rowData) => {
-        const age = getAge(new Date(rowData.dateOfBirth));
+        const age = dateutils.getAge(new Date(rowData.dateOfBirth));
 
         return (
           <span>

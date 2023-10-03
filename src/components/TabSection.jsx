@@ -27,7 +27,7 @@ export default function TabSection({ defaultTab, children }) {
   }, [defaultTab]);
 
   return (
-    <div className="mt-10">
+    <div>
       <div>
         <ul className="flex -mb-[0.1rem]">
           {children.map((child) => {
@@ -44,7 +44,7 @@ export default function TabSection({ defaultTab, children }) {
           })}
         </ul>
 
-        <div className="py-8">
+        <div className="pt-4">
           {children.map((child) => {
             if (child.props.label.toLowerCase() !== activeTab.toLowerCase())
               return undefined;
