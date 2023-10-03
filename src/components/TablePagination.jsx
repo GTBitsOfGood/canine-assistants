@@ -12,7 +12,6 @@ export default function TablePaginator({ paginationFunctions }) {
     decrementPage,
     gotoFirstPage,
     gotoLastPage,
-    setPage,
   } = paginationFunctions;
 
   return (

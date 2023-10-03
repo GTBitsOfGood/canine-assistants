@@ -1,5 +1,4 @@
-import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import TablePaginator from "./TablePagination";
 
 /**
@@ -66,11 +65,8 @@ export default function Table({
   filter,
   noElements,
 }) {
-  const ids = cols.map((col) => col.id);
-
   // CLamped between [1, maxPages]
   const [currentPage, setCurrentPage] = useState(0);
-  const [currentElements, setCurrentElements] = useState([]);
 
   const pageAmount = Math.ceil(rows.length / elementsPerPage);
 
@@ -79,7 +75,7 @@ export default function Table({
   };
 
   const decrementPage = () => {
-    setCurrentPage(Math.max(0, currentPage - 1));
+    setCurrentPage(Math.max(0, Math.min(pageAmount - 1, currentPage - 1)));
   };
 
   const gotoLastPage = () => {
@@ -89,6 +85,11 @@ export default function Table({
   const gotoFirstPage = () => {
     setCurrentPage(0);
   };
+
+  useEffect(() => {
+    setCurrentPage(Math.max(Math.min(currentPage, pageAmount - 1), 0))
+  }, [cols, currentPage, pageAmount])
+
   /**
    * Formats each value in the table depending on settings provided
    *
