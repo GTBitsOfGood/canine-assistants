@@ -13,8 +13,6 @@ import {
 import { Chip, ChipTypeStyles } from "./Chip";
 import SearchTagDisplay from "./SearchTagDisplay";
 
-const dogFetcher = (...args) => fetch(...args).then((res) => res.json());
-
 /**
  *
  * @param {{[Array]}} dogs The dog data provided to the table
@@ -59,15 +57,6 @@ export default function DogTable() {
   if (!data.data) return <div>loading2</div>;
 
   const dogs = data.data;
-
-  /**
-   * Adjusts the search filter of the table when the search filter has changed
-   *
-   * @param {React.FormEvent<HTMLInputElement>} e The event fired
-   */
-  const onInputChange = (e) => {
-    setSearchFilter(e.target.value);
-  };
 
   // TEMPORARY until enum situation is figured out
   const chipTypeMapping = {
