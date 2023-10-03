@@ -33,7 +33,41 @@ export default function IndividualDogPage() {
 
   const dog = data.data;
 
-  console.log({ dog });
+  const dogInformationSchema = {
+    ["Birth"]: {
+      ["Birth Time"]: "N/A",
+      ["Color Color"]: "N/A",
+      ["Supplemental Feeding"]: "N/A",
+      ["Delivery Information"]: "N/A",
+      ["Birth Order"]: "N/A",
+    },
+    ["Family"]: {
+      ["Litter Size"]: "N/A",
+      ["Litter Composition"]: "N/A",
+      ["Father"]: "N/A",
+      ["Mother"]: "N/A",
+    },
+    ["Maternal Demeanor"]: {
+      ["Prior to Whelping"]: "N/A",
+      ["During Whelping"]: "N/A",
+      ["Subsequent to Whelping"]: "N/A",
+    },
+    ["Housing"]: {
+      ["Housing"]: "N/A",
+      ["Instructor"]: "N/A",
+      ["Primary Caregiver(s)"]: "N/A",
+      ["Primary Toileting Area"]: "N/A",
+    },
+    ["Feeding"]: {
+      ["Amount"]: "N/A",
+      ["First Meal"]: "N/A",
+      ["Second Meal"]: "N/A",
+      ["Third Meal"]: "N/A",
+    },
+    ["Grooming"]: {
+      ["Last bath"]: "N/A",
+    },
+  };
 
   return (
     // Artificial spacing until nav is created
@@ -102,69 +136,21 @@ export default function IndividualDogPage() {
         <TabSection defaultTab="information">
           <div label="information">
             <div className="w-2/3 grid grid-cols-3 gap-16">
-              <div className="col">
-                <div className="flex-col space-y-4 text-lg">
-                  <div className="text-xl">
-                    <strong>Birth</strong>
+              {Object.keys(dogInformationSchema).map((category) => (
+                <div className="col" key={category}>
+                  <div className="flex-col space-y-4 text-lg">
+                    <div className="text-xl">
+                      <strong>{category}</strong>
+                    </div>
+
+                    {Object.keys(dogInformationSchema[category]).map((col) => (
+                      <div key={col}>
+                        {col}: {dogInformationSchema[category][col]}
+                      </div>
+                    ))}
                   </div>
-                  <div>Birth Time: N/A</div>
-                  <div>Collar Color: N/A</div>
-                  <div>Supplemental Feeding: N/A</div>
-                  <div>Delivery Information: N/A</div>
-                  <div>Birth Order: N/A</div>
                 </div>
-              </div>
-              <div className="col">
-                <div className="flex-col space-y-4 text-lg">
-                  <div className="text-xl">
-                    <strong>Family</strong>
-                  </div>
-                  <div>Litter Size: N/A</div>
-                  <div>Litter Composition: N/A</div>
-                  <div>Father: N/A</div>
-                  <div>Mother: N/A</div>
-                </div>
-              </div>
-              <div className="col">
-                <div className="flex-col space-y-4">
-                  <div className="text-lg">
-                    <strong>Maternal Demeanor</strong>
-                  </div>
-                  <div>Prior to Whelping</div>
-                  <div>During Whelping</div>
-                  <div>Subsequent to Whelping</div>
-                </div>
-              </div>
-              <div className="col">
-                <div className="flex-col space-y-4">
-                  <div className="text-lg">
-                    <strong>Housing</strong>
-                  </div>
-                  <div>Housing: N/A</div>
-                  <div>Instructor: N/A</div>
-                  <div>Primary Caregiver(s): N/A</div>
-                  <div>Primary Toileting Area: N/A</div>
-                </div>
-              </div>
-              <div className="col">
-                <div className="flex-col space-y-4">
-                  <div className="text-xl">
-                    <strong>Feeding</strong>
-                  </div>
-                  <div>Amount: N/A</div>
-                  <div>First Meal: N/A</div>
-                  <div>Second Meal: N/A</div>
-                  <div>Third Meal: N/A</div>
-                </div>
-              </div>
-              <div className="col">
-                <div className="flex-col space-y-4">
-                  <div className="text-xl">
-                    <strong>Grooming</strong>
-                  </div>
-                  <div>Last bath: N/A</div>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
           <div label="logs">logs</div>
