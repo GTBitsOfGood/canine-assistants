@@ -2,9 +2,9 @@ import { useRouter } from "next/router";
 
 export const ChipTypeStyles = {
   Tag: "border-neutral-chip-shade bg-neutral-chip",
-  "High concern": "border-high-concern-shade bg-high-concern",
-  "Some concern": "border-some-concern-shade bg-some-concern",
-  "No concern": "border-no-concern-shade bg-no-concern",
+  "High Concern": "border-high-concern-shade bg-high-concern",
+  "Some Concern": "border-some-concern-shade bg-some-concern",
+  "No Concern": "border-no-concern-shade bg-no-concern",
   Placed: "border-location-placed-shade bg-location-placed",
   Facility: "border-facility-green-shade bg-facility-green",
 };
