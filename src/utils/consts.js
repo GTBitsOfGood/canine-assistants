@@ -19,7 +19,7 @@ const consts = {
 
   genderPetArray: ["Female", "Male"],
   genderPersonArray: ["Female", "Male", "Other"],
-  concernArray: ["No concern", "Some concern", "High concern"],
+  concernArray: ["No Concern", "Some Concern", "High Concern"],
   locationArray: ["Facility 1", "Facility 2", "Placed"],
   roleArray: ["Service", "Companion"],
   leashArray: ["Leashed", "Off-leash"],
@@ -32,7 +32,14 @@ const consts = {
     "Other",
   ],
   topicArray: ["Medical", "Behavioral", "Other"],
-  tagsArray: ["auditory", "heartworm", "fleas/ticks"],
+  tagsArray: [
+    "Auditory",
+    "Heartworm",
+    "Fleas",
+    "Ticks",
+    "Vet",
+    "Feeding Change",
+  ],
   deliveryArray: ["Natural", "C-section", "Combination"],
   housingArray: ["Clinic", "Nursery", "BBI"],
 };
@@ -162,8 +169,8 @@ const mocks = {
           severity: "High concern",
           description: "Some other random log I made",
           author: {},
-          dog: {}
-        }
+          dog: {},
+        },
       ],
       instructors: [],
       _id: "dog1",
@@ -175,7 +182,7 @@ const mocks = {
       other: "No concern",
       parents: [],
       dateOfBirth: new Date("2021-09-06T21:37:38.975Z").toLocaleDateString(
-        "en-US"
+        "en-US",
       ),
       litterSize: 3,
       birthOrder: 4,
@@ -197,8 +204,8 @@ const mocks = {
           severity: "High concern",
           description: "Some random log I made",
           author: {},
-          dog: {}
-        }
+          dog: {},
+        },
       ],
       instructors: [],
       _id: "dog2",
@@ -210,7 +217,7 @@ const mocks = {
       other: "No concern",
       parents: [],
       dateOfBirth: new Date("2019-09-06T21:37:38.975Z").toLocaleDateString(
-        "en-US"
+        "en-US",
       ),
       litterSize: 3,
       birthOrder: 4,
