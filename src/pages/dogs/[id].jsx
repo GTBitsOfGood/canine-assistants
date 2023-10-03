@@ -3,13 +3,12 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import dateutils from "@/utils/dateutils";
-import { ChevronLeftIcon } from "@heroicons/react/24/solid";
+import { ChevronLeftIcon, PencilIcon, PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
 import { Chip, ChipTypeStyles } from "@/components/Chip";
 import Image from "next/image";
 import maleicon from "../../../public/maleicon.svg";
 import femaleicon from "../../../public/femaleicon.svg";
 import dogplaceholdericon from "../../../public/dogplaceholdericon.svg";
-
 /**
  *
  * @returns {React.ReactElement} The individual Dog page
@@ -92,21 +91,24 @@ export default function IndividualDogPage() {
               <Image priority src={dogplaceholdericon} alt="Dog Placeholder" />
             </div>
             <div className="flex-col">
-              <div className="flex gap-4">
-                <Chip
-                  label={dog.location}
-                  type={ChipTypeStyles[dog.location] || ChipTypeStyles.Tag}
-                />
-                <div className="flex justify-center items-center space-x-2">
-                  <Image
-                    priority
-                    src={dog.gender === "Male" ? maleicon : femaleicon}
-                    alt="Male Dog"
+              <div className="flex justify-between">
+                <div className="flex gap-4">
+                  <Chip
+                    label={dog.location}
+                    type={ChipTypeStyles[dog.location] || ChipTypeStyles.Tag}
                   />
+                  <div className="flex justify-center items-center space-x-2">
+                    <Image
+                      priority
+                      src={dog.gender === "Male" ? maleicon : femaleicon}
+                      alt="Male Dog"
+                    />
 
-                  <div>Male</div>
+                    <div>Male</div>
+                  </div>
                 </div>
               </div>
+
               <div className="pt-6 pl-1 font-bold text-3xl">{dog.name}</div>
               <div className="flex space-x-16">
                 <div className="flex-col pt-8 pl-1 text-lg space-y-2">
@@ -126,6 +128,18 @@ export default function IndividualDogPage() {
 
                   <div>Placement Camp: N/A</div>
                 </div>
+              </div>
+            </div>
+            <div className="grow flex gap-4 justify-end">
+              <div className="flex justify-center space-x-2">
+                <PencilSquareIcon className="h-5" />
+
+                <div>Edit</div>
+              </div>
+              <div className="flex justify-center space-x-2">
+                <TrashIcon className="h-5" />
+
+                <div>Delete</div>
               </div>
             </div>
           </>
