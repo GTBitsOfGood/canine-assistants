@@ -3,7 +3,11 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import dateutils from "@/utils/dateutils";
-import { ChevronLeftIcon, PencilIcon, PencilSquareIcon, TrashIcon } from "@heroicons/react/24/solid";
+import {
+  ChevronLeftIcon,
+  PencilSquareIcon,
+  TrashIcon,
+} from "@heroicons/react/24/solid";
 import { Chip, ChipTypeStyles } from "@/components/Chip";
 import Image from "next/image";
 import maleicon from "../../../public/maleicon.svg";
@@ -123,10 +127,18 @@ export default function IndividualDogPage() {
                 </div>
 
                 <div className="flex-col pt-8 pl-1 text-lg space-y-2">
-                  <div>Placement: N/A</div>
-                  <div>Partner: N/A</div>
-
-                  <div>Placement Camp: N/A</div>
+                  {dog.location === "Placed" ? (
+                    <>
+                      <div>Placement: N/A</div>
+                      <div>Partner: N/A</div>
+                      <div>Placement Camp: N/A</div>
+                    </>
+                  ) : (
+                    <>
+                      <div>Housing: N/A</div>
+                      <div>Instructor: N/A</div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
