@@ -31,6 +31,8 @@ const consts = {
   ],
   topicArray: ["Medical", "Behavioral", "Other"],
   tagsArray: ["auditory", "heartworm", "fleas/ticks"],
+  
+
 };
 
 /**
@@ -39,18 +41,28 @@ const consts = {
 const mocks = {
   mockDogs: [
     {
-      recentLogs: [],
+      recentLogs: [
+        {
+          title: "Log 1 for Mock 1",
+          topic: "Medical",
+          tags: ["auditory", "heartworm"],
+          severity: "High concern",
+          description: "Some other random log I made",
+          author: {},
+          dog: {}
+        }
+      ],
       instructors: [],
       _id: "dog1",
       name: "Rufus",
       gender: "Male",
       breed: "Poodle",
       behavior: "No concern",
-      medical: "No concern",
+      medical: "High concern",
       other: "No concern",
       parents: [],
-      dateOfBirth: new Date("2023-09-06T21:37:38.975Z").toLocaleDateString(
-        "en-US",
+      dateOfBirth: new Date("2021-09-06T21:37:38.975Z").toLocaleDateString(
+        "en-US"
       ),
       litterSize: 3,
       birthOrder: 4,
@@ -64,18 +76,28 @@ const mocks = {
       toiletArea: "Leashed",
     },
     {
-      recentLogs: [],
+      recentLogs: [
+        {
+          title: "Log 1",
+          topic: "Medical",
+          tags: ["auditory", "heartworm"],
+          severity: "High concern",
+          description: "Some random log I made",
+          author: {},
+          dog: {}
+        }
+      ],
       instructors: [],
       _id: "dog2",
       name: "Turnip",
       gender: "Male",
-      breed: "Poodle",
+      breed: "Golden Doodle",
       behavior: "No concern",
-      medical: "No concern",
+      medical: "Some concern",
       other: "No concern",
       parents: [],
-      dateOfBirth: new Date("2023-09-06T21:37:38.975Z").toLocaleDateString(
-        "en-US",
+      dateOfBirth: new Date("2019-09-06T21:37:38.975Z").toLocaleDateString(
+        "en-US"
       ),
       litterSize: 3,
       birthOrder: 4,

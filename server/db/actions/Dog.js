@@ -7,12 +7,55 @@ export async function getDogs(filter = {}) {
   try {
     await dbConnect();
 
-    if (filter["name"]) {
-      filter.name = new RegExp(filter.name, "i");
+    if (filter["name"] !== undefined) {
+      filter.name = { $regex: filter.name, $options: "i" };
     }
 
-    if (filter["instructors"]) {
-      filter.instructors = { $in: filter.instructors };
+    const arrayFilters = [
+      "location",
+      "behavior",
+      "medical",
+      "other",
+      "instructors",
+    ];
+
+    for (let i = 0; i < arrayFilters.length; i++) {
+      let field = arrayFilters[i];
+
+      if (filter[field] !== undefined) {
+        filter[field] = { $in: filter[field] };
+      }
+    }
+
+    if (filter["recentLogTags"] !== undefined) {
+      const logTagsFilter = filter["recentLogTags"];
+      delete filter["recentLogTags"];
+
+      return await Dog.aggregate([
+        {
+          $match: {
+            ...filter,
+          },
+        },
+        {
+          $lookup: {
+            from: "logs",
+            localField: "recentLogs",
+            foreignField: "_id",
+            as: "recentLogs",
+          },
+        },
+        {
+          $match: {
+            "recentLogs.tags": { $in: logTagsFilter },
+          },
+        },
+        {
+          $addFields: {
+            recentLogTags: { $arrayElemAt: ["$recentLogs.tags", 0] },
+          },
+        },
+      ]);
     }
 
     return Dog.find(filter).populate("recentLogs");
