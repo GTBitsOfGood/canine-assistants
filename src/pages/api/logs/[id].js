@@ -6,6 +6,13 @@ export default async function handler(req, res) {
   if (req.method == "GET") {
     try {
       const { id } = req.query;
+      if (!mongoose.isValidObjectId(id)) {
+        return res.status(422).send({
+          success: false,
+          message: "Invalid ID",
+        });
+      }
+
       const data = await getLogById(id);
 
       if (data === null || data.length === 0) {
@@ -29,7 +36,7 @@ export default async function handler(req, res) {
       return;
     }
   }
-  
+
   if (req.method == "DELETE") {
     if (!mongoose.isValidObjectId(req.query.id)) {
       return res.status(422).send({
