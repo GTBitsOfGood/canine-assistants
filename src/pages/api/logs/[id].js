@@ -4,11 +4,11 @@ import { z } from "zod";
 import { consts } from "@/utils/consts";
 
 const logSchema = z.object({
-  title: z.string().optional(),
-  topic: z.enum(consts.topicArray).optional(),
-  tags: z.enum(consts.tagsArray).array().optional(),
-  severity: z.enum(consts.concernArray).optional(),
-  description: z.string().optional().optional(),
+  title: z.string(),
+  topic: z.enum(consts.topicArray),
+  tags: z.enum(consts.tagsArray).array(),
+  severity: z.enum(consts.concernArray),
+  description: z.string(),
 });
 
 export default async function handler(req, res) {
@@ -39,10 +39,11 @@ export default async function handler(req, res) {
         });
       } else {
         let message;
-        console.log(error);
         const erroredKeys = error.errors[0].keys;
-
-        if (erroredKeys.includes("dog") || erroredKeys.includes("author")) {
+        if (
+          erroredKeys &&
+          (erroredKeys.includes("dog") || erroredKeys.includes("author"))
+        ) {
           message = "Cannot update dog and/or author field!";
         } else {
           message = error.errors[0].message;
