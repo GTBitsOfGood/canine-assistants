@@ -51,3 +51,8 @@ export default function Login({ dogs }) {
     </div>
   );
 }
+
+// Override layout with blank
+Login.getLayout = function getLayout(page) {
+  return page;
+}

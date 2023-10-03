@@ -2,7 +2,7 @@ import Navbar from "./Navbar";
 
 import { Maven_Pro } from "next/font/google";
 
-const mavenPro = Maven_Pro({ subsets: ["latin"] })
+const mavenPro = Maven_Pro({ subsets: ["latin"] });
 
 export default function Layout({ children }) {
   return (
