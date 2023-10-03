@@ -5,10 +5,10 @@ import { consts } from "@/utils/consts";
 
 const dogSchema = z.object({
   name: z.string().optional(),
-  location: z.enum(consts.locationArray).optional(),
-  behavior: z.enum(consts.concernArray).optional(),
-  medical: z.enum(consts.concernArray).optional(),
-  other: z.enum(consts.concernArray).optional(),
+  location: z.array(z.enum(consts.locationArray)).optional(),
+  behavior: z.array(z.enum(consts.concernArray)).optional(),
+  medical: z.array(z.enum(consts.concernArray)).optional(),
+  other: z.array(z.enum(consts.concernArray)).optional(),
   instructors: z
     .string()
     .refine((id) => {
@@ -32,7 +32,7 @@ const dogSchema = z.object({
 
 export default async function handler(req, res) {
   const {
-    success,
+  success,
     error,
     data: filter,
   } = dogSchema.safeParse(req.body ? req.body : {});

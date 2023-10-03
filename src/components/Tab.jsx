@@ -1,3 +1,5 @@
+import stringUtils from "@/utils/stringutils";
+
 /**
  * A modular Tab used in a TabSection
  * 
@@ -6,8 +8,8 @@
  */
 export default function Tab({ activeTab, label, onTabClick }) {
     return (
-        <li className={`${activeTab.toLowerCase() === label.toLowerCase() ? "border-red-300" : ""} text-sm px-7 sm:px-10 border-b-2 text-gray-400 uppercase hover:bg-gray-50`} onClick={onTabClick}>
-            <a href="#">{label}</a>
+        <li className={`${activeTab.toLowerCase() === label.toLowerCase() ? "border-primary-gray" : ""} text-xl font-bold px-7 sm:px-10 border-b-4 text-primary-text hover:bg-gray-50`} onClick={onTabClick}>
+            <a href="#">{stringUtils.upperFirstLetter(label)}</a>
         </li>
     )
 }

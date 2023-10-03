@@ -7,12 +7,24 @@ export async function getDogs(filter = {}) {
   try {
     await dbConnect();
 
-    if (filter["name"]) {
-      filter.name = new RegExp(filter.name, "i");
+    if (filter["name"] !== undefined) {
+      filter.name = { $regex: filter.name, $options: "i" };
     }
 
-    if (filter["instructors"]) {
-      filter.instructors = { $in: filter.instructors };
+    const arrayFilters = [
+      "location",
+      "behavior",
+      "medical",
+      "other",
+      "instructors",
+    ];
+
+    for (let i = 0; i < arrayFilters.length; i++) {
+      let field = arrayFilters[i];
+
+      if (filter[field] !== undefined) {
+        filter[field] = { $in: filter[field] };
+      }
     }
 
     return Dog.find(filter).populate("recentLogs");
