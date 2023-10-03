@@ -1,43 +1,52 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
       backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+        "gradient-conic":
+          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      },
+      colors: {
+        background: "#f0f2f2",
+        "primary-text": "#121212",
+        "tertiary-gray": "#808080",
+      },
+      fontFamily: {
+        "maven-pro": ["Maven Pro", "sans-serif"],
+        roboto: ["Roboto", "sans-serif"],
       },
       colors: {
         
-        'primary-background': 'var(--primary-background)',
-        'ca-green': 'var(--ca-green)',
-        'ca-pink': 'var(--ca-pink)',
-        'ca-pink-shade': 'var(--ca-pink-shade)',
-        'foreground': 'var(--foreground)',
-        'high-concern': 'var(--high-concern)',
-        'high-concern-shade': 'var(--high-concern-shade)',
-        'neutral-chip': 'var(--neutral-chip)',
-        'neutral-chip-shade': 'var(--neutral-chip-shade)',
-        'no-concern': 'var(--no-concern)',
-        'no-concern-shade': 'var(--no-concern-shade)',
-        'location-placed': 'var(--location-placed)',
-        'location-placed-shade': 'var(--location-placed-shade)',
-        'location-placed-secondary': 'var(--location-placed-secondary)',
-        'primary-gray': 'var(--primary-gray)',
-        'primary-text': 'var(--primary-text)',
-        'secondary-text': 'var(--secondary-text)',
-        'some-concern': 'var(--some-concern)',
-        'some-concern-shade': 'var(--some-concern-shade)',
-        'facility-green': 'var(--facility-green)',
-        'facility-green-shade': 'var(--facility-green-shade)'
+        'primary-background': '#F0F2F2',
+        'ca-green': '#17603D',
+        'ca-pink': '#A70C53',
+        'ca-pink-shade': '#730034',
+        'foreground': '#ffffff',
+        'high-concern': '#FFCDC2',
+        'high-concern-shade': '#DC5B3E',
+        'neutral-chip': '#BDE7FF',
+        'neutral-chip-shade': '#75AFCF',
+        'no-concern': '#C5E2AE',
+        'no-concern-shade': '#6EB138',
+        'location-placed': '#ECDDFF',
+        'location-placed-shade': '#DABDFF',
+        'location-placed-secondary': '#6C2FBB33',
+        'primary-gray': '#D4D4D4',
+        'primary-text': '#000000a8',
+        'secondary-text': '#353535',
+        'some-concern': '#FBC49D',
+        'some-concern-shade': '#E87420',
+        'facility-green': '#BCF0E4',
+        'facility-green-shade': '#38AE75'
 
       }
     },
   },
   plugins: [],
-}
+};

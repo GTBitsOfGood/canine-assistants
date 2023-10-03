@@ -1,37 +1,29 @@
+@import url("https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700;800;900&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --primary-background: #F0F2F2;
-  --ca-green: #17603D;
-  --ca-pink: #A70C53;
-  --ca-pink-shade: #730034;
-  --foreground: #ffffff;
-  --high-concern: #FFCDC2;
-  --high-concern-shade: #DC5B3E;
-  --neutral-chip: #BDE7FF;
-  --neutral-chip-shade: #75AFCF;
-  --no-concern: #C5E2AE;
-  --no-concern-shade: #6EB138;
-  --location-placed: #ECDDFF;
-  --location-placed-shade: #DABDFF;
-  --location-placed-secondary: #6C2FBB33;
-  --primary-gray: #D4D4D4;
-  --primary-text: #000000a8;
-  --secondary-text: #353535;
-  --some-concern: #FBC49D;
-  --some-concern-shade: #E87420;
-  --facility-green: #BCF0E4;
-  --facility-green-shade: #38AE75;
-}
+@layer base {
+  * {
+    padding: 0;
+    margin: 0;
+  }
 
-* {
-  padding: 0;
-  margin: 0;
-}
+  body {
+    color: rgb(var(--foreground-rgb));
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgb(var(--background-end-rgb))
+      )
+      rgb(var(--background-start-rgb));
+    @apply bg-primary-background;
+  }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: var(--primary-background);
+  h1 {
+    @apply text-3xl;
+    @apply font-medium;
+  }
 }
