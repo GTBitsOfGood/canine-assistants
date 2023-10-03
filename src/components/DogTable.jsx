@@ -13,6 +13,7 @@ import {
 import { Chip, ChipTypeStyles } from "./Chip";
 import SearchTagDisplay from "./SearchTagDisplay";
 import dateutils from "@/utils/dateutils";
+import { consts } from "@/utils/consts";
 
 /**
  *
@@ -62,9 +63,9 @@ export default function DogTable() {
 
   // TEMPORARY until enum situation is figured out
   const chipTypeMapping = {
-    ["No concern"]: ChipTypeStyles.NoConcern,
-    ["Some concern"]: ChipTypeStyles.SomeConcern,
-    ["High concern"]: ChipTypeStyles.HighConcern,
+    [consts.concernArray[0]]: ChipTypeStyles.NoConcern,
+    [consts.concernArray[1]]: ChipTypeStyles.SomeConcern,
+    [consts.concernArray[2]]: ChipTypeStyles.HighConcern,
   };
 
   /**
