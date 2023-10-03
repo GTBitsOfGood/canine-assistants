@@ -79,7 +79,26 @@ export async function createLog(logData) {
 
   return log._id;
 }
+/**
+Updates a log
+@param {*} logId ObjectId of log to update
+@param {*} logData Object with log updates
+*/
+export async function updateLog(logId, logData) {
+  try {
+    await dbConnect();
+  } catch (e) {
+    throw new Error("Unable to update log, please try again");
+  }
 
+  try {
+    return await Log.findByIdAndUpdate({ _id: logId }, logData, {
+      returnDocument: "after",
+    });
+  } catch (e) {
+    throw new Error("Unable to update dog");
+  }
+}
 /**
  * Deletes log and removes from recentLogs array if applicable
  * and adds next most recent log to array
