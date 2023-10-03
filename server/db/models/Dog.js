@@ -177,6 +177,10 @@ const DogSchema = new Schema({
   image: {
     type: String,
   },
+  placementCamp: {
+    startDate: Date,
+    endDate: Date,
+  },
 });
 
 export default mongoose.models?.Dog ?? mongoose.model("Dog", DogSchema);

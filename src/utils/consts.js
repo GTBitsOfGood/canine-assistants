@@ -153,6 +153,12 @@ const dogSchema = z.object({
     .optional(),
   placement: z.string().optional(),
   image: z.string().optional(),
+  placementCamp: z
+    .object({
+      startDate: z.coerce.date().optional(),
+      endDate: z.coerce.date().optional(),
+    })
+    .optional(),
 });
 
 /**
