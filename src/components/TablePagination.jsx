@@ -12,7 +12,6 @@ export default function TablePaginator({ paginationFunctions }) {
     decrementPage,
     gotoFirstPage,
     gotoLastPage,
-    setPage,
   } = paginationFunctions;
 
   return (
@@ -26,7 +25,7 @@ export default function TablePaginator({ paginationFunctions }) {
               gotoFirstPage();
             }}
           >
-            <ChevronDoubleLeftIcon className={"w-3 h-3"} color="gray" />
+            <ChevronDoubleLeftIcon className={"w-3 h-3 text-gray-800"} />
           </button>
         </div>
       </li>
@@ -40,7 +39,7 @@ export default function TablePaginator({ paginationFunctions }) {
               decrementPage();
             }}
           >
-            <ChevronLeftIcon className={"w-3 h-3"} color="gray" />
+            <ChevronLeftIcon className={"w-3 h-3 text-gray-800"}/>
           </button>
         </div>
       </li>
@@ -48,7 +47,7 @@ export default function TablePaginator({ paginationFunctions }) {
       {
         <li style={{ paddingLeft: "0.5rem" }}>
           <div
-            className={`p-2 flex justify-center items-center w-[0.5rem] text-gray-500 h-[0.5rem] rounded-lg" : ""
+            className={`p-2 flex justify-center items-center w-[0.5rem] text-gray-800 h-[0.5rem] rounded-lg" : ""
               }`}
           >
             {currentPage + 1}
@@ -65,7 +64,7 @@ export default function TablePaginator({ paginationFunctions }) {
               incrementPage();
             }}
           >
-            <ChevronRightIcon className={"w-3 h-3"} color="gray" />
+            <ChevronRightIcon className={"w-3 h-3 text-gray-800"} />
           </button>
         </div>
       </li>
@@ -79,7 +78,7 @@ export default function TablePaginator({ paginationFunctions }) {
               gotoLastPage();
             }}
           >
-            <ChevronDoubleRightIcon className={"w-3 h-3"} color="gray" />
+            <ChevronDoubleRightIcon className={"w-3 h-3 text-gray-800"} />
           </button>
         </div>
       </li>

@@ -27,6 +27,37 @@ export async function getDogs(filter = {}) {
       }
     }
 
+    if (filter["recentLogTags"] !== undefined) {
+      const logTagsFilter = filter["recentLogTags"];
+      delete filter["recentLogTags"];
+
+      return await Dog.aggregate([
+        {
+          $match: {
+            ...filter,
+          },
+        },
+        {
+          $lookup: {
+            from: "logs",
+            localField: "recentLogs",
+            foreignField: "_id",
+            as: "recentLogs",
+          },
+        },
+        {
+          $match: {
+            "recentLogs.tags": { $in: logTagsFilter },
+          },
+        },
+        {
+          $addFields: {
+            recentLogTags: { $arrayElemAt: ["$recentLogs.tags", 0] },
+          },
+        },
+      ]);
+    }
+
     return Dog.find(filter).populate("recentLogs");
   } catch (e) {
     throw new Error("Unable to get dogs at this time, please try again");

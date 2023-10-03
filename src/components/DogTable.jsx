@@ -12,9 +12,6 @@ import {
 } from "@heroicons/react/24/solid";
 import { Chip, ChipTypeStyles } from "./Chip";
 import SearchTagDisplay from "./SearchTagDisplay";
-import dateutils from "@/utils/dateutils";
-
-const dogFetcher = (...args) => fetch(...args).then((res) => res.json());
 
 /**
  *
@@ -62,23 +59,12 @@ export default function DogTable() {
 
   const dogs = data.data;
 
-  /**
-   * Adjusts the search filter of the table when the search filter has changed
-   *
-   * @param {React.FormEvent<HTMLInputElement>} e The event fired
-   */
-  const onInputChange = (e) => {
-    setSearchFilter(e.target.value);
-  };
-
   // TEMPORARY until enum situation is figured out
   const chipTypeMapping = {
     ["No concern"]: ChipTypeStyles.NoConcern,
     ["Some concern"]: ChipTypeStyles.SomeConcern,
     ["High concern"]: ChipTypeStyles.HighConcern,
   };
-
-
 
   /**
    * The specified columns for the DogTable
