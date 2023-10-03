@@ -62,9 +62,9 @@ export default function DogTable() {
 
   // TEMPORARY until enum situation is figured out
   const chipTypeMapping = {
-    ["No Concern"]: ChipTypeStyles.NoConcern,
-    ["Some Concern"]: ChipTypeStyles.SomeConcern,
-    ["High Concern"]: ChipTypeStyles.HighConcern,
+    ["No concern"]: ChipTypeStyles.NoConcern,
+    ["Some concern"]: ChipTypeStyles.SomeConcern,
+    ["High concern"]: ChipTypeStyles.HighConcern,
   };
 
   /**
@@ -201,7 +201,7 @@ export default function DogTable() {
         cols={dogTableColumns}
         rows={dogs}
         filter={searchFilter}
-        elementsPerPage={6}
+        elementsPerPage={10}
         noElements={
           <div className=" flex justify-center bg-white py-16 text-gray-500">
             No dogs were found.

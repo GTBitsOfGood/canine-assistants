@@ -20,7 +20,7 @@ export default function SearchTagDisplay({ tags, removeTag }) {
                   {stringUtils.toUpperEveryWord(tag.label)}
                 </span>
                 <button onClick={() => removeTag(tag.group, tag.index)}>
-                  <XMarkIcon className="h-3.5 w-3.5 mt-1" />
+                  <XMarkIcon className="h-3.5 w-3.5" />
                 </button>
               </div>
             }
