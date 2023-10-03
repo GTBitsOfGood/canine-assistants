@@ -7,131 +7,7 @@ import { createLog } from "../../../server/db/actions/Log";
 import { consts } from "@/utils/consts";
 import { createDog } from "../../../server/db/actions/Dog";
 
-const dogs = [
-  {
-    name: "Bella",
-    gender: "Female",
-    breed: "Labrador Retriever",
-    weight: 30,
-    behavior: "No concern",
-    medical: "Some concern",
-    other: "No concern",
-    dateOfBirth: new Date("2019-03-15"),
-    litterSize: 8,
-    birthOrder: 2,
-    parents: [],
-    maternalDemeanor: "Happy",
-    location: "Facility 1",
-    toiletArea: "Leashed",
-    housemates: [
-      {
-        age: 40,
-        gender: "Male",
-        relationshipToPartner: "Partner",
-      },
-      {
-        age: 10,
-        gender: "Female",
-        relationshipToPartner: "Child",
-      },
-    ],
-    petmates: [
-      {
-        animal: "Cat",
-        age: 5,
-        gender: "Male",
-      },
-      {
-        animal: "Rabbit",
-        age: 2,
-        gender: "Female",
-      },
-    ],
-    instructors: [],
-  },
-  {
-    name: "Max",
-    gender: "Male",
-    breed: "German Shepherd",
-    weight: 40,
-    behavior: "No concern",
-    medical: "High concern",
-    other: "No concern",
-    recentLogs: [],
-    dateOfBirth: new Date("2020-06-20"),
-    litterSize: 6,
-    birthOrder: 3,
-    parents: [],
-    maternalDemeanor: "Fearful",
-    location: "Placed",
-    rolePlacedAs: "Service",
-    partner: "",
-    toiletArea: "Leashed",
-    housemates: [
-      {
-        age: 30,
-        gender: "Female",
-        relationshipToPartner: "Partner",
-      },
-    ],
-    petmates: [
-      {
-        animal: "Dog",
-        age: 4,
-        gender: "Female",
-      },
-    ],
-    instructors: [],
-  },
-  {
-    name: "Casey",
-    gender: "Female",
-    breed: "Pomeranian",
-    weight: 10,
-    behavior: "Some concern",
-    medical: "No concern",
-    other: "No concern",
-    dateOfBirth: new Date("2025-03-08"),
-    litterSize: 4,
-    birthOrder: 3,
-    parents: [],
-    maternalDemeanor: "Fearful",
-    location: "Placed",
-    rolePlacedAs: "Companion",
-    partner: "",
-    toiletArea: "Off-leash",
-    housemates: [
-      {
-        age: 50,
-        gender: "Male",
-        relationshipToPartner: "Partner",
-      },
-      {
-        age: 19,
-        gender: "Female",
-        relationshipToPartner: "Child",
-      },
-      {
-        age: 17,
-        gender: "Female",
-        relationshipToPartner: "Child",
-      },
-    ],
-    petmates: [
-      {
-        animal: "Rat",
-        age: 2,
-        gender: "Male",
-      },
-      {
-        animal: "Rabbit",
-        age: 3,
-        gender: "Female",
-      },
-    ],
-    instructors: [],
-  },
-];
+const dogs = [];
 const users = [
   {
     username: "jsmith",
@@ -220,7 +96,194 @@ const logs = [
     author: "",
     dog: "",
   },
+  {
+    title: "This is a log",
+    topic: consts.topicArray[1],
+    tags: [consts.tagsArray[0]],
+    severity: consts.concernArray[2],
+    description: "This is a log description",
+    author: "",
+    dog: "",
+  },
+  {
+    title: "This is a log",
+    topic: consts.topicArray[1],
+    tags: [consts.tagsArray[0]],
+    severity: consts.concernArray[2],
+    description: "This is a log description",
+    author: "",
+    dog: "",
+  },
+  {
+    title: "This is a log",
+    topic: consts.topicArray[1],
+    tags: [consts.tagsArray[0]],
+    severity: consts.concernArray[2],
+    description: "This is a log description",
+    author: "",
+    dog: "",
+  },
+  {
+    title: "This is a log",
+    topic: consts.topicArray[1],
+    tags: [consts.tagsArray[0]],
+    severity: consts.concernArray[2],
+    description: "This is a log description",
+    author: "",
+    dog: "",
+  },
+  {
+    title: "This is a log",
+    topic: consts.topicArray[1],
+    tags: [consts.tagsArray[0]],
+    severity: consts.concernArray[2],
+    description: "This is a log description",
+    author: "",
+    dog: "",
+  },
+  {
+    title: "This is a log",
+    topic: consts.topicArray[1],
+    tags: [consts.tagsArray[0]],
+    severity: consts.concernArray[2],
+    description: "This is a log description",
+    author: "",
+    dog: "",
+  },
+  {
+    title: "This is a log",
+    topic: consts.topicArray[1],
+    tags: [consts.tagsArray[0]],
+    severity: consts.concernArray[2],
+    description: "This is a log description",
+    author: "",
+    dog: "",
+  },
 ];
+
+const dogNames = [
+  "Max",
+  "Charlie",
+  "Rocky",
+  "Buddy",
+  "Duke",
+  "Zeus",
+  "Bear",
+  "Tucker",
+  "Bailey",
+  "Cooper",
+  "Finn",
+  "Oliver",
+  "Milo",
+  "Leo",
+  "Simba",
+  "Louie",
+  "Rusty",
+  "Oscar",
+  "Bentley",
+  "Hunter",
+  "Cody",
+  "Jasper",
+  "Apollo",
+  "Diesel",
+  "Ace",
+  "Thor",
+  "Marley",
+  "Gizmo",
+  "Rocco",
+  "Bruno",
+  "Hank",
+  "Blue",
+  "Roscoe",
+  "Boomer",
+  "Brody",
+  "Chester",
+  "Ziggy",
+  "Murphy",
+  "Wrigley",
+  "Teddy",
+  "Sammy",
+  "Bear",
+  "Brady",
+  "Koda",
+  "Jax",
+  "Shadow",
+  "Dexter",
+  "Louie",
+  "Gunner",
+  "Rocky",
+  "Bella",
+  "Luna",
+  "Daisy",
+  "Lucy",
+  "Sadie",
+  "Ruby",
+  "Chloe",
+  "Lily",
+  "Zoey",
+  "Molly",
+  "Rosie",
+  "Bailey",
+  "Stella",
+  "Mia",
+  "Penny",
+  "Olive",
+  "Sophie",
+  "Willow",
+  "Coco",
+  "Zoe",
+  "Mia",
+  "Nala",
+  "Ruby",
+  "Ivy",
+  "Hazel",
+  "Harley",
+  "Lulu",
+  "Mia",
+  "Ginger",
+  "Daisy",
+  "Roxy",
+  "Maya",
+  "Daisy",
+  "Gracie",
+  "Tinkerbell",
+  "Lady",
+  "Rosie",
+  "Pepper",
+  "Angel",
+  "Bella",
+  "Abby",
+  "Mocha",
+  "Winnie",
+  "Honey",
+  "Lexi",
+  "Rosie",
+  "Gigi",
+  "Willow",
+  "Pippin",
+  "Breezy"
+];
+
+const dogBreeds = [
+  "Labrador Retriever",
+  "German Shepherd",
+  "Golden Retriever",
+  "Bulldog",
+  "Beagle",
+  "Poodle",
+  "Rottweiler",
+  "Yorkshire Terrier",
+  "Boxer",
+  "Dachshund"
+];
+
+const disabilities = [
+  "epilepsy",
+  "mobility",
+  "diabetes",
+  "PTSD",
+]
+
 
 export default async function handler(req, res) {
   if (process.env.NODE_ENV === "development" && req.method === "GET") {
@@ -239,11 +302,61 @@ export default async function handler(req, res) {
 
     // create dogs
     const dogIds = [];
-    dogs[1].partner = userIds[2];
-    dogs[2].partner = userIds[3];
-    for (let i = 0; i < dogs.length; i++) {
+    const dogCount = 100;
+
+    for (let i = 0; i < dogCount; i++) {
+      dogs[i] = {
+        name: dogNames[getRandomInt(0, dogNames.length - 1)],
+        gender: getRandomInt(0, 1) === 1 ? "Male" : "Female",
+        breed: dogBreeds[getRandomInt(0, dogBreeds.length - 1)],
+        weight: getRandomInt(15, 30),
+        behavior: consts.concernArray[getRandomInt(0, consts.concernArray.length - 1)],
+        medical: consts.concernArray[getRandomInt(0, consts.concernArray.length - 1)],
+        other: consts.concernArray[getRandomInt(0, consts.concernArray.length - 1)],
+        dateOfBirth: new Date("2019-03-15"),
+        litterSize: 8,
+        birthOrder: 2,
+        parents: [],
+        maternalDemeanor: [getRandomInt(1, 5), getRandomInt(1, 5), getRandomInt(1, 5)],
+        location: consts.locationArray[getRandomInt(0, consts.locationArray.length - 1)],
+        toiletArea: "Leashed",
+        housemates: [
+          {
+            age: 40,
+            gender: "Male",
+            relationshipToPartner: "Partner",
+          },
+          {
+            age: 10,
+            gender: "Female",
+            relationshipToPartner: "Child",
+          },
+        ],
+        petmates: [
+          {
+            animal: "Cat",
+            age: 5,
+            gender: "Male",
+          },
+          {
+            animal: "Rabbit",
+            age: 2,
+            gender: "Female",
+          },
+        ],
+        instructors: [],
+        partner: {
+          age: getRandomInt(1, 100),
+          name: dogNames[getRandomInt(0, dogNames.length - 1)],
+          disability: disabilities[getRandomInt(0, disabilities.length - 1)]
+        }
+      };
+
       dogs[i].instructors = [userIds[0]];
+      dogs[i].partner.user = userIds[2];
+
       const id = await createDog(dogs[i]);
+
       dogIds.push(id.toString());
     }
 

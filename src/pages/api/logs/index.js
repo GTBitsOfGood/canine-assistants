@@ -1,4 +1,4 @@
-import { createLog } from "../../../../server/db/actions/Log";
+import { createLog, getLogs } from "../../../../server/db/actions/Log";
 import { z } from "zod";
 import mongoose, { Types } from "mongoose";
 import { consts } from "@/utils/consts";
@@ -44,6 +44,24 @@ export default async function handler(req, res) {
       message: "Log successfully created",
       data: { _id: logId },
     });
+  }
+
+  if (req.method == "GET") {
+    try {
+      const logs = await getLogs();
+
+      return res.status(200).json({
+        success: true,
+        message: "Successfully retrieved logs",
+        data: logs,
+      });
+    } catch (e) {
+      res.status(500).json({
+        success: false,
+        message: e.message,
+      });
+      return;
+    }
   }
 
   return res.status(405).json({

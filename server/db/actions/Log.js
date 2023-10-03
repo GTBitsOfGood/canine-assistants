@@ -2,6 +2,25 @@ import dbConnect from "../dbConnect";
 import Log from "../models/Log";
 import Dog from "../models/Dog";
 
+export async function getLogs(filter = {}) {
+  try {
+    await dbConnect();
+  } catch (e) {
+    throw new Error("Unable to get logs at this time, please try again");
+  }
+
+  return Log.find(filter);
+}
+
+export async function getLogById(id) {
+  try {
+    await dbConnect();
+    return Log.findById(id);
+  } catch (e) {
+    throw new Error("Unable to get log at this time, please try again");
+  }
+}
+
 export async function createLog(logData) {
   try {
     await dbConnect();
@@ -60,7 +79,11 @@ export async function createLog(logData) {
 
   return log._id;
 }
-
+/**
+Updates a log
+@param {*} logId ObjectId of log to update
+@param {*} logData Object with log updates
+*/
 export async function updateLog(logId, logData) {
   try {
     await dbConnect();
@@ -74,5 +97,61 @@ export async function updateLog(logId, logData) {
     });
   } catch (e) {
     throw new Error("Unable to update dog");
+  }
+}
+/**
+ * Deletes log and removes from recentLogs array if applicable
+ * and adds next most recent log to array
+ * @param {*} logID ObjectId of log to delete
+ * @returns id of deleted log if success, error if otherwise
+ */
+export async function deleteLog(logId) {
+  try {
+    await dbConnect();
+
+    const deletedLog = await Log.findById(logId).populate("dog");
+
+    if (!deletedLog) {
+      throw new Error("Invalid log ID");
+    }
+
+    const dog = deletedLog.dog;
+    let index = dog.recentLogs.indexOf(logId);
+
+    if (index == -1) {
+      return (await Log.findByIdAndDelete(logId))._id;
+    } else {
+      // Find all logs for this dog and sort reverse to get max
+      const logArray = await Log.aggregate([
+        {
+          $match: {
+            dog: dog._id,
+          },
+        },
+        {
+          $sort: {
+            createdAt: -1,
+          },
+        },
+      ]);
+
+      // Push next most recent log if it exists
+      if (logArray.length > dog.recentLogs.length) {
+        const mostRecentLogId = logArray[dog.recentLogs.length]._id;
+
+        await Dog.findByIdAndUpdate(dog._id, {
+          $push: { recentLogs: mostRecentLogId },
+        });
+      }
+
+      // Remove deleted log from recentLog array
+      await Dog.findByIdAndUpdate(dog._id, {
+        $pull: { recentLogs: logId },
+      });
+
+      return (await Log.findByIdAndDelete(logId))._id;
+    }
+  } catch (e) {
+    throw new Error(e);
   }
 }
