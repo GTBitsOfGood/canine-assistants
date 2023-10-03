@@ -61,8 +61,12 @@ export async function getDogs(filter = {}) {
     if (filter["partner"]) {
       for (let field in filter["partner"]) {
         let data = filter["partner"][field];
-        filter[`partner.${field}`] =
-          typeof data == "string" ? new RegExp(data, "i") : data;
+
+        if (typeof data == "string" && field != "user") {
+          filter[`partner.${field}`] = new RegExp(data, "i");
+        } else {
+          filter[`partner.${field}`] = data;
+        }
       }
 
       delete filter.partner;
