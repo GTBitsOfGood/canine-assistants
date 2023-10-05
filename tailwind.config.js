@@ -21,6 +21,9 @@ module.exports = {
         "maven-pro": ["Maven Pro", "sans-serif"],
         roboto: ["Roboto", "sans-serif"],
       },
+      dropShadow: {
+        'wave': '2px -2px 2px rgba(0, 0, 0, 0.1)'
+      },
       colors: {
         
         'primary-background': '#F0F2F2',
