@@ -12,3 +12,13 @@ export async function createUser(username, hash) {
 
   return user._id;
 }
+
+export async function getUsers(filter = {}) {
+  try {
+    await dbConnect();
+  } catch (e) {
+    throw new Error("Unable to get users at this time, please try again");
+  }
+
+  return User.find(filter);
+}
