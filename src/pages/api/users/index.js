@@ -12,7 +12,7 @@ export default async function handler(req, res) {
       return;
     }
 
-    res.status(200).json({ id: userId });
+    return res.status(200).json({ id: userId });
   }
 
   if (req.method == "GET") {
