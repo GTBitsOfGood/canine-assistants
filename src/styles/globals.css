@@ -27,3 +27,9 @@
     @apply font-medium;
   }
 }
+
+@layer components {
+  .modal-shadow {
+    box-shadow: 0 0 16px 0 rgba(40, 48, 45, 0.16);
+  }
+}
