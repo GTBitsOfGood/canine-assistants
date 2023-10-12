@@ -162,6 +162,23 @@ const dogSchema = z.object({
 });
 
 /**
+ * Zod object for validating request bodies for logs
+ */
+const logSchema = z.object({
+  title: z.string(),
+  topic: z.enum(consts.topicArray),
+  tags: z.array(z.enum(consts.tagsArray)).optional(),
+  severity: z.enum(consts.concernArray),
+  description: z.string().optional(),
+  author: z.string().refine((id) => {
+    return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+  }),
+  dog: z.string().refine((id) => {
+    return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+  }),
+});
+
+/**
  * Mock data for testing without any backend interaction
  */
 const mocks = {
@@ -239,4 +256,4 @@ const mocks = {
   ],
 };
 
-export { pages, consts, dogSchema, mocks };
+export { pages, consts, dogSchema, logSchema, mocks };
