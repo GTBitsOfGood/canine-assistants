@@ -1,4 +1,4 @@
-import mongoose, { Types } from "mongoose";
+import { Types } from "mongoose";
 import { z } from "zod";
 
 const pages = {
@@ -58,14 +58,14 @@ const dogSchema = z.object({
   recentLogs: z
     .array(
       z.string().refine((id) => {
-        return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+        return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
       }),
     )
     .default([]),
   parents: z
     .array(
       z.string().refine((id) => {
-        return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+        return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
       }),
     )
     .optional(),
@@ -83,7 +83,7 @@ const dogSchema = z.object({
       user: z
         .string()
         .refine((id) => {
-          return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+          return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
         })
         .optional(),
     })
@@ -110,14 +110,14 @@ const dogSchema = z.object({
   instructors: z
     .array(
       z.string().refine((id) => {
-        return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+        return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
       }),
     )
     .optional(),
   volunteer: z
     .string()
     .refine((id) => {
-      return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+      return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
     })
     .optional(),
   collarColor: z.string().optional(),
@@ -134,7 +134,7 @@ const dogSchema = z.object({
   caregivers: z
     .array(
       z.string().refine((id) => {
-        return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+        return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
       }),
     )
     .optional(),
@@ -171,10 +171,10 @@ const logSchema = z.object({
   severity: z.enum(consts.concernArray),
   description: z.string().optional(),
   author: z.string().refine((id) => {
-    return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+    return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
   }),
   dog: z.string().refine((id) => {
-    return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+    return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
   }),
 });
 
