@@ -42,6 +42,7 @@ module.exports = {
         "modal-background-gray": "#E3E3E3",
         "primary-text": "#000000a8",
         "secondary-text": "#353535",
+        "error-red": "#FF0000",
         "some-concern": "#FBC49D",
         "some-concern-shade": "#E87420",
         "facility-green": "#BCF0E4",

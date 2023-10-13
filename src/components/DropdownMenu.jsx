@@ -81,7 +81,7 @@ export default function DropdownMenu({
           extended
             ? "border-t border-x rounded-t border-b-transparent"
             : " rounded"
-        } border border-neutral-300  items-center gap-2 flex w-48 justify-between`}
+        } border ${props?.error ? "border-error-red" : "border-neutral-300"}  items-center gap-2 flex w-48 justify-between`}
         onClick={() => {
           if (extended) {
             setExtended(false);
