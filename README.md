@@ -48,3 +48,23 @@ npm run dev
 ### Code Formatting
 
 Install and enable [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) in VSCode. This repository is also configured with a pre-commit hook that automatically formats any code you commit to ensure formatting consistency throughout the codebase.
+
+## Docker Development
+
+### Pre-requisites
+
+1. Docker installed on your machine. You can download it from [Docker's official site](https://www.docker.com/products/docker-desktop).
+2. Docker Compose, usually bundled with Docker Desktop.
+3. Ensure .env.development.local file is in the root of your project directory (see "Environment Variables" section above)
+
+### Running the Application with Docker
+
+1. In the project's root directory, build and run the Docker containers:
+
+```sh
+docker-compose up 
+```
+
+If you make any changes to the packages, you may need to rebuild the images. To do this, append --build to the above docker compose up command.
+
+The Dockerized application will have live-reloading of changes made on the host machine.
