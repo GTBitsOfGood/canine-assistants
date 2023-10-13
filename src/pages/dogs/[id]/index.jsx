@@ -10,9 +10,9 @@ import {
 } from "@heroicons/react/24/solid";
 import { Chip, ChipTypeStyles } from "@/components/Chip";
 import Image from "next/image";
-import maleicon from "../../../public/maleicon.svg";
-import femaleicon from "../../../public/femaleicon.svg";
-import dogplaceholdericon from "../../../public/dogplaceholdericon.svg";
+import maleicon from "../../../../public/maleicon.svg"
+import femaleicon from "../../../../public/femaleicon.svg";
+import dogplaceholdericon from "../../../../public/dogplaceholdericon.svg";
 /**
  *
  * @returns {React.ReactElement} The individual Dog page
