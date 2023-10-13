@@ -80,7 +80,13 @@ export default function IndividualDogPage() {
     <div className={`container mx-auto order-b border-gray-300`}>
       {showLogModal ? (
         <>
-          <LogModal dogId={ dog._id } userId={ dog.instructors[0]._id } />
+          <LogModal
+            dogId={ dog._id }
+            userId={ dog.instructors[0]._id }
+            onClose={() => {
+              setShowLogModal(false);
+            }}
+          />
         </>
       ) : null }
       <div className="py-6 flex items-center">

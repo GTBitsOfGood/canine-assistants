@@ -7,7 +7,7 @@ import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
 /**
  * TODO PARKER JAVADOCS 
  */
-export default function LogModal({ dogId, userId }) {
+export default function LogModal({ dogId, userId, onClose }) {
   const [ logData, setLogData ] = useState({
     title: "",
     topicSet: {},
@@ -46,6 +46,7 @@ export default function LogModal({ dogId, userId }) {
       .then((res) => {
         // TODO PARKER close then id page needs react toast success
         // also show new log on log page
+        onClose();
       })
       .catch((err) => {
         // TODO PARKER server error react toast
@@ -66,7 +67,7 @@ export default function LogModal({ dogId, userId }) {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-10">
-      <div className="fixed inset-0 bg-modal-background-gray opacity-60"></div>
+      <div onClick={() => onClose()} className="fixed inset-0 bg-modal-background-gray opacity-60"></div>
       <div className="modal-shadow bg-secondary-background p-6 z-10">
         <h1>Add a log</h1>
         <label>Title*</label><br/>
@@ -212,7 +213,10 @@ export default function LogModal({ dogId, userId }) {
         ) : null}
         <br/>
 
-        <button className="px-4 py-2.5 bg-secondary-gray rounded border border-primary-gray justify-start items-center gap-2 flex">
+        <button
+          onClick={() => onClose()}
+          className="px-4 py-2.5 bg-secondary-gray rounded border border-primary-gray justify-start items-center gap-2 flex"
+        >
           <div className="text-primary-text text-base font-medium">
             Cancel
           </div>
