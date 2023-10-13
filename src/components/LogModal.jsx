@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { consts } from "@/utils/consts";
+import { consts, logSchema } from "@/utils/consts";
 import DropdownMenu, { DropdownMenuOption } from "./DropdownMenu";
-import { logSchema } from "@/utils/consts";
+import { Chip, ChipTypeStyles } from "./Chip";
 import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
 
 /**
@@ -120,6 +120,12 @@ export default function LogModal({ dogId, userId }) {
             Please select a topic
           </div>
         ) : null}
+        {Object.keys(logData.topicSet).length ? (
+          <Chip
+            label={Object.values(logData.topicSet)[0]}
+            type={ChipTypeStyles["Tag"]}
+          />
+        ) : null}
 
         <DropdownMenu
           label={"Severity*"}
@@ -148,6 +154,12 @@ export default function LogModal({ dogId, userId }) {
             Please select a severity
           </div>
         ) : null}
+        {Object.keys(logData.severitySet).length ? (
+          <Chip
+            label={Object.values(logData.severitySet)[0]}
+            type={ChipTypeStyles[Object.values(logData.severitySet)[0]]}
+          />
+        ) : null}
 
         <DropdownMenu
           label="Tags"
@@ -167,7 +179,19 @@ export default function LogModal({ dogId, userId }) {
             />
           ))}
         </DropdownMenu>
+        {Object.keys(logData.tagsSet).length ? (
+          Object.values(logData.tagsSet).map((value, index) => {
+            return (
+              <Chip
+                key={index}
+                label={value}
+                type={ChipTypeStyles["Tag"]}
+              />
+            )
+          })
+        ) : null}
 
+        <br />
         <label>Log Description*</label><br/>
         <input
           value={logData.description}
