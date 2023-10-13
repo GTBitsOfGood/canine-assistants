@@ -24,7 +24,14 @@
 
   h1 {
     @apply text-3xl;
+    @apply text-black;
     @apply font-medium;
+  }
+
+  h2 {
+    @apply text-xl;
+    @apply text-black;
+    @apply font-semibold;
   }
 }
 

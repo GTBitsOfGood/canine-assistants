@@ -68,164 +68,193 @@ export default function LogModal({ dogId, userId, onClose }) {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-10">
       <div onClick={() => onClose()} className="fixed inset-0 bg-modal-background-gray opacity-60"></div>
-      <div className="modal-shadow bg-secondary-background p-6 z-10">
-        <h1>Add a log</h1>
-        <label>Title*</label><br/>
-        <input
-          value={logData.title}
-          onChange={(event) => {
-            setLogData({ ...logData, title: event.target.value });
-            setErrors({...errors, title: false })
-          }}
-          className={`rounded bg-foreground border ${errors.title ? 'border-error-red' : 'border-neutral-300'} text-neutral-700 text-lg p-2.5 pl-10 font-normal`}
-        >
-        </input>
-        <br/>
-        {errors.title ? (
-          <div className="flex">
-            <div className="w-4 align-baseline">
-              <ExclamationCircleIcon />
+      <div className="modal-shadow bg-secondary-background px-12 py-9 max-h-[95vh] z-10 overflow-auto">
+        <h1 className="font-bold mb-[3vh]">Add a log</h1>
+        <h2 className="h-[5vh]">Title<span className="text-error-red">*</span></h2>
+        <div className="mb-[3vh]">
+          <input
+            value={logData.title}
+            onChange={(event) => {
+              setLogData({ ...logData, title: event.target.value });
+              setErrors({...errors, title: false })
+            }}
+            className={`rounded bg-foreground border ${errors.title ? 'border-error-red' : 'border-primary-gray'} focus:border-primary-gray focus:border text-secondary-text text-lg font-normal w-full h-11 px-4 py-2.5`}
+          >
+          </input>
+          {errors.title ? (
+            <div className="flex items-center gap-[5px] text-black text-lg font-normal">
+              <div className="h-4 w-4 fill-slate-900">
+                <ExclamationCircleIcon />
+              </div>
+              Please enter a title
             </div>
-            Please enter a title
+          ) : null}
+        </div>
+
+        <h2 className="h-[5vh]">Tags<span className="text-error-red">*</span></h2>
+        <div className="flex gap-[3vw]">
+          <div className="">
+            <DropdownMenu
+              label={"Topic"}
+              props={{
+                hideFilterButton: true,
+                hideCheckboxes: true,
+                singleSelect: true,
+                requiredField: true,
+                selectedColor: ChipTypeStyles["Topic"],
+                error: errors.topic
+              }}
+              selectedOptions={logData.topicSet}
+              onFilterSelect={(data) => {
+                if (data !== undefined) {
+                  setLogData({ ...logData, topicSet: data });
+                  setErrors({...errors, topic: false })
+                }
+              }}
+            >
+              {consts.topicArray.map((topic, index) => (
+                <DropdownMenuOption
+                  key={index}
+                  label={topic}
+                  name={topic.replaceAll(" ", "").toLowerCase()}
+                />
+              ))}
+            </DropdownMenu>
+            {errors.topic ? (
+            <div className="flex items-center gap-[5px] text-black text-lg font-normal">
+              <div className="h-4 w-4 fill-slate-900">
+                  <ExclamationCircleIcon />
+                </div>
+                Please select a topic
+              </div>
+            ) : null}
+            {Object.keys(logData.topicSet).length ? (
+              <div className="mt-[1vh]">
+                <Chip
+                  label={Object.values(logData.topicSet)[0]}
+                  type={ChipTypeStyles["Topic"]}
+                />
+              </div>
+            ) : null}
           </div>
-        ) : null}
 
-        <label>Tags*</label>
-        <br/>
+          <div className="">
+            <DropdownMenu
+              label={"Severity"}
+              props={{
+                hideFilterButton: true,
+                hideCheckboxes: true,
+                singleSelect: true,
+                requiredField: true,
+                smallText: true,
+                selectedColor: "concern",
+                error: errors.severity
+              }}
+              selectedOptions={logData.severitySet}
+              onFilterSelect={(data) => {
+                if (data !== undefined) {
+                  setLogData({ ...logData, severitySet: data });
+                  setErrors({...errors, severity: false })
+                }
+              }}
+            >
+              {consts.concernArray.map((concern, index) => (
+                <DropdownMenuOption
+                  key={index}
+                  label={concern}
+                  name={concern.replaceAll(" ", "").toLowerCase()}
+                />
+              ))}
+            </DropdownMenu>
+            {errors.severity ? (
+              <div className="flex items-center gap-[5px] text-black text-lg font-normal">
+                <div className="h-4 w-4 fill-slate-900">
+                  <ExclamationCircleIcon />
+                </div>
+                Please select a severity
+              </div>
+            ) : null}
+            {Object.keys(logData.severitySet).length ? (
+              <div className="mt-[1vh]">
+                <Chip
+                  label={Object.values(logData.severitySet)[0]}
+                  type={ChipTypeStyles[Object.values(logData.severitySet)[0]]}
+                />
+              </div>
+            ) : null}
+          </div>
 
-        <DropdownMenu
-          label={"Topic*"}
-          props={{ hideFilterButton: true, radioButtons: true, error: errors.topic }}
-          selectedOptions={logData.topicSet}
-          onFilterSelect={(data) => {
-            console.log(data);
-            if (data !== undefined) {
-              setLogData({ ...logData, topicSet: data });
-              setErrors({...errors, topic: false })
-            }
-          }}
-        >
-          {consts.topicArray.map((topic, index) => (
-            <DropdownMenuOption
-              key={index}
-              label={topic}
-              name={topic.replaceAll(" ", "").toLowerCase()}
-            />
-          ))}
-        </DropdownMenu>
-        {errors.topic ? (
-          <div className="flex">
-            <div className="w-4 align-baseline">
-              <ExclamationCircleIcon />
+          <div className="">
+            <DropdownMenu
+              label="Tags"
+              props={{ hideFilterButton: true, hideCheckboxes: true, selectedColor: ChipTypeStyles["Tag"] }}
+              selectedOptions={logData.tagsSet}
+              onFilterSelect={(data) => {
+                if (data !== undefined) {
+                  setLogData({ ...logData, tagsSet: data });
+                }
+              }}
+            >
+              {consts.tagsArray.map((tag, index) => (
+                <DropdownMenuOption
+                  key={index}
+                  label={tag}
+                  name={tag.replaceAll(" ", "").toLowerCase()}
+                />
+              ))}
+            </DropdownMenu>
+            <div className="flex flex-wrap w-48 mt-[1vh] gap-x-[1vh] gap-y-[0.5vh] min-h-[8vh]">
+              {Object.keys(logData.tagsSet).length ? (
+                Object.values(logData.tagsSet).map((value, index) => {
+                  return (
+                    <Chip
+                      key={index}
+                      label={value}
+                      type={ChipTypeStyles["Tag"]}
+                    />
+                  )
+                })
+              ) : null}
             </div>
-            Please select a topic
           </div>
-        ) : null}
-        {Object.keys(logData.topicSet).length ? (
-          <Chip
-            label={Object.values(logData.topicSet)[0]}
-            type={ChipTypeStyles["Tag"]}
-          />
-        ) : null}
+        </div>
 
-        <DropdownMenu
-          label={"Severity*"}
-          props={{ hideFilterButton: true, radioButtons: true, error: errors.severity }}
-          selectedOptions={logData.severitySet}
-          onFilterSelect={(data) => {
-            if (data !== undefined) {
-              setLogData({ ...logData, severitySet: data });
-              setErrors({...errors, severity: false })
-            }
-          }}
-        >
-          {consts.concernArray.map((concern, index) => (
-            <DropdownMenuOption
-              key={index}
-              label={concern}
-              name={concern.replaceAll(" ", "").toLowerCase()}
-            />
-          ))}
-        </DropdownMenu>
-        {errors.severity ? (
-          <div className="flex">
-            <div className="w-4 align-baseline">
-              <ExclamationCircleIcon />
+        <h2 className="h-[5vh]">Log Description<span className="text-error-red">*</span></h2>
+        <div className="mb-[3vh]">
+          <textarea
+            value={logData.description}
+            onChange={(event) => {
+              setLogData({ ...logData, description: event.target.value });
+              setErrors({...errors, description: false })
+            }}
+            className={`rounded bg-foreground border ${errors.description ? 'border-error-red' : 'border-primary-gray'} text-secondary-text text-lg font-normal w-full h-[25vh] max-h-[25vh] px-4 py-2.5`}
+          >
+          </textarea>
+          {errors.description ? (
+            <div className="flex items-center gap-[5px] text-black text-lg font-normal">
+              <div className="h-4 w-4 fill-slate-900">
+                <ExclamationCircleIcon />
+              </div>
+              Please enter a description
             </div>
-            Please select a severity
-          </div>
-        ) : null}
-        {Object.keys(logData.severitySet).length ? (
-          <Chip
-            label={Object.values(logData.severitySet)[0]}
-            type={ChipTypeStyles[Object.values(logData.severitySet)[0]]}
-          />
-        ) : null}
+          ) : null}
+        </div>
 
-        <DropdownMenu
-          label="Tags"
-          props={{ hideFilterButton: true }}
-          selectedOptions={logData.tagsSet}
-          onFilterSelect={(data) => {
-            if (data !== undefined) {
-              setLogData({ ...logData, tagsSet: data });
-            }
-          }}
-        >
-          {consts.tagsArray.map((tag, index) => (
-            <DropdownMenuOption
-              key={index}
-              label={tag}
-              name={tag.replaceAll(" ", "").toLowerCase()}
-            />
-          ))}
-        </DropdownMenu>
-        {Object.keys(logData.tagsSet).length ? (
-          Object.values(logData.tagsSet).map((value, index) => {
-            return (
-              <Chip
-                key={index}
-                label={value}
-                type={ChipTypeStyles["Tag"]}
-              />
-            )
-          })
-        ) : null}
-
-        <br />
-        <label>Log Description*</label><br/>
-        <input
-          value={logData.description}
-          onChange={(event) => {
-            setLogData({ ...logData, description: event.target.value });
-            setErrors({...errors, description: false })
-          }}
-          className={`rounded bg-foreground border ${errors.description ? 'border-error-red' : 'border-neutral-300'} text-neutral-700 text-lg p-2.5 pl-10 font-normal`}
-        >
-        </input>
-        {errors.description ? (
-          <div className="flex">
-            <div className="w-5 h-5 align-baseline">
-              <ExclamationCircleIcon />
+        <div className="flex justify-end gap-[2vw]">
+          <button
+            onClick={() => onClose()}
+            className="w-32 h-10 px-4 py-2.5 bg-secondary-gray rounded border border-primary-gray justify-center items-center gap-2 flex"
+          >
+            <div className="text-primary-text text-base font-medium">
+              Cancel
             </div>
-            Please enter a description
-          </div>
-        ) : null}
-        <br/>
-
-        <button
-          onClick={() => onClose()}
-          className="px-4 py-2.5 bg-secondary-gray rounded border border-primary-gray justify-start items-center gap-2 flex"
-        >
-          <div className="text-primary-text text-base font-medium">
-            Cancel
-          </div>
-        </button>
-        <button onClick={() => saveLog(logData)} className="px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade justify-start items-center gap-2 flex">
-          <div className="text-foreground text-base font-medium">
-            Save
-          </div>
-        </button>
+          </button>
+          <button onClick={() => saveLog(logData)} className="w-32 h-10 px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade justify-center items-center gap-2 flex">
+            <div className="text-foreground text-base font-medium">
+              Save
+            </div>
+          </button>
+        </div>
       </div>
     </div>
   )
