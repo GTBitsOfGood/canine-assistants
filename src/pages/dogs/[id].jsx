@@ -14,12 +14,16 @@ import Image from "next/image";
 import maleicon from "../../../public/maleicon.svg";
 import femaleicon from "../../../public/femaleicon.svg";
 import dogplaceholdericon from "../../../public/dogplaceholdericon.svg";
+import FormField from "@/components/FormField";
 /**
  *
  * @returns {React.ReactElement} The individual Dog page
  */
 export default function IndividualDogPage() {
   const [data, setData] = useState();
+  const [isEdit, setIsEdit] = useState(false);
+
+  const { register, handleSubmit } = useForm();
 
   const router = useRouter();
 
@@ -73,6 +77,10 @@ export default function IndividualDogPage() {
     },
   };
 
+  const onSubmit = (data) => {
+    console.log(data, "yay");
+  };
+
   return (
     // Artificial spacing until nav is created
     <div className={`container mx-auto order-b border-gray-300`}>
@@ -83,7 +91,7 @@ export default function IndividualDogPage() {
         </Link>
       </div>
 
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="flex gap-8">
           {dog.image ? (
             <Image alt="Dog" width={300} height={300} src={dog.image} />
@@ -101,7 +109,7 @@ export default function IndividualDogPage() {
                 />
               </div>
               <div className="flex-col">
-                <div className="flex justify-between">
+                <div className="flex justify-between mb-2">
                   <div className="flex gap-4">
                     <Chip
                       label={dog.location}
@@ -119,46 +127,117 @@ export default function IndividualDogPage() {
                   </div>
                 </div>
 
-                <div className="pt-6 pl-1 font-bold text-3xl">{dog.name}</div>
+                <FormField
+                  className="h-min pl-1 font-bold text-3xl"
+                  label="Name"
+                  isEditing={isEdit}
+                  value={dog.name}
+                  register={register}
+                  showLabel={false}
+                />
+
                 <div className="flex space-x-16">
                   <div className="flex-col pt-8 pl-1 text-lg space-y-2">
-                    <div>
-                      Birth Date:{" "}
+                    <FormField isEditing={isEdit} label={"Birth Date"}>
                       {dateutils.getDateString(new Date(dog.dateOfBirth))}
-                    </div>
-                    <div>Sex: {dog.gender}</div>
-
-                    <div>Breed: {dog.breed}</div>
-                    <div>Coat Color: N/A</div>
+                    </FormField>
+                    <FormField
+                      isEditing={isEdit}
+                      register={register}
+                      label={"Sex"}
+                      value={dog.gender}
+                    />
+                    <FormField
+                      isEditing={isEdit}
+                      register={register}
+                      label={"Breed"}
+                      value={dog.breed}
+                    />
+                    <FormField
+                      isEditing={isEdit}
+                      register={register}
+                      label={"Coat Color"}
+                      value={"N/A"}
+                    />
                   </div>
 
                   <div className="flex-col pt-8 pl-1 text-lg space-y-2">
                     {dog.location === "Placed" ? (
                       <>
-                        <div>Placement: N/A</div>
-                        <div>Partner: N/A</div>
-                        <div>Placement Camp: N/A</div>
+                        <FormField
+                          isEditing={isEdit}
+                          register={register}
+                          label={"Placement"}
+                          value={"N/A"}
+                        />
+                        <FormField
+                          isEditing={isEdit}
+                          register={register}
+                          label={"Partner"}
+                          value={"N/A"}
+                        />
+                        <FormField
+                          isEditing={isEdit}
+                          register={register}
+                          label={"Placement Camp"}
+                          value={"N/A"}
+                        />
                       </>
                     ) : (
                       <>
-                        <div>Housing: N/A</div>
-                        <div>Instructor: N/A</div>
+                        <FormField
+                          isEditing={isEdit}
+                          register={register}
+                          label={"Housing"}
+                          value={"N/A"}
+                        />
+                        <FormField
+                          isEditing={isEdit}
+                          register={register}
+                          label={"Instructor"}
+                          value={"N/A"}
+                        />
                       </>
                     )}
                   </div>
                 </div>
               </div>
-              <div className="grow flex gap-4 justify-end">
-                <button className="flex justify-center space-x-2 h-min">
-                  <PencilSquareIcon className="h-5" />
-                  Edit
-                </button>
-                <div className="flex justify-center space-x-2">
-                  <TrashIcon className="h-5" />
-
-                  <div>Delete</div>
+              {isEdit ? (
+                <div className="grow flex gap-4 justify-end">
+                  <button
+                    type="button"
+                    className="flex justify-center space-x-2 h-min"
+                    onClick={() => setIsEdit((isEdit) => !isEdit)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="flex justify-center space-x-2 h-min"
+                    onClick={() => {
+                      handleSubmit(onSubmit)();
+                      setIsEdit(false);
+                    }}
+                  >
+                    Save
+                  </button>
                 </div>
-              </div>
+              ) : (
+                <div className="grow flex gap-4 justify-end">
+                  <button
+                    type="button"
+                    className="flex justify-center space-x-2 h-min"
+                    onClick={() => setIsEdit((isEdit) => !isEdit)}
+                  >
+                    <PencilSquareIcon className="h-5" />
+                    Edit
+                  </button>
+                  <div className="flex justify-center space-x-2">
+                    <TrashIcon className="h-5" />
+
+                    <div>Delete</div>
+                  </div>
+                </div>
+              )}
             </>
           )}
         </div>
