@@ -1,13 +1,18 @@
 import React, { useState } from "react";
+import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
 import { consts, logSchema } from "@/utils/consts";
 import DropdownMenu, { DropdownMenuOption } from "./DropdownMenu";
 import { Chip, ChipTypeStyles } from "./Chip";
-import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
 
 /**
- * TODO PARKER JAVADOCS 
+ * Modal for creating a new log
+ * @param {*} dogId string id of dog associated with the log
+ * @param {*} userId string id of user creating the log
+ * @param {*} onClose function that is called when the log needs to be closed
+ * @param {*} onSubmit function that is called when the user tries to save the log
+ * @returns the modal component
  */
-export default function LogModal({ dogId, userId, onClose }) {
+export default function LogModal({ dogId, userId, onClose, onSubmit }) {
   const [ logData, setLogData ] = useState({
     title: "",
     topicSet: {},
@@ -44,12 +49,11 @@ export default function LogModal({ dogId, userId, onClose }) {
         body: JSON.stringify(formattedData),
       })
       .then((res) => {
-        // TODO PARKER close then id page needs react toast success
-        // also show new log on log page
+        onSubmit(true);
         onClose();
       })
       .catch((err) => {
-        // TODO PARKER server error react toast
+        onSubmit(false);
       });
     } else {
       const errorsArray = error.format();

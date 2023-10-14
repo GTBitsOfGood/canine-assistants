@@ -1,6 +1,7 @@
 import TabSection from "@/components/TabSection";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import toast, { Toaster } from 'react-hot-toast';
 import { useRouter } from "next/router";
 import dateutils from "@/utils/dateutils";
 import {
@@ -78,6 +79,7 @@ export default function IndividualDogPage() {
   return (
     // Artificial spacing until nav is created
     <div className={`container mx-auto order-b border-gray-300`}>
+      <Toaster />
       {showLogModal ? (
         <>
           <LogModal
@@ -85,6 +87,24 @@ export default function IndividualDogPage() {
             userId={ dog.instructors[0]._id }
             onClose={() => {
               setShowLogModal(false);
+            }}
+            onSubmit={(success) => {
+              // TODO PARKER get toast animation working and show log on screen
+              if (success) {
+                toast.custom((t) => (
+                  <div className={`h-12 px-6 py-4 rounded shadow border border-ca-pink-shade justify-center items-center inline-flex bg-ca-pink text-white text-lg font-normal
+                    ${t.visible ? 'animate-enter' : 'animate-leave'}`}
+                  >
+                    <span className="font-bold">New log</span>&nbsp;<span>was successfully added.</span>
+                  </div>
+                ));
+              } else {
+                toast.custom(() => (
+                  <div className="h-12 px-6 py-4 rounded shadow border border-error-red justify-center items-center inline-flex bg-high-concern text-black text-lg font-semibold">
+                    There was a problem saving the log, please try again.
+                  </div>
+                ));
+              }
             }}
           />
         </>
