@@ -26,7 +26,10 @@ export default function SearchTagDisplay({ tags, removeTag }) {
             }
             type={
               ChipTypeStyles[
-                stringUtils.toUpperEveryWord(tag.label).replaceAll(" ", "")
+                stringUtils
+                  .toUpperEveryWord(tag.label)
+                  .replaceAll(" ", "")
+                  .replace(/[0-9]/g, "")
               ] || ChipTypeStyles.Tag
             }
           />

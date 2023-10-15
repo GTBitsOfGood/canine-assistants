@@ -13,6 +13,9 @@ import Image from "next/image";
 import maleicon from "../../../public/maleicon.svg";
 import femaleicon from "../../../public/femaleicon.svg";
 import dogplaceholdericon from "../../../public/dogplaceholdericon.svg";
+import LogSearchFilterBar from "@/components/LogSearchFilterBar";
+import SearchTagDisplay from "@/components/SearchTagDisplay";
+
 /**
  *
  * @returns {React.ReactElement} The individual Dog page
@@ -22,6 +25,11 @@ export default function IndividualDogPage() {
 
   const router = useRouter();
 
+  const [logSearchFilter, setLogSearchFilter] = useState("");
+  const [logFilters, setLogFilters] = useState({});
+
+  const [logData, setLogData] = useState();
+
   useEffect(() => {
     if (router.query.id) {
       fetch(`/api/dogs/${router.query.id}`)
@@ -30,12 +38,47 @@ export default function IndividualDogPage() {
     }
   }, [router.query]);
 
-  if (!data || data === undefined || !data.success) {
+  useEffect(() => {
+    let logSearch = {};
+    if (logFilters) {
+      Object.keys(logFilters)
+        .filter(
+          (category) =>
+            category && Object.values(logFilters[category]).length > 0
+        )
+        .forEach((category) => {
+          logSearch[category] = Object.values(logFilters[category]);
+        });
+    }
+
+    logSearch.title = logSearchFilter;
+
+    fetch("/api/logs/search", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(logSearch),
+    })
+      .catch((err) => setLogData([]))
+      .then((res) => res.json())
+      .then((logData) => setLogData(logData));
+  }, [logSearchFilter, logFilters]);
+
+  if (
+    !data ||
+    data === undefined ||
+    !data.success ||
+    !logData ||
+    logData === undefined ||
+    !logData.success
+  ) {
     return <div>loading</div>;
   }
 
   const dog = data.data;
 
+  const logs = logData.data;
   const dogInformationSchema = {
     ["Birth"]: {
       ["Birth Time"]: "N/A",
@@ -70,6 +113,31 @@ export default function IndividualDogPage() {
     ["Grooming"]: {
       ["Last bath"]: "N/A",
     },
+  };
+
+  const tags = Object.keys(logFilters)
+    .map((filterGroup, index) =>
+      Object.keys(logFilters[filterGroup]).map((element) =>
+        filterGroup[element] == null ? (
+          <></>
+        ) : (
+          {
+            group: filterGroup,
+            label: logFilters[filterGroup][element],
+            index: element,
+            type: ChipTypeStyles.Tag,
+          }
+        )
+      )
+    )
+    .flat(1);
+
+  const removeTag = (group, index) => {
+    const newFilters = { ...logFilters };
+
+    delete newFilters[group][index];
+
+    setLogFilters(newFilters);
   };
 
   return (
@@ -158,7 +226,7 @@ export default function IndividualDogPage() {
         )}
       </div>
 
-      <div className="mt-8 shadow-xl rounded-lg text-md w-full text-left relative overflow-hidden bg-foreground p-8">
+      <div className="mt-8 shadow-xl rounded-lg text-md w-full text-left relative bg-foreground p-8">
         <TabSection defaultTab="information">
           <div label="information">
             <div className="w-2/3 grid grid-cols-3 gap-16">
@@ -179,7 +247,17 @@ export default function IndividualDogPage() {
               ))}
             </div>
           </div>
-          <div label="logs">logs</div>
+          <div label="logs">
+            <div className="flex-grow flex-col space-y-4">
+              <LogSearchFilterBar
+                filters={logFilters}
+                setFilters={setLogFilters}
+                setSearch={setLogSearchFilter}
+              />
+
+              <SearchTagDisplay tags={tags} removeTag={removeTag} />
+            </div>
+          </div>
         </TabSection>
       </div>
     </div>

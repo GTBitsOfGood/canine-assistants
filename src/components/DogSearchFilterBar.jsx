@@ -1,11 +1,8 @@
-import {
-  MagnifyingGlassIcon,
-  PlusIcon,
-} from "@heroicons/react/24/solid";
+import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/24/solid";
 import DropdownMenu, { DropdownMenuOption } from "./DropdownMenu";
 import { consts } from "@/utils/consts";
 
-export default function SearchFilterBar({ filters, setFilters, setSearch }) {
+export default function DogSearchFilterBar({ filters, setFilters, setSearch }) {
   return (
     <div className="flex items-center gap-4">
       <div className="relative grow justify-start items-center flex">

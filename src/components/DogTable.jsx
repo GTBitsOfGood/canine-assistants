@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Table from "./Table";
 import Link from "next/link";
-import SearchFilterBar from "./SearchFilterBar";
+import DogSearchFilterBar from "./DogSearchFilterBar";
 import {
   Bars3BottomLeftIcon,
   CalendarIcon,
@@ -29,7 +29,6 @@ export default function DogTable() {
 
   useEffect(() => {
     let search = {};
-
     if (filters) {
       Object.keys(filters)
         .filter(
@@ -92,7 +91,16 @@ export default function DogTable() {
       label: "Location",
       icon: <MapPinIcon />,
       customRender: (rowData) => {
-        return <Chip label={rowData.location} type={ChipTypeStyles.Facility} />;
+        return (
+          <Chip
+            label={rowData.location}
+            type={
+              rowData.location == "Placed"
+                ? ChipTypeStyles.Placed
+                : ChipTypeStyles.Facility
+            }
+          />
+        );
       },
     },
     {
@@ -176,13 +184,11 @@ export default function DogTable() {
     const newFilters = { ...filters };
 
     delete newFilters[group][index];
-
     setFilters(newFilters);
   };
-
   return (
     <div className="flex-grow flex-col space-y-6">
-      <SearchFilterBar
+      <DogSearchFilterBar
         filters={filters}
         setFilters={setFilters}
         setSearch={setSearchFilter}
