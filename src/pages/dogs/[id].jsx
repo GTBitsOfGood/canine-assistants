@@ -89,7 +89,7 @@ export default function IndividualDogPage() {
               setShowLogModal(false);
             }}
             onSubmit={(success) => {
-              // TODO PARKER get toast animation working and show log on screen
+              // TODO toast animation
               if (success) {
                 toast.custom((t) => (
                   <div className={`h-12 px-6 py-4 rounded shadow border border-ca-pink-shade justify-center items-center inline-flex bg-ca-pink text-white text-lg font-normal

@@ -25,7 +25,7 @@ export function Chip({ label, type, link = "" }) {
       <button
         onClick={handleClick}
         href="#"
-        className={`${link.length > 0 ? "" : "cursor-default"} big-red-300 h-10 inline-flex`}
+        className={`${link.length > 0 ? "" : "cursor-default"} big-red-300 max-h-10 inline-flex`}
       >
         <div className={`px-2.5 border items-center rounded py-2 ${type} flex`}>
           <div className="text-sm font-medium">{label}</div>
