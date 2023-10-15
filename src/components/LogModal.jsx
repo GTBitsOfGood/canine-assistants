@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
 import { consts, logSchema } from "@/utils/consts";
 import DropdownMenu, { DropdownMenuOption } from "./DropdownMenu";
@@ -20,11 +20,26 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
     tagsSet: {},
     description: ""
   });
+
   const [ errors, setErrors ] = useState({
     title: false,
     topic: false,
     severity: false,
     description: false
+  });
+
+  const modalRef = useRef(null);
+
+  useEffect(() => {
+    const scrollToBottom = () => {
+      modalRef.current.scrollTop = modalRef.current.scrollHeight;
+    };
+
+    modalRef.current.querySelector("textarea").addEventListener('click', scrollToBottom);
+
+    return () => {
+      document.removeEventListener('click', scrollToBottom);
+    };
   });
 
   const saveLog = (logData) => {
@@ -72,7 +87,7 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
   return (
     <div className="fixed inset-0 flex items-end sm:items-center justify-center z-10">
       <div onClick={() => onClose()} className="fixed inset-0 bg-modal-background-gray opacity-60"></div>
-      <div className="modal-shadow-mobile sm:modal-shadow bg-white sm:bg-secondary-background px-5 sm:px-12 py-4 sm:py-9 w-full sm:w-auto h-[90%] sm:h-auto sm:min-h-[70vh] sm:max-h-[95vh] z-10 overflow-auto rounded-t-[50px] sm:rounded-t-none">
+      <div ref={modalRef} className="modal-shadow-mobile sm:modal-shadow bg-white sm:bg-secondary-background px-5 sm:px-12 py-4 sm:py-9 w-full sm:w-auto h-[90%] sm:h-auto sm:min-h-[70vh] sm:max-h-[95vh] z-10 overflow-auto rounded-t-[50px] sm:rounded-t-none">
         <div className="sm:hidden w-8 h-1 opacity-40 bg-zinc-500 rounded-[100px] mx-auto mb-[12px]" />
         <h1 className="font-bold mb-[3vh]">Add a log</h1>
         <h2 className="h-[5vh]">Title<span className="text-error-red">*</span></h2>
