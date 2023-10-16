@@ -52,7 +52,7 @@ export default async function handler(req, res) {
 
     let updatedUserObject;
     const user = await nextAuth.user();
-    console.log(user);
+
     try {
       if (user.isAdmin) {
         updatedUserObject = await updateUser(req.query.id, data["role"]);
