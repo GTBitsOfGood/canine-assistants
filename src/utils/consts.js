@@ -1,4 +1,5 @@
 import mongoose, { Types } from "mongoose";
+import dateutils from "./dateutils";
 import { z } from "zod";
 
 const pages = {
@@ -161,6 +162,61 @@ const dogSchema = z.object({
     .optional(),
 });
 
+const dogInformationSchema = {
+  ["Birth"]: {
+    ["Birth Time"]: "N/A",
+    ["Collar Color"]: "N/A",
+    ["Supplemental Feeding"]: "N/A",
+    ["Delivery Information"]: "N/A",
+    ["Birth Order"]: "N/A",
+  },
+  ["Family"]: {
+    ["Litter Size"]: "N/A",
+    ["Litter Composition"]: "N/A",
+    ["Father"]: "N/A",
+    ["Mother"]: "N/A",
+  },
+  ["Maternal Demeanor"]: {
+    ["Prior to Whelping"]: "N/A",
+    ["During Whelping"]: "N/A",
+    ["Subsequent to Whelping"]: "N/A",
+  },
+  ["Housing"]: {
+    ["Housing"]: "N/A",
+    ["Instructor"]: "N/A",
+    ["Primary Caregiver(s)"]: "N/A",
+    ["Primary Toileting Area"]: "N/A",
+  },
+  ["Feeding"]: {
+    ["Amount"]: "N/A",
+    ["First Meal"]: "N/A",
+    ["Second Meal"]: "N/A",
+    ["Third Meal"]: "N/A",
+  },
+  ["Grooming"]: {
+    ["Last bath"]: "N/A",
+  },
+};
+
+const computeDefaultValues = (dog) => {
+  const defaults = {
+    name: dog?.name || "",
+    dateOfBirth: dog?.dateOfBirth
+      ? dateutils.getDateString(new Date(dog.dateOfBirth))
+      : "",
+    gender: dog?.gender || "",
+    breed: dog?.breed || "",
+  };
+
+  // Object.keys(dogInformationSchema).forEach((category) => {
+  //   Object.keys(dogInformationSchema[category]).forEach((col) => {
+  //     defaults[col] = "";
+  //   });
+  // });
+
+  return defaults;
+};
+
 /**
  * Mock data for testing without any backend interaction
  */
@@ -239,4 +295,11 @@ const mocks = {
   ],
 };
 
-export { pages, consts, dogSchema, mocks };
+export {
+  pages,
+  consts,
+  dogSchema,
+  mocks,
+  computeDefaultValues,
+  dogInformationSchema,
+};

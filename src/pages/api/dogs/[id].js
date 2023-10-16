@@ -64,6 +64,7 @@ export default async function handler(req, res) {
         message: "Unable to update because dog ID is not in valid format.",
       });
     }
+
     const { success, error, data } = dogSchema
       .partial()
       .strict()
