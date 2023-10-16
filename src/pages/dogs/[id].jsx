@@ -92,7 +92,7 @@ export default function IndividualDogPage() {
               // TODO toast animation
               if (success) {
                 toast.custom((t) => (
-                  <div className={`h-12 px-6 py-4 rounded shadow border border-ca-pink-shade justify-center items-center inline-flex bg-ca-pink text-white text-lg font-normal
+                  <div className={`h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-ca-green text-white text-lg font-normal
                     ${t.visible ? 'animate-enter' : 'animate-leave'}`}
                   >
                     <span className="font-bold">New log</span>&nbsp;<span>was successfully added.</span>
@@ -100,7 +100,7 @@ export default function IndividualDogPage() {
                 ));
               } else {
                 toast.custom(() => (
-                  <div className="h-12 px-6 py-4 rounded shadow border border-error-red justify-center items-center inline-flex bg-high-concern text-black text-lg font-semibold">
+                  <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
                     There was a problem saving the log, please try again.
                   </div>
                 ));

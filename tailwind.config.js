@@ -37,7 +37,6 @@ module.exports = {
         "secondary-gray": "#EBEBEB",
         "tertiary-gray": "#808080",
         "modal-background-gray": "#E3E3E3",
-        // "primary-text": "#000000a8",
         "primary-text": "#121212",
         "secondary-text": "#353535",
         "error-red": "#FF0000",
