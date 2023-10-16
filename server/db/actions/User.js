@@ -22,3 +22,12 @@ export async function getUsers(filter = {}) {
 
   return User.find(filter);
 }
+
+export async function getUserById(id) {
+  try {
+    await dbConnect();
+    return User.findById(id);
+  } catch (e) {
+    throw new Error("Unable to get user at this time, please try again");
+  }
+}
