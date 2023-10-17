@@ -1,13 +1,11 @@
 import mongoose from "mongoose";
 
-const DB_URL = process.env.DB_URL;
-const DB_NAME = process.env.DB_NAME;
-const DB_CONNECTION_STRING = `${DB_URL}${DB_NAME}?retryWrites=true&w=majority`
-const DB_OPTS = {
+export const DB_URL = process.env.DB_URL;
+export const DB_NAME = process.env.DB_NAME;
+export const DB_CONNECTION_STRING = `${DB_URL}${DB_NAME}?retryWrites=true&w=majority`
+export const DB_OPTS = {
   bufferCommands: false,
 };
-
-export const DB_INFO = { DB_URL, DB_NAME, DB_CONNECTION_STRING, DB_OPTS };
 
 if (!DB_URL || !DB_NAME) {
   throw new Error(
