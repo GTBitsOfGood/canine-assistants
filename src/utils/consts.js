@@ -162,6 +162,14 @@ const dogSchema = z.object({
 });
 
 /**
+ * Zod object for validating request bodies for users
+ */
+const userUpdateSchema = z.object({
+  name: z.string(),
+  role: z.enum(["Admin", "Instructor", "Volunteer/Recipient"]),
+});
+
+/**
  * Zod object for validating request bodies for logs
  */
 const logSchema = z.object({
@@ -256,4 +264,4 @@ const mocks = {
   ],
 };
 
-export { pages, consts, dogSchema, logSchema, mocks };
+export { pages, consts, dogSchema, logSchema, userUpdateSchema, mocks };
