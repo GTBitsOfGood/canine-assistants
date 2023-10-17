@@ -1,4 +1,4 @@
-import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/24/solid";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import DropdownMenu, { DropdownMenuOption } from "./DropdownMenu";
 import { consts } from "@/utils/consts";
 
@@ -18,10 +18,10 @@ export default function LogSearchFilterBar({ filters, setFilters, setSearch }) {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <button className=" px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade justify-start items-center gap-2 flex">
+        {/* <button className=" px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade justify-start items-center gap-2 flex">
           <div className="text-foreground h-4 w-4 relative">{<PlusIcon />}</div>
           <div className="text-foreground text-base font-medium">Add a log</div>
-        </button>
+        </button> */}
       </div>
       <div className="flex flex-row items-center gap-4">
         <div className="text-neutral-700 text-sm font-medium">Filter by</div>

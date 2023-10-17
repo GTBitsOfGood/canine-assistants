@@ -7,6 +7,7 @@ import dateutils from "@/utils/dateutils";
 import {
   ChevronLeftIcon,
   PencilSquareIcon,
+  PlusIcon,
   TrashIcon,
 } from "@heroicons/react/24/solid";
 import { Chip, ChipTypeStyles } from "@/components/Chip";
@@ -281,6 +282,13 @@ export default function IndividualDogPage() {
           </div>
           <div label="logs">
             <div className="flex-grow flex-col space-y-4">
+              <button
+                className=" px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade justify-start items-center gap-2 flex"
+                onClick={() => setShowLogModal(true)}
+              >
+          <div className="text-foreground h-4 w-4 relative">{<PlusIcon />}</div>
+          <div className="text-foreground text-base font-medium">Add a log</div>
+        </button>
               <LogSearchFilterBar
                 filters={logFilters}
                 setFilters={setLogFilters}
@@ -289,14 +297,6 @@ export default function IndividualDogPage() {
 
               <SearchTagDisplay tags={tags} removeTag={removeTag} />
             </div>
-            <button
-              className="px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade justify-start items-center gap-2 flex"
-              onClick={() => setShowLogModal(true)}
-            >
-              <div className="text-foreground text-base font-medium">
-                + Add a log
-              </div>
-            </button>
           </div>
         </TabSection>
       </div>
