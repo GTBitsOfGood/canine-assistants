@@ -4,14 +4,6 @@ import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const UserSchema = new Schema({
-  username: {
-    type: String,
-    required: true,
-  },
-  hash: {
-    type: String,
-    required: true,
-  },
   name: {
     type: String,
     required: true
@@ -29,7 +21,7 @@ const UserSchema = new Schema({
   },
   role: {
     type: String,
-    enum: consts.roleArray,
+    enum: consts.userRoleArray,
     required: true,
   }
   

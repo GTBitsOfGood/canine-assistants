@@ -5,7 +5,9 @@ import GoogleProvider from "next-auth/providers/google";
 
 let cachedPromise;
 
-import { MongoClient } from "mongodb";
+import { MongoClient, ObjectId } from "mongodb";
+import User from "../../../../server/db/models/User";
+import { consts } from "@/utils/consts";
 
 const client = new MongoClient(DB_INFO.DB_CONNECTION_STRING);
 
@@ -40,7 +42,37 @@ export const authOptions = {
     newUser: "/dogs",
     error: "/login",
   },
+  events: {
+    createUser: async (message) => {
+      await dbConnect();
+
+      const _id = new ObjectId(message.user.id);
+
+      // TODO: Find a way of avoiding unnecessary deletion calls
+      await User.deleteOne({ _id });
+
+      const newUserRecord = {
+        _id,
+        name: message.user.name,
+        email: message.user.email,
+        image: message.user.image,
+        role: "Volunteer" // TODO: Default string shouldn't be hardcoded and instead moved somewhere else
+        
+      }
+
+      const user = new User(newUserRecord);
+
+      await user.save();
+    }
+  },
   callbacks: {
+    async signIn({ user, account, profile, email, credentials }) {
+      if (!user.role) {
+        user.role = "Volunteer";
+      }
+
+      return true;
+    },
     async jwt({ token, user }) {
       if (user) {
         token.user = {
@@ -57,6 +89,7 @@ export const authOptions = {
     session: async ({ session, token }) => {
       if (token) {
         session.user = token.user;
+        session.role = token.role;
       }
 
       return session;
