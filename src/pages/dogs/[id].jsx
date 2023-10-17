@@ -7,7 +7,7 @@ import { Form, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import stringUtils from "@/utils/stringutils";
 import { dogInformationSchema, computeDefaultValues } from "@/utils/consts";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 import {
   ChevronLeftIcon,
@@ -21,7 +21,6 @@ import femaleicon from "../../../public/femaleicon.svg";
 import dogplaceholdericon from "../../../public/dogplaceholdericon.svg";
 import FormField from "@/components/FormField";
 import { dogSchema } from "@/utils/consts";
-import { Nothing_You_Could_Do } from "next/font/google";
 /**
  *
  * @returns {React.ReactElement} The individual Dog page
@@ -59,20 +58,33 @@ export default function IndividualDogPage() {
 
   const dog = data.data;
 
-  const notify = (message) => {
+  const notify = (message, newDogName) => {
     if (message === "success") {
-      toast.success("Successfully updated!");
+      toast(
+        <>
+          <span>
+            <strong>{newDogName}</strong> was successfully updated.
+          </span>
+        </>,
+        {
+          style: {
+            color: "white",
+            backgroundColor: "green",
+          },
+        }
+      );
     } else if (message === "failure") {
       toast.error("Unable to update!");
     }
   };
 
-  const onSubmit = async (data) => {
+  const onEditSubmit = async (data) => {
+    console.log(data, "bruh");
     const dataFormatted = Object.fromEntries(
-      Object.entries(data).filter(
-        ([key, value]) => value !== "" || value !== "N/A"
-      )
+      Object.entries(data).filter(([key, value]) => value !== "N/A")
     );
+
+    console.log(dataFormatted, "weee");
 
     const requestBody = {
       method: "PATCH",
@@ -91,7 +103,7 @@ export default function IndividualDogPage() {
         throw new Error(res.message);
       }
 
-      notify("success");
+      notify("success", res.data.name);
       setData(res);
       reset(computeDefaultValues(res.data));
       setIsEdit(false);
@@ -102,10 +114,11 @@ export default function IndividualDogPage() {
     }
   };
 
+  console.log(dog);
+
   return (
     // Artificial spacing until nav is created
     <div className={`container mx-auto order-b border-gray-300`}>
-      <Toaster />
       <div className="py-6 flex items-center">
         <ChevronLeftIcon className="w-4 mr-2" />
         <Link href="/dogs" className="text-lg text-secondary-text">
@@ -113,7 +126,7 @@ export default function IndividualDogPage() {
         </Link>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onEditSubmit)}>
         <div className="flex gap-8">
           {dog.image ? (
             <Image alt="Dog" width={300} height={300} src={dog.image} />
@@ -199,7 +212,7 @@ export default function IndividualDogPage() {
                       label={"Coat Color"}
                       errors={errors}
                       keyLabel={"coatColor"}
-                      value={"N/A"}
+                      value={dog.coatColor || "N/A"}
                     />
                   </div>
 
@@ -318,7 +331,7 @@ export default function IndividualDogPage() {
                             errors={errors}
                             register={register}
                             label={col}
-                            value={dogInformationSchema[category][col]}
+                            value={dog[stringUtils.toCamelCase(col)] || "N/A"}
                           />
                         )
                       )}

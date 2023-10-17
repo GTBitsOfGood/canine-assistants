@@ -1,10 +1,16 @@
 // default type checking is string
-const isFieldType = (schema, field, type = "zodString") => {
-  return !(schema.shape[field] && schema.shape[field]._def.typeName === type);
+const getZodType = (schema, field) => {
+  if (schema.shape[field]) {
+    if (schema.shape[field]._def.typeName === "ZodOptional") {
+      return schema.shape[field]._def.innerType._def.typeName;
+    } else {
+      return schema.shape[field]._def.typeName;
+    }
+  }
 };
 
 const schemautils = {
-  isFieldType,
+  getZodType,
 };
 
 export default schemautils;

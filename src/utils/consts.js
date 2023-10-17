@@ -198,14 +198,28 @@ const dogInformationSchema = {
   },
 };
 
+const dogLabelToKey = {
+  Name: "name",
+  "Birth Date": "dateOfBirth",
+  Sex: "gender",
+  Breed: "breed",
+  "Coat Color": "coatColor",
+  "Collar Color": "collarColor",
+};
+
 const computeDefaultValues = (dog) => {
   const defaults = {
-    name: dog?.name || "",
+    name: dog?.name || "N/A",
     dateOfBirth: dog?.dateOfBirth
       ? dateutils.getDateString(new Date(dog.dateOfBirth))
-      : "",
-    gender: dog?.gender || "",
-    breed: dog?.breed || "",
+      : "N/A",
+    gender: dog?.gender || "N/A",
+    breed: dog?.breed || "N/A",
+    coatColor: dog?.coatColor || "N/A",
+    collarColor: dog?.collarColor || "N/A",
+    supplementalFeeding: dog?.supplementalFeeding || "N/A",
+    deliveryInformation: dog?.deliveryInformation || "Natural", // right now set to natural, figure out default value later
+    litterComposition: dog?.litterComposition || "N/A",
   };
 
   // Object.keys(dogInformationSchema).forEach((category) => {
@@ -301,5 +315,6 @@ export {
   dogSchema,
   mocks,
   computeDefaultValues,
+  dogLabelToKey,
   dogInformationSchema,
 };
