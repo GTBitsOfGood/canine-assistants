@@ -1,21 +1,11 @@
-import { mongoose } from "mongoose";
-import { z } from "zod";
-import { consts } from "@/utils/consts";
+import { Types } from "mongoose";
+import { userSchema } from "@/utils/consts";
 import nextAuth from "next-auth";
 import { updateUser } from "../../../../server/db/actions/User";
 
-const userSchema = z.object({
-  username: z.string().optional(),
-  name: z.string().optional(),
-  email: z.string().optional(),
-  image: z.string().optional(),
-  emailVerified: z.boolean().default(null).optional(),
-  role: z.array(z.enum(consts.roleArray)).optional(),
-});
-
 export default async function handler(req, res) {
   if (req.method == "PATCH") {
-    if (!mongoose.isValidObjectId(req.query.id)) {
+    if (!Types.ObjectId.isValid(req.query.id)) {
       return res.status(422).send({
         success: false,
         message: "Unable to update because user ID is not in valid format.",
