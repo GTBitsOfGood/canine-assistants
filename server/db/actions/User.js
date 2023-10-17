@@ -31,3 +31,24 @@ export async function getUserById(id) {
     throw new Error("Unable to get user at this time, please try again");
   }
 }
+
+/**
+Updates a user
+@param {*} userId ObjectId of log to update
+@param {*} userData Object with log updates
+*/
+export async function updateUser(userId, userData) {
+  try {
+    await dbConnect();
+  } catch (e) {
+    throw new Error("Unable to update user, please try again");
+  }
+
+  try {
+    return await User.findByIdAndUpdate(userId, userData, {
+      returnDocument: "after",
+    });
+  } catch (e) {
+    throw new Error("Unable to update user");
+  }
+}

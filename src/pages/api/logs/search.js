@@ -1,13 +1,13 @@
 import { getLogs } from "../../../../server/db/actions/Log";
 import { z } from "zod";
-import mongoose, { Types } from "mongoose";
+import { Types } from "mongoose";
 
 const logParams = z.object({
   author: z.string().refine((id) => {
-    return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+    return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
   }),
   dog: z.string().refine((id) => {
-    return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+    return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
   }),
 });
 
