@@ -1,9 +1,42 @@
 import { Types } from "mongoose";
+import { getUserById, updateUser } from "../../../../server/db/actions/User";
 import { userUpdateSchema } from "@/utils/consts";
-import { updateUser } from "../../../../server/db/actions/User";
 
 export default async function handler(req, res) {
-  if (req.method == "PATCH") {
+  if (req.method == "GET") {
+    try {
+      const { id } = req.query;
+      if (!Types.ObjectId.isValid(id)) {
+        return res.status(422).send({
+          success: false,
+          message: "Invalid User ID",
+        });
+      }
+
+      const data = await getUserById(id);
+
+      if (data === null || data.length === 0) {
+        res.status(404).json({
+          success: false,
+          error: "Unable to retrieve user because it doesn't exist",
+        });
+        return;
+      }
+
+      return res.status(200).json({
+        success: true,
+        message: "Successfully retrieved user",
+        data: data,
+      });
+    } catch (e) {
+      res.status(500).json({
+        success: false,
+        message: e.message,
+      });
+      return;
+    }
+  }
+  else if (req.method == "PATCH") {
     if (!Types.ObjectId.isValid(req.query.id)) {
       return res.status(422).send({
         success: false,
@@ -76,7 +109,6 @@ export default async function handler(req, res) {
       });
     }
   }
-
   return res.status(405).json({
     success: false,
     message: `Request method ${req.method} is not allowed`,
