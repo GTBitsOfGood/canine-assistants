@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import { Types } from "mongoose";
 import {
   deleteDog,
   updateDog,
@@ -29,7 +29,7 @@ export default async function handler(req, res) {
       return;
     }
   } else if (req.method == "DELETE") {
-    if (!mongoose.isValidObjectId(req.query.id)) {
+    if (!Types.ObjectId.isValid(req.query.id)) {
       return res.status(422).send({
         success: false,
         message: "Unable to delete because dog id is not in valid format",
@@ -58,7 +58,7 @@ export default async function handler(req, res) {
         });
       });
   } else if (req.method == "PATCH") {
-    if (!mongoose.isValidObjectId(req.query.id)) {
+    if (!Types.ObjectId.isValid(req.query.id)) {
       return res.status(422).send({
         success: false,
         message: "Unable to update because dog ID is not in valid format.",
