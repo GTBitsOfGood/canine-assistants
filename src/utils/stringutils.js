@@ -1,16 +1,19 @@
 const upperFirstLetter = (str) => {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-}
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
 
 const toUpperEveryWord = (str) => {
-    if (str.length === 0) return "";
+  if (str.length === 0) return "";
 
-    return str.split(" ").reduce((prev, curr, index) => prev + upperFirstLetter(curr) + ' ', '').trim(); 
-} 
+  return str
+    .split(" ")
+    .reduce((prev, curr, index) => prev + upperFirstLetter(curr) + " ", "")
+    .trim();
+};
 
 const stringUtils = {
-    upperFirstLetter,
-    toUpperEveryWord
-}   
+  upperFirstLetter,
+  toUpperEveryWord,
+};
 
 export default stringUtils;

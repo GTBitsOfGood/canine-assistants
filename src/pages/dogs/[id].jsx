@@ -46,20 +46,41 @@ export default function IndividualDogPage() {
         },
         body: JSON.stringify(search),
       })
-        // .catch((err) => setLogs([]))
+        .catch((err) => setLogs([]))
         .then((res) => res.json())
         .then((data) => setLogs(data));
     }
   }, [router.query]);
+
   useEffect(() => {
-    // apply string search query
-    setFilteredLogs(
-      (!logs || logs === undefined || !logs.success ? [] : logs.data).filter(
-        (log) =>
-          log.title.includes(logSearch) || log.description.includes(logSearch)
-      )
+    // get all logs
+    const allLogs =
+      !logs || logs === undefined || !logs.success ? [] : logs.data;
+    // filter logs by search query
+    const searchQueryFilteredLogs = allLogs.filter(
+      (log) =>
+        log.title.toLowerCase().includes(logSearch) ||
+        log.description.toLowerCase().includes(logSearch)
     );
-    // TODO: apply filters
+    setFilteredLogs(
+      // if filters are applied, further filter
+      Object.keys(logFilters).length === 0
+        ? searchQueryFilteredLogs
+        : searchQueryFilteredLogs.filter((log) => {
+            return Object.keys(logFilters).reduce((acc, filterType) => {
+              return (
+                acc ||
+                (filterType == "tags"
+                  ? Object.values(logFilters[filterType]).includes(
+                      ...log[filterType]
+                    )
+                  : Object.values(logFilters[filterType]).includes(
+                      log[filterType]
+                    ))
+              );
+            }, false);
+          })
+    );
   }, [logs, logFilters, logSearch]);
 
   if (!data || data === undefined || !data.success) {
@@ -123,8 +144,11 @@ export default function IndividualDogPage() {
 
   const removeTag = (group, index) => {
     const newFilters = { ...logFilters };
-
-    delete newFilters[group][index];
+    if (Object.keys(newFilters[group]).length <= 1) {
+      delete newFilters[group];
+    } else {
+      delete newFilters[group][index];
+    }
 
     setLogFilters(newFilters);
   };
@@ -246,6 +270,7 @@ export default function IndividualDogPage() {
 
               <TagDisplay tags={tags} removeTag={removeTag} />
 
+              {/* TODO: move to static array, toggle hidden field */}
               {filteredLogs.map((log) => {
                 return <Log log={log} key={log._id} />;
               })}
