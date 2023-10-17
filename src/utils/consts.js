@@ -164,12 +164,9 @@ const dogSchema = z.object({
 /**
  * Zod object for validating request bodies for users
  */
-const userSchema = z.object({
-  name: z.string().optional(),
-  email: z.string().optional(),
-  image: z.string().optional(),
-  emailVerified: z.boolean().default(null).optional(),
-  role: z.array(z.enum(consts.roleArray)).optional(),
+const userUpdateSchema = z.object({
+  name: z.string(),
+  role: z.enum(["Admin", "Instructor", "Volunteer/Recipient"]),
 });
 
 /**
@@ -250,4 +247,4 @@ const mocks = {
   ],
 };
 
-export { pages, consts, dogSchema, userSchema, mocks };
+export { pages, consts, dogSchema, userUpdateSchema, mocks };

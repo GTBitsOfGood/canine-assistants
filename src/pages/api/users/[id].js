@@ -1,6 +1,5 @@
 import { Types } from "mongoose";
-import { userSchema } from "@/utils/consts";
-import nextAuth from "next-auth";
+import { userUpdateSchema } from "@/utils/consts";
 import { updateUser } from "../../../../server/db/actions/User";
 
 export default async function handler(req, res) {
@@ -12,9 +11,13 @@ export default async function handler(req, res) {
       });
     }
 
-    const { success, error, data } = userSchema
+    const { success, error, data } = userUpdateSchema
       .partial()
       .strict()
+      .refine(
+        (data) => data.name || data.role,
+        "Must update either name or role",
+      )
       .safeParse(req.body);
 
     if (!success) {
@@ -41,13 +44,16 @@ export default async function handler(req, res) {
     }
 
     let updatedUserObject;
-    const user = await nextAuth.user();
-
+    // TODO: grab user from session
+    const user = {
+      role: "Admin",
+    };
     try {
-      if (user.isAdmin) {
-        updatedUserObject = await updateUser(req.query.id, data["role"]);
+      if (user.role === "Admin") {
+        updatedUserObject = await updateUser(req.query.id, data);
       } else {
-        delete data["role"];
+        delete data.role;
+        // TODO: check if the user _id from session == user _id they are trying to update
         updatedUserObject = await updateUser(req.query.id, data);
       }
     } catch (e) {
@@ -58,12 +64,12 @@ export default async function handler(req, res) {
     }
 
     if (!updatedUserObject) {
-      return res.status(404).send({
+      return res.status(404).json({
         success: false,
-        message: "Cannot update user because user does not exist!",
+        message: "Cannot update user because user does not exist",
       });
     } else {
-      return res.status(200).send({
+      return res.status(200).json({
         success: true,
         message: "Sucessfully updated user",
         data: updatedUserObject,

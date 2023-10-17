@@ -26,7 +26,7 @@ export async function updateUser(userId, userData) {
   }
 
   try {
-    return await User.findByIdAndUpdate({ _id: userId }, userData, {
+    return await User.findByIdAndUpdate(userId, userData, {
       returnDocument: "after",
     });
   } catch (e) {
