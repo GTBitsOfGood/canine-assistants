@@ -1,6 +1,6 @@
 import { getDogs } from "../../../../server/db/actions/Dog";
 import { z } from "zod";
-import mongoose, { Types } from "mongoose";
+import { Types } from "mongoose";
 import { consts } from "@/utils/consts";
 
 const dogSchema = z.object({
@@ -13,14 +13,14 @@ const dogSchema = z.object({
   instructors: z
     .string()
     .refine((id) => {
-      return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+      return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
     })
     .array()
     .optional(),
   volunteer: z
     .string()
     .refine((id) => {
-      return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+      return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
     })
     .optional(),
   partner: z
@@ -31,7 +31,7 @@ const dogSchema = z.object({
       user: z
         .string()
         .refine((id) => {
-          return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+          return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
         })
         .optional(),
     })
@@ -40,7 +40,7 @@ const dogSchema = z.object({
 
 export default async function handler(req, res) {
   const {
-  success,
+    success,
     error,
     data: filter,
   } = dogSchema.safeParse(req.body ? req.body : {});

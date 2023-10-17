@@ -7,6 +7,7 @@ export const ChipTypeStyles = {
   "No Concern": "border-no-concern-shade bg-no-concern",
   Placed: "border-location-placed-shade bg-location-placed",
   Facility: "border-facility-green-shade bg-facility-green",
+  "Topic": "border-topic-chip-yellow-border bg-topic-chip-yellow"
 };
 
 export function Chip({ label, type, link = "" }) {
@@ -24,7 +25,7 @@ export function Chip({ label, type, link = "" }) {
       <button
         onClick={handleClick}
         href="#"
-        className={`${link.length > 0 ? "" : "cursor-default"} big-red-300 h-10 inline-flex`}
+        className={`${link.length > 0 ? "" : "cursor-default"} big-red-300 max-h-10 inline-flex`}
       >
         <div className={`px-2.5 border items-center rounded py-2 ${type} flex`}>
           <div className="text-sm font-medium">{label}</div>
