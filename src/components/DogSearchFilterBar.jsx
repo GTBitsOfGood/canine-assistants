@@ -11,7 +11,7 @@ export default function DogSearchFilterBar({ filters, setFilters, setSearch }) {
         </div>
         <input
           type="search"
-          className="w-full h-full rounded bg-foregrund border border-neutral-300 text-neutral-700 text-lg p-2.5 pl-10 font-normal"
+          className="w-full h-full rounded bg-foreground border border-neutral-300 text-neutral-700 text-lg p-2.5 pl-10 font-normal"
           placeholder="Search Dogs..."
           required
           onChange={(e) => setSearch(e.target.value)}

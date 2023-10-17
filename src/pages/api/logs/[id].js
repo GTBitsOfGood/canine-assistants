@@ -1,6 +1,9 @@
-
-import mongoose, { Types } from "mongoose";
-import { updateLog, deleteLog, getLogById } from "../../../../server/db/actions/Log";
+import { Types } from "mongoose";
+import {
+  updateLog,
+  deleteLog,
+  getLogById,
+} from "../../../../server/db/actions/Log";
 import { z } from "zod";
 import { consts } from "@/utils/consts";
 
@@ -16,7 +19,7 @@ export default async function handler(req, res) {
   if (req.method == "GET") {
     try {
       const { id } = req.query;
-      if (!mongoose.isValidObjectId(id)) {
+      if (!Types.ObjectId.isValid(id)) {
         return res.status(422).send({
           success: false,
           message: "Invalid ID",
@@ -48,7 +51,7 @@ export default async function handler(req, res) {
   }
 
   if (req.method == "DELETE") {
-    if (!mongoose.isValidObjectId(req.query.id)) {
+    if (!Types.ObjectId.isValid(req.query.id)) {
       return res.status(422).send({
         success: false,
         message: "Unable to delete because log id is not in valid format",
@@ -78,9 +81,9 @@ export default async function handler(req, res) {
         });
       });
   }
-  
+
   if (req.method == "PATCH") {
-    if (!mongoose.isValidObjectId(req.query.id)) {
+    if (!Types.ObjectId.isValid(req.query.id)) {
       return res.status(422).send({
         success: false,
         message: "Unable to update because log ID is not in valid format.",

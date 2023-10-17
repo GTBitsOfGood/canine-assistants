@@ -1,16 +1,25 @@
-import { createUser } from "../../../../server/db/actions/User";
+import { getUsers } from "../../../../server/db/actions/User";
 
 export default async function handler(req, res) {
-  const { username, hash } = req.query;
+  if (req.method == "GET") {
+    try {
+      const users = await getUsers();
 
-  console.log(hash);
-  let userId;
-  try {
-    userId = await createUser(username, hash);
-  } catch (e) {
-    res.status(500).json({ error: "Unable to create user" });
-    return;
+      return res.status(200).json({
+        success: true,
+        message: "Successfully retrieved users",
+        data: users,
+      });
+    } catch (e) {
+      return res.status(500).json({
+        success: false,
+        message: e.message,
+      });
+    }
   }
 
-  res.status(200).json({ id: userId });
+  return res.status(405).json({
+    success: false,
+    message: `Request method ${req.method} is not allowed`,
+  });
 }
