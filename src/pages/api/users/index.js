@@ -23,18 +23,3 @@ export default async function handler(req, res) {
     message: `Request method ${req.method} is not allowed`,
   });
 }
-
-import { z } from "zod";
-import { consts } from "@/utils/consts";
-import nextAuth from "next-auth";
-import { updateUser } from "../../../../server/db/actions/User";
-
-const userSchema = z.object({
-  username: z.string(),
-  hash: z.string(),
-  name: z.string(),
-  email: z.string(),
-  image: z.string().optional(),
-  emailVerified: z.boolean().default(null),
-  role: z.array(z.enum(consts.roleArray)).optional(),
-});

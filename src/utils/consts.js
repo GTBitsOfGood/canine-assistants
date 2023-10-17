@@ -45,6 +45,17 @@ const consts = {
 };
 
 /**
+ * Zod object for validating request bodies for users
+ */
+const userSchema = z.object({
+  name: z.string(),
+  email: z.string(),
+  image: z.string().optional(),
+  emailVerified: z.boolean().default(null),
+  role: z.array(z.enum(consts.roleArray)).optional(),
+});
+
+/**
  * Zod object for validating request bodies for dogs
  */
 const dogSchema = z.object({
@@ -239,4 +250,4 @@ const mocks = {
   ],
 };
 
-export { pages, consts, dogSchema, mocks };
+export { pages, consts, dogSchema, userSchema, mocks };

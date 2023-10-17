@@ -1,25 +1,14 @@
-import mongoose from "mongoose";
-import { z } from "zod";
-import { consts } from "@/utils/consts";
+import { Types } from "mongoose";
 import { getUserById } from "../../../../server/db/actions/User";
-
-const userSchema = z.object({
-  username: z.string(),
-  name: z.string(),
-  email: z.string(),
-  image: z.string().optional(),
-  emailVerified: z.boolean().default(null),
-  role: z.array(z.enum(consts.roleArray)).optional(),
-});
 
 export default async function handler(req, res) {
   if (req.method == "GET") {
     try {
       const { id } = req.query;
-      if (!mongoose.isValidObjectId(id)) {
+      if (!Types.ObjectId.isValid(id)) {
         return res.status(422).send({
           success: false,
-          message: "Invalid Object ID",
+          message: "Invalid User ID",
         });
       }
 
