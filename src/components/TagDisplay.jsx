@@ -20,7 +20,7 @@ export default function TagDisplay({ tags, removeTag }) {
               <div className="flex gap-2 items-center">
                 <span>
                   <strong>{stringUtils.toUpperEveryWord(tag.group)}</strong>{" "}
-                  {stringUtils.toUpperEveryWord(tag.label)}
+                  {tag.label}
                 </span>
                 {removeTag ? (
                   <button onClick={() => removeTag(tag.group, tag.index)}>
@@ -32,19 +32,11 @@ export default function TagDisplay({ tags, removeTag }) {
               </div>
             }
             type={
-              ChipTypeStyles[
-                stringUtils
-                  .toUpperEveryWord(tag.label)
-                  .replaceAll(" ", "")
-                  .replace(/[0-9]/g, "")
-              ] ||
-              ChipTypeStyles[
-                stringUtils
-                  .toUpperEveryWord(tag.group)
-                  .replaceAll(" ", "")
-                  .replace(/[0-9]/g, "")
-              ] ||
-              ChipTypeStyles.Tag
+              tag.group === "topic"
+                ? ChipTypeStyles.Topic
+                : ChipTypeStyles[
+                    tag.label.replaceAll(" ", "").replace(/[0-9]/g, "")
+                  ] || ChipTypeStyles.Tag
             }
           />
         );

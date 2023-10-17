@@ -134,25 +134,21 @@ export default function IndividualDogPage() {
   };
 
   const tags = Object.keys(appliedFilters)
-    .map((filterGroup, index) =>
-      Object.keys(appliedFilters[filterGroup]).map((element) => {
-        return filterGroup[element] == null ? (
-          <></>
-        ) : (
-          {
-            group: filterGroup,
-            label: appliedFilters[filterGroup][element],
-            index: element,
-            type:
-              ChipTypeStyles[
-                appliedFilters[filterGroup][element]
-                  .replaceAll(" ", "")
-                  .replace(/[0-9]/g, "")
-              ] || ChipTypeStyles.Tag,
-          }
-        );
-      })
-    )
+    .map((filterGroup, index) => {
+      return Object.keys(appliedFilters[filterGroup]).map((element) => {
+        return {
+          group: filterGroup,
+          label: appliedFilters[filterGroup][element],
+          index: element,
+          type:
+            ChipTypeStyles[
+              appliedFilters[filterGroup][element]
+                .replaceAll(" ", "")
+                .replace(/[0-9]/g, "")
+            ] || ChipTypeStyles.Tag,
+        };
+      });
+    })
     .flat(1);
 
   const removeTag = (group, index) => {
