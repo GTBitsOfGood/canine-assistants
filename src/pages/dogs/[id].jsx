@@ -26,8 +26,8 @@ export default function IndividualDogPage() {
 
   const router = useRouter();
 
-  const [logSearch, setLogSearch] = useState("");
-  const [logFilters, setLogFilters] = useState({});
+  const [searchQuery, setSearchQuery] = useState("");
+  const [appliedFilters, setAppliedFilters] = useState({});
   const [logs, setLogs] = useState([]);
   const [filteredLogs, setFilteredLogs] = useState([]);
 
@@ -52,36 +52,44 @@ export default function IndividualDogPage() {
     }
   }, [router.query]);
 
+  // get all logs
+  const allLogs = !logs || logs === undefined || !logs.success ? [] : logs.data;
+
   useEffect(() => {
-    // get all logs
-    const allLogs =
-      !logs || logs === undefined || !logs.success ? [] : logs.data;
     // filter logs by search query
     const searchQueryFilteredLogs = allLogs.filter(
       (log) =>
-        log.title.toLowerCase().includes(logSearch) ||
-        log.description.toLowerCase().includes(logSearch)
+        log.title.toLowerCase().includes(searchQuery) ||
+        log.description.toLowerCase().includes(searchQuery)
     );
-    setFilteredLogs(
-      // if filters are applied, further filter
-      Object.keys(logFilters).length === 0
-        ? searchQueryFilteredLogs
-        : searchQueryFilteredLogs.filter((log) => {
-            return Object.keys(logFilters).reduce((acc, filterType) => {
-              return (
-                acc ||
-                (filterType == "tags"
-                  ? Object.values(logFilters[filterType]).includes(
-                      ...log[filterType]
-                    )
-                  : Object.values(logFilters[filterType]).includes(
-                      log[filterType]
-                    ))
-              );
-            }, false);
-          })
-    );
-  }, [logs, logFilters, logSearch]);
+
+    // if filters are applied, filter the log list further
+    if (Object.keys(appliedFilters).length === 0) {
+      setFilteredLogs(searchQueryFilteredLogs);
+    } else {
+      setFilteredLogs(
+        searchQueryFilteredLogs.filter((log) => {
+          return Object.keys(appliedFilters).reduce((acc, filterType) => {
+            /* 
+            note: a log can have multiple tags, so we check if ANY of the 
+            applied tag filters match ANY of the log tags; for other types, it 
+            must be an exact match.
+            */
+            return (
+              acc ||
+              (filterType == "tags"
+                ? Object.values(appliedFilters[filterType]).includes(
+                    ...log[filterType]
+                  )
+                : Object.values(appliedFilters[filterType]).includes(
+                    log[filterType]
+                  ))
+            );
+          }, false);
+        })
+      );
+    }
+  }, [logs, appliedFilters, searchQuery]);
 
   if (!data || data === undefined || !data.success) {
     return <div>loading</div>;
@@ -125,32 +133,37 @@ export default function IndividualDogPage() {
     },
   };
 
-  const tags = Object.keys(logFilters)
+  const tags = Object.keys(appliedFilters)
     .map((filterGroup, index) =>
-      Object.keys(logFilters[filterGroup]).map((element) =>
-        filterGroup[element] == null ? (
+      Object.keys(appliedFilters[filterGroup]).map((element) => {
+        return filterGroup[element] == null ? (
           <></>
         ) : (
           {
             group: filterGroup,
-            label: logFilters[filterGroup][element],
+            label: appliedFilters[filterGroup][element],
             index: element,
-            type: ChipTypeStyles.Tag,
+            type:
+              ChipTypeStyles[
+                appliedFilters[filterGroup][element]
+                  .replaceAll(" ", "")
+                  .replace(/[0-9]/g, "")
+              ] || ChipTypeStyles.Tag,
           }
-        )
-      )
+        );
+      })
     )
     .flat(1);
 
   const removeTag = (group, index) => {
-    const newFilters = { ...logFilters };
+    const newFilters = { ...appliedFilters };
     if (Object.keys(newFilters[group]).length <= 1) {
       delete newFilters[group];
     } else {
       delete newFilters[group][index];
     }
 
-    setLogFilters(newFilters);
+    setAppliedFilters(newFilters);
   };
 
   return (
@@ -263,9 +276,9 @@ export default function IndividualDogPage() {
           <div label="logs">
             <div className="flex-grow flex-col space-y-4">
               <LogSearchFilterBar
-                filters={logFilters}
-                setFilters={setLogFilters}
-                setSearch={setLogSearch}
+                filters={appliedFilters}
+                setFilters={setAppliedFilters}
+                setSearch={setSearchQuery}
               />
 
               <TagDisplay tags={tags} removeTag={removeTag} />
@@ -274,6 +287,10 @@ export default function IndividualDogPage() {
               {filteredLogs.map((log) => {
                 return <Log log={log} key={log._id} />;
               })}
+              <div className="flex justify-center">
+                Displaying {filteredLogs.length} out of {allLogs.length}{" "}
+                {allLogs.length == 1 ? "log" : "logs"}
+              </div>
             </div>
           </div>
         </TabSection>

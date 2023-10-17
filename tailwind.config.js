@@ -39,7 +39,7 @@ module.exports = {
         "some-concern-shade": "#E87420",
         "facility-green": "#BCF0E4",
         "facility-green-shade": "#38AE75",
-        topic: "#FFF490",
+        topic: "#E3E69D",
         "topic-shade": "#B6AE69",
       },
     },
