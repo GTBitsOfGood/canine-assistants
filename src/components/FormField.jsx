@@ -22,6 +22,8 @@ export default function FormField({
       return "text";
     } else if (schemautils.getZodType(dogSchema, keyLabel) === "ZodEnum") {
       return "text";
+    } else if (schemautils.getZodType(dogSchema, keyLabel) === "ZodDate") {
+      return "text";
     } else {
       return "complex"; // this is temporary!! (we handle this next sprint)
     }
