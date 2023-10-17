@@ -48,7 +48,10 @@ export default function LogSearchFilterBar({ filters, setFilters, setSearch }) {
           selectedOptions={filters.severity}
           label="Severity"
           submitFilters={(newFilters) => {
-            if (newFilters !== undefined) {
+            if (
+              newFilters !== undefined &&
+              Object.keys(newFilters).length > 0
+            ) {
               setFilters({ ...filters, severity: newFilters });
             }
           }}

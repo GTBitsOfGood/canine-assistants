@@ -11,8 +11,9 @@ import {
   TagIcon,
 } from "@heroicons/react/24/solid";
 import { Chip, ChipTypeStyles } from "./Chip";
-import SearchTagDisplay from "./SearchTagDisplay";
+import TagDisplay from "./TagDisplay";
 import dateutils from "@/utils/dateutils";
+import stringUtils from "@/utils/stringutils";
 
 /**
  *
@@ -111,7 +112,13 @@ export default function DogTable() {
         return (
           <Chip
             label={rowData.medical}
-            type={ChipTypeStyles[rowData.medical]}
+            type={
+              ChipTypeStyles[
+                stringUtils
+                  .toUpperEveryWord(rowData.medical)
+                  .replaceAll(" ", "")
+              ]
+            }
           />
         );
       },
@@ -124,7 +131,13 @@ export default function DogTable() {
         return (
           <Chip
             label={rowData.behavior}
-            type={ChipTypeStyles[rowData.behavior]}
+            type={
+              ChipTypeStyles[
+                stringUtils
+                  .toUpperEveryWord(rowData.behavior)
+                  .replaceAll(" ", "")
+              ]
+            }
           />
         );
       },
@@ -135,7 +148,14 @@ export default function DogTable() {
       icon: <ClipboardIcon />,
       customRender: (rowData) => {
         return (
-          <Chip label={rowData.other} type={ChipTypeStyles[rowData.other]} />
+          <Chip
+            label={rowData.other}
+            type={
+              ChipTypeStyles[
+                stringUtils.toUpperEveryWord(rowData.other).replaceAll(" ", "")
+              ]
+            }
+          />
         );
       },
     },
@@ -194,7 +214,7 @@ export default function DogTable() {
         setSearch={setSearchFilter}
       />
 
-      <SearchTagDisplay tags={tags} removeTag={removeTag} />
+      <TagDisplay tags={tags} removeTag={removeTag} />
 
       <Table
         cols={dogTableColumns}

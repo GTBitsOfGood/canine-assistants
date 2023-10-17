@@ -7,7 +7,7 @@ export const ChipTypeStyles = {
   NoConcern: "border-no-concern-shade bg-no-concern",
   Placed: "border-location-placed-shade bg-location-placed",
   Facility: "border-facility-green-shade bg-facility-green",
-  "Topic": "border-topic-chip-yellow-border bg-topic-chip-yellow"
+  Topic: "border-topic-shade bg-topic",
 };
 
 export function Chip({ label, type, link = "" }) {
