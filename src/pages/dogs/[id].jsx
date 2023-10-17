@@ -1,7 +1,7 @@
 import TabSection from "@/components/TabSection";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import toast, { Toaster } from 'react-hot-toast';
+import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import dateutils from "@/utils/dateutils";
 import {
@@ -79,7 +79,6 @@ export default function IndividualDogPage() {
   return (
     // Artificial spacing until nav is created
     <div className={`container mx-auto order-b border-gray-300`}>
-      <Toaster />
       {showLogModal ? (
         <>
           <LogModal
