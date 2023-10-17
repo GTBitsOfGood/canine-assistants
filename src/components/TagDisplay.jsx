@@ -2,13 +2,16 @@ import { XMarkIcon } from "@heroicons/react/24/solid";
 import { Chip, ChipTypeStyles } from "./Chip";
 import stringUtils from "@/utils/stringutils";
 
-export default function SearchTagDisplay({ tags, removeTag }) {
+export default function TagDisplay({ tags, removeTag }) {
   return (
     <div className="flex items-center gap-1">
-      <div className="text-sm font-medium mr-1">
-        Filters applied: {tags.length === 0 ? "None" : ""}
-      </div>
-
+      {removeTag ? (
+        <div className="text-sm font-medium mr-1">
+          Filters applied: {tags.length === 0 ? "None" : ""}
+        </div>
+      ) : (
+        <></>
+      )}
       {tags.map((tag) => {
         return (
           <Chip
@@ -19,9 +22,13 @@ export default function SearchTagDisplay({ tags, removeTag }) {
                   <strong>{stringUtils.toUpperEveryWord(tag.group)}</strong>{" "}
                   {stringUtils.toUpperEveryWord(tag.label)}
                 </span>
-                <button onClick={() => removeTag(tag.group, tag.index)}>
-                  <XMarkIcon className="h-3.5 w-3.5" />
-                </button>
+                {removeTag ? (
+                  <button onClick={() => removeTag(tag.group, tag.index)}>
+                    <XMarkIcon className="h-3.5 w-3.5" />
+                  </button>
+                ) : (
+                  <></>
+                )}
               </div>
             }
             type={
@@ -30,7 +37,14 @@ export default function SearchTagDisplay({ tags, removeTag }) {
                   .toUpperEveryWord(tag.label)
                   .replaceAll(" ", "")
                   .replace(/[0-9]/g, "")
-              ] || ChipTypeStyles.Tag
+              ] ||
+              ChipTypeStyles[
+                stringUtils
+                  .toUpperEveryWord(tag.group)
+                  .replaceAll(" ", "")
+                  .replace(/[0-9]/g, "")
+              ] ||
+              ChipTypeStyles.Tag
             }
           />
         );

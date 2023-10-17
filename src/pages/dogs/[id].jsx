@@ -14,7 +14,8 @@ import maleicon from "../../../public/maleicon.svg";
 import femaleicon from "../../../public/femaleicon.svg";
 import dogplaceholdericon from "../../../public/dogplaceholdericon.svg";
 import LogSearchFilterBar from "@/components/LogSearchFilterBar";
-import SearchTagDisplay from "@/components/SearchTagDisplay";
+import TagDisplay from "@/components/TagDisplay";
+import Log from "@/components/Log";
 
 /**
  *
@@ -25,60 +26,48 @@ export default function IndividualDogPage() {
 
   const router = useRouter();
 
-  const [logSearchFilter, setLogSearchFilter] = useState("");
+  const [logSearch, setLogSearch] = useState("");
   const [logFilters, setLogFilters] = useState({});
-
-  const [logData, setLogData] = useState();
+  const [logs, setLogs] = useState([]);
+  const [filteredLogs, setFilteredLogs] = useState([]);
 
   useEffect(() => {
+    let search = {};
+    search.dog = router.query.id;
+
     if (router.query.id) {
       fetch(`/api/dogs/${router.query.id}`)
         .then((res) => res.json())
         .then((data) => setData(data));
+      fetch("/api/logs/search", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(search),
+      })
+        // .catch((err) => setLogs([]))
+        .then((res) => res.json())
+        .then((data) => setLogs(data));
     }
   }, [router.query]);
-
   useEffect(() => {
-    let logSearch = {};
-    if (logFilters) {
-      Object.keys(logFilters)
-        .filter(
-          (category) =>
-            category && Object.values(logFilters[category]).length > 0
-        )
-        .forEach((category) => {
-          logSearch[category] = Object.values(logFilters[category]);
-        });
-    }
+    // apply string search query
+    setFilteredLogs(
+      (!logs || logs === undefined || !logs.success ? [] : logs.data).filter(
+        (log) =>
+          log.title.includes(logSearch) || log.description.includes(logSearch)
+      )
+    );
+    // TODO: apply filters
+  }, [logs, logFilters, logSearch]);
 
-    logSearch.title = logSearchFilter;
-
-    fetch("/api/logs/search", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(logSearch),
-    })
-      .catch((err) => setLogData([]))
-      .then((res) => res.json())
-      .then((logData) => setLogData(logData));
-  }, [logSearchFilter, logFilters]);
-
-  if (
-    !data ||
-    data === undefined ||
-    !data.success ||
-    !logData ||
-    logData === undefined ||
-    !logData.success
-  ) {
+  if (!data || data === undefined || !data.success) {
     return <div>loading</div>;
   }
 
   const dog = data.data;
 
-  const logs = logData.data;
   const dogInformationSchema = {
     ["Birth"]: {
       ["Birth Time"]: "N/A",
@@ -252,10 +241,14 @@ export default function IndividualDogPage() {
               <LogSearchFilterBar
                 filters={logFilters}
                 setFilters={setLogFilters}
-                setSearch={setLogSearchFilter}
+                setSearch={setLogSearch}
               />
 
-              <SearchTagDisplay tags={tags} removeTag={removeTag} />
+              <TagDisplay tags={tags} removeTag={removeTag} />
+
+              {filteredLogs.map((log) => {
+                return <Log log={log} key={log._id} />;
+              })}
             </div>
           </div>
         </TabSection>

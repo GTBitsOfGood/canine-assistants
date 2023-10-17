@@ -1,6 +1,9 @@
-
 import mongoose, { Types } from "mongoose";
-import { updateLog, deleteLog, getLogById } from "../../../../server/db/actions/Log";
+import {
+  updateLog,
+  deleteLog,
+  getLogById,
+} from "../../../../server/db/actions/Log";
 import { z } from "zod";
 import { consts } from "@/utils/consts";
 
@@ -78,7 +81,7 @@ export default async function handler(req, res) {
         });
       });
   }
-  
+
   if (req.method == "PATCH") {
     if (!mongoose.isValidObjectId(req.query.id)) {
       return res.status(422).send({
