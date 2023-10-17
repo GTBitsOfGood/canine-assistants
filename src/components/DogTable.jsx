@@ -112,13 +112,7 @@ export default function DogTable() {
         return (
           <Chip
             label={rowData.medical}
-            type={
-              ChipTypeStyles[
-                stringUtils
-                  .toUpperEveryWord(rowData.medical)
-                  .replaceAll(" ", "")
-              ]
-            }
+            type={ChipTypeStyles[stringUtils.toUpperEveryWord(rowData.medical)]}
           />
         );
       },
@@ -132,11 +126,7 @@ export default function DogTable() {
           <Chip
             label={rowData.behavior}
             type={
-              ChipTypeStyles[
-                stringUtils
-                  .toUpperEveryWord(rowData.behavior)
-                  .replaceAll(" ", "")
-              ]
+              ChipTypeStyles[stringUtils.toUpperEveryWord(rowData.behavior)]
             }
           />
         );
@@ -150,11 +140,7 @@ export default function DogTable() {
         return (
           <Chip
             label={rowData.other}
-            type={
-              ChipTypeStyles[
-                stringUtils.toUpperEveryWord(rowData.other).replaceAll(" ", "")
-              ]
-            }
+            type={ChipTypeStyles[stringUtils.toUpperEveryWord(rowData.other)]}
           />
         );
       },

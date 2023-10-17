@@ -34,9 +34,8 @@ export default function TagDisplay({ tags, removeTag }) {
             type={
               tag.group === "topic"
                 ? ChipTypeStyles.Topic
-                : ChipTypeStyles[
-                    tag.label.replaceAll(" ", "").replace(/[0-9]/g, "")
-                  ] || ChipTypeStyles.Tag
+                : ChipTypeStyles[tag.label.replace(/[0-9]/g, "")] ||
+                  ChipTypeStyles.Tag
             }
           />
         );

@@ -142,9 +142,7 @@ export default function IndividualDogPage() {
           index: element,
           type:
             ChipTypeStyles[
-              appliedFilters[filterGroup][element]
-                .replaceAll(" ", "")
-                .replace(/[0-9]/g, "")
+              appliedFilters[filterGroup][element].replace(/[0-9]/g, "")
             ] || ChipTypeStyles.Tag,
         };
       });
