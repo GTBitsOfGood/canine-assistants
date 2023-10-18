@@ -6,6 +6,7 @@ import {
 import { StopIcon as StopIconOutline } from "@heroicons/react/24/outline";
 import { useEffect, useState, useRef } from "react";
 import { ChipTypeStyles } from "./Chip";
+import useClickOff from "@/hooks/useClickOff";
 
 
 /**
@@ -45,19 +46,15 @@ export default function DropdownMenu({
   const [enabledOptions, setEnabledOptions] = useState(selectedOptions || {});
   const dropdownRef = useRef(null);
 
-  useEffect(() => {
-    const handleOutsideClick = (event) => {
-      if (document.contains(event.target) && dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setExtended(false);
-      }
-    };
+  useClickOff(dropdownRef, () => {
+    closeMenu();
+  }, []);
 
-    document.addEventListener('click', handleOutsideClick);
+  const closeMenu = () => {
+    setExtended(false);
 
-    return () => {
-      document.removeEventListener('click', handleOutsideClick);
-    };
-  }, [ extended ]);
+    setEnabledOptions(selectedOptions || []);
+  }
 
   const toggleOption = (option, index) => {
     let newEnabledOptions = {};
@@ -107,9 +104,7 @@ export default function DropdownMenu({
         } border ${props?.error ? "border-error-red" : "border-primary-gray"}  items-center gap-2 flex w-48 justify-between`}
         onClick={() => {
           if (extended) {
-            setExtended(false);
-            
-            setEnabledOptions(selectedOptions || []);
+            closeMenu();
           } else {
             setExtended(true);
           }
@@ -145,7 +140,7 @@ export default function DropdownMenu({
                 {enabledOptions[index] !== undefined ? (
                     props?.hideCheckboxes ? (
                       <div className={`px-2 py-1.5 ${
-                          props?.selectedColor == "concern" ? ChipTypeStyles[option.props.label] : props?.selectedColor
+                          props?.selectedColor === "concern" ? ChipTypeStyles[option.props.label] : props?.selectedColor
                         } rounded-lg border justify-center items-start`}>
                         <div className="text-primary-text text-base font-medium">{option}</div>
                       </div>

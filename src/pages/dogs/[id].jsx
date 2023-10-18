@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
-import dateutils from "@/utils/dateutils";
+import dateUtils from "@/utils/dateutils";
 import {
   ChevronLeftIcon,
   PencilSquareIcon,
@@ -95,7 +95,7 @@ export default function IndividualDogPage() {
     }
   }, [logs, appliedFilters, searchQuery]);
 
-  if (!data || data === undefined || !data.success) {
+  if (!data || !data.success) {
     return <div>loading</div>;
   }
 
@@ -239,7 +239,7 @@ export default function IndividualDogPage() {
                 <div className="flex-col pt-8 pl-1 text-lg space-y-2">
                   <div>
                     Birth Date:{" "}
-                    {dateutils.getDateString(new Date(dog.dateOfBirth))}
+                    {dateUtils.getDateString(new Date(dog.dateOfBirth))}
                   </div>
                   <div>Sex: {dog.gender}</div>
 

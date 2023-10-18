@@ -12,14 +12,10 @@ import {
 } from "@heroicons/react/24/solid";
 import { Chip, ChipTypeStyles } from "./Chip";
 import TagDisplay from "./TagDisplay";
-import dateutils from "@/utils/dateutils";
+import dateUtils from "@/utils/dateutils";
 import stringUtils from "@/utils/stringutils";
 
 /**
- *
- * @param {{[Array]}} dogs The dog data provided to the table
- *
- *
  * @returns { React.ReactElement } The DogTable component
  */
 export default function DogTable() {
@@ -49,7 +45,7 @@ export default function DogTable() {
       },
       body: JSON.stringify(search),
     })
-      .catch((err) => setData([]))
+      .catch(() => setData([]))
       .then((res) => res.json())
       .then((data) => setData(data));
   }, [searchFilter, filters]);
@@ -78,11 +74,11 @@ export default function DogTable() {
       label: "Age",
       icon: <CalendarIcon />,
       customRender: (rowData) => {
-        const age = dateutils.getAge(new Date(rowData.dateOfBirth));
+        const age = dateUtils.getAge(new Date(rowData.dateOfBirth));
 
         return (
           <span>
-            {age} {age != 1 ? "years" : "year"}
+            {age} {age !== 1 ? "years" : "year"}
           </span>
         );
       },
@@ -96,7 +92,7 @@ export default function DogTable() {
           <Chip
             label={rowData.location}
             type={
-              rowData.location == "Placed"
+              rowData.location === "Placed"
                 ? ChipTypeStyles.Placed
                 : ChipTypeStyles.Facility
             }
@@ -170,7 +166,7 @@ export default function DogTable() {
   ];
 
   const tags = Object.keys(filters)
-    .map((filterGroup, index) =>
+    .map((filterGroup) =>
       Object.keys(filters[filterGroup]).map((element) =>
         filterGroup[element] == null ? (
           <></>
