@@ -46,7 +46,7 @@ export default function DropdownMenu({
 
   useEffect(() => {
     const handleOutsideClick = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      if (document.contains(event.target) && dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setExtended(false);
       }
     };
