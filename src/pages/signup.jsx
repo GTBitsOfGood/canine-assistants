@@ -2,6 +2,7 @@ import Image from "next/image";
 import waves from "public/waves.png";
 import CALogo from "public/ca-logo.svg";
 import GoogleLogo from "public/google-logo.svg";
+import GreenWaves from "@/components/GreenWaves";
 
 /**
  * Sign up page
@@ -45,9 +46,7 @@ export default function Signup({ dogs }) {
         </div>
       </div>
 
-      <div className="h-1/5 relative w-screen overflow-hidden">
-        <Image src={waves} alt="decorative green waves" layout="fill" />
-      </div>
+      <GreenWaves/>
     </div>
   );
 }

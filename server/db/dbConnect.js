@@ -1,7 +1,11 @@
 import mongoose from "mongoose";
 
-const DB_URL = process.env.DB_URL;
-const DB_NAME = process.env.DB_NAME;
+export const DB_URL = process.env.DB_URL;
+export const DB_NAME = process.env.DB_NAME;
+export const DB_CONNECTION_STRING = `${DB_URL}${DB_NAME}?retryWrites=true&w=majority`
+export const DB_OPTS = {
+  bufferCommands: false,
+};
 
 if (!DB_URL || !DB_NAME) {
   throw new Error(
@@ -26,12 +30,10 @@ async function dbConnect() {
   }
 
   if (!cached.promise) {
-    const opts = {
-      bufferCommands: false,
-    };
+
 
     cached.promise = mongoose
-      .connect(`${DB_URL}${DB_NAME}?retryWrites=true&w=majority`, opts)
+      .connect(DB_CONNECTION_STRING, DB_OPTS)
       .then((mongoose) => {
         mongoose.set('debug', process.env.NODE_ENV === 'development')
 
