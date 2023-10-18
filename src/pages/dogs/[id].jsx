@@ -16,7 +16,6 @@ import maleicon from "../../../public/maleicon.svg";
 import femaleicon from "../../../public/femaleicon.svg";
 import dogplaceholdericon from "../../../public/dogplaceholdericon.svg";
 import LogSearchFilterBar from "@/components/LogSearchFilterBar";
-import SearchTagDisplay from "@/components/SearchTagDisplay";
 import LogModal from "@/components/LogModal";
 import TagDisplay from "@/components/TagDisplay";
 import Log from "@/components/Log";

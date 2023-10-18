@@ -7,6 +7,7 @@ import { StopIcon as StopIconOutline } from "@heroicons/react/24/outline";
 import { useEffect, useState, useRef } from "react";
 import { ChipTypeStyles } from "./Chip";
 
+
 /**
  * Individual option for Dropdown menu component to be used with a map
  * @param {*} name option for internal use
@@ -34,7 +35,6 @@ export function DropdownMenuOption({ name, label }) {
  */
 export default function DropdownMenu({
   label,
-  options,
   selectedOptions,
   onFilterSelect,
   submitFilters,
