@@ -1,10 +1,10 @@
 import Image from "next/image";
-import waves from "public/waves.png";
 import CALogo from "public/ca-logo.svg";
 import GoogleLogo from "public/google-logo.svg";
 import GreenWaves from "@/components/GreenWaves";
 import { signIn } from "next-auth/react"
-
+import { getServerSession } from "next-auth";
+import { authOptions } from "./api/auth/[...nextauth]";
 /**
  * Log in page
  *
@@ -55,4 +55,21 @@ export default function Login({ dogs }) {
 // Override layout with blank
 Login.getLayout = function getLayout(page) {
   return page;
+}
+
+export async function getServerSideProps({ req, res }) {
+  const session = await getServerSession(req, res, authOptions);
+  if (session) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/dogs"
+      }
+    }
+  }
+  return {
+    props: {
+      session
+    }
+  }
 }

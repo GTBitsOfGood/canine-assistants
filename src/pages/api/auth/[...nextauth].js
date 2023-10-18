@@ -42,7 +42,7 @@ export const authOptions = {
   pages: {
     signIn: "/login",
     newUser: "/dogs",
-    error: "/login",
+    // error: "/login",
   },
   events: {
     createUser: async (message) => {
@@ -73,9 +73,6 @@ export const authOptions = {
       }
 
       return true;
-    },
-    async redirect({ url, baseUrl }) {
-      return `${baseUrl}/dogs`;
     },
     async jwt({ token, user }) {
       if (user) {
