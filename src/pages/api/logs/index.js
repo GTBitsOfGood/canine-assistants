@@ -1,21 +1,5 @@
 import { createLog, getLogs } from "../../../../server/db/actions/Log";
-import { z } from "zod";
-import mongoose, { Types } from "mongoose";
-import { consts } from "@/utils/consts";
-
-const logSchema = z.object({
-  title: z.string(),
-  topic: z.enum(consts.topicArray),
-  tags: z.enum(consts.tagsArray).array().optional(),
-  severity: z.enum(consts.concernArray),
-  description: z.string().optional(),
-  author: z.string().refine((id) => {
-    return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
-  }),
-  dog: z.string().refine((id) => {
-    return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
-  }),
-});
+import { logSchema } from "@/utils/consts";
 
 export default async function handler(req, res) {
   const { success, error, data } = logSchema.safeParse(req.body);

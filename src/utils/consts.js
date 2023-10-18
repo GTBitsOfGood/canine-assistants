@@ -1,4 +1,4 @@
-import mongoose, { Types } from "mongoose";
+import { Types } from "mongoose";
 import { z } from "zod";
 
 const pages = {
@@ -46,12 +46,23 @@ const consts = {
 };
 
 /**
+ * Zod object for validating request bodies for users
+ */
+const userSchema = z.object({
+  name: z.string(),
+  email: z.string(),
+  image: z.string().optional(),
+  emailVerified: z.boolean().default(null),
+  role: z.array(z.enum(consts.roleArray)).optional(),
+});
+
+/**
  * Zod object for validating request bodies for dogs
  */
 const dogSchema = z.object({
-  name: z.string(),
+  name: z.string().min(1),
   gender: z.enum(consts.genderPetArray),
-  breed: z.string(),
+  breed: z.string().min(1),
   weight: z.number(),
   behavior: z.enum(consts.concernArray),
   medical: z.enum(consts.concernArray),
@@ -59,14 +70,14 @@ const dogSchema = z.object({
   recentLogs: z
     .array(
       z.string().refine((id) => {
-        return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+        return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
       }),
     )
     .default([]),
   parents: z
     .array(
       z.string().refine((id) => {
-        return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+        return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
       }),
     )
     .optional(),
@@ -84,7 +95,7 @@ const dogSchema = z.object({
       user: z
         .string()
         .refine((id) => {
-          return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+          return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
         })
         .optional(),
     })
@@ -111,14 +122,14 @@ const dogSchema = z.object({
   instructors: z
     .array(
       z.string().refine((id) => {
-        return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+        return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
       }),
     )
     .optional(),
   volunteer: z
     .string()
     .refine((id) => {
-      return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+      return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
     })
     .optional(),
   collarColor: z.string().optional(),
@@ -135,7 +146,7 @@ const dogSchema = z.object({
   caregivers: z
     .array(
       z.string().refine((id) => {
-        return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+        return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
       }),
     )
     .optional(),
@@ -160,6 +171,31 @@ const dogSchema = z.object({
       endDate: z.coerce.date().optional(),
     })
     .optional(),
+});
+
+/**
+ * Zod object for validating request bodies for users
+ */
+const userUpdateSchema = z.object({
+  name: z.string(),
+  role: z.enum(["Admin", "Instructor", "Volunteer/Recipient"]),
+});
+
+/**
+ * Zod object for validating request bodies for logs
+ */
+const logSchema = z.object({
+  title: z.string().min(1),
+  topic: z.enum(consts.topicArray),
+  tags: z.array(z.enum(consts.tagsArray)).optional(),
+  severity: z.enum(consts.concernArray),
+  description: z.string().min(1).optional(),
+  author: z.string().refine((id) => {
+    return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
+  }),
+  dog: z.string().refine((id) => {
+    return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
+  }),
 });
 
 /**
@@ -240,4 +276,4 @@ const mocks = {
   ],
 };
 
-export { pages, consts, dogSchema, mocks };
+export { pages, consts, dogSchema, logSchema, userUpdateSchema, mocks };

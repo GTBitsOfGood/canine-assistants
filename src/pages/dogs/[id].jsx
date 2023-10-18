@@ -1,6 +1,7 @@
 import TabSection from "@/components/TabSection";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import dateutils from "@/utils/dateutils";
 import {
@@ -13,12 +14,15 @@ import Image from "next/image";
 import maleicon from "../../../public/maleicon.svg";
 import femaleicon from "../../../public/femaleicon.svg";
 import dogplaceholdericon from "../../../public/dogplaceholdericon.svg";
+import LogModal from "@/components/LogModal";
+
 /**
  *
  * @returns {React.ReactElement} The individual Dog page
  */
 export default function IndividualDogPage() {
   const [data, setData] = useState();
+  const [ showLogModal, setShowLogModal ] = useState(false);
 
   const router = useRouter();
 
@@ -75,6 +79,35 @@ export default function IndividualDogPage() {
   return (
     // Artificial spacing until nav is created
     <div className={`container mx-auto order-b border-gray-300`}>
+      {showLogModal ? (
+        <>
+          <LogModal
+            dogId={ dog._id }
+            userId={ dog.instructors[0]._id }
+            onClose={() => {
+              setShowLogModal(false);
+            }}
+            onSubmit={(success) => {
+              // TODO toast animation
+              if (success) {
+                toast.custom((t) => (
+                  <div className={`h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-ca-green text-white text-lg font-normal
+                    ${t.visible ? 'animate-enter' : 'animate-leave'}`}
+                  >
+                    <span className="font-bold">New log</span>&nbsp;<span>was successfully added.</span>
+                  </div>
+                ));
+              } else {
+                toast.custom(() => (
+                  <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
+                    There was a problem saving the log, please try again.
+                  </div>
+                ));
+              }
+            }}
+          />
+        </>
+      ) : null }
       <div className="py-6 flex items-center">
         <ChevronLeftIcon className="w-4 mr-2" />
         <Link href="/dogs" className="text-lg text-secondary-text">
@@ -179,7 +212,16 @@ export default function IndividualDogPage() {
               ))}
             </div>
           </div>
-          <div label="logs">logs</div>
+          <div label="logs">
+            <button
+              className="px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade justify-start items-center gap-2 flex"
+              onClick={() => setShowLogModal(true)}
+            >
+              <div className="text-foreground text-base font-medium">
+                + Add a log
+              </div>
+            </button>
+          </div>
         </TabSection>
       </div>
     </div>
