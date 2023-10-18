@@ -1,6 +1,8 @@
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import NextAuth from "next-auth";
-import dbConnect, { DB_CONNECTION_STRING } from "../../../../server/db/dbConnect";
+import dbConnect, {
+  DB_CONNECTION_STRING,
+} from "../../../../server/db/dbConnect";
 import GoogleProvider from "next-auth/providers/google";
 
 let cachedPromise;
@@ -32,6 +34,7 @@ export const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
     GoogleProvider({
+      id: "google",
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
@@ -55,14 +58,13 @@ export const authOptions = {
         name: message.user.name,
         email: message.user.email,
         image: message.user.image,
-        role: "Volunteer/Recipient" // TODO: Default string shouldn't be hardcoded and instead moved somewhere else
-        
-      }
+        role: "Volunteer/Recipient", // TODO: Default string shouldn't be hardcoded and instead moved somewhere else
+      };
 
       const user = new User(newUserRecord);
 
       await user.save();
-    }
+    },
   },
   callbacks: {
     async signIn({ user }) {
@@ -92,7 +94,7 @@ export const authOptions = {
       }
 
       return session;
-    }
+    },
   },
 };
 
