@@ -1,16 +1,15 @@
 import { consts } from "@/utils/consts";
 import mongoose from "mongoose";
-
 const { Schema } = mongoose;
 
 const UserSchema = new Schema({
   name: {
     type: String,
-    required: true,
+    required: true
   },
   email: {
     type: String,
-    required: true,
+    required: true
   },
   image: {
     type: String,
@@ -23,7 +22,7 @@ const UserSchema = new Schema({
     type: String,
     enum: consts.userRoleArray,
     required: true,
-  },
+  }
 });
 
 export default mongoose.models?.User ?? mongoose.model("User", UserSchema);

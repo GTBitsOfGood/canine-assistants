@@ -1,3 +1,4 @@
+import { signOut } from "next-auth/react";
 
 export default function Navbar() {
     return (
@@ -21,6 +22,12 @@ export default function Navbar() {
                     <div className="text-center text-primary-text text-lg font-semibold">User Management</div>
                 </div>
             </div>
+
+            <button onClick={() => signOut()} className="border-b-4 border-foreground flex-col justify-center items-start inline-flex">
+                <div className="p-3 flex-col justify-center items-center flex">
+                    <div className="text-center text-primary-text text-lg font-semibold">Sign Out</div>
+                </div>
+            </button>
 
         </div>
     )

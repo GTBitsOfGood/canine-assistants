@@ -2,6 +2,8 @@ import Image from "next/image";
 import waves from "public/waves.png";
 import CALogo from "public/ca-logo.svg";
 import GoogleLogo from "public/google-logo.svg";
+import GreenWaves from "@/components/GreenWaves";
+import { signIn } from "next-auth/react"
 
 /**
  * Log in page
@@ -27,7 +29,7 @@ export default function Login({ dogs }) {
 
         <div className="flex flex-col items-center justify-center">
           <h1 className="pb-4 font-bold">Log In</h1>
-          <button className="font-roboto text-tertiary-gray w-80 py-3 rounded-sm bg-white outline outline-black outline-1 flex flex-row items-center justify-center text-2xl">
+          <button onClick={() => signIn("google", { callbackUrl: "/dogs" })} className="font-roboto text-tertiary-gray w-80 py-3 rounded-sm bg-white outline outline-black outline-1 flex flex-row items-center justify-center text-2xl">
             <div className="aspect-square h-7 relative mx-4">
               <Image src={GoogleLogo} alt="Google G logo" layout="fill" />
             </div>
@@ -45,9 +47,7 @@ export default function Login({ dogs }) {
         </div>
       </div>
 
-      <div className="h-1/5 relative w-screen overflow-hidden">
-        <Image src={waves} alt="decorative green waves" layout="fill" />
-      </div>
+      <GreenWaves/>
     </div>
   );
 }
