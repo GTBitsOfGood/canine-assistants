@@ -42,7 +42,7 @@ export const authOptions = {
   pages: {
     signIn: "/login",
     newUser: "/dogs",
-    // error: "/login",
+    error: "/login",
   },
   events: {
     createUser: async (message) => {
