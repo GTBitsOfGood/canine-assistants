@@ -12,7 +12,6 @@ export function DropdownMenuOption({ name, label }) {
 
 export default function DropdownMenu({
   label,
-  options,
   selectedOptions,
   submitFilters,
   children,

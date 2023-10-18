@@ -29,7 +29,7 @@ export default function Login({ dogs }) {
 
         <div className="flex flex-col items-center justify-center">
           <h1 className="pb-4 font-bold">Log In</h1>
-          <button onClick={() => signIn("google")} className="font-roboto text-tertiary-gray w-80 py-3 rounded-sm bg-white outline outline-black outline-1 flex flex-row items-center justify-center text-2xl">
+          <button onClick={() => signIn("google", { callbackUrl: "/dogs" })} className="font-roboto text-tertiary-gray w-80 py-3 rounded-sm bg-white outline outline-black outline-1 flex flex-row items-center justify-center text-2xl">
             <div className="aspect-square h-7 relative mx-4">
               <Image src={GoogleLogo} alt="Google G logo" layout="fill" />
             </div>
