@@ -10,44 +10,74 @@ import { createDog } from "../../../server/db/actions/Dog";
 const dogs = [];
 const users = [
   {
-    username: "jsmith",
-    hash: "hash1",
+    name: "Alexa",
+    email: "alexa@gmail.com",
+    image: "",
+    emailVerified: false,
+    role: "Admin",
   },
   {
-    username: "afazio",
-    hash: "hash2",
+    name: "Ryder",
+    email: "ryder@gmail.com",
+    image: "",
+    emailVerified: false,
+    role: "Admin",
   },
   {
-    username: "bpatel",
-    hash: "hash3",
+    name: "Parker",
+    email: "parker@gmail.com",
+    image: "",
+    emailVerified: false,
+    role: "Admin",
   },
   {
-    username: "gburdell",
-    hash: "hash4",
+    name: "Tawsif",
+    email: "tawsif@gmail.com",
+    image: "",
+    emailVerified: false,
+    role: "Admin",
   },
   {
-    username: "buzz",
-    hash: "hash5",
+    name: "Jai",
+    email: "jai@gmail.com",
+    image: "",
+    emailVerified: false,
+    role: "Admin",
   },
   {
-    username: "amahesh",
-    hash: "hash6",
+    name: "Evie",
+    email: "evie@gmail.com",
+    image: "",
+    emailVerified: false,
+    role: "Admin",
   },
   {
-    username: "emitchell",
-    hash: "hash7",
+    name: "Hemadri",
+    email: "hemadri@gmail.com",
+    image: "",
+    emailVerified: false,
+    role: "Admin",
   },
   {
-    username: "pcabrera",
-    hash: "hash8",
+    name: "Siri",
+    email: "siri@gmail.com",
+    image: "",
+    emailVerified: false,
+    role: "Admin",
   },
   {
-    username: "khenry",
-    hash: "hash9",
+    name: "Akash",
+    email: "akash@gmail.com",
+    image: "",
+    emailVerified: false,
+    role: "Admin",
   },
   {
-    username: "rhoward",
-    hash: "hash10",
+    name: "Test",
+    email: "test@gmail.com",
+    image: "",
+    emailVerified: false,
+    role: "Instructor",
   },
 ];
 const logs = [
@@ -290,7 +320,7 @@ export default async function handler(req, res) {
     // create users
     const userIds = [];
     for (const user of users) {
-      const id = await createUser(user.username, user.hash);
+      const id = await createUser(user);
       userIds.push(id.toString());
     }
 
