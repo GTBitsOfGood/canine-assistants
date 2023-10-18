@@ -74,6 +74,9 @@ export const authOptions = {
 
       return true;
     },
+    async redirect({ url, baseUrl }) {
+      return "/dogs";
+    },
     async jwt({ token, user }) {
       if (user) {
         token.user = {
