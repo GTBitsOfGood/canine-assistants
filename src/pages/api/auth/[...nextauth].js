@@ -75,7 +75,7 @@ export const authOptions = {
       return true;
     },
     async redirect({ url, baseUrl }) {
-      return "/dogs";
+      return `${baseUrl}/dogs`;
     },
     async jwt({ token, user }) {
       if (user) {
