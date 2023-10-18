@@ -4,7 +4,7 @@ import {
   StopIcon as StopIconSolid,
 } from "@heroicons/react/24/solid";
 import { StopIcon as StopIconOutline } from "@heroicons/react/24/outline";
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { ChipTypeStyles } from "./Chip";
 import useClickOff from "@/hooks/useClickOff";
 
@@ -57,7 +57,7 @@ export default function DropdownMenu({
   }
 
   const toggleOption = (option, index) => {
-    let newEnabledOptions = {};
+    let newEnabledOptions;
 
     if (props?.singleSelect) {
       newEnabledOptions = {};
