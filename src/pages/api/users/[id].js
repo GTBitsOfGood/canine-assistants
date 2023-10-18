@@ -35,8 +35,7 @@ export default async function handler(req, res) {
       });
       return;
     }
-  }
-  else if (req.method == "PATCH") {
+  } else if (req.method == "PATCH") {
     if (!Types.ObjectId.isValid(req.query.id)) {
       return res.status(422).send({
         success: false,

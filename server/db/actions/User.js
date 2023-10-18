@@ -1,13 +1,14 @@
 import dbConnect from "../dbConnect";
 import User from "../models/User";
 
-export async function createUser(username, hash) {
+export async function createUser(data) {
   await dbConnect();
-  const user = new User({ username, hash });
+  let user;
   try {
+    user = new User(data);
     await user.save();
   } catch (e) {
-    throw new Error("Unable to create user");
+    throw new Error(e);
   }
 
   return user._id;

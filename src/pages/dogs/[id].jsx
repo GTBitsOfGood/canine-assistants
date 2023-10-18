@@ -7,6 +7,7 @@ import dateutils from "@/utils/dateutils";
 import {
   ChevronLeftIcon,
   PencilSquareIcon,
+  PlusIcon,
   TrashIcon,
 } from "@heroicons/react/24/solid";
 import { Chip, ChipTypeStyles } from "@/components/Chip";
@@ -14,7 +15,10 @@ import Image from "next/image";
 import maleicon from "../../../public/maleicon.svg";
 import femaleicon from "../../../public/femaleicon.svg";
 import dogplaceholdericon from "../../../public/dogplaceholdericon.svg";
+import LogSearchFilterBar from "@/components/LogSearchFilterBar";
 import LogModal from "@/components/LogModal";
+import TagDisplay from "@/components/TagDisplay";
+import Log from "@/components/Log";
 
 /**
  *
@@ -26,13 +30,70 @@ export default function IndividualDogPage() {
 
   const router = useRouter();
 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [appliedFilters, setAppliedFilters] = useState({});
+  const [logs, setLogs] = useState([]);
+  const [filteredLogs, setFilteredLogs] = useState([]);
+
   useEffect(() => {
+    let search = {};
+    search.dog = router.query.id;
+
     if (router.query.id) {
       fetch(`/api/dogs/${router.query.id}`)
         .then((res) => res.json())
         .then((data) => setData(data));
+      fetch("/api/logs/search", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(search),
+      })
+        .catch((err) => setLogs([]))
+        .then((res) => res.json())
+        .then((data) => setLogs(data));
     }
   }, [router.query]);
+
+  // get all logs
+  const allLogs = !logs || logs === undefined || !logs.success ? [] : logs.data;
+
+  useEffect(() => {
+    // filter logs by search query
+    const searchQueryFilteredLogs = allLogs.filter(
+      (log) =>
+        log.title.toLowerCase().includes(searchQuery) ||
+        log.description.toLowerCase().includes(searchQuery)
+    );
+
+    // if filters are applied, filter the log list further
+    if (Object.keys(appliedFilters).length === 0) {
+      setFilteredLogs(searchQueryFilteredLogs);
+    } else {
+      setFilteredLogs(
+        searchQueryFilteredLogs.filter((log) => {
+          return Object.keys(appliedFilters).reduce((acc, filterType) => {
+            /* 
+            note: a log can have multiple tags, so we check if ANY of the 
+            applied tag filters match ANY of the log tags; for other types, it 
+            must be an exact match.
+            */
+            return (
+              acc ||
+              (filterType == "tags"
+                ? Object.values(appliedFilters[filterType]).includes(
+                    ...log[filterType]
+                  )
+                : Object.values(appliedFilters[filterType]).includes(
+                    log[filterType]
+                  ))
+            );
+          }, false);
+        })
+      );
+    }
+  }, [logs, appliedFilters, searchQuery]);
 
   if (!data || data === undefined || !data.success) {
     return <div>loading</div>;
@@ -74,6 +135,33 @@ export default function IndividualDogPage() {
     ["Grooming"]: {
       ["Last bath"]: "N/A",
     },
+  };
+
+  const tags = Object.keys(appliedFilters)
+    .map((filterGroup, index) => {
+      return Object.keys(appliedFilters[filterGroup]).map((element) => {
+        return {
+          group: filterGroup,
+          label: appliedFilters[filterGroup][element],
+          index: element,
+          type:
+            ChipTypeStyles[
+              appliedFilters[filterGroup][element].replace(/[0-9]/g, "")
+            ] || ChipTypeStyles.Tag,
+        };
+      });
+    })
+    .flat(1);
+
+  const removeTag = (group, index) => {
+    const newFilters = { ...appliedFilters };
+    if (Object.keys(newFilters[group]).length <= 1) {
+      delete newFilters[group];
+    } else {
+      delete newFilters[group][index];
+    }
+
+    setAppliedFilters(newFilters);
   };
 
   return (
@@ -191,7 +279,7 @@ export default function IndividualDogPage() {
         )}
       </div>
 
-      <div className="mt-8 shadow-xl rounded-lg text-md w-full text-left relative overflow-hidden bg-foreground p-8">
+      <div className="mt-8 shadow-xl rounded-lg text-md w-full text-left relative bg-foreground p-8">
         <TabSection defaultTab="information">
           <div label="information">
             <div className="w-2/3 grid grid-cols-3 gap-16">
@@ -213,14 +301,31 @@ export default function IndividualDogPage() {
             </div>
           </div>
           <div label="logs">
-            <button
-              className="px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade justify-start items-center gap-2 flex"
-              onClick={() => setShowLogModal(true)}
-            >
-              <div className="text-foreground text-base font-medium">
-                + Add a log
+            <div className="flex-grow flex-col space-y-4">
+              <button
+                className=" px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade justify-start items-center gap-2 flex"
+                onClick={() => setShowLogModal(true)}
+              >
+          <div className="text-foreground h-4 w-4 relative">{<PlusIcon />}</div>
+          <div className="text-foreground text-base font-medium">Add a log</div>
+        </button>
+              <LogSearchFilterBar
+                filters={appliedFilters}
+                setFilters={setAppliedFilters}
+                setSearch={setSearchQuery}
+              />
+
+              <TagDisplay tags={tags} removeTag={removeTag} />
+
+              {/* TODO: move to static array, toggle hidden field */}
+              {filteredLogs.map((log) => {
+                return <Log log={log} key={log._id} />;
+              })}
+              <div className="flex justify-center">
+                Displaying {filteredLogs.length} out of {allLogs.length}{" "}
+                {allLogs.length == 1 ? "log" : "logs"}
               </div>
-            </button>
+            </div>
           </div>
         </TabSection>
       </div>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Table from "./Table";
 import Link from "next/link";
-import SearchFilterBar from "./SearchFilterBar";
+import DogSearchFilterBar from "./DogSearchFilterBar";
 import {
   Bars3BottomLeftIcon,
   CalendarIcon,
@@ -11,8 +11,9 @@ import {
   TagIcon,
 } from "@heroicons/react/24/solid";
 import { Chip, ChipTypeStyles } from "./Chip";
-import SearchTagDisplay from "./SearchTagDisplay";
+import TagDisplay from "./TagDisplay";
 import dateutils from "@/utils/dateutils";
+import stringUtils from "@/utils/stringutils";
 
 /**
  *
@@ -29,7 +30,6 @@ export default function DogTable() {
 
   useEffect(() => {
     let search = {};
-
     if (filters) {
       Object.keys(filters)
         .filter(
@@ -92,7 +92,16 @@ export default function DogTable() {
       label: "Location",
       icon: <MapPinIcon />,
       customRender: (rowData) => {
-        return <Chip label={rowData.location} type={ChipTypeStyles.Facility} />;
+        return (
+          <Chip
+            label={rowData.location}
+            type={
+              rowData.location == "Placed"
+                ? ChipTypeStyles.Placed
+                : ChipTypeStyles.Facility
+            }
+          />
+        );
       },
     },
     {
@@ -103,7 +112,7 @@ export default function DogTable() {
         return (
           <Chip
             label={rowData.medical}
-            type={ChipTypeStyles[rowData.medical]}
+            type={ChipTypeStyles[stringUtils.toUpperEveryWord(rowData.medical)]}
           />
         );
       },
@@ -116,7 +125,9 @@ export default function DogTable() {
         return (
           <Chip
             label={rowData.behavior}
-            type={ChipTypeStyles[rowData.behavior]}
+            type={
+              ChipTypeStyles[stringUtils.toUpperEveryWord(rowData.behavior)]
+            }
           />
         );
       },
@@ -127,7 +138,10 @@ export default function DogTable() {
       icon: <ClipboardIcon />,
       customRender: (rowData) => {
         return (
-          <Chip label={rowData.other} type={ChipTypeStyles[rowData.other]} />
+          <Chip
+            label={rowData.other}
+            type={ChipTypeStyles[stringUtils.toUpperEveryWord(rowData.other)]}
+          />
         );
       },
     },
@@ -176,19 +190,17 @@ export default function DogTable() {
     const newFilters = { ...filters };
 
     delete newFilters[group][index];
-
     setFilters(newFilters);
   };
-
   return (
     <div className="flex-grow flex-col space-y-6">
-      <SearchFilterBar
+      <DogSearchFilterBar
         filters={filters}
         setFilters={setFilters}
         setSearch={setSearchFilter}
       />
 
-      <SearchTagDisplay tags={tags} removeTag={removeTag} />
+      <TagDisplay tags={tags} removeTag={removeTag} />
 
       <Table
         cols={dogTableColumns}
