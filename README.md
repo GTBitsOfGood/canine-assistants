@@ -49,22 +49,20 @@ npm run dev
 
 Install and enable [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) in VSCode. This repository is also configured with a pre-commit hook that automatically formats any code you commit to ensure formatting consistency throughout the codebase.
 
-## Docker Development
+### Run With Docker
 
-### Pre-requisites
-
-1. Docker installed on your machine. You can download it from [Docker's official site](https://www.docker.com/products/docker-desktop).
-2. Docker Compose, usually bundled with Docker Desktop.
-3. Ensure .env.development.local file is in the root of your project directory (see "Environment Variables" section above)
-
-### Running the Application with Docker
-
-1. In the project's root directory, build and run the Docker containers:
-
-```sh
-docker-compose up 
-```
+1.  Install [Docker](https://docs.docker.com/engine/install/)
+2.  Obtain the Bitwarden password from your EM. Create a `bitwarden.env` file and fill it in with the following contents:
+    ```
+    BW_PASSWORD=<your bitwarden password>
+    ```
+    This only needs to be done on your first run. After that, you should delete the file from your repository to avoid pushing it to Github.
+3.  Start the application with Docker Compose: `docker compose up`
 
 If you make any changes to the packages, you may need to rebuild the images. To do this, append --build to the above docker compose up command.
 
 The Dockerized application will have live-reloading of changes made on the host machine.
+
+Note: On linux-based operating systems, if you come across an entrypoint permission error (i.e. `process: exec: "./entrypoint.sh": permission denied: unknown`), run `chmod +x ./entrypoint.sh` to make the shell file an executable.
+
+Windows Users: If you come across this error `exec ./entrypoint.sh: no such file or directory` when running the docker compose command, please follow this [Stackoverflow thread](https://stackoverflow.com/questions/40452508/docker-error-on-an-entrypoint-script-no-such-file-or-directory) to fix it.
