@@ -1,34 +1,67 @@
 import { signOut } from "next-auth/react";
+import Link from "next/link";
+import React, { useState } from "react";
 
 export default function Navbar() {
-    return (
-        <div className="flex h-[74px] bg-foreground items-center px-8 border-b border-neutral-300 justify-start gap-4">
-            <div className="px-10">
-                Logo
-            </div>
+  const [currentPage, setCurrentPage] = useState("Dashboard");
 
-            <div className="border-b-4 self-stretch border-ca-green flex-col justify-center items-start inline-flex ">
-                <div className="p-3 flex-col justify-center items-center flex">
-                    <div className="text-center text-primary-text text-lg font-semibold">Dashboard</div>
-                </div>
-            </div>
-            <div className="border-b-4 border-foreground self-stretch flex-col justify-center items-start inline-flex">
-                <div className="p-3 flex-col justify-center items-center flex">
-                    <div className="text-center text-primary-text text-lg font-semibold">Account</div>
-                </div>
-            </div>
-            <div className="border-b-4 border-foreground self-stretch flex-col justify-center items-start inline-flex">
-                <div className="p-3 flex-col justify-center items-center flex">
-                    <div className="text-center text-primary-text text-lg font-semibold">User Management</div>
-                </div>
-            </div>
+  return (
+    <div className="flex h-20 bg-foreground items-center justify-start gap-4">
+      <Link href="/">
+        <div className="px-10">Logo</div>
+      </Link>
 
-            <button onClick={() => signOut()} className="border-b-4 border-foreground flex-col justify-center items-start inline-flex">
-                <div className="p-3 flex-col justify-center items-center flex">
-                    <div className="text-center text-primary-text text-lg font-semibold">Sign Out</div>
-                </div>
-            </button>
-
+      <Link
+        href="/dogs"
+        className={
+          "flex flex-col justify-center w-fit h-full border-b-4 border-ca-green " +
+          (currentPage == "Dashboard"
+            ? "border-opacity-100"
+            : "border-opacity-0")
+        }
+        onClick={() => setCurrentPage("Dashboard")}
+      >
+        <div className="text-center text-primary-text text-lg font-semibold px-3">
+          Dashboard
         </div>
-    )
+      </Link>
+
+      <Link
+        href="/account"
+        className={
+          "flex flex-col justify-center w-fit h-full border-b-4 border-ca-green " +
+          (currentPage == "Account" ? "border-opacity-100" : "border-opacity-0")
+        }
+        onClick={() => setCurrentPage("Account")}
+      >
+        <div className="text-center text-primary-text text-lg font-semibold px-3">
+          Account
+        </div>
+      </Link>
+
+      <Link
+        href="/"
+        className={
+          "flex flex-col justify-center w-fit h-full border-b-4 border-ca-green " +
+          (currentPage == "User Management"
+            ? "border-opacity-100"
+            : "border-opacity-0")
+        }
+        onClick={() => setCurrentPage("User Management")}
+      >
+        <div className="text-center text-primary-text text-lg font-semibold px-3">
+          User Management
+        </div>
+      </Link>
+
+      <button
+        onClick={() => signOut()}
+        className="flex flex-col justify-center w-fit h-full"
+      >
+        <div className="text-center text-primary-text text-lg font-semibold px-3 border-foreground border-b-4">
+          Sign Out
+        </div>
+      </button>
+    </div>
+  );
 }
