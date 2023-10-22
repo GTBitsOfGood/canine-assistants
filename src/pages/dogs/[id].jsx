@@ -337,21 +337,11 @@ export default function IndividualDogPage() {
           </div>
           <div label="logs">
             <div className="flex-grow flex-col space-y-4">
-              <button
-                className=" px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade justify-start items-center gap-2 flex"
-                onClick={() => setShowLogModal(true)}
-              >
-                <div className="text-foreground h-4 w-4 relative">
-                  {<PlusIcon />}
-                </div>
-                <div className="text-foreground text-base font-medium">
-                  Add a log
-                </div>
-              </button>
               <LogSearchFilterBar
                 filters={appliedFilters}
                 setFilters={setAppliedFilters}
                 setSearch={setSearchQuery}
+                addLogFunction={() => setShowLogModal(true)}
               />
 
               <TagDisplay tags={tags} removeTag={removeTag} />
