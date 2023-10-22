@@ -53,7 +53,11 @@ export default function IndividualDogPage() {
         .catch((err) => setLogs([]))
         .then((res) => res.json())
         .then((data) =>
-          setLogs(!data || data === undefined || !data.success ? [] : data.data)
+          setLogs(
+            !data || data === undefined || !data.success
+              ? []
+              : data.data.reverse()
+          )
         );
     }
   }, [router.query]);
@@ -191,7 +195,7 @@ export default function IndividualDogPage() {
                     setLogs(
                       !data || data === undefined || !data.success
                         ? []
-                        : data.data
+                        : data.data.reverse()
                     )
                   );
 
