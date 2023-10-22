@@ -249,10 +249,10 @@ export default function IndividualDogPage() {
                     <Image
                       priority
                       src={dog.gender === "Male" ? maleicon : femaleicon}
-                      alt="Male Dog"
+                      alt={dog.gender === "Male" ? "Male Dog" : "Female Dog"}
                     />
 
-                    <div>Male</div>
+                    <div>{dog.gender}</div>
                   </div>
                 </div>
               </div>
