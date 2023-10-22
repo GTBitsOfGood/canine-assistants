@@ -1,9 +1,10 @@
 import TabSection from "@/components/TabSection";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import dateutils from "@/utils/dateutils";
+import stringUtils from "@/utils/stringutils";
 import {
   ChevronLeftIcon,
   PencilSquareIcon,
@@ -28,16 +29,20 @@ export default function IndividualDogPage() {
   const [data, setData] = useState();
   const [ showLogModal, setShowLogModal ] = useState(false);
 
-  const router = useRouter();
-
   const [searchQuery, setSearchQuery] = useState("");
   const [appliedFilters, setAppliedFilters] = useState({});
   const [logs, setLogs] = useState([]);
   const [filteredLogs, setFilteredLogs] = useState([]);
+  const [ showLogTab, setShowLogTab ] = useState(false);
+
+  const router = useRouter();
+  const logRef = useRef(null);
 
   useEffect(() => {
-    let search = {};
-    search.dog = router.query.id;
+    setShowLogTab(router.query?.showLogTab);
+    if (router.query?.filteredTag) {
+      setAppliedFilters({ tags: [ stringUtils.upperFirstLetter(router.query?.filteredTag) ]});
+    }
 
     if (router.query.id) {
       fetch(`/api/dogs/${router.query.id}`)
@@ -93,7 +98,11 @@ export default function IndividualDogPage() {
         })
       );
     }
-  }, [logs, appliedFilters, searchQuery]);
+
+    if (router.query?.showLogTab && logRef.current) {
+      window.scrollTo(0, logRef.current.offsetTop);
+    }
+  }, [ logs, appliedFilters, searchQuery, router.query, logRef.current ]);
 
   if (!data || data === undefined || !data.success) {
     return <div>loading</div>;
@@ -279,8 +288,8 @@ export default function IndividualDogPage() {
         )}
       </div>
 
-      <div className="mt-8 shadow-xl rounded-lg text-md w-full text-left relative bg-foreground p-8">
-        <TabSection defaultTab="information">
+      <div ref={logRef} className="mt-8 shadow-xl rounded-lg text-md w-full text-left relative bg-foreground p-8">
+        <TabSection defaultTab={showLogTab ? "logs" : "information"}>
           <div label="information">
             <div className="w-2/3 grid grid-cols-3 gap-16">
               {Object.keys(dogInformationSchema).map((category) => (
