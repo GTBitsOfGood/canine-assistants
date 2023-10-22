@@ -244,8 +244,6 @@ const computeDefaultValues = (dog) => {
       priorToWhelping: dog?.priorToWhelping || "N/A",
       duringWhelping: dog?.duringWhelping || "N/A",
     },
-
-    caregivers,
   };
 
   return defaults;
