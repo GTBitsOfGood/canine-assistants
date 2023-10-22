@@ -20,7 +20,7 @@ export default function Log({ log }) {
           <h2>{log.title}</h2>
           <div className="flex flex-row">
             <p className="text-secondary-text font-regular w-fit">
-              {"Author: " + log.author}
+              {"Author: " + log.author.username}
             </p>
             <p className="text-secondary-text font-regular mx-5 w-fit">
               {"Date: " + createdAt.toLocaleDateString()}
