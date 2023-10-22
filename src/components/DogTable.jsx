@@ -156,7 +156,7 @@ export default function DogTable() {
             {rowData.recentLogs.map((log) =>
               log.tags.map((tag, i) => (
                 <Chip
-                  link={rowData._id + "/" + log._id}
+                  link={"dogs/" + rowData._id + "?showLogTab=true&filteredTag=" + tag}
                   key={i}
                   label={tag}
                   type={ChipTypeStyles.Tag}
