@@ -110,8 +110,13 @@ export default function IndividualDogPage() {
     }
   }, [ logs, appliedFilters, searchQuery, router.query, logRef.current ]);
 
-  if (!data || data === undefined || !data.success) {
+  if (!data || data === undefined) {
     return <div>loading</div>;
+  } else if (!data.success) {
+    return <div className="flex flex-col items-center justify-center self-center text-center m-10">
+      <div className="font-semibold text-5xl mb-4">404</div>
+      <div className="text-2xl">This dog does not exist! Please go back to the Dashboard and select a dog from there.</div>
+    </div>;
   }
 
   const dog = data.data;
