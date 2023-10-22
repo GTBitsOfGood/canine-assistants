@@ -15,7 +15,7 @@ export async function getLogs(filter = {}) {
 export async function getLogById(id) {
   try {
     await dbConnect();
-    return Log.findById(id);
+    return Log.findById(id).populate("author");
   } catch (e) {
     throw new Error("Unable to get log at this time, please try again");
   }
