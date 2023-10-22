@@ -17,7 +17,7 @@ const useClickOff = (elementRef, onClickOff, exceptions) => {
          */
         const handleClickOutside = (event) => {
             // Check if the target is any of the exceptions, ignore if found
-            if (exceptions.some(element => element.current.contains(event.target))) return;
+            if (exceptions.some(element => element && element.contains(event.target))) return;
 
             // Check if target from clicking was NOT the element the hook belongs to
             if (document.contains(event.target) && elementRef.current && !elementRef.current.contains(event.target)) {

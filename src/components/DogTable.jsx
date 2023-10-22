@@ -102,7 +102,8 @@ export default function DogTable() {
     },
     {
       id: "medical",
-      label: "Medical Status",
+      label: "Medical",
+      subLabel: "Concern",
       icon: <ClipboardIcon />,
       customRender: (rowData) => {
         return (
@@ -115,7 +116,8 @@ export default function DogTable() {
     },
     {
       id: "behavior",
-      label: "Behavioral Status",
+      label: "Behavioral",
+      subLabel: "Concern",
       icon: <ClipboardIcon />,
       customRender: (rowData) => {
         return (
@@ -130,12 +132,14 @@ export default function DogTable() {
     },
     {
       id: "other",
-      label: "Other Status",
+      label: "Other",
+      subLabel: "Concern",
       icon: <ClipboardIcon />,
       customRender: (rowData) => {
         return (
           <Chip
             label={rowData.other}
+            styles={"justify-center"}
             type={ChipTypeStyles[stringUtils.toUpperEveryWord(rowData.other)]}
           />
         );
@@ -144,7 +148,7 @@ export default function DogTable() {
     {
       id: "recentLogs",
       label: "Recent Log Tags",
-      style: "flex justify-center",
+      style: "",
       icon: <TagIcon />,
       customRender: (rowData) => {
         return (
