@@ -42,7 +42,7 @@ export default function FormField({
           } focus:outline-none`}
         />
         {errors && errors[keyLabel] && (
-          <div className="flex items-center gap-x-2">
+          <div className="flexd items-center gap-x-2">
             <ExclamationCircleIcon className="w-4 h-4" />
             <p role="alert">Please enter a valid {label.toLowerCase()}</p>
           </div>

@@ -114,7 +114,8 @@ export default function IndividualDogPage() {
     }
   };
 
-  console.log(dog);
+  console.log(dog)
+
 
   return (
     // Artificial spacing until nav is created
@@ -331,7 +332,7 @@ export default function IndividualDogPage() {
                             errors={errors}
                             register={register}
                             label={col}
-                            value={dog[stringUtils.toCamelCase(col)] || "N/A"}
+                            value={"N/A"}
                           />
                         )
                       )}

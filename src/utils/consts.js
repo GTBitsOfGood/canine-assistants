@@ -198,6 +198,15 @@ const dogInformationSchema = {
   },
 };
 
+const keyToLabel = {
+  name: "Name",
+  dateOfBirth: "Birth Date",
+  gender: "Sex",
+  breed: "Breed",
+  coatColor: "Coat Color",
+  collarColor: "Collar Color",
+};
+
 const dogLabelToKey = {
   Name: "name",
   "Birth Date": "dateOfBirth",
@@ -209,6 +218,7 @@ const dogLabelToKey = {
 
 const computeDefaultValues = (dog) => {
   const defaults = {
+    // Top info
     name: dog?.name || "N/A",
     dateOfBirth: dog?.dateOfBirth
       ? dateutils.getDateString(new Date(dog.dateOfBirth))
@@ -216,17 +226,27 @@ const computeDefaultValues = (dog) => {
     gender: dog?.gender || "N/A",
     breed: dog?.breed || "N/A",
     coatColor: dog?.coatColor || "N/A",
+
+    // Birth
+    birthTime: dog?.birthTime || 0,
     collarColor: dog?.collarColor || "N/A",
     supplementalFeeding: dog?.supplementalFeeding || "N/A",
     deliveryInformation: dog?.deliveryInformation || "Natural", // right now set to natural, figure out default value later
-    litterComposition: dog?.litterComposition || "N/A",
-  };
+    birthOrder: dog?.birthOrder || "N/A",
 
-  // Object.keys(dogInformationSchema).forEach((category) => {
-  //   Object.keys(dogInformationSchema[category]).forEach((col) => {
-  //     defaults[col] = "";
-  //   });
-  // });
+    // Family
+    litterSize: dog?.litterSize || 0,
+    litterComposition: dog?.litterComposition || "N/A",
+    parents: ["65175368edf55fb45e6d9755", "65175368edf55fb45e6d9775"], // father is 0 index, mother is 1 index
+
+    // Maternal Demeanor
+    maternalDemeanor: {
+      priorToWhelping: dog?.priorToWhelping || "N/A",
+      duringWhelping: dog?.duringWhelping || "N/A",
+    },
+
+    caregivers,
+  };
 
   return defaults;
 };

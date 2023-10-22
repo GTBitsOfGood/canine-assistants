@@ -48,7 +48,7 @@ const DogSchema = new Schema({
   parents: {
     type: [
       {
-        type: SchemaTypes.ObjectId,
+        type: SchemaTypes.ObjectId, // 0 is father, 1 is mother
         ref: "Dog",
       },
     ],
