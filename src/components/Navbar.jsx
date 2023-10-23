@@ -1,8 +1,10 @@
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 
 export default function Navbar() {
+  const router = useRouter();
   const [currentPage, setCurrentPage] = useState("Dashboard");
 
   return (
