@@ -110,7 +110,7 @@ export default function IndividualDogPage() {
     }
   }, [ logs, appliedFilters, searchQuery, router.query, logRef.current ]);
 
-  if (!data || data === undefined || !data.success) {
+  if (!data || !data.success) {
     return <div>loading</div>;
   }
 
@@ -274,7 +274,7 @@ export default function IndividualDogPage() {
                 <div className="flex-col pt-8 pl-1 text-lg space-y-2">
                   <div>
                     Birth Date:{" "}
-                    {dateutils.getDateString(new Date(dog.dateOfBirth))}
+                    {dateUtils.getDateString(new Date(dog.dateOfBirth))}
                   </div>
                   <div>Sex: {dog.gender}</div>
 

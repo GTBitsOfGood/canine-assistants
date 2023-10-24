@@ -6,9 +6,9 @@ const getDateString = (date) => {
     return date.toLocaleString('en-us',{month:'long', day: 'numeric', year:'numeric'})
 }
 
-const dateutils = {
+const dateUtils = {
     getAge,
     getDateString
 }
 
-export default dateutils;
+export default dateUtils;

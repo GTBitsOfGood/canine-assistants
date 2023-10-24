@@ -13,19 +13,19 @@ import { Chip, ChipTypeStyles } from "./Chip";
  * @returns the modal component
  */
 export default function LogModal({ dogId, userId, onClose, onSubmit }) {
-  const [ logData, setLogData ] = useState({
+  const [logData, setLogData] = useState({
     title: "",
     topicSet: {},
     severitySet: {},
     tagsSet: {},
-    description: ""
+    description: "",
   });
 
-  const [ errors, setErrors ] = useState({
+  const [errors, setErrors] = useState({
     title: false,
     topic: false,
     severity: false,
-    description: false
+    description: false,
   });
 
   const [ saving, setSaving ] = useState(false);
@@ -36,10 +36,12 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
       modalRef.current.scrollTop = modalRef.current.scrollHeight;
     };
 
-    modalRef.current.querySelector("textarea").addEventListener('click', scrollToBottom);
+    modalRef.current
+      .querySelector("textarea")
+      .addEventListener("click", scrollToBottom);
 
     return () => {
-      document.removeEventListener('click', scrollToBottom);
+      document.removeEventListener("click", scrollToBottom);
     };
   });
 
@@ -52,7 +54,7 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
       description: logData.description,
       dog: dogId,
       author: userId,
-    }
+    };
 
     const { success, error, data } = logSchema.safeParse(formattedData);
 
@@ -86,26 +88,35 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
 
       setErrors({ ...errors, ...errorsObject });
     }
-  }
+  };
 
   return (
     <div className="fixed inset-0 flex items-end sm:items-center justify-center z-10">
-      <div onClick={() => onClose()} className="fixed inset-0 bg-modal-background-gray opacity-60"></div>
-      <div ref={modalRef} className="modal-shadow-mobile sm:modal-shadow bg-white sm:bg-secondary-background px-5 sm:px-12 py-4 sm:py-9 w-full sm:w-auto h-[90%] sm:h-auto sm:min-h-[70vh] sm:max-h-[95vh] z-10 overflow-auto rounded-t-[50px] sm:rounded-t-none">
+      <div
+        onClick={() => onClose()}
+        className="fixed inset-0 bg-modal-background-gray opacity-60"
+      ></div>
+      <div
+        ref={modalRef}
+        className="modal-shadow-mobile sm:modal-shadow bg-white sm:bg-secondary-background px-5 sm:px-12 py-4 sm:py-9 w-full sm:w-auto h-[90%] sm:h-auto sm:min-h-[70vh] sm:max-h-[95vh] z-10 overflow-auto rounded-t-[50px] sm:rounded-t-none"
+      >
         {/* TODO add behavior for dragging downwards to close the modal on mobile */}
         <div className="sm:hidden w-8 h-1 opacity-40 bg-zinc-500 rounded-[100px] mx-auto mb-[12px]" />
-        <h1 className="font-bold mb-[3vh]">Add a log</h1>
-        <h2 className="h-[5vh]">Title<span className="text-error-red">*</span></h2>
+        <h1 className="font-bold mb-[3vh]"> Add a log</h1>
+        <h2 className="h-[5vh]">
+          Title<span className="text-error-red">*</span>
+        </h2>
         <div className="mb-[3vh]">
           <input
             value={logData.title}
             onChange={(event) => {
               setLogData({ ...logData, title: event.target.value });
-              setErrors({...errors, title: false })
+              setErrors({ ...errors, title: false });
             }}
-            className={`rounded bg-foreground border ${errors.title ? 'border-error-red' : 'border-primary-gray'} focus:border-primary-gray focus:border text-secondary-text text-lg font-normal w-full h-11 px-4 py-2.5`}
-          >
-          </input>
+            className={`rounded bg-foreground border ${
+              errors.title ? "border-error-red" : "border-primary-gray"
+            } focus:border-primary-gray focus:border text-secondary-text text-lg font-normal w-full h-11 px-4 py-2.5`}
+          ></input>
           {errors.title ? (
             <div className="flex items-center gap-[5px] text-black text-lg font-normal">
               <div className="h-4 w-4 fill-slate-900">
@@ -116,24 +127,29 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
           ) : null}
         </div>
 
-        <h2 className="h-[5vh]">Tags<span className="text-error-red">*</span></h2>
+        <h2 className="h-[5vh]">
+          Tags<span className="text-error-red">*</span>
+        </h2>
         <div className="flex flex-col sm:flex-row gap-[3vw]">
-          <div className={`flex ${errors.topic ? "flex-col" : "flex-row"} sm:flex-col justify-between sm:justify-normal`}>
+          <div
+            className={`flex ${
+              errors.topic ? "flex-col" : "flex-row"
+            } sm:flex-col justify-between sm:justify-normal`}
+          >
             <DropdownMenu
               label={"Topic"}
               props={{
                 hideFilterButton: true,
-                hideCheckboxes: true,
                 singleSelect: true,
                 requiredField: true,
                 selectedColor: ChipTypeStyles["Topic"],
-                error: errors.topic
+                error: errors.topic,
               }}
               selectedOptions={logData.topicSet}
               onFilterSelect={(data) => {
                 if (data !== undefined) {
                   setLogData({ ...logData, topicSet: data });
-                  setErrors({...errors, topic: false })
+                  setErrors({ ...errors, topic: false });
                 }
               }}
             >
@@ -146,8 +162,8 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
               ))}
             </DropdownMenu>
             {errors.topic ? (
-            <div className="flex items-center gap-[5px] text-black text-lg font-normal">
-              <div className="h-4 w-4 fill-slate-900">
+              <div className="flex items-center gap-[5px] text-black text-lg font-normal">
+                <div className="h-4 w-4 fill-slate-900">
                   <ExclamationCircleIcon />
                 </div>
                 Please select a topic
@@ -163,23 +179,26 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
             ) : null}
           </div>
 
-          <div className={`flex ${errors.topic ? "flex-col" : "flex-row"} sm:flex-col justify-between sm:justify-normal`}>
+          <div
+            className={`flex ${
+              errors.topic ? "flex-col" : "flex-row"
+            } sm:flex-col justify-between sm:justify-normal`}
+          >
             <DropdownMenu
               label={"Severity"}
               props={{
                 hideFilterButton: true,
-                hideCheckboxes: true,
                 singleSelect: true,
                 requiredField: true,
                 smallText: true,
                 selectedColor: "concern",
-                error: errors.severity
+                error: errors.severity,
               }}
               selectedOptions={logData.severitySet}
               onFilterSelect={(data) => {
                 if (data !== undefined) {
                   setLogData({ ...logData, severitySet: data });
-                  setErrors({...errors, severity: false })
+                  setErrors({ ...errors, severity: false });
                 }
               }}
             >
@@ -212,7 +231,10 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
           <div className="flex flex-row sm:flex-col justify-between sm:justify-normal">
             <DropdownMenu
               label="Tags"
-              props={{ hideFilterButton: true, hideCheckboxes: true, selectedColor: ChipTypeStyles["Tag"] }}
+              props={{
+                hideFilterButton: true,
+                selectedColor: ChipTypeStyles["Tag"],
+              }}
               selectedOptions={logData.tagsSet}
               onFilterSelect={(data) => {
                 if (data !== undefined) {
@@ -229,32 +251,35 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
               ))}
             </DropdownMenu>
             <div className="flex flex-wrap justify-end sm:justify-start w-48 mt-[1vh] gap-[1vh] min-h-[8vh]">
-              {Object.keys(logData.tagsSet).length ? (
-                Object.values(logData.tagsSet).map((value, index) => {
-                  return (
-                    <Chip
-                      key={index}
-                      label={value}
-                      type={ChipTypeStyles["Tag"]}
-                    />
-                  )
-                })
-              ) : null}
+              {Object.keys(logData.tagsSet).length
+                ? Object.values(logData.tagsSet).map((value, index) => {
+                    return (
+                      <Chip
+                        key={index}
+                        label={value}
+                        type={ChipTypeStyles["Tag"]}
+                      />
+                    );
+                  })
+                : null}
             </div>
           </div>
         </div>
 
-        <h2 className="h-[5vh]">Log Description<span className="text-error-red">*</span></h2>
+        <h2 className="h-[5vh]">
+          Log Description<span className="text-error-red">*</span>
+        </h2>
         <div className="mb-[3vh]">
           <textarea
             value={logData.description}
             onChange={(event) => {
               setLogData({ ...logData, description: event.target.value });
-              setErrors({...errors, description: false })
+              setErrors({ ...errors, description: false });
             }}
-            className={`rounded bg-foreground border ${errors.description ? 'border-error-red' : 'border-primary-gray'} text-secondary-text text-lg font-normal w-full h-[25vh] min-h-[44px] max-h-[25vh] resize-none sm:resize-y px-4 py-2.5`}
-          >
-          </textarea>
+            className={`rounded bg-foreground border ${
+              errors.description ? "border-error-red" : "border-primary-gray"
+            } text-secondary-text text-lg font-normal w-full h-[25vh] min-h-[44px] max-h-[25vh] resize-none sm:resize-y px-4 py-2.5`}
+          ></textarea>
           {errors.description ? (
             <div className="flex items-center gap-[5px] text-black text-lg font-normal">
               <div className="h-4 w-4 fill-slate-900">
@@ -270,9 +295,7 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
             onClick={() => onClose()}
             className="w-full sm:w-32 h-10 px-4 py-2.5 bg-secondary-gray rounded border border-primary-gray justify-center items-center gap-2 flex"
           >
-            <div className="text-primary-text text-base font-medium">
-              Cancel
-            </div>
+            <div className="text-primary-text text-sm font-medium">Cancel</div>
           </button>
           <button onClick={() => saveLog(logData)} disabled={saving} className={`w-full sm:w-32 h-10 px-4 py-2.5 ${saving ? " bg-primary-gray border-tertiary-gray " : " bg-ca-pink border-ca-pink-shade "}  rounded border justify-center items-center gap-2 flex`}>
             <div className={`${saving ? "text-tertiary-gray " : "text-foreground "} text-base font-medium`}>
@@ -282,5 +305,5 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
         </div>
       </div>
     </div>
-  )
+  );
 }

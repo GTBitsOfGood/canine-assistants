@@ -1,12 +1,14 @@
 import {
+  CheckCircleIcon,
   CheckIcon,
   ChevronDownIcon,
   StopIcon as StopIconSolid,
 } from "@heroicons/react/24/solid";
 import { StopIcon as StopIconOutline } from "@heroicons/react/24/outline";
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { ChipTypeStyles } from "./Chip";
-
+import useClickOff from "@/hooks/useClickOff";
+import CircleIcon from "@/components/icons/CircleIcon";
 
 /**
  * Individual option for Dropdown menu component to be used with a map
@@ -39,28 +41,29 @@ export default function DropdownMenu({
   onFilterSelect,
   submitFilters,
   children,
-  props
+  props,
 }) {
   const [extended, setExtended] = useState(false);
   const [enabledOptions, setEnabledOptions] = useState(selectedOptions || {});
   const dropdownRef = useRef(null);
+  const dropdownOptionRefs = useRef([]);
 
-  useEffect(() => {
-    const handleOutsideClick = (event) => {
-      if (document.contains(event.target) && dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setExtended(false);
-      }
-    };
+  useClickOff(
+    dropdownRef,
+    () => {
+      closeMenu();
+    },
+    dropdownOptionRefs.current
+  );
 
-    document.addEventListener('click', handleOutsideClick);
+  const closeMenu = () => {
+    setExtended(false);
 
-    return () => {
-      document.removeEventListener('click', handleOutsideClick);
-    };
-  }, [ extended ]);
+    setEnabledOptions(selectedOptions || []);
+  };
 
   const toggleOption = (option, index) => {
-    let newEnabledOptions = {};
+    let newEnabledOptions;
 
     if (props?.singleSelect) {
       newEnabledOptions = {};
@@ -68,11 +71,10 @@ export default function DropdownMenu({
       newEnabledOptions = { ...enabledOptions };
     }
 
-
     if (newEnabledOptions[index] !== undefined) {
       delete newEnabledOptions[index];
     } else {
-      newEnabledOptions[index] = option.props.label; 
+      newEnabledOptions[index] = option.props.label;
     }
 
     if (props?.hideFilterButton) {
@@ -90,7 +92,7 @@ export default function DropdownMenu({
     submitFilters(enabledOptions);
 
     setExtended(false);
-  }
+  };
 
   return (
     <div ref={dropdownRef} className="relative">
@@ -102,20 +104,20 @@ export default function DropdownMenu({
         aria-expanded="false"
         className={`px-4 py-2.5 m-0 p-0 box-border whitespace-nowrap top-[-1px] bg-white ${
           extended
-            ? "border-t border-x rounded-t border-b-transparent"
+            ? "rounded-t border-b-transparent "
             : " rounded"
-        } border ${props?.error ? "border-error-red" : "border-primary-gray"}  items-center gap-2 flex w-48 justify-between`}
+        } border -mb-[1px] ${
+          props?.error ? "border-error-red" : "border-primary-gray"
+        }  items-center gap-2 flex w-48 justify-between`}
         onClick={() => {
           if (extended) {
-            setExtended(false);
-            
-            setEnabledOptions(selectedOptions || []);
+            closeMenu();
           } else {
             setExtended(true);
           }
         }}
       >
-        <div className="text-primary-text text-base font-medium">
+        <div className="text-primary-text text-sm font-medium">
           {label}
           {props?.requiredField ? (
             <span className="text-error-red">*</span>
@@ -133,43 +135,66 @@ export default function DropdownMenu({
         {children.map((option, index) => {
           return (
             <div
-              className={`w-full px-3 pb-2 whitespace-nowrap bg-white border-x border-primary-gray justify-start items-center gap-2 inline-flex
-              }`}
+              ref={(ref) => {
+                if (ref) dropdownOptionRefs.current[index] = ref;
+              }}
+              className={`w-full px-3 pb-4 whitespace-nowrap bg-white border-x border-primary-gray justify-start items-center gap-2 inline-flex`}
               href="#"
               key={index}
             >
               <button
-                onClick={() => { toggleOption(option, index) }}
+                onClick={() => {
+                  toggleOption(option, index);
+                }}
                 className="relative  p-0 m-0 flex items-center"
               >
                 {enabledOptions[index] !== undefined ? (
-                    props?.hideCheckboxes ? (
-                      <div className={`px-2 py-1.5 ${
-                          props?.selectedColor == "concern" ? ChipTypeStyles[option.props.label] : props?.selectedColor
-                        } rounded-lg border justify-center items-start`}>
-                        <div className="text-primary-text text-base font-medium">{option}</div>
+                  <>
+                    {props?.singleSelect ? (
+                      <div className="w-5">
+                        {/* <CircleIcon
+                          className={"border-2 border-neutral-300"}
+                          size={"1.25rem"}
+                          color={""}
+                        /> */}
+                        <CheckCircleIcon className="text-ca-pink h-[1.5385rem] -ml-[0.15rem] " />
                       </div>
                     ) : (
-                      <>
-                        <StopIconSolid className=" h-8 text-ca-pink" />
-                        <CheckIcon className="pl-2 absolute h-4 text-foreground" />
-                      </>
-                    )
-                  ) : (
-                    props?.hideCheckboxes ? (
-                      <div className="px-2 py-1.5 bg-white rounded-lg border border-primary-gray justify-center items-start">
-                        <div className="text-primary-text text-base font-medium">{option}</div>
+                      // <CircleIcon
+                      //   className={"border-2 border-neutral-300"}
+                      //   size={"1.25rem"}
+                      //   color={""}
+                      // />
+                      <div className="flex items-center justify-between mx-1.5 ">
+                        {/* <StopIconOutline className=" h-8 text-primary-gray" /> */}
+                        <CheckIcon className="pl-[0.14rem] absolute h-4 text-foreground"/>
+                        <div className="w-5 h-5 px-2 py-1.5 bg-ca-pink rounded " />
                       </div>
+                    )}
+                  </>
+                ) : props?.hideCheckboxes ? (
+                  <div className="px-2 py-1.5 bg-white rounded-lg border border-primary-gray justify-center items-start">
+                    <div className="text-primary-text text-sm font-medium">
+                      {option}
+                    </div>
+                  </div>
+                ) : (
+                    props?.singleSelect ? (
+                      <CircleIcon
+                        className={"border-2 border-neutral-300"}
+                        size={"1.25rem"}
+                        color={""}
+                      />
                     ) : (
-                      <>
-                        <StopIconOutline className=" h-8 text-primary-gray" />
+                        <>
+                        <div className="mx-1.5  w-5 h-5 px-2 py-1.5 bg-white rounded border-2 border-neutral-300" />
                       </>
                     )
-                  )
-                }
+                  
+                )}
               </button>
               {props?.hideCheckboxes ? null : (
-                <div className={`text-primary-text text-base font-medium`}>
+                <div className={`text-primary-text text-sm font-medium`}>
                   {option}
                 </div>
               )}
@@ -178,15 +203,17 @@ export default function DropdownMenu({
         })}
 
         {props?.hideFilterButton ? (
-            <div className="justify-center w-full pt-1 pb-4 whitespace-nowrap bg-white border-x border-b rounded-b border-neutral-300 items-center gap-2 inline-flex"></div>
+          <div className="justify-center w-full pt-1 pb-4 whitespace-nowrap bg-white border-x border-b rounded-b border-neutral-300 items-center gap-2 inline-flex"></div>
         ) : (
           <div className="justify-center w-full px-3 pt-2 pb-4 whitespace-nowrap bg-white border-x border-b rounded-b border-neutral-300 items-center gap-2 inline-flex">
-            <button onClick={() => handleSubmit()} className="bg-secondary-gray border border-primary-gray mx-1.5 rounded w-full pt-2 pb-2">
+            <button
+              onClick={() => handleSubmit()}
+              className="bg-secondary-gray border border-primary-gray mx-1.5 rounded w-full pt-2 pb-2"
+            >
               Apply Filters
             </button>
           </div>
-          )
-        }
+        )}
       </div>
     </div>
   );

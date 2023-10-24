@@ -9,7 +9,7 @@ import TablePaginator from "./TablePagination";
  */
 function TableHeader({ children }) {
   return (
-    <tr className="border-b border-gray-300 text-gray-400 text-xs text-left">
+    <tr className="border-b border-gray-300 text-gray-400 text-sm text-left">
       {children}
     </tr>
   );
@@ -21,7 +21,7 @@ function TableHeader({ children }) {
  * @param {{ col: string, style: string }}
  * @returns {React.ReactElement} The TableColumn component
  */
-function TableColumn({ icon, col, style }) {
+function TableColumn({ icon, subLabel, col, style }) {
   return (
     <th
       id={col.id}
@@ -29,7 +29,10 @@ function TableColumn({ icon, col, style }) {
     >
       <div className="items-center inline-flex gap-3 justify-start p-1">
         <div className="h-4 w-4 relative">{icon}</div>
-        <span className="text-lg">{col.label}</span>
+        <div className="flex-col items-center">
+          {subLabel && <div className="font-normal text-[.625rem] -mb-2">{subLabel}</div>}
+          <span className="text-sm">{col.label}</span>
+        </div>
       </div>
     </th>
   );
@@ -42,7 +45,7 @@ function TableFooter({ elementsOnPage, rows, paginationFunctions }) {
         Showing {elementsOnPage} of {rows.length} Results
       </div>
       <div>
-        <TablePaginator paginationFunctions = {paginationFunctions} />
+        <TablePaginator paginationFunctions={paginationFunctions} />
       </div>
     </div>
   );
@@ -65,8 +68,6 @@ export default function Table({
   filter,
   noElements,
 }) {
-
-
   // CLamped between [1, maxPages]
   const [currentPage, setCurrentPage] = useState(0);
   const [currentElements, setCurrentElements] = useState([]);
@@ -90,8 +91,8 @@ export default function Table({
   };
 
   useEffect(() => {
-    setCurrentPage(Math.max(Math.min(currentPage, pageAmount - 1), 0))
-  }, [cols, currentPage, pageAmount])
+    setCurrentPage(Math.max(Math.min(currentPage, pageAmount - 1), 0));
+  }, [cols, currentPage, pageAmount]);
 
   /**
    * Formats each value in the table depending on settings provided
@@ -131,6 +132,7 @@ export default function Table({
             {cols.map((col) => (
               <TableColumn
                 key={col.id}
+                subLabel={col.subLabel}
                 icon={col.icon}
                 col={col}
                 style={col.style}
@@ -152,7 +154,7 @@ export default function Table({
                 {cols.map((col, i) => {
                   return (
                     <td key={i}>
-                      <div className="py-3 px-6">
+                      <div className="py-3 px-6 text-sm">
                         {formatColumnValue(
                           row,
                           row[col.id],

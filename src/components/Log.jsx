@@ -2,6 +2,7 @@ import TagDisplay from "@/components/TagDisplay";
 import { useState } from "react";
 
 export default function Log({ log }) {
+  
   const [showMore, setShowMore] = useState(false);
   const createdAt = new Date(log.createdAt);
 
