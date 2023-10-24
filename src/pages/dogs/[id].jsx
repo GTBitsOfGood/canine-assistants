@@ -1,9 +1,10 @@
 import TabSection from "@/components/TabSection";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
-import dateUtils from "@/utils/dateutils";
+import dateutils from "@/utils/dateutils";
+import stringUtils from "@/utils/stringutils";
 import {
   ChevronLeftIcon,
   PencilSquareIcon,
@@ -26,18 +27,25 @@ import Log from "@/components/Log";
  */
 export default function IndividualDogPage() {
   const [data, setData] = useState();
-  const [ showLogModal, setShowLogModal ] = useState(false);
-
-  const router = useRouter();
+  const [showLogModal, setShowLogModal] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [appliedFilters, setAppliedFilters] = useState({});
   const [logs, setLogs] = useState([]);
   const [filteredLogs, setFilteredLogs] = useState([]);
+  const [ showLogTab, setShowLogTab ] = useState(false);
+
+  const router = useRouter();
+  const logRef = useRef(null);
+
+  let search = {};
+  search.dog = router.query.id;
 
   useEffect(() => {
-    let search = {};
-    search.dog = router.query.id;
+    setShowLogTab(router.query?.showLogTab);
+    if (router.query?.filteredTag) {
+      setAppliedFilters({ tags: [ stringUtils.upperFirstLetter(router.query?.filteredTag) ]});
+    }
 
     if (router.query.id) {
       fetch(`/api/dogs/${router.query.id}`)
@@ -52,16 +60,19 @@ export default function IndividualDogPage() {
       })
         .catch((err) => setLogs([]))
         .then((res) => res.json())
-        .then((data) => setLogs(data));
+        .then((data) =>
+          setLogs(
+            !data || data === undefined || !data.success
+              ? []
+              : data.data.reverse()
+          )
+        );
     }
   }, [router.query]);
 
-  // get all logs
-  const allLogs = !logs || logs === undefined || !logs.success ? [] : logs.data;
-
   useEffect(() => {
     // filter logs by search query
-    const searchQueryFilteredLogs = allLogs.filter(
+    const searchQueryFilteredLogs = logs.filter(
       (log) =>
         log.title.toLowerCase().includes(searchQuery) ||
         log.description.toLowerCase().includes(searchQuery)
@@ -93,7 +104,11 @@ export default function IndividualDogPage() {
         })
       );
     }
-  }, [logs, appliedFilters, searchQuery]);
+
+    if (router.query?.showLogTab && logRef.current) {
+      window.scrollTo(0, logRef.current.offsetTop);
+    }
+  }, [ logs, appliedFilters, searchQuery, router.query, logRef.current ]);
 
   if (!data || !data.success) {
     return <div>loading</div>;
@@ -170,19 +185,39 @@ export default function IndividualDogPage() {
       {showLogModal ? (
         <>
           <LogModal
-            dogId={ dog._id }
-            userId={ dog.instructors[0]._id }
+            dogId={dog._id}
+            userId={dog.instructors[0]._id}
             onClose={() => {
               setShowLogModal(false);
             }}
             onSubmit={(success) => {
               // TODO toast animation
               if (success) {
+                // update logs to display
+                fetch("/api/logs/search", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(search),
+                })
+                  .catch((err) => setLogs([]))
+                  .then((res) => res.json())
+                  .then((data) =>
+                    setLogs(
+                      !data || data === undefined || !data.success
+                        ? []
+                        : data.data.reverse()
+                    )
+                  );
+
                 toast.custom((t) => (
-                  <div className={`h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-ca-green text-white text-lg font-normal
-                    ${t.visible ? 'animate-enter' : 'animate-leave'}`}
+                  <div
+                    className={`h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-ca-green text-white text-lg font-normal
+                    ${t.visible ? "animate-enter" : "animate-leave"}`}
                   >
-                    <span className="font-bold">New log</span>&nbsp;<span>was successfully added.</span>
+                    <span className="font-bold">New log</span>&nbsp;
+                    <span>was successfully added.</span>
                   </div>
                 ));
               } else {
@@ -195,7 +230,7 @@ export default function IndividualDogPage() {
             }}
           />
         </>
-      ) : null }
+      ) : null}
       <div className="py-6 flex items-center">
         <ChevronLeftIcon className="w-4 mr-2" />
         <Link href="/dogs" className="text-lg text-secondary-text">
@@ -226,10 +261,10 @@ export default function IndividualDogPage() {
                     <Image
                       priority
                       src={dog.gender === "Male" ? maleicon : femaleicon}
-                      alt="Male Dog"
+                      alt={dog.gender === "Male" ? "Male Dog" : "Female Dog"}
                     />
 
-                    <div>Male</div>
+                    <div>{dog.gender}</div>
                   </div>
                 </div>
               </div>
@@ -279,8 +314,8 @@ export default function IndividualDogPage() {
         )}
       </div>
 
-      <div className="mt-8 shadow-xl rounded-lg text-md w-full text-left relative bg-foreground p-8">
-        <TabSection defaultTab="information">
+      <div ref={logRef} className="mt-8 shadow-xl rounded-lg text-md w-full text-left relative bg-foreground p-8">
+        <TabSection defaultTab={showLogTab ? "logs" : "information"}>
           <div label="information">
             <div className="w-2/3 grid grid-cols-3 gap-16">
               {Object.keys(dogInformationSchema).map((category) => (
@@ -302,17 +337,11 @@ export default function IndividualDogPage() {
           </div>
           <div label="logs">
             <div className="flex-grow flex-col space-y-4">
-              <button
-                className=" px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade justify-start items-center gap-2 flex"
-                onClick={() => setShowLogModal(true)}
-              >
-          <div className="text-foreground h-4 w-4 relative">{<PlusIcon />}</div>
-          <div className="text-foreground text-base font-medium">Add a log</div>
-        </button>
               <LogSearchFilterBar
                 filters={appliedFilters}
                 setFilters={setAppliedFilters}
                 setSearch={setSearchQuery}
+                addLogFunction={() => setShowLogModal(true)}
               />
 
               <TagDisplay tags={tags} removeTag={removeTag} />
@@ -322,8 +351,8 @@ export default function IndividualDogPage() {
                 return <Log log={log} key={log._id} />;
               })}
               <div className="flex justify-center">
-                Displaying {filteredLogs.length} out of {allLogs.length}{" "}
-                {allLogs.length == 1 ? "log" : "logs"}
+                Displaying {filteredLogs.length} out of {logs.length}{" "}
+                {logs.length == 1 ? "log" : "logs"}
               </div>
             </div>
           </div>

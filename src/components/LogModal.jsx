@@ -28,6 +28,7 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
     description: false,
   });
 
+  const [ saving, setSaving ] = useState(false);
   const modalRef = useRef(null);
 
   useEffect(() => {
@@ -58,6 +59,7 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
     const { success, error, data } = logSchema.safeParse(formattedData);
 
     if (success) {
+      setSaving(true);
       fetch("/api/logs", {
         method: "POST",
         headers: {
@@ -65,13 +67,15 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
         },
         body: JSON.stringify(formattedData),
       })
-        .then((res) => {
-          onSubmit(true);
-          onClose();
-        })
-        .catch((err) => {
-          onSubmit(false);
-        });
+      .then((res) => {
+        onSubmit(true);
+        onClose();
+        setSaving(false);
+      })
+      .catch((err) => {
+        setSaving(false);
+        onSubmit(false);
+      });
     } else {
       const errorsArray = error.format();
       const errorsObject = {};
@@ -293,11 +297,10 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
           >
             <div className="text-primary-text text-sm font-medium">Cancel</div>
           </button>
-          <button
-            onClick={() => saveLog(logData)}
-            className="w-full sm:w-32 h-10 px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade justify-center items-center gap-2 flex"
-          >
-            <div className="text-foreground text-sm font-medium">Save</div>
+          <button onClick={() => saveLog(logData)} disabled={saving} className={`w-full sm:w-32 h-10 px-4 py-2.5 ${saving ? " bg-primary-gray border-tertiary-gray " : " bg-ca-pink border-ca-pink-shade "}  rounded border justify-center items-center gap-2 flex`}>
+            <div className={`${saving ? "text-tertiary-gray " : "text-foreground "} text-base font-medium`}>
+              Save
+            </div>
           </button>
         </div>
       </div>

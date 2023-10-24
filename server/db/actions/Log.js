@@ -9,7 +9,7 @@ export async function getLogs(filter = {}) {
     throw new Error("Unable to get logs at this time, please try again");
   }
 
-  return Log.find(filter);
+  return Log.find(filter).populate("author");
 }
 
 export async function getLogById(id) {
