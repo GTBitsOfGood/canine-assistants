@@ -42,13 +42,13 @@ export default function Account() {
   const user = data.data;
 
   return (
-    <Card cardStyle="mt-16">
+    <Card cardStyle="mt-16 min-w-fit">
       {showDeactivateModal ? (
         <div>
           <div className="fixed inset-0 bg-modal-background-gray opacity-60"></div>
-          <Card cardStyle="flex flex-col justify-between fixed z-10 inset-0 mt-32 mx-96 h-64">
+          <Card cardStyle="flex flex-col justify-between fixed z-10 inset-0 mt-32 mx-96 h-fit min-w-fit">
             <h1>Deactivate {user.name}?</h1>
-            <p>
+            <p className="my-8">
               Select “Confirm” to deactivate Jane and remove all access to the
               Canine Assistants database. This action can only be undone by an
               administrator.
@@ -88,7 +88,7 @@ export default function Account() {
       ) : (
         ``
       )}
-      <div className="flex flex-row">
+      <div className="flex flex-row min-w-fit">
         <div className="rounded-full">
           <Image
             height={180}
@@ -197,7 +197,7 @@ export default function Account() {
                 </div>
               )}
               <button
-                className="flex flex-row h-10 px-4 py-2 items-center bg-secondary-gray border rounded border-primary-gray"
+                className="flex flex-row h-10 px-4 py-2 mx-4 items-center bg-secondary-gray border rounded border-primary-gray"
                 onClick={() => setShowDeactivateModal(!showDeactivateModal)}
               >
                 <ExclamationTriangleIcon className="mr-2 h-4 text-primary-text" />
