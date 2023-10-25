@@ -1,27 +1,25 @@
 import { signOut } from "next-auth/react";
 import Link from "next/link";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
 export default function Navbar() {
   const router = useRouter();
-  const [currentPage, setCurrentPage] = useState("Dashboard");
+  const [currentPage, setCurrentPage] = useState(router.pathname);
+
+  useEffect(() => setCurrentPage(router.pathname), [router.pathname]);
 
   return (
     <div className="flex h-20 bg-foreground items-center justify-start gap-4">
-      <Link href="/">
-        <div className="px-10">Logo</div>
-      </Link>
+      <div className="px-10">Logo</div>
 
       <Link
         href="/dogs"
         className={
           "flex flex-col justify-center w-fit h-full border-b-4 border-ca-green " +
-          (currentPage == "Dashboard"
-            ? "border-opacity-100"
-            : "border-opacity-0")
+          (currentPage == "/dogs" ? "border-opacity-100" : "border-opacity-0")
         }
-        onClick={() => setCurrentPage("Dashboard")}
+        onClick={() => setCurrentPage(router.pathname)}
       >
         <div className="text-center text-primary-text text-lg font-semibold px-3">
           Dashboard
@@ -32,24 +30,25 @@ export default function Navbar() {
         href="/account"
         className={
           "flex flex-col justify-center w-fit h-full border-b-4 border-ca-green " +
-          (currentPage == "Account" ? "border-opacity-100" : "border-opacity-0")
+          (currentPage == "/account"
+            ? "border-opacity-100"
+            : "border-opacity-0")
         }
-        onClick={() => setCurrentPage("Account")}
+        onClick={() => setCurrentPage(router.pathname)}
       >
         <div className="text-center text-primary-text text-lg font-semibold px-3">
           Account
         </div>
       </Link>
 
+      {/* TODO: udpate links with User Management page */}
       <Link
         href="/"
         className={
           "flex flex-col justify-center w-fit h-full border-b-4 border-ca-green " +
-          (currentPage == "User Management"
-            ? "border-opacity-100"
-            : "border-opacity-0")
+          (currentPage == "/" ? "border-opacity-100" : "border-opacity-0")
         }
-        onClick={() => setCurrentPage("User Management")}
+        onClick={() => setCurrentPage(router.pathname)}
       >
         <div className="text-center text-primary-text text-lg font-semibold px-3">
           User Management
