@@ -274,7 +274,7 @@ export default function IndividualDogPage() {
                 <div className="flex-col pt-8 pl-1 text-lg space-y-2">
                   <div>
                     Birth Date:{" "}
-                    {dateUtils.getDateString(new Date(dog.dateOfBirth))}
+                    {dateutils.getDateString(new Date(dog.dateOfBirth))}
                   </div>
                   <div>Sex: {dog.gender}</div>
 
