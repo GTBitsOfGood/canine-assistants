@@ -64,7 +64,8 @@ export default function Account() {
                 className="flex flex-row h-full w-32 px-4 py-2 justify-center text-foreground bg-ca-pink border rounded border-ca-pink-shade"
                 onClick={() => {
                   let body = {};
-                  body.role = "Invalid";
+                  body.role = consts.userRoleArray[3];
+                  console.log(body);
                   fetch("/api/users/" + placeholderUser, {
                     method: "PATCH",
                     headers: {
@@ -72,7 +73,10 @@ export default function Account() {
                     },
                     body: JSON.stringify(body),
                   })
-                    .then((res) => router.push("/login"))
+                    .then((res) => {
+                      console.log(res);
+                      router.push("/login");
+                    })
                     .catch((err) => console.log(err));
                 }}
               >
@@ -133,28 +137,35 @@ export default function Account() {
                               .then((res) => res.json())
                               .then((data) => setData(data));
 
-                            toast.custom((t) => (
-                              <div
-                                className={`h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-ca-green text-white text-lg font-normal
-                                ${
-                                  t.visible ? "animate-enter" : "animate-leave"
-                                }`}
-                              >
-                                <span className="font-bold">Account Name</span>
-                                &nbsp;
-                                <span> was successfully updated.</span>
-                              </div>
-                            ));
-
-                            setEditName(!editName);
+                            if (res.ok) {
+                              toast.custom((t) => (
+                                <div
+                                  className={`h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-ca-green text-white text-lg font-normal
+                                  ${
+                                    t.visible
+                                      ? "animate-enter"
+                                      : "animate-leave"
+                                  }`}
+                                >
+                                  <span className="font-bold">
+                                    Account Name
+                                  </span>
+                                  &nbsp;
+                                  <span> was successfully updated.</span>
+                                </div>
+                              ));
+                              setEditName(!editName);
+                            } else {
+                              toast.custom(() => (
+                                <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
+                                  There was a problem updating the account name,
+                                  please try again.
+                                </div>
+                              ));
+                            }
                           })
                           .catch((err) => {
-                            toast.custom(() => (
-                              <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
-                                There was a problem updating the account name,
-                                please try again.
-                              </div>
-                            ));
+                            console.log(err);
                           });
                       }}
                     >
