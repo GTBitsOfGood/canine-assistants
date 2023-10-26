@@ -8,7 +8,6 @@ import stringUtils from "@/utils/stringutils";
 import {
   ChevronLeftIcon,
   PencilSquareIcon,
-  PlusIcon,
   TrashIcon,
 } from "@heroicons/react/24/solid";
 import { Chip, ChipTypeStyles } from "@/components/Chip";

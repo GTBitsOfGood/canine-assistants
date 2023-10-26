@@ -1,5 +1,4 @@
 import Image from "next/image";
-import waves from "public/waves.png";
 import CALogo from "public/ca-logo.svg";
 import GoogleLogo from "public/google-logo.svg";
 import GreenWaves from "@/components/GreenWaves";
