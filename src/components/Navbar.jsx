@@ -1,34 +1,68 @@
 import { signOut } from "next-auth/react";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 export default function Navbar() {
-    return (
-        <div className="flex h-[74px] bg-foreground items-center px-8 border-b border-neutral-300 justify-start gap-4">
-            <div className="px-10">
-                Logo
-            </div>
+  const router = useRouter();
+  const [currentPage, setCurrentPage] = useState(router.pathname);
 
-            <div className="border-b-4 self-stretch border-ca-green flex-col justify-center items-start inline-flex ">
-                <div className="p-3 flex-col justify-center items-center flex">
-                    <div className="text-center text-primary-text text-lg font-semibold">Dashboard</div>
-                </div>
-            </div>
-            <div className="border-b-4 border-foreground self-stretch flex-col justify-center items-start inline-flex">
-                <div className="p-3 flex-col justify-center items-center flex">
-                    <div className="text-center text-primary-text text-lg font-semibold">Account</div>
-                </div>
-            </div>
-            <div className="border-b-4 border-foreground self-stretch flex-col justify-center items-start inline-flex">
-                <div className="p-3 flex-col justify-center items-center flex">
-                    <div className="text-center text-primary-text text-lg font-semibold">User Management</div>
-                </div>
-            </div>
+  useEffect(() => setCurrentPage(router.pathname), [router.pathname]);
 
-            <button onClick={() => signOut()} className="border-b-4 border-foreground flex-col justify-center items-start inline-flex">
-                <div className="p-3 flex-col justify-center items-center flex">
-                    <div className="text-center text-primary-text text-lg font-semibold">Sign Out</div>
-                </div>
-            </button>
+  return (
+    <div className="flex h-20 bg-foreground items-center justify-start gap-4">
+      <div className="px-10">Logo</div>
 
+      <Link
+        href="/dogs"
+        className={
+          "flex flex-col justify-center w-fit h-full border-b-4 border-ca-green " +
+          (currentPage == "/dogs" ? "border-opacity-100" : "border-opacity-0")
+        }
+        onClick={() => setCurrentPage(router.pathname)}
+      >
+        <div className="text-center text-primary-text text-lg font-semibold px-3">
+          Dashboard
         </div>
-    )
+      </Link>
+
+      <Link
+        href="/account"
+        className={
+          "flex flex-col justify-center w-fit h-full border-b-4 border-ca-green " +
+          (currentPage == "/account"
+            ? "border-opacity-100"
+            : "border-opacity-0")
+        }
+        onClick={() => setCurrentPage(router.pathname)}
+      >
+        <div className="text-center text-primary-text text-lg font-semibold px-3">
+          Account
+        </div>
+      </Link>
+
+      {/* TODO: udpate links with User Management page */}
+      <Link
+        href="/"
+        className={
+          "flex flex-col justify-center w-fit h-full border-b-4 border-ca-green " +
+          (currentPage == "/" ? "border-opacity-100" : "border-opacity-0")
+        }
+        onClick={() => setCurrentPage(router.pathname)}
+      >
+        <div className="text-center text-primary-text text-lg font-semibold px-3">
+          User Management
+        </div>
+      </Link>
+
+      <button
+        onClick={() => signOut()}
+        className="flex flex-col justify-center w-fit h-full"
+      >
+        <div className="text-center text-primary-text text-lg font-semibold px-3 border-foreground border-b-4">
+          Sign Out
+        </div>
+      </button>
+    </div>
+  );
 }
