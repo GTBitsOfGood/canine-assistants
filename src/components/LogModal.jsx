@@ -28,7 +28,7 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
     description: false,
   });
 
-  const [ saving, setSaving ] = useState(false);
+  const [saving, setSaving] = useState(false);
   const modalRef = useRef(null);
 
   useEffect(() => {
@@ -67,15 +67,15 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
         },
         body: JSON.stringify(formattedData),
       })
-      .then((res) => {
-        onSubmit(true);
-        onClose();
-        setSaving(false);
-      })
-      .catch((err) => {
-        setSaving(false);
-        onSubmit(false);
-      });
+        .then((res) => {
+          onSubmit(true);
+          onClose();
+          setSaving(false);
+        })
+        .catch((err) => {
+          setSaving(false);
+          onSubmit(false);
+        });
     } else {
       const errorsArray = error.format();
       const errorsObject = {};
@@ -102,7 +102,7 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
       >
         {/* TODO add behavior for dragging downwards to close the modal on mobile */}
         <div className="sm:hidden w-8 h-1 opacity-40 bg-zinc-500 rounded-[100px] mx-auto mb-[12px]" />
-        <h1 className="font-bold mb-[3vh]"> Add a log</h1>
+        <h1 className="mb-[3vh]"> Add a log</h1>
         <h2 className="h-[5vh]">
           Title<span className="text-error-red">*</span>
         </h2>
@@ -297,8 +297,20 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
           >
             <div className="text-primary-text text-sm font-medium">Cancel</div>
           </button>
-          <button onClick={() => saveLog(logData)} disabled={saving} className={`w-full sm:w-32 h-10 px-4 py-2.5 ${saving ? " bg-primary-gray border-tertiary-gray " : " bg-ca-pink border-ca-pink-shade "}  rounded border justify-center items-center gap-2 flex`}>
-            <div className={`${saving ? "text-tertiary-gray " : "text-foreground "} text-base font-medium`}>
+          <button
+            onClick={() => saveLog(logData)}
+            disabled={saving}
+            className={`w-full sm:w-32 h-10 px-4 py-2.5 ${
+              saving
+                ? " bg-primary-gray border-tertiary-gray "
+                : " bg-ca-pink border-ca-pink-shade "
+            }  rounded border justify-center items-center gap-2 flex`}
+          >
+            <div
+              className={`${
+                saving ? "text-tertiary-gray " : "text-foreground "
+              } text-base font-medium`}
+            >
               Save
             </div>
           </button>

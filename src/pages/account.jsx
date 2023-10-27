@@ -27,7 +27,7 @@ export default function Account() {
 
   const router = useRouter();
   // TODO: replace with session info
-  const placeholderUser = "65358b82eccc98bd5877fcbb";
+  const placeholderUser = "653c24c5cc0f21473ff48464";
 
   useEffect(() => {
     fetch(`/api/users/${placeholderUser}`)
@@ -43,51 +43,7 @@ export default function Account() {
 
   return (
     <Card cardStyle="mt-16 min-w-fit">
-      {showDeactivateModal ? (
-        <div>
-          <div className="fixed inset-0 bg-modal-background-gray opacity-60"></div>
-          <Card cardStyle="flex flex-col justify-between fixed z-10 inset-0 mt-32 mx-96 h-fit min-w-fit">
-            <h1>Deactivate {user.name}?</h1>
-            <p className="my-8">
-              Select “Confirm” to deactivate Jane and remove all access to the
-              Canine Assistants database. This action can only be undone by an
-              administrator.
-            </p>
-            <div className="flex flex-row justify-end">
-              <button
-                className="flex flex-row h-full w-32 px-4 py-2 mx-4 justify-center border rounded border-primary-gray"
-                onClick={() => setShowDeactivateModal(!showDeactivateModal)}
-              >
-                Cancel
-              </button>
-              <button
-                className="flex flex-row h-full w-32 px-4 py-2 justify-center text-foreground bg-ca-pink border rounded border-ca-pink-shade"
-                onClick={() => {
-                  let body = {};
-                  body.role = consts.userRoleArray[3];
-                  console.log(body);
-                  fetch("/api/users/" + placeholderUser, {
-                    method: "PATCH",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(body),
-                  })
-                    .then((res) => {
-                      console.log(res);
-                      router.push("/login");
-                    })
-                    .catch((err) => console.log(err));
-                }}
-              >
-                Confirm
-              </button>
-            </div>
-          </Card>
-        </div>
-      ) : (
-        ``
-      )}
+      {showDeactivateModal ? deactivateModal(user, placeholderUser) : ``}
       <div className="flex flex-row min-w-fit">
         <div className="rounded-full">
           <Image
@@ -215,4 +171,50 @@ export default function Account() {
       </div>
     </Card>
   );
+
+  function deactivateModal() {
+    return (
+      <div>
+        <div className="fixed inset-0 bg-modal-background-gray opacity-60"></div>
+        <Card cardStyle="flex flex-col justify-between fixed z-10 inset-0 mt-32 mx-96 h-fit min-w-fit">
+          <h1>Deactivate {user.name}?</h1>
+          <p className="my-8">
+            Select “Confirm” to deactivate {user.name} and remove all access to
+            the Canine Assistants database. This action can only be undone by an
+            administrator.
+          </p>
+          <div className="flex flex-row justify-end">
+            <button
+              className="flex flex-row h-full w-32 px-4 py-2 mx-4 justify-center border rounded border-primary-gray"
+              onClick={() => setShowDeactivateModal(!showDeactivateModal)}
+            >
+              Cancel
+            </button>
+            <button
+              className="flex flex-row h-full w-32 px-4 py-2 justify-center text-foreground bg-ca-pink border rounded border-ca-pink-shade"
+              onClick={() => {
+                let body = {};
+                body.role = consts.userRoleArray[3];
+                console.log(body);
+                fetch("/api/users/" + placeholderUser, {
+                  method: "PATCH",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify(body),
+                })
+                  .then((res) => {
+                    console.log(res);
+                    router.push("/login");
+                  })
+                  .catch((err) => console.log(err));
+              }}
+            >
+              Confirm
+            </button>
+          </div>
+        </Card>
+      </div>
+    );
+  }
 }
