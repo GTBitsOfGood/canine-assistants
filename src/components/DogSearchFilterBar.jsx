@@ -11,7 +11,7 @@ export default function DogSearchFilterBar({ filters, setFilters, setSearch }) {
         </div>
         <input
           type="search"
-          className="w-full h-full rounded bg-foreground border border-neutral-300 text-neutral-700 text-lg p-2.5 pl-10 font-normal"
+          className="w-full h-full rounded bg-foreground border border-neutral-300 text-neutral-700 text-sm p-2.5 pl-10 font-normal"
           placeholder="Search Dogs..."
           required
           onChange={(e) => setSearch(e.target.value)}
@@ -39,7 +39,7 @@ export default function DogSearchFilterBar({ filters, setFilters, setSearch }) {
 
       <DropdownMenu
         selectedOptions={filters.medical}
-        label="Medical Status"
+        label="Medical Concern"
         submitFilters={(newFilters) => {
           setFilters({ ...filters, medical: newFilters });
         }}
@@ -55,7 +55,7 @@ export default function DogSearchFilterBar({ filters, setFilters, setSearch }) {
 
       <DropdownMenu
         selectedOptions={filters.behavior}
-        label="Behavior Status"
+        label="Behavior Concern"
         submitFilters={(newFilters) => {
           if (newFilters !== undefined) {
             setFilters({ ...filters, behavior: newFilters });
@@ -91,7 +91,7 @@ export default function DogSearchFilterBar({ filters, setFilters, setSearch }) {
 
       <button className=" px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade justify-start items-center gap-2 flex">
         <div className="text-foreground h-4 w-4 relative">{<PlusIcon />}</div>
-        <div className="text-foreground text-base font-medium">Add a dog</div>
+        <div className="text-foreground text-sm font-medium">Add Dog</div>
       </button>
     </div>
   );

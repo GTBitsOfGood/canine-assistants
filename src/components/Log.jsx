@@ -14,13 +14,13 @@ export default function Log({ log }) {
   ];
 
   return (
-    <div className="bg-primary-background p-4 my-4">
+    <div className="bg-primary-background p-4 my-4 w-full">
       <div className="flex justify-between">
         <div className="flex flex-col">
           <h2>{log.title}</h2>
           <div className="flex flex-row">
             <p className="text-secondary-text font-regular w-fit">
-              {"Author: " + log.author}
+              {"Author: " + log.author.name}
             </p>
             <p className="text-secondary-text font-regular mx-5 w-fit">
               {"Date: " + createdAt.toLocaleDateString()}
@@ -33,8 +33,8 @@ export default function Log({ log }) {
         <TagDisplay tags={tags} removeTag={null} />
       </div>
       {log.description.length > 250 ? (
-        <div>
-          <p className="pt-4">
+        <div className="max-w-fit">
+          <p className="pt-4 break-words">
             {showMore
               ? log.description
               : log.description.substring(0, 250) + "..."}
@@ -49,7 +49,7 @@ export default function Log({ log }) {
           </div>
         </div>
       ) : (
-        <p className="pt-4">{log.description}</p>
+        <p className="min-w-fit pt-4 break-words">{log.description}</p>
       )}
     </div>
   );
