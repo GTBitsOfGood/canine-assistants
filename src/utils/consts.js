@@ -191,14 +191,7 @@ const logSchema = z.object({
 /**
  * Zod object for validating request bodies for dogs
  */
-const formSchema = z.object({
-  type: z.enum(consts.formTypeArray),
-  user: z.string().refine((id) => {
-    return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
-  }),
-  dog: z.string().refine((id) => {
-    return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
-  }),
+const formUpdateSchema = z.object({
   responses: z
     .array(
       z.object({
@@ -208,4 +201,11 @@ const formSchema = z.object({
     .optional(),
 });
 
-export { pages, consts, dogSchema, logSchema, userUpdateSchema, formSchema };
+export {
+  pages,
+  consts,
+  dogSchema,
+  logSchema,
+  userUpdateSchema,
+  formUpdateSchema,
+};
