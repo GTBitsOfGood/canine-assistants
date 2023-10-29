@@ -21,6 +21,8 @@ const retrievePromise = () => {
   }
 };
 
+console.log(`CURRENT NEXTAUTH_URL: ${process.env.NEXTAUTH_URL}`);
+
 /**
  * @type {import("next-auth").NextAuthOptions}
  */
