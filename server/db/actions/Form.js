@@ -38,3 +38,13 @@ export async function getFormById(id) {
     throw new Error("Unable to get the form at this time, please try again");
   }
 }
+
+export async function getForms(filter = {}) {
+  try {
+    await dbConnect();
+  } catch (e) {
+    throw new Error("Unable to get forms at this time, please try again");
+  }
+
+  return Form.find(filter).populate("user").populate("dog");
+}
