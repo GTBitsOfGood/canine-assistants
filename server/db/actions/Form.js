@@ -28,3 +28,13 @@ export async function createForm(formData) {
 
   return form._id;
 }
+
+export async function getFormById(id) {
+  try {
+    await dbConnect();
+
+    return Form.findById(id).populate("user").populate("dog");
+  } catch (e) {
+    throw new Error("Unable to get the form at this time, please try again");
+  }
+}
