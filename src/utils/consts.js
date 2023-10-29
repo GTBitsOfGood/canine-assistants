@@ -188,4 +188,24 @@ const logSchema = z.object({
   }),
 });
 
-export { pages, consts, dogSchema, logSchema, userUpdateSchema };
+/**
+ * Zod object for validating request bodies for dogs
+ */
+const formUpdateSchema = z.object({
+  responses: z
+    .array(
+      z.object({
+        answer: z.string(),
+      }),
+    )
+    .optional(),
+});
+
+export {
+  pages,
+  consts,
+  dogSchema,
+  logSchema,
+  userUpdateSchema,
+  formUpdateSchema,
+};
