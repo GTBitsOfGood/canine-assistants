@@ -4,7 +4,11 @@ import { dogSchema } from "@/utils/consts";
 export default async function handler(req, res) {
   if (req.method == "GET") {
     try {
-      const data = await getDogs();
+      const fields = req.query.fields
+        ? req.query.fields.split(",").join(" ")
+        : "";
+
+      const data = await getDogs({}, fields);
 
       return res.status(200).json({
         success: true,

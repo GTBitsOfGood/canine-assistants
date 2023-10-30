@@ -66,14 +66,19 @@ const dogSchema = z.object({
   parents: z
     .array(
       z.string().refine((id) => {
-        return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+        return mongoose.Types.ObjectId.isValid(id)
+          ? new Types.ObjectId(id)
+          : null;
       }),
     )
     .optional(),
   dateOfBirth: z.coerce.date(),
-  litterSize: z.number().optional(),
-  birthOrder: z.number().min(1).optional(),
-  maternalDemeanor: z.array(z.number().gte(1).lte(5)).length(3).optional(),
+  litterSize: z.coerce.number().optional(),
+  birthOrder: z.coerce.number().min(1).optional(),
+  maternalDemeanor: z
+    .array(z.coerce.number().gte(1).lte(5))
+    .length(3)
+    .optional(),
   location: z.enum(consts.locationArray),
   rolePlacedAs: z.enum(consts.roleArray).optional(),
   partner: z
@@ -111,7 +116,9 @@ const dogSchema = z.object({
   instructors: z
     .array(
       z.string().refine((id) => {
-        return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+        return mongoose.Types.ObjectId.isValid(id)
+          ? new Types.ObjectId(id)
+          : null;
       }),
     )
     .optional(),
@@ -135,7 +142,9 @@ const dogSchema = z.object({
   caregivers: z
     .array(
       z.string().refine((id) => {
-        return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+        return mongoose.Types.ObjectId.isValid(id)
+          ? new Types.ObjectId(id)
+          : null;
       }),
     )
     .optional(),
@@ -163,86 +172,137 @@ const dogSchema = z.object({
 });
 
 const dogInformationSchema = {
-  ["Birth"]: {
-    ["Birth Time"]: "N/A",
-    ["Collar Color"]: "N/A",
-    ["Supplemental Feeding"]: "N/A",
-    ["Delivery Information"]: "N/A",
-    ["Birth Order"]: "N/A",
+  Birth: {
+    "Birth Time": {
+      key: "dateOfBirth",
+    },
+    "Collar Color": {
+      key: "collarColor",
+    },
+    "Supplemental Feeding": {
+      key: "supplementalFeeding",
+    },
+    "Delivery Information": {
+      key: "deliveryInformation",
+      value: "Natural",
+    },
+    "Birth Order": {
+      key: "birthOrder",
+      value: 0,
+    },
   },
   ["Family"]: {
-    ["Litter Size"]: "N/A",
-    ["Litter Composition"]: "N/A",
-    ["Father"]: "N/A",
-    ["Mother"]: "N/A",
+    "Litter Size": {
+      key: "litterSize",
+    },
+    ["Litter Composition"]: {
+      key: "litterComposition",
+    },
+    ["Father"]: {
+      key: "parents.0",
+    },
+    ["Mother"]: {
+      key: "parents.1",
+    },
   },
   ["Maternal Demeanor"]: {
-    ["Prior to Whelping"]: "N/A",
-    ["During Whelping"]: "N/A",
-    ["Subsequent to Whelping"]: "N/A",
+    ["Prior to Whelping"]: {
+      key: "maternalDemeanor.0",
+    },
+    ["During Whelping"]: {
+      key: "maternalDemeanor.1",
+    },
+    ["Subsequent to Whelping"]: {
+      key: "maternalDemeanor.2",
+    },
   },
   ["Housing"]: {
-    ["Housing"]: "N/A",
-    ["Instructor"]: "N/A",
-    ["Primary Caregiver(s)"]: "N/A",
-    ["Primary Toileting Area"]: "N/A",
+    ["Housing"]: {
+      key: "housing.place",
+    },
+    ["Instructor(s)"]: {
+      key: "instructors",
+    },
+    ["Primary Caregiver(s)"]: {
+      key: "caregivers",
+    },
+
+    ["Primary Toileting Area"]: {
+      key: "toiletArea",
+    },
   },
   ["Feeding"]: {
-    ["Amount"]: "N/A",
-    ["First Meal"]: "N/A",
-    ["Second Meal"]: "N/A",
-    ["Third Meal"]: "N/A",
+    ["Amount"]: {
+      key: "feeding.amount",
+    },
+    ["First Meal"]: {
+      key: "feeding.firstmeal",
+    },
+    ["Second Meal"]: {
+      key: "feeding.secondmeal",
+    },
+    ["Third Meal"]: {
+      key: "feeding.thirdmeal",
+    },
   },
   ["Grooming"]: {
-    ["Last bath"]: "N/A",
+    ["Last bath"]: {
+      key: "grooming.lastBath",
+    },
   },
-};
-
-const keyToLabel = {
-  name: "Name",
-  dateOfBirth: "Birth Date",
-  gender: "Sex",
-  breed: "Breed",
-  coatColor: "Coat Color",
-  collarColor: "Collar Color",
-};
-
-const dogLabelToKey = {
-  Name: "name",
-  "Birth Date": "dateOfBirth",
-  Sex: "gender",
-  Breed: "breed",
-  "Coat Color": "coatColor",
-  "Collar Color": "collarColor",
 };
 
 const computeDefaultValues = (dog) => {
   const defaults = {
     // Top info
-    name: dog?.name || "N/A",
-    dateOfBirth: dog?.dateOfBirth
-      ? dateutils.getDateString(new Date(dog.dateOfBirth))
-      : "N/A",
-    gender: dog?.gender || "N/A",
-    breed: dog?.breed || "N/A",
-    coatColor: dog?.coatColor || "N/A",
+    name: dog?.name,
+    dateOfBirth:
+      dog?.dateOfBirth && dateutils.getDateString(new Date(dog.dateOfBirth)),
+
+    gender: dog?.gender,
+    breed: dog?.breed,
+    coatColor: dog?.coatColor,
+    location: dog?.location,
 
     // Birth
-    birthTime: dog?.birthTime || 0,
-    collarColor: dog?.collarColor || "N/A",
-    supplementalFeeding: dog?.supplementalFeeding || "N/A",
-    deliveryInformation: dog?.deliveryInformation || "Natural", // right now set to natural, figure out default value later
-    birthOrder: dog?.birthOrder || "N/A",
+    collarColor: dog?.collarColor,
+    supplementalFeeding: dog?.supplementalFeeding,
+    deliveryInformation: dog?.deliveryInformation, // right now set to natural, figure out default value later
+    birthOrder: dog?.birthOrder,
 
     // Family
-    litterSize: dog?.litterSize || 0,
-    litterComposition: dog?.litterComposition || "N/A",
-    parents: ["65175368edf55fb45e6d9755", "65175368edf55fb45e6d9775"], // father is 0 index, mother is 1 index
+    litterSize: dog?.litterSize,
+    litterComposition: dog?.litterComposition,
+    parents: dog?.parents?.map((parent) => (parent._id ? parent._id : parent)),
 
     // Maternal Demeanor
-    maternalDemeanor: {
-      priorToWhelping: dog?.priorToWhelping || "N/A",
-      duringWhelping: dog?.duringWhelping || "N/A",
+    maternalDemeanor: dog?.maternalDemeanor, // priorToWheeping, duringWheeping, subsequentToWheeping
+
+    // Housing
+    housing: {
+      place: dog?.housing?.place,
+    },
+    toiletArea: dog?.toiletArea,
+    instructors: dog?.instructors?.map((instructor) =>
+      instructor._id ? instructor._id : instructor,
+    ),
+    caregivers: dog?.caregivers.map((caregiver) =>
+      caregiver._id ? caregiver._id : caregiver,
+    ),
+    // Feeding
+
+    feeding: {
+      amount: dog?.feeding?.amount,
+      firstmeal: dog?.feeding?.firstmeal,
+      secondmeal: dog?.feeding?.secondmeal,
+      thirdmeal: dog?.feeding?.thirdmeal,
+    },
+
+    // Grooming
+    grooming: {
+      lastBath: dog?.grooming?.lastBath
+        ? dateutils.getDateString(new Date(dog.grooming?.lastBath))
+        : dateutils.getDateString(new Date()),
     },
   };
 
@@ -333,6 +393,5 @@ export {
   dogSchema,
   mocks,
   computeDefaultValues,
-  dogLabelToKey,
   dogInformationSchema,
 };

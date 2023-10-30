@@ -2,10 +2,6 @@ import TabSection from "@/components/TabSection";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import dateutils from "@/utils/dateutils";
-import { Form, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import stringUtils from "@/utils/stringutils";
 import { dogInformationSchema, computeDefaultValues } from "@/utils/consts";
 import toast from "react-hot-toast";
 
@@ -20,26 +16,17 @@ import maleicon from "../../../public/maleicon.svg";
 import femaleicon from "../../../public/femaleicon.svg";
 import dogplaceholdericon from "../../../public/dogplaceholdericon.svg";
 import FormField from "@/components/FormField";
-import { dogSchema } from "@/utils/consts";
+import { useEditDog } from "@/context/EditDogContext";
 /**
  *
  * @returns {React.ReactElement} The individual Dog page
  */
 export default function IndividualDogPage() {
   const [data, setData] = useState();
-  const [isEdit, setIsEdit] = useState(false);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm({
-    resolver: zodResolver(dogSchema.partial()),
-    defaultValues: computeDefaultValues(null),
-  });
-
   const router = useRouter();
+
+  const { setIsEdit, isEdit, handleSubmit, reset, getValues, errors } =
+    useEditDog();
 
   useEffect(() => {
     if (router.query.id) {
@@ -47,10 +34,15 @@ export default function IndividualDogPage() {
         .then((res) => res.json())
         .then((data) => {
           setData(data);
+          console.log("originalData", data);
+          console.log("initialDefaultVals,", computeDefaultValues(data.data));
           reset(computeDefaultValues(data.data));
         });
     }
   }, [router.query, reset]);
+
+  console.log(getValues(), "Values!!! ");
+  console.log(errors, "errors!!");
 
   if (!data || data === undefined || !data.success) {
     return <div>loading</div>;
@@ -79,19 +71,14 @@ export default function IndividualDogPage() {
   };
 
   const onEditSubmit = async (data) => {
-    console.log(data, "bruh");
-    const dataFormatted = Object.fromEntries(
-      Object.entries(data).filter(([key, value]) => value !== "N/A")
-    );
-
-    console.log(dataFormatted, "weee");
+    console.log(data, "yayyyy");
 
     const requestBody = {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(dataFormatted),
+      body: JSON.stringify(data),
     };
 
     try {
@@ -105,6 +92,7 @@ export default function IndividualDogPage() {
 
       notify("success", res.data.name);
       setData(res);
+      console.log(computeDefaultValues(res.data), "resMyGy");
       reset(computeDefaultValues(res.data));
       setIsEdit(false);
     } catch (err) {
@@ -113,9 +101,6 @@ export default function IndividualDogPage() {
       setIsEdit(false);
     }
   };
-
-  console.log(dog)
-
 
   return (
     // Artificial spacing until nav is created
@@ -174,95 +159,29 @@ export default function IndividualDogPage() {
                         className="h-min pl-1 font-bold text-3xl"
                         label="Name"
                         keyLabel={"name"}
-                        errors={errors}
-                        isEditing={isEdit}
-                        value={dog.name}
-                        register={register}
                         showLabel={false}
                       />
                     )}
 
-                    <FormField
-                      isEditing={isEdit}
-                      label={"Birth Date"}
-                      errors={errors}
-                      keyLabel={"dateOfBirth"}
-                      register={register}
-                    >
-                      {dateutils.getDateString(new Date(dog.dateOfBirth))}
-                    </FormField>
-                    <FormField
-                      isEditing={isEdit}
-                      register={register}
-                      label={"Sex"}
-                      errors={errors}
-                      keyLabel={"gender"}
-                      value={dog.gender}
-                    />
-                    <FormField
-                      isEditing={isEdit}
-                      register={register}
-                      label={"Breed"}
-                      errors={errors}
-                      keyLabel={"breed"}
-                      value={dog.breed}
-                    />
-                    <FormField
-                      isEditing={isEdit}
-                      register={register}
-                      label={"Coat Color"}
-                      errors={errors}
-                      keyLabel={"coatColor"}
-                      value={dog.coatColor || "N/A"}
-                    />
+                    <FormField label={"Birth Date"} keyLabel={"dateOfBirth"} />
+                    <FormField label={"Sex"} keyLabel={"gender"} />
+                    <FormField label={"Breed"} keyLabel={"breed"} />
+                    <FormField label={"Coat Color"} keyLabel={"coatColor"} />
                   </div>
 
                   <div className="flex-col pt-8 pl-1 text-lg space-y-2">
                     {dog.location === "Placed" ? (
                       <>
+                        <FormField label={"Placement"} keyLabel={"placement"} />
+                        <FormField label={"Partner"} keyLabel={"partner"} />
                         <FormField
-                          isEditing={isEdit}
-                          register={register}
-                          errors={errors}
-                          label={"Placement"}
-                          keyLabel={"placement"}
-                          value={"N/A"}
-                        />
-                        <FormField
-                          isEditing={isEdit}
-                          register={register}
-                          errors={errors}
-                          label={"Partner"}
-                          keyLabel={"partner"}
-                          value={"N/A"}
-                        />
-                        <FormField
-                          isEditing={isEdit}
-                          register={register}
-                          errors={errors}
                           label={"Placement Camp"}
                           keyLabel={"placementCamp"}
-                          value={"N/A"}
                         />
                       </>
                     ) : (
                       <>
-                        <FormField
-                          isEditing={isEdit}
-                          register={register}
-                          errors={errors}
-                          label={"Housing"}
-                          keyLabel={"housing"}
-                          value={"N/A"}
-                        />
-                        <FormField
-                          isEditing={isEdit}
-                          register={register}
-                          errors={errors}
-                          label={"Instructors"}
-                          keyLabel={"instructors"}
-                          value={"N/A"}
-                        />
+                        <FormField label={"Location"} keyLabel={"location"} />
                       </>
                     )}
                   </div>
@@ -311,11 +230,7 @@ export default function IndividualDogPage() {
         <div className="mt-8 shadow-xl rounded-lg text-md w-full text-left relative overflow-hidden bg-foreground p-8">
           <TabSection defaultTab="information">
             <div label="information">
-              <div
-                className={`${
-                  isEdit ? "w-5/6" : "w-2/3"
-                } grid grid-cols-3 gap-16`}
-              >
+              <div className={`${"w-full"} grid grid-cols-3 gap-16`}>
                 {Object.keys(dogInformationSchema).map((category) => (
                   <div className="col" key={category}>
                     <div className="flex-col space-y-4 text-lg">
@@ -324,17 +239,18 @@ export default function IndividualDogPage() {
                       </div>
 
                       {Object.keys(dogInformationSchema[category]).map(
-                        (col) => (
-                          <FormField
-                            key={col}
-                            keyLabel={stringUtils.toCamelCase(col)}
-                            isEditing={isEdit}
-                            errors={errors}
-                            register={register}
-                            label={col}
-                            value={"N/A"}
-                          />
-                        )
+                        (col) => {
+                          const { key: formKey } =
+                            dogInformationSchema[category][col];
+
+                          return (
+                            <FormField
+                              key={col}
+                              keyLabel={formKey}
+                              label={col}
+                            />
+                          );
+                        }
                       )}
                     </div>
                   </div>
