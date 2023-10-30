@@ -45,4 +45,4 @@ const validateForm = (type, responses) => {
   return { success: true };
 };
 
-export { validateForm };
+export { validateForm, formMap };
