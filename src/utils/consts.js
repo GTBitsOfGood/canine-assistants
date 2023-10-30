@@ -184,11 +184,9 @@ const dogInformationSchema = {
     },
     "Delivery Information": {
       key: "deliveryInformation",
-      value: "Natural",
     },
     "Birth Order": {
       key: "birthOrder",
-      value: 0,
     },
   },
   ["Family"]: {
@@ -256,8 +254,7 @@ const computeDefaultValues = (dog) => {
   const defaults = {
     // Top info
     name: dog?.name,
-    dateOfBirth:
-      dog?.dateOfBirth && dateutils.getDateString(new Date(dog.dateOfBirth)),
+    dateOfBirth: dog?.dateOfBirth,
 
     gender: dog?.gender,
     breed: dog?.breed,

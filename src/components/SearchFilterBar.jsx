@@ -6,7 +6,6 @@ import DropdownMenu, { DropdownMenuOption } from "./DropdownMenu";
 import { consts } from "@/utils/consts";
 
 export default function SearchFilterBar({ filters, setFilters, setSearch }) {
-  console.log(filters.location);
   return (
     <div className="flex items-center gap-4">
       <div className="relative grow justify-start items-center flex">

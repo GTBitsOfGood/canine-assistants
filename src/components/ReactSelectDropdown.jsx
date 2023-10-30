@@ -25,8 +25,7 @@ export default function ReactSelectDropdown({
   };
 
   const changeVal = (field, val) => {
-    console.log(field, "changeVal");
-    console.log(val, "val!!!");
+
     if (isMulti) {
       field.onChange(val.map((indVal) => indVal.value));
     } else {

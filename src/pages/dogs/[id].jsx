@@ -34,15 +34,13 @@ export default function IndividualDogPage() {
         .then((res) => res.json())
         .then((data) => {
           setData(data);
-          console.log("originalData", data);
-          console.log("initialDefaultVals,", computeDefaultValues(data.data));
+          
           reset(computeDefaultValues(data.data));
         });
     }
   }, [router.query, reset]);
 
-  console.log(getValues(), "Values!!! ");
-  console.log(errors, "errors!!");
+
 
   if (!data || data === undefined || !data.success) {
     return <div>loading</div>;
@@ -71,7 +69,7 @@ export default function IndividualDogPage() {
   };
 
   const onEditSubmit = async (data) => {
-    console.log(data, "yayyyy");
+
 
     const requestBody = {
       method: "PATCH",
@@ -92,7 +90,6 @@ export default function IndividualDogPage() {
 
       notify("success", res.data.name);
       setData(res);
-      console.log(computeDefaultValues(res.data), "resMyGy");
       reset(computeDefaultValues(res.data));
       setIsEdit(false);
     } catch (err) {

@@ -10,24 +10,24 @@ export default function Test() {
   const test = ["one", "two", "three"];
   const { enums } = useEditDog();
   const submitDropdown = (data) => {
-    console.log(data);
+
   };
 
   const { handleSubmit, control, reset } = useForm({
     defaultValues: {
       caregivers: [{ value: "65175368edf55fb45e6d971d", label: "doe" }],
       parents: ["svsd", "sdsvd"],
-      birthDate: new Date(),
+      birthDate: dateutils.getDateString(new Date(val)),
     },
   });
 
-  console.log(enums["caregivers"]);
+
 
   return (
     <div className="h-screen flex flex-col items-center justify-between">
       <form
         onSubmit={handleSubmit((data) => {
-          console.log(data);
+        
         })}
       >
         <ReactSelectDropdown

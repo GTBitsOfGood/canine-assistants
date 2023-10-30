@@ -84,7 +84,6 @@ export default async function handler(req, res) {
             error.errors[0].received,
         });
       } else {
-        console.log(error);
         return res.status(422).send({
           success: false,
           message: error.errors[0].message,

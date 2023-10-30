@@ -17,7 +17,7 @@ const Input = React.forwardRef(
     },
     ref
   ) => {
-    const { enums } = useEditDog();
+    const { enums, isEdit } = useEditDog();
 
     const { field } = useController({
       name,
@@ -41,11 +41,23 @@ const Input = React.forwardRef(
       } else {
         if (label === "Birth Time") {
           return dateutils.getTimeString(new Date(val));
+        } else if (label === "Birth Date") {
+          return dateutils.getDateString(new Date(val));
         } else {
-          return val || "";
+          return val;
         }
       }
     };
+
+    // if it is not defined, then it will show N/A!
+    if (
+      (field.value === undefined ||
+        (Array.isArray(field.value) && field.value.length === 0)) &&
+      !isEdit
+    ) {
+      return <span className={`text-neutral-700 pl-2 font-normal`}>N/A</span>;
+    }
+
     return (
       <input
         {...field}

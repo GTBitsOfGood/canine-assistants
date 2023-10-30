@@ -2,6 +2,7 @@ import React from "react";
 import { useController } from "react-hook-form";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import dateutils from "@/utils/dateutils";
 
 export default function DatePicker({ name, control, isTimeOnly, ...rest }) {
   const CustomInput = React.forwardRef(({ value, onClick }, ref) => (
@@ -22,12 +23,18 @@ export default function DatePicker({ name, control, isTimeOnly, ...rest }) {
     control,
   });
 
+  const { onBlur, onChange, ref } = field;
+
   const getProps = () => {
     // Common props that both date pickers share
     const commonProps = {
       ...rest,
-      ...field,
+      onBlur,
+      onChange,
+      ref,
+      name,
       selected: field.value ? new Date(field.value) : null,
+      dateFormat: "MMMM d, yyyy",
       customInput: <CustomInput />,
     };
 
