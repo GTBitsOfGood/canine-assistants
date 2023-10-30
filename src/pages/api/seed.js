@@ -6,6 +6,7 @@ import Dog from "../../../server/db/models/Dog";
 import { createLog } from "../../../server/db/actions/Log";
 import { consts } from "@/utils/consts";
 import { createDog } from "../../../server/db/actions/Dog";
+import Form from "../../../server/db/models/Form";
 
 const dogs = [];
 const users = [
@@ -190,7 +191,52 @@ const logs = [
     dog: "",
   },
 ];
-
+const forms = [
+  {
+    type: consts.formTypeArray[0],
+    user: "",
+    dog: "",
+    responses: [
+      {
+        answer: "Yes",
+      },
+      {
+        answer: "Yes",
+      },
+      {
+        answer: "Yes",
+      },
+      {
+        answer: "Yes",
+      },
+      {
+        answer: "Yes",
+      },
+    ],
+  },
+  {
+    type: consts.formTypeArray[1],
+    user: "",
+    dog: "",
+    responses: [
+      {
+        answer: "No",
+      },
+      {
+        answer: "No",
+      },
+      {
+        answer: "No",
+      },
+      {
+        answer: "No",
+      },
+      {
+        answer: "No",
+      },
+    ],
+  },
+];
 const dogNames = [
   "Max",
   "Charlie",
@@ -316,6 +362,7 @@ export default async function handler(req, res) {
     await User.deleteMany({});
     await Log.deleteMany({});
     await Dog.deleteMany({});
+    await Form.deleteMany({});
 
     // create users
     const userIds = [];
@@ -400,6 +447,14 @@ export default async function handler(req, res) {
       logs[i].author = userIds[getRandomInt(0, userIds.length - 1)];
       await createLog(logs[i]);
     }
+
+    // create forms
+    for (let i = 0; i < forms.length; i++) {
+      forms[i].user = userIds[getRandomInt(0, userIds.length - 1)];
+      forms[i].dog = dogIds[getRandomInt(0, dogIds.length - 1)];
+      await Form.create(forms[i]);
+    }
+
     return res.send("Successfully seeded db");
   }
   return res.redirect("/");
