@@ -65,18 +65,21 @@ const dogSchema = z.object({
     .default([]),
   parents: z
     .array(
-      z.string().refine((id) => {
-        return mongoose.Types.ObjectId.isValid(id)
-          ? new Types.ObjectId(id)
-          : null;
-      }),
+      z
+        .string()
+        .refine((id) => {
+          return mongoose.Types.ObjectId.isValid(id)
+            ? new Types.ObjectId(id)
+            : null;
+        })
+        .optional(),
     )
     .optional(),
   dateOfBirth: z.coerce.date(),
   litterSize: z.coerce.number().optional(),
   birthOrder: z.coerce.number().min(1).optional(),
   maternalDemeanor: z
-    .array(z.coerce.number().gte(1).lte(5))
+    .array(z.coerce.number().gte(1).lte(5).optional())
     .length(3)
     .optional(),
   location: z.enum(consts.locationArray),

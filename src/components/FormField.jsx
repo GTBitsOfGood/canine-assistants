@@ -19,6 +19,23 @@ export default function FormField({
     errors && errors[keyLabel] && "border-red-500 border-2"
   } focus:outline-none`;
 
+  const checkErrors = () => {
+    const formattedKey = keyLabel.split(".")[0];
+    const index = keyLabel.split(".")[1];
+
+    if (
+      errors[formattedKey] &&
+      Array.isArray(errors[formattedKey]) &&
+      errors[formattedKey].hasOwnProperty(index)
+    ) {
+      return true;
+    } else if (errors[formattedKey] && !Array.isArray(errors[formattedKey])) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const FormInput = () => {
     // splits for example (parents.0 = parents)
 
@@ -69,7 +86,7 @@ export default function FormField({
         </div>
       </div>
       <div className="w-full">
-        {errors && errors[keyLabel] && (
+        {checkErrors() && (
           <div className="flex items-center gap-x-2">
             <ExclamationCircleIcon className="w-4 h-4" />
             <p role="alert">Please enter a valid {label.toLowerCase()}</p>

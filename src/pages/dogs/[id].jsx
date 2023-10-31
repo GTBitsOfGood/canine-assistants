@@ -34,13 +34,11 @@ export default function IndividualDogPage() {
         .then((res) => res.json())
         .then((data) => {
           setData(data);
-          
+
           reset(computeDefaultValues(data.data));
         });
     }
   }, [router.query, reset]);
-
-
 
   if (!data || data === undefined || !data.success) {
     return <div>loading</div>;
@@ -68,8 +66,28 @@ export default function IndividualDogPage() {
     }
   };
 
-  const onEditSubmit = async (data) => {
+  console.log(errors);
 
+  const onEditSubmit = async (data) => {
+    // FORMAT DATA FIRST
+    const removeUndefinedAndEmpty = (obj) => {
+      Object.keys(obj).forEach((key) => {
+        if (Array.isArray(obj[key])) {
+          obj[key] = obj[key].filter((item) => item !== undefined);
+          if (obj[key].length === 0) {
+            delete obj[key];
+          }
+        } else if (obj[key] && typeof obj[key] === "object") {
+          removeUndefinedAndEmpty(obj[key]); // recurse
+        } else if (obj[key] === undefined) {
+          delete obj[key];
+        }
+      });
+      return obj;
+    };
+
+    data = removeUndefinedAndEmpty(data);
+    console.log(data);
 
     const requestBody = {
       method: "PATCH",
