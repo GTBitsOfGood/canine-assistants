@@ -96,10 +96,18 @@ export default async function handler(req, res) {
           });
         }
       })
-      .catch(() => {
+      .catch((error) => {
+        if (error.message == "Invalid form ID") {
+          return res.status(500).send({
+            success: false,
+            message: "Unable to delete form because form ID does not exist",
+          });
+        }
+
         return res.status(500).send({
           success: false,
           message: "Unable to delete form, please try again",
+          error: error.message,
         });
       });
   }
