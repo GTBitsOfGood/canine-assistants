@@ -28,7 +28,7 @@ export default function IndividualDogPage() {
   const { setIsEdit, isEdit, handleSubmit, reset, getValues, errors } =
     useEditDog();
 
-  console.log(getValues());
+
 
   useEffect(() => {
     if (router.query.id) {
@@ -68,7 +68,7 @@ export default function IndividualDogPage() {
     }
   };
 
-  console.log(errors);
+
 
   const onEditSubmit = async (data) => {
     // FORMAT DATA FIRST
@@ -89,7 +89,7 @@ export default function IndividualDogPage() {
     };
 
     data = removeUndefinedAndEmpty(data);
-    console.log(data);
+
 
     const requestBody = {
       method: "PATCH",
