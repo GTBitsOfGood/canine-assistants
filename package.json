@@ -35,7 +35,6 @@
   },
   "devDependencies": {
     "@bitwarden/cli": "^2023.7.0",
-    "@netlify/plugin-nextjs": "^4.36.1",
     "eslint-config-prettier": "^9.0.0",
     "fx": "^28.0.0",
     "husky": "^8.0.3",
