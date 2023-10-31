@@ -168,7 +168,7 @@ const dogSchema = z.object({
  */
 const userUpdateSchema = z.object({
   name: z.string(),
-  role: z.enum(["Admin", "Instructor", "Volunteer/Recipient"]),
+  role: z.enum(["Admin", "Instructor", "Volunteer/Recipient", "Inactive"]),
 });
 
 /**
