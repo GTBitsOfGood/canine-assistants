@@ -107,7 +107,6 @@ export default async function handler(req, res) {
         return res.status(500).send({
           success: false,
           message: "Unable to delete form, please try again",
-          error: error.message,
         });
       });
   }
