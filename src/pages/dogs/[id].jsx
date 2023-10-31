@@ -28,6 +28,8 @@ export default function IndividualDogPage() {
   const { setIsEdit, isEdit, handleSubmit, reset, getValues, errors } =
     useEditDog();
 
+  console.log(getValues());
+
   useEffect(() => {
     if (router.query.id) {
       fetch(`/api/dogs/${router.query.id}`)
@@ -188,7 +190,7 @@ export default function IndividualDogPage() {
                     {dog.location === "Placed" ? (
                       <>
                         <FormField label={"Placement"} keyLabel={"placement"} />
-                        <FormField label={"Partner"} keyLabel={"partner"} />
+                        <FormField label={"Partner"} keyLabel={"partner.user"} />
                         <FormField
                           label={"Placement Camp"}
                           keyLabel={"placementCamp"}

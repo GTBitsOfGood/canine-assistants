@@ -92,7 +92,9 @@ const dogSchema = z.object({
       user: z
         .string()
         .refine((id) => {
-          return mongoose.isValidObjectId(id) ? new Types.ObjectId(id) : null;
+          return mongoose.Types.ObjectId.isValid(id)
+            ? new Types.ObjectId(id)
+            : null;
         })
         .optional(),
     })
@@ -262,7 +264,6 @@ const computeDefaultValues = (dog) => {
     gender: dog?.gender,
     breed: dog?.breed,
     coatColor: dog?.coatColor,
-    location: dog?.location,
 
     // Birth
     collarColor: dog?.collarColor,
@@ -305,6 +306,16 @@ const computeDefaultValues = (dog) => {
         : dateutils.getDateString(new Date()),
     },
   };
+
+  // do logic for placed/unplaced dogs
+
+  if (dog?.location === "Placed") {
+    defaults.partner = dog?.partner;
+    defaults.placement = dog?.placement;
+    defaults.placementCamp = dog?.placementCamp;
+  } else {
+    defaults.location = dog?.location;
+  }
 
   return defaults;
 };

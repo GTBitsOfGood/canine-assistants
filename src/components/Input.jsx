@@ -19,10 +19,18 @@ const Input = React.forwardRef(
   ) => {
     const { enums, isEdit } = useEditDog();
 
+
     const { field } = useController({
       name,
       control,
     });
+
+
+    if (formattedKey === "partner") {
+      console.log(name, "name");
+      console.log(formattedKey, "formatted");
+      console.log(field, "fieldss");
+    }
 
     const getDisplayValue = (val) => {
       if (isSelect && isMultiSelect && Array.isArray(val)) {

@@ -47,6 +47,9 @@ export default function FormField({
     const isMultiSelect = multiselects.includes(formattedKey);
     const isDateField = dateFields.includes(formattedKey);
     const isTimeOnly = label === "Birth Time";
+    const isDateRange = label === "Placement Camp";
+
+
 
     if (isSelect && isEdit) {
       return (
@@ -59,7 +62,12 @@ export default function FormField({
       );
     } else if (isDateField && isEdit) {
       return (
-        <DatePicker control={control} name={keyLabel} isTimeOnly={isTimeOnly} />
+        <DatePicker
+          control={control}
+          name={keyLabel}
+          isTimeOnly={isTimeOnly}
+          selectsRange={isDateRange}
+        />
       );
     } else {
       return (
