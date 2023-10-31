@@ -74,7 +74,7 @@ export default function Login({ dogs }) {
           </div>
           <div className="w-full flex justify-center">
             <button
-              onClick={() => signIn("google", { callbackUrl: "/dogs" })}
+              onClick={() => signIn("google", { redirect: false })}
               className="w-3/4 bg-white rounded-full shadow-sm text-neutral-700 mt-6 py-3 flex flex-row items-center justify-center text-md"
             >
               <div className="aspect-square h-7 relative mx-4">
