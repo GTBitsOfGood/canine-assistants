@@ -189,7 +189,7 @@ const logSchema = z.object({
 });
 
 /**
- * Zod object for validating request bodies for dogs
+ * Zod object for validating request bodies for form updates
  */
 const formUpdateSchema = z.object({
   responses: z
@@ -201,11 +201,22 @@ const formUpdateSchema = z.object({
     .optional(),
 });
 
-export {
-  pages,
-  consts,
-  dogSchema,
-  logSchema,
-  userUpdateSchema,
-  formUpdateSchema,
-};
+/**
+ * Zod object for validating request bodies for forms
+ */
+const formSchema = z.object({
+  type: z.enum(consts.formTypeArray),
+  user: z.string().refine((id) => {
+    return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
+  }),
+  dog: z.string().refine((id) => {
+    return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
+  }),
+  responses: z.array(
+    z.object({
+      answer: z.string(),
+    }),
+  ),
+});
+
+export { pages, consts, dogSchema, logSchema, userUpdateSchema, formSchema, formUpdateSchema };
