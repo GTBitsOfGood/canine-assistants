@@ -10,6 +10,9 @@ let cachedPromise;
 import { MongoClient, ObjectId } from "mongodb";
 import User from "../../../../server/db/models/User";
 
+import CredentialsProvider from "next-auth/providers/credentials";
+import { verifyUser } from "../../../../server/db/actions/User";
+
 const client = new MongoClient(DB_CONNECTION_STRING);
 
 const retrievePromise = () => {
@@ -20,8 +23,6 @@ const retrievePromise = () => {
     return cachedPromise;
   }
 };
-
-console.log(`CURRENT NEXTAUTH_URL: ${process.env.NEXTAUTH_URL}`);
 
 /**
  * @type {import("next-auth").NextAuthOptions}
@@ -35,13 +36,37 @@ export const authOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
+    CredentialsProvider({
+      id: "credentials",
+      name: "Login with Username and Password",
+      
+      async authorize(credentials) {
+        const response = await verifyUser(
+          credentials.email,
+          credentials.password
+        );
+
+        if (response.status === 200) {
+          return {
+            id: response.message._id,
+            ...response.message,
+          }
+        } else {
+          return null;
+        }
+      },
+      credentials: {
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" }
+      }
+    }),
     GoogleProvider({
       id: "google",
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
-  pages: {
+  pages: {  
     signIn: "/login",
     // newUser: "/dogs",
     // error: "/login",
