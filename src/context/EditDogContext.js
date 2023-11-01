@@ -77,15 +77,15 @@ export function EditDogProvider({ children }) {
     parents: allDogsData.map((dog) => ({ value: dog._id, label: dog.name })),
     caregivers: allUsers.map((user) => ({
       value: user._id,
-      label: user.username,
+      label: user.name,
     })),
     instructors: allUsers.map((user) => ({
       value: user._id,
-      label: user.username,
+      label: user.name,
     })),
     partner: allUsers.map((user) => ({
       value: user._id,
-      label: user.username,
+      label: user.name,
     })),
   };
 

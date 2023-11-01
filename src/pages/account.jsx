@@ -121,7 +121,6 @@ export default function Account() {
                             }
                           })
                           .catch((err) => {
-                            console.log(err);
                           });
                       }}
                     >
@@ -195,7 +194,6 @@ export default function Account() {
               onClick={() => {
                 let body = {};
                 body.role = consts.userRoleArray[3];
-                console.log(body);
                 fetch("/api/users/" + placeholderUser, {
                   method: "PATCH",
                   headers: {
@@ -204,10 +202,11 @@ export default function Account() {
                   body: JSON.stringify(body),
                 })
                   .then((res) => {
-                    console.log(res);
                     router.push("/login");
                   })
-                  .catch((err) => console.log(err));
+                  .catch((err) => {
+                    
+                  });
               }}
             >
               Confirm

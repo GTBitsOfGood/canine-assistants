@@ -31,10 +31,6 @@ export default function DatePicker({
 
   const { onBlur, onChange, ref } = field;
 
-  if (selectsRange) {
-    console.log(field);
-  }
-
   const getProps = () => {
     // Common props that both date pickers share
     const commonProps = {

@@ -25,13 +25,6 @@ const Input = React.forwardRef(
       control,
     });
 
-
-    if (formattedKey === "partner") {
-      console.log(name, "name");
-      console.log(formattedKey, "formatted");
-      console.log(field, "fieldss");
-    }
-
     const getDisplayValue = (val) => {
       if (isSelect && isMultiSelect && Array.isArray(val)) {
         return val
