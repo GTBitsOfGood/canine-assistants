@@ -1,18 +1,46 @@
+@import url("https://fonts.googleapis.com/css2?family=Maven+Pro:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-* {
-  padding: 0;
-  margin: 0;
+@layer base {
+  * {
+    padding: 0;
+    margin: 0;
+  }
+
+  body {
+    color: rgb(var(--foreground-rgb));
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgb(var(--background-end-rgb))
+      )
+      rgb(var(--background-start-rgb));
+    @apply bg-secondary-background;
+  }
+
+  h1 {
+    @apply text-3xl;
+    @apply text-black;
+    @apply font-bold;
+  }
+
+  h2 {
+    @apply text-xl;
+    @apply text-black;
+    @apply font-semibold;
+  }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+@layer components {
+  .modal-shadow {
+    box-shadow: 0 0 16px 0 rgba(40, 48, 45, 0.16);
+  }
+
+  .modal-shadow-mobile {
+    box-shadow: 2px -2px 3px 0 rgba(0, 0, 0, 0.3);
+  }
 }

@@ -1,18 +1,31 @@
+import { consts } from "@/utils/consts";
 import mongoose from "mongoose";
-
 const { Schema } = mongoose;
 
 const UserSchema = new Schema({
-  username: {
+  name: {
     type: String,
-    required: true,
-    index: true,
-    unique: true,
+    required: true
   },
-  hash: {
+  email: {
     type: String,
+    required: true
+  },
+  image: {
+    type: String,
+  },
+  emailVerified: {
+    type: Boolean,
+    default: null,
+  },
+  role: {
+    type: String,
+    enum: consts.userRoleArray,
     required: true,
   },
+  passwordHashed: {
+    type: String
+  }
 });
 
 export default mongoose.models?.User ?? mongoose.model("User", UserSchema);

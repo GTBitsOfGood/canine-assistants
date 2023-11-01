@@ -5,7 +5,7 @@ What does this PR change and why?
 ### Checklist
 - [ ] Requirements have been implemented
 - [ ] Acceptance criteria is met
-- [ ] Database schema docs have been updated or are not necessary
+- [ ] Database schema [docs](https://www.notion.so/gtbitsofgood/Database-Schema-Docs-a841a38d02db4428a7cdc85dcbb8a35c?pvs=4) have been updated or are not necessary
 - [ ] Code follows design and style guidelines
 - [ ] Commits follow guidelines (concise, squashed, etc)
 - [ ] Relevant reviewers (EM) have been assigned to this PR
