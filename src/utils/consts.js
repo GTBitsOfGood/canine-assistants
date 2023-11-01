@@ -1,4 +1,5 @@
 import { Types } from "mongoose";
+import dateutils from "./dateutils";
 import { z } from "zod";
 
 const pages = {
@@ -72,9 +73,12 @@ const dogSchema = z.object({
     )
     .optional(),
   dateOfBirth: z.coerce.date(),
-  litterSize: z.number().optional(),
-  birthOrder: z.number().min(1).optional(),
-  maternalDemeanor: z.array(z.number().gte(1).lte(5)).length(3).optional(),
+  litterSize: z.coerce.number().optional(),
+  birthOrder: z.coerce.number().min(1).optional(),
+  maternalDemeanor: z
+    .array(z.coerce.number().gte(1).lte(5).optional())
+    .length(3)
+    .optional(),
   location: z.enum(consts.locationArray),
   rolePlacedAs: z.enum(consts.roleArray).optional(),
   partner: z
@@ -163,6 +167,150 @@ const dogSchema = z.object({
     .optional(),
 });
 
+const dogInformationSchema = {
+  Birth: {
+    "Birth Time": {
+      key: "dateOfBirth",
+    },
+    "Collar Color": {
+      key: "collarColor",
+    },
+    "Supplemental Feeding": {
+      key: "supplementalFeeding",
+    },
+    "Delivery Information": {
+      key: "deliveryInformation",
+    },
+    "Birth Order": {
+      key: "birthOrder",
+    },
+  },
+  ["Family"]: {
+    "Litter Size": {
+      key: "litterSize",
+    },
+    ["Litter Composition"]: {
+      key: "litterComposition",
+    },
+    ["Father"]: {
+      key: "parents.0",
+    },
+    ["Mother"]: {
+      key: "parents.1",
+    },
+  },
+  ["Maternal Demeanor"]: {
+    ["Prior to Whelping"]: {
+      key: "maternalDemeanor.0",
+    },
+    ["During Whelping"]: {
+      key: "maternalDemeanor.1",
+    },
+    ["Subsequent to Whelping"]: {
+      key: "maternalDemeanor.2",
+    },
+  },
+  ["Housing"]: {
+    ["Housing"]: {
+      key: "housing.place",
+    },
+    ["Instructor(s)"]: {
+      key: "instructors",
+    },
+    ["Primary Caregiver(s)"]: {
+      key: "caregivers",
+    },
+
+    ["Primary Toileting Area"]: {
+      key: "toiletArea",
+    },
+  },
+  ["Feeding"]: {
+    ["Amount"]: {
+      key: "feeding.amount",
+    },
+    ["First Meal"]: {
+      key: "feeding.firstmeal",
+    },
+    ["Second Meal"]: {
+      key: "feeding.secondmeal",
+    },
+    ["Third Meal"]: {
+      key: "feeding.thirdmeal",
+    },
+  },
+  ["Grooming"]: {
+    ["Last bath"]: {
+      key: "grooming.lastBath",
+    },
+  },
+};
+
+const computeDefaultValues = (dog) => {
+  const defaults = {
+    // Top info
+    name: dog?.name,
+    dateOfBirth: dog?.dateOfBirth,
+
+    gender: dog?.gender,
+    breed: dog?.breed,
+    coatColor: dog?.coatColor,
+
+    // Birth
+    collarColor: dog?.collarColor,
+    supplementalFeeding: dog?.supplementalFeeding,
+    deliveryInformation: dog?.deliveryInformation, // right now set to natural, figure out default value later
+    birthOrder: dog?.birthOrder,
+
+    // Family
+    litterSize: dog?.litterSize,
+    litterComposition: dog?.litterComposition,
+    parents: dog?.parents?.map((parent) => (parent._id ? parent._id : parent)),
+
+    // Maternal Demeanor
+    maternalDemeanor: dog?.maternalDemeanor, // priorToWheeping, duringWheeping, subsequentToWheeping
+
+    // Housing
+    housing: {
+      place: dog?.housing?.place,
+    },
+    toiletArea: dog?.toiletArea,
+    instructors: dog?.instructors?.map((instructor) =>
+      instructor._id ? instructor._id : instructor,
+    ),
+    caregivers: dog?.caregivers.map((caregiver) =>
+      caregiver._id ? caregiver._id : caregiver,
+    ),
+    // Feeding
+
+    feeding: {
+      amount: dog?.feeding?.amount,
+      firstmeal: dog?.feeding?.firstmeal,
+      secondmeal: dog?.feeding?.secondmeal,
+      thirdmeal: dog?.feeding?.thirdmeal,
+    },
+
+    // Grooming
+    grooming: {
+      lastBath: dog?.grooming?.lastBath
+        ? dateutils.getDateString(new Date(dog.grooming?.lastBath))
+        : dateutils.getDateString(new Date()),
+    },
+  };
+
+  // do logic for placed/unplaced dogs
+
+  if (dog?.location === "Placed") {
+    defaults.partner = dog?.partner;
+    defaults.placement = dog?.placement;
+    defaults.placementCamp = dog?.placementCamp;
+  } else {
+    defaults.location = dog?.location;
+  }
+
+  return defaults;
+};
+
 /**
  * Zod object for validating request bodies for users
  */
@@ -219,4 +367,14 @@ const formSchema = z.object({
   ),
 });
 
-export { pages, consts, dogSchema, logSchema, userUpdateSchema, formSchema, formUpdateSchema };
+export {
+  pages,
+  consts,
+  dogSchema,
+  logSchema,
+  userUpdateSchema,
+  formSchema,
+  formUpdateSchema,
+  dogInformationSchema,
+  computeDefaultValues,
+};

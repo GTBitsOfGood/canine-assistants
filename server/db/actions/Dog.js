@@ -3,7 +3,7 @@ import Dog from "../models/Dog";
 import Log from "../models/Log";
 import User from "../models/User";
 
-export async function getDogs(filter = {}) {
+export async function getDogs(filter = {}, fields = null) {
   try {
     await dbConnect();
 
@@ -71,8 +71,11 @@ export async function getDogs(filter = {}) {
 
       delete filter.partner;
     }
-
-    return Dog.find(filter).populate("recentLogs");
+    if (fields === null || (fields && fields.includes("recentLogs"))) {
+      return Dog.find(filter, fields).populate("recentLogs");
+    } else {
+      return Dog.find(filter, fields);
+    }
   } catch (e) {
     throw new Error("Unable to get dogs at this time, please try again");
   }
@@ -84,7 +87,8 @@ export async function getDogById(id) {
     return Dog.findById(id)
       .populate("instructors")
       .populate("partner")
-      .populate("parents");
+      .populate("parents")
+      .populate("caregivers");
   } catch (e) {
     throw new Error("Unable to get dog by Id at this time, please try again");
   }

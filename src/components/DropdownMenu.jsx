@@ -5,7 +5,7 @@ import {
   StopIcon as StopIconSolid,
 } from "@heroicons/react/24/solid";
 import { StopIcon as StopIconOutline } from "@heroicons/react/24/outline";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { ChipTypeStyles } from "./Chip";
 import useClickOff from "@/hooks/useClickOff";
 import CircleIcon from "@/components/icons/CircleIcon";
@@ -75,6 +75,14 @@ export default function DropdownMenu({
       delete newEnabledOptions[index];
     } else {
       newEnabledOptions[index] = option.props.label;
+    }
+
+    if (props?.hideFilterButton) {
+      onFilterSelect(newEnabledOptions);
+    }
+
+    if (props?.singleSelect) {
+      setExtended(false);
     }
 
     if (props?.hideFilterButton) {
