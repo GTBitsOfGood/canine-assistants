@@ -155,6 +155,7 @@ export default function DropdownMenu({
                   toggleOption(option, index);
                 }}
                 className="relative  p-0 m-0 flex items-center"
+                type="button"
               >
                 {enabledOptions[index] !== undefined ? (
                   <>
@@ -214,9 +215,10 @@ export default function DropdownMenu({
           <div className="justify-center w-full pt-1 pb-4 whitespace-nowrap bg-white border-x border-b rounded-b border-neutral-300 items-center gap-2 inline-flex"></div>
         ) : (
           <div className="justify-center w-full px-3 pt-2 pb-4 whitespace-nowrap bg-white border-x border-b rounded-b border-neutral-300 items-center gap-2 inline-flex">
-            <button
-              onClick={() => handleSubmit()}
-              className="bg-secondary-gray border border-primary-gray mx-1.5 rounded w-full pt-2 pb-2"
+              <button
+                type="button"
+                onClick={() => handleSubmit()}
+                className="bg-secondary-gray border border-primary-gray mx-1.5 rounded w-full pt-2 pb-2"
             >
               Apply Filters
             </button>
