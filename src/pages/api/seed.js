@@ -193,7 +193,6 @@ const logs = [
     dog: "",
   },
 ];
-
 const dogNames = [
   "Max",
   "Charlie",

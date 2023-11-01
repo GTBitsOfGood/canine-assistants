@@ -19,7 +19,7 @@
         rgb(var(--background-end-rgb))
       )
       rgb(var(--background-start-rgb));
-    @apply bg-primary-background;
+    @apply bg-secondary-background;
   }
 
   h1 {
