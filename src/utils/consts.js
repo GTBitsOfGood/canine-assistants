@@ -188,4 +188,35 @@ const logSchema = z.object({
   }),
 });
 
-export { pages, consts, dogSchema, logSchema, userUpdateSchema };
+/**
+ * Zod object for validating request bodies for form updates
+ */
+const formUpdateSchema = z.object({
+  responses: z
+    .array(
+      z.object({
+        answer: z.string(),
+      }),
+    )
+    .optional(),
+});
+
+/**
+ * Zod object for validating request bodies for forms
+ */
+const formSchema = z.object({
+  type: z.enum(consts.formTypeArray),
+  user: z.string().refine((id) => {
+    return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
+  }),
+  dog: z.string().refine((id) => {
+    return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
+  }),
+  responses: z.array(
+    z.object({
+      answer: z.string(),
+    }),
+  ),
+});
+
+export { pages, consts, dogSchema, logSchema, userUpdateSchema, formSchema, formUpdateSchema };

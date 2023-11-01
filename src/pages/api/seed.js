@@ -7,6 +7,8 @@ import { createLog } from "../../../server/db/actions/Log";
 import { consts } from "@/utils/consts";
 import { createDog } from "../../../server/db/actions/Dog";
 import Form from "../../../server/db/models/Form";
+import { formMap } from "@/utils/formUtils";
+import { createForm } from "../../../server/db/actions/Form";
 
 const dogs = [];
 const users = [
@@ -355,6 +357,27 @@ const dogBreeds = [
 
 const disabilities = ["epilepsy", "mobility", "diabetes", "PTSD"];
 
+const forms = [
+  {
+    type: consts.formTypeArray[0],
+    user: "",
+    dog: "",
+    responses: [],
+  },
+  {
+    type: consts.formTypeArray[1],
+    user: "",
+    dog: "",
+    responses: [],
+  },
+  {
+    type: consts.formTypeArray[2],
+    user: "",
+    dog: "",
+    responses: [],
+  },
+];
+
 export default async function handler(req, res) {
   if (req.method === "GET") {
     await dbConnect();
@@ -450,9 +473,21 @@ export default async function handler(req, res) {
 
     // create forms
     for (let i = 0; i < forms.length; i++) {
-      forms[i].user = userIds[getRandomInt(0, userIds.length - 1)];
       forms[i].dog = dogIds[getRandomInt(0, dogIds.length - 1)];
-      await Form.create(forms[i]);
+      forms[i].user = userIds[getRandomInt(0, userIds.length - 1)];
+
+      const formTemplate = formMap[forms[i].type];
+      for (let j = 0; j < formTemplate.length; j++) {
+        forms[i].responses.push({
+          answer:
+            formTemplate[i].choices.length > 0
+              ? formTemplate[i].choices[
+                  getRandomInt(0, formTemplate[i].choices.length - 1)
+                ]
+              : "Long answer",
+        });
+      }
+      await createForm(forms[i]);
     }
 
     return res.send("Successfully seeded db");
