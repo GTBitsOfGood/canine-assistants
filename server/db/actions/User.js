@@ -1,5 +1,6 @@
 import dbConnect from "../dbConnect";
 import User from "../models/User";
+import bcrypt, { hash } from "bcrypt";
 
 export async function createUser(data) {
   await dbConnect();
@@ -29,7 +30,7 @@ export async function getUserById(id) {
     await dbConnect();
     return User.findById(id);
   } catch (e) {
-    throw new Error("Unable to get user at this time, please try again");
+    throw new Error("Unable to get user at this time, please try again.");
   }
 }
 
@@ -42,7 +43,7 @@ export async function updateUser(userId, userData) {
   try {
     await dbConnect();
   } catch (e) {
-    throw new Error("Unable to update user, please try again");
+    throw new Error("Unable to update user, please try again.");
   }
 
   try {
@@ -51,5 +52,46 @@ export async function updateUser(userId, userData) {
     });
   } catch (e) {
     throw new Error("Unable to update user");
+  }
+}
+
+
+export async function verifyUser(email, password) {
+  try {
+    await dbConnect();
+  } catch (e) {
+    throw new Error("Unable to verify user, please try again.");
+  }
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return {
+      status: 404,
+      message: "Unable to find user with specified email address."
+    }
+  }
+
+  let userObj = user.toObject();
+
+  if (userObj.passwordHash === undefined) {
+    return {
+      status: 400,
+      message: "Invalid user."
+    }
+  }
+
+  const matchedUser = await bcrypt.compare(password + email, userObj.passwordHash);
+
+  if (matchedUser) {
+    return {
+      status: 200,
+      message: user
+    }
+  } else {
+    return {
+      status: 400,
+      message: "Invalid username or password."
+    }
   }
 }

@@ -22,6 +22,9 @@ const UserSchema = new Schema({
     type: String,
     enum: consts.userRoleArray,
     required: true,
+  },
+  passwordHashed: {
+    type: String
   }
 });
 
