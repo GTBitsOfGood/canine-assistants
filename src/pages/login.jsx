@@ -41,7 +41,7 @@ export default function Login({ dogs }) {
         </div>
 
         <form onSubmit={onSubmitForm} className="w-[25rem] pt-8 flex-col items-center justify-center">
-          <label className="text-sm text-neutral-500" for="email">
+          <label className="text-sm text-neutral-500" htmlFor="email">
             Email address
           </label>
           <input
@@ -51,7 +51,7 @@ export default function Login({ dogs }) {
             className="p-1 bg-secondary-background mb-4 w-full border-b-[2px]"
           ></input>
 
-          <label className="text-sm text-neutral-500" for="email">
+          <label className="text-sm text-neutral-500" htmlFor="email">
             Password
           </label>
           <input

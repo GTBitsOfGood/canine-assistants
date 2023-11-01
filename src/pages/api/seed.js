@@ -193,52 +193,6 @@ const logs = [
     dog: "",
   },
 ];
-const forms = [
-  {
-    type: consts.formTypeArray[0],
-    user: "",
-    dog: "",
-    responses: [
-      {
-        answer: "Yes",
-      },
-      {
-        answer: "Yes",
-      },
-      {
-        answer: "Yes",
-      },
-      {
-        answer: "Yes",
-      },
-      {
-        answer: "Yes",
-      },
-    ],
-  },
-  {
-    type: consts.formTypeArray[1],
-    user: "",
-    dog: "",
-    responses: [
-      {
-        answer: "No",
-      },
-      {
-        answer: "No",
-      },
-      {
-        answer: "No",
-      },
-      {
-        answer: "No",
-      },
-      {
-        answer: "No",
-      },
-    ],
-  },
-];
 const dogNames = [
   "Max",
   "Charlie",
