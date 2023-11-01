@@ -10,9 +10,18 @@ const getDateString = (date) => {
   });
 };
 
-const dateUtils = {
-  getAge,
-  getDateString,
+const getTimeString = (date) => {
+  return date.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true, // or false for 24-hour time format
+  });
 };
 
-export default dateUtils;
+const dateutils = {
+  getAge,
+  getDateString,
+  getTimeString,
+};
+
+export default dateutils;

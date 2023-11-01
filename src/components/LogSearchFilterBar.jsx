@@ -18,7 +18,7 @@ export default function LogSearchFilterBar({ filters, setFilters, setSearch, add
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <button onClick={() => addLogFunction()} className=" px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade justify-start items-center gap-2 flex">
+        <button type="button" onClick={() => addLogFunction()} className=" px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade justify-start items-center gap-2 flex">
           <div className="text-foreground h-4 w-4 relative">{<PlusIcon />}</div>
           <div className="text-foreground text-base font-medium">Add a log</div>
         </button>
