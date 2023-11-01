@@ -52,6 +52,8 @@ export const authOptions = {
             ...response.message,
           }
         } else {
+          console.log({response, credentials});
+
           return null;
         }
       },
