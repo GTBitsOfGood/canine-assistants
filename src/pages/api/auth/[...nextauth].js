@@ -39,28 +39,28 @@ export const authOptions = {
     CredentialsProvider({
       id: "credentials",
       name: "Login with Username and Password",
-      
+
       async authorize(credentials) {
         const response = await verifyUser(
           credentials.email,
-          credentials.password
+          credentials.password,
         );
 
         if (response.status === 200) {
           return {
             id: response.message._id,
             ...response.message,
-          }
+          };
         } else {
-          console.log({response, credentials});
+          console.log({ response, credentials });
 
           return null;
         }
       },
       credentials: {
         email: { label: "Email", type: "text" },
-        password: { label: "Password", type: "password" }
-      }
+        password: { label: "Password", type: "password" },
+      },
     }),
     GoogleProvider({
       id: "google",
@@ -68,7 +68,7 @@ export const authOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
-  pages: {  
+  pages: {
     signIn: "/login",
     // newUser: "/dogs",
     // error: "/login",
@@ -105,21 +105,16 @@ export const authOptions = {
     },
     async jwt({ token, user }) {
       if (user) {
-        token._id = user._doc._id;
-        token.email = user._doc.email;
-        token.image = user._doc.image;
-        token.name = user._doc.name;
-        token.role = user._doc.role
+        token.role = user.role;
       }
 
       return token;
-
     },
 
     session: async ({ session, token }) => {
       if (token) {
-        session.role = token.role;
-        session._id = token._id;
+        session.user.role = token.role;
+        session.user._id = token.sub;
       }
 
       return session;
