@@ -13,6 +13,7 @@ import {
   ExclamationCircleIcon,
 } from "@heroicons/react/24/solid";
 import { consts } from "@/utils/consts";
+import { useSession } from "next-auth/react";
 
 /**
  * User account management page
@@ -24,26 +25,26 @@ export default function Account() {
   const [editName, setEditName] = useState(false);
   const [name, setName] = useState("");
   const [showDeactivateModal, setShowDeactivateModal] = useState(false);
+  const { data: session, status } = useSession();
 
   const router = useRouter();
-  // TODO: replace with session info
-  const placeholderUser = "653c24c5cc0f21473ff48464";
 
   useEffect(() => {
-    fetch(`/api/users/${placeholderUser}`)
+    fetch(`/api/users/${session?.user._id}`)
       .then((res) => res.json())
       .then((data) => setData(data));
-  }, [router.query]);
+  }, [session?.user]);
 
   if (!data || data === undefined || !data.success) {
     return <div>loading</div>;
   }
 
   const user = data.data;
+  const userId = user._id;
 
   return (
     <Card cardStyle="mt-16 min-w-fit">
-      {showDeactivateModal ? deactivateModal(user, placeholderUser) : ``}
+      {showDeactivateModal ? deactivateModal(user, userId) : ``}
       <div className="flex flex-row min-w-fit">
         <div className="rounded-full">
           <Image
@@ -81,7 +82,7 @@ export default function Account() {
                         let body = {};
                         body.name = name;
 
-                        fetch("/api/users/" + placeholderUser, {
+                        fetch("/api/users/" + userId, {
                           method: "PATCH",
                           headers: {
                             "Content-Type": "application/json",
@@ -89,7 +90,7 @@ export default function Account() {
                           body: JSON.stringify(body),
                         })
                           .then((res) => {
-                            fetch(`/api/users/${placeholderUser}`)
+                            fetch(`/api/users/${userId}`)
                               .then((res) => res.json())
                               .then((data) => setData(data));
 
@@ -194,7 +195,7 @@ export default function Account() {
               onClick={() => {
                 let body = {};
                 body.role = consts.userRoleArray[3];
-                fetch("/api/users/" + placeholderUser, {
+                fetch("/api/users/" + userId, {
                   method: "PATCH",
                   headers: {
                     "Content-Type": "application/json",
