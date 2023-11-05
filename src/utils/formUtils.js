@@ -19,6 +19,15 @@ const formActions = {
 };
 
 /**
+ * Maps each form type to a user-readable title string
+ */
+const formTitleMap = {
+  MonthlyPlaced: "Monthly Check-In",
+  MonthlyUnplaced: "Monthly Check-In (Unplaced Dog)",
+  VolunteerInteraction: "Volunteer Interaction",
+}
+
+/**
  * Validates each array element in the responses array
  * @param {string} type Type of form, should be one of consts.formTypeArray options
  * @param {string[]} responses Array of objects with key of "answer" and value of the string response
@@ -50,4 +59,4 @@ const validateForm = (type, responses) => {
   return { success: true };
 };
 
-export { validateForm, formMap, formActions };
+export { validateForm, formMap, formActions, formTitleMap };

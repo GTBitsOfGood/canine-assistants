@@ -11,6 +11,7 @@ import {
   PencilSquareIcon,
   TrashIcon,
 } from "@heroicons/react/24/solid";
+import { DocumentIcon } from "@heroicons/react/24/outline";
 import { Chip, ChipTypeStyles } from "@/components/Chip";
 import Image from "next/image";
 import maleicon from "../../../public/maleicon.svg";
@@ -23,6 +24,10 @@ import Log from "@/components/Log";
 
 import FormField from "@/components/FormField";
 import { useEditDog } from "@/context/EditDogContext";
+import Card from "@/components/Card";
+import { formTitleMap } from "@/utils/formUtils";
+import dateutils from "@/utils/dateutils";
+
 /**
  *
  * @returns {React.ReactElement} The individual Dog page
@@ -30,12 +35,13 @@ import { useEditDog } from "@/context/EditDogContext";
 export default function IndividualDogPage() {
   const [data, setData] = useState();
   const [showLogModal, setShowLogModal] = useState(false);
+  const [ showLogTab, setShowLogTab ] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [appliedFilters, setAppliedFilters] = useState({});
   const [logs, setLogs] = useState([]);
   const [filteredLogs, setFilteredLogs] = useState([]);
-  const [ showLogTab, setShowLogTab ] = useState(false);
+  const [ forms, setForms ] = useState([]);
 
   const router = useRouter();
   const logRef = useRef(null);
@@ -45,8 +51,6 @@ export default function IndividualDogPage() {
 
   const { setIsEdit, isEdit, handleSubmit, reset, getValues, errors } =
     useEditDog();
-
-
 
   useEffect(() => {
     setShowLogTab(router.query?.showLogTab);
@@ -78,7 +82,7 @@ export default function IndividualDogPage() {
           )
         );
     }
-  }, [router.query, reset]);
+  }, [ router.query, reset ]);
 
   useEffect(() => {
     // filter logs by search query
@@ -119,6 +123,23 @@ export default function IndividualDogPage() {
       window.scrollTo(0, logRef.current.offsetTop);
     }
   }, [ logs, appliedFilters, searchQuery, router.query, logRef.current ]);
+
+  useEffect(() => {
+    if (data) {
+      fetch("/api/forms/search", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ dog: data.data._id }),
+      })
+        .catch((err) => setForms([]))
+        .then((res) => res.json())
+        .then((forms) => {
+          setForms(forms.data);
+        });
+    }
+  }, [ data ]);
 
   if (!data || !data.success) {
     return <div>loading</div>;
@@ -429,26 +450,47 @@ export default function IndividualDogPage() {
               </div>
             </div>
             <div label="logs">
-            <div className="flex-grow flex-col space-y-4">
-              <LogSearchFilterBar
-                filters={appliedFilters}
-                setFilters={setAppliedFilters}
-                setSearch={setSearchQuery}
-                addLogFunction={() => setShowLogModal(true)}
-              />
+              <div className="flex-grow flex-col space-y-4">
+                <LogSearchFilterBar
+                  filters={appliedFilters}
+                  setFilters={setAppliedFilters}
+                  setSearch={setSearchQuery}
+                  addLogFunction={() => setShowLogModal(true)}
+                />
 
-              <TagDisplay tags={tags} removeTag={removeTag} />
+                <TagDisplay tags={tags} removeTag={removeTag} />
 
-              {/* TODO: move to static array, toggle hidden field */}
-              {filteredLogs.map((log) => {
-                return <Log log={log} key={log._id} />;
-              })}
-              <div className="flex justify-center">
-                Displaying {filteredLogs.length} out of {logs.length}{" "}
-                {logs.length == 1 ? "log" : "logs"}
+                {/* TODO: move to static array, toggle hidden field */}
+                {filteredLogs.map((log) => {
+                  return <Log log={log} key={log._id} />;
+                })}
+                <div className="flex justify-center">
+                  Displaying {filteredLogs.length} out of {logs.length}{" "}
+                  {logs.length == 1 ? "log" : "logs"}
+                </div>
               </div>
             </div>
-          </div>
+            <div label="forms">
+              <div>
+              {forms.map((form) => {
+                return (
+                  // TODO finish styling card and make it clickable
+                  <Card>
+                    <div className="flex justify-between">
+                      <div className="flex flex-row">
+                        <DocumentIcon className="h-5" />
+                        {formTitleMap[form.type]}
+                      </div>
+                      <div className="flex gap-x-4">
+                        <span>Created by: {form.user.name}</span>
+                        <span>Last updated: {dateutils.displayDateAndTime(form.updatedAt)}</span>
+                      </div>
+                    </div>
+                  </Card>
+                )
+              })}
+              </div>
+            </div>
           </TabSection>
         </div>
       </form>
