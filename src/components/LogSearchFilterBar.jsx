@@ -14,7 +14,6 @@ export default function LogSearchFilterBar({ filters, setFilters, setSearch, add
             type="search"
             className="w-full h-full rounded bg-foregrund border border-neutral-300 text-neutral-700 text-lg p-2.5 pl-10 font-normal"
             placeholder="Search Logs..."
-            required
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
