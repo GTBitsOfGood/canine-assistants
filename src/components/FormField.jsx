@@ -15,7 +15,7 @@ export default function FormField({
 
   const nonEditingStyles =
     "outline-none border-none bg-transparent shadow-none appearance-none";
-  const editingStyles = `w-full ml-1 ${
+  const editingStyles = `w-full pl-3 ${
     errors && errors[keyLabel] && "border-red-500 border-2"
   } focus:outline-none`;
 
@@ -88,7 +88,7 @@ export default function FormField({
   return (
     <div>
       <div className="flex whitespace-nowrap items-center">
-        {label && <label>{label + ": "}</label>}
+        {label && <label className="pr-2">{label + ": "}</label>}
         <div className="w-full">
           <FormInput />
         </div>

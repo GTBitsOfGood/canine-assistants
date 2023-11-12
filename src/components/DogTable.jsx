@@ -14,6 +14,9 @@ import { Chip, ChipTypeStyles } from "./Chip";
 import TagDisplay from "./TagDisplay";
 import dateUtils from "@/utils/dateutils";
 import stringUtils from "@/utils/stringutils";
+import { useRouter } from "next/router";
+import { Router } from "react-router";
+import { da } from "date-fns/locale";
 
 /**
  * @returns { React.ReactElement } The DogTable component
@@ -23,6 +26,8 @@ export default function DogTable() {
   const [data, setData] = useState();
 
   const [filters, setFilters] = useState({});
+
+  const router = useRouter();
 
   useEffect(() => {
     let search = {};
@@ -65,7 +70,7 @@ export default function DogTable() {
       label: "Name",
       icon: <Bars3BottomLeftIcon />,
       customRender: (row, name) => {
-        return <Link href={`/dogs/${row["_id"]}`}>{name}</Link>;
+        return <span>{name}</span>;
       },
     },
     { id: "breed", label: "Breed", icon: <FingerPrintIcon /> },
@@ -89,14 +94,7 @@ export default function DogTable() {
       icon: <MapPinIcon />,
       customRender: (rowData) => {
         return (
-          <Chip
-            label={rowData.location}
-            type={
-              rowData.location === "Placed"
-                ? ChipTypeStyles.Placed
-                : ChipTypeStyles.Facility
-            }
-          />
+          <span>{rowData.location}</span>
         );
       },
     },
@@ -207,6 +205,7 @@ export default function DogTable() {
         rows={dogs}
         filter={searchFilter}
         elementsPerPage={10}
+        onRowClick={( _, rowIndex ) => router.push(`/dogs/${data.data[rowIndex]['_id']}`)}
         noElements={
           <div className=" flex justify-center bg-white py-16 text-gray-500">
             No dogs were found.

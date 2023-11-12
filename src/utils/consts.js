@@ -278,7 +278,7 @@ const computeDefaultValues = (dog) => {
     instructors: dog?.instructors?.map((instructor) =>
       instructor._id ? instructor._id : instructor,
     ),
-    caregivers: dog?.caregivers.map((caregiver) =>
+    caregivers: dog?.caregivers?.map((caregiver) =>
       caregiver._id ? caregiver._id : caregiver,
     ),
     // Feeding

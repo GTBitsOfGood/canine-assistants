@@ -41,7 +41,23 @@ export default function ReactSelectDropdown({
       onChange={(val) => changeVal(field, val)}
       onBlur={() => field.onBlur()}
       isDisabled={isDisabled}
-      styles={styles}
+      styles={{
+        option: (provided, state) => ({
+          ...provided,
+          borderRadius: 0,
+          marginTop: 0,
+          backgroundColor: state.isSelected ? '#ebebeb' : 'white',
+          color: '#121212'
+        }),
+        menu: base => ({
+          ...base,
+          borderRadius: 0,
+        }),
+        menuList: base => ({
+          ...base,
+          padding: 0,
+        })
+      }}
     />
   );
 }

@@ -11,7 +11,7 @@ export default function Tab({ activeTab, label, onTabClick }) {
     <li
       className={`${
         activeTab.toLowerCase() === label.toLowerCase()
-          ? "border-primary-gray"
+          ? "border-ca-green"
           : ""
       } text-xl font-bold px-7 sm:px-10 border-b-4 text-primary-text hover:bg-gray-100`}
       onClick={onTabClick}

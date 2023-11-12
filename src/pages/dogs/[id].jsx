@@ -23,6 +23,7 @@ import Log from "@/components/Log";
 
 import FormField from "@/components/FormField";
 import { useEditDog } from "@/context/EditDogContext";
+import TabContainer from "@/components/TabContainer";
 /**
  *
  * @returns {React.ReactElement} The individual Dog page
@@ -35,7 +36,7 @@ export default function IndividualDogPage() {
   const [appliedFilters, setAppliedFilters] = useState({});
   const [logs, setLogs] = useState([]);
   const [filteredLogs, setFilteredLogs] = useState([]);
-  const [ showLogTab, setShowLogTab ] = useState(false);
+  const [showLogTab, setShowLogTab] = useState(false);
 
   const router = useRouter();
   const logRef = useRef(null);
@@ -46,15 +47,20 @@ export default function IndividualDogPage() {
   const { setIsEdit, isEdit, handleSubmit, reset, getValues, errors } =
     useEditDog();
 
-
-
   useEffect(() => {
     setShowLogTab(router.query?.showLogTab);
     if (router.query?.filteredTag) {
-      setAppliedFilters({ tags: [ stringUtils.upperFirstLetter(router.query?.filteredTag) ]});
+      setAppliedFilters({
+        tags: [stringUtils.upperFirstLetter(router.query?.filteredTag)],
+      });
     }
 
+    console.log(router);
+
     if (router.query.id) {
+
+      console.log("Fetching " + router.query.id);
+
       fetch(`/api/dogs/${router.query.id}`)
         .then((res) => res.json())
         .then((data) => {
@@ -77,7 +83,10 @@ export default function IndividualDogPage() {
               : data.data.reverse()
           )
         );
-    }
+    } else if (router.route === "/dogs/new") {
+      setData({ data: { }, success: "201" });
+      reset(computeDefaultValues({}));
+    } 
   }, [router.query, reset]);
 
   useEffect(() => {
@@ -115,10 +124,13 @@ export default function IndividualDogPage() {
       );
     }
 
+
     if (router.query?.showLogTab && logRef.current) {
       window.scrollTo(0, logRef.current.offsetTop);
     }
-  }, [ logs, appliedFilters, searchQuery, router.query, logRef.current ]);
+  }, [logs, appliedFilters, searchQuery, router.query, logRef.current]);
+
+  console.log(data);
 
   if (!data || !data.success) {
     return <div>loading</div>;
@@ -146,8 +158,6 @@ export default function IndividualDogPage() {
     }
   };
 
-
-
   const onEditSubmit = async (data) => {
     // FORMAT DATA FIRST
     const removeUndefinedAndEmpty = (obj) => {
@@ -168,9 +178,8 @@ export default function IndividualDogPage() {
 
     data = removeUndefinedAndEmpty(data);
 
-
     const requestBody = {
-      method: "PATCH",
+      method: router.route === "/dogs/new" ? "POST" : "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
@@ -178,6 +187,7 @@ export default function IndividualDogPage() {
     };
 
     try {
+
       const res = await (
         await fetch(`/api/dogs/${router.query.id}`, requestBody)
       ).json();
@@ -192,6 +202,7 @@ export default function IndividualDogPage() {
       setIsEdit(false);
     } catch (err) {
       reset();
+      console.log({err});
       notify("failure");
       setIsEdit(false);
     }
@@ -344,7 +355,10 @@ export default function IndividualDogPage() {
                     {dog.location === "Placed" ? (
                       <>
                         <FormField label={"Placement"} keyLabel={"placement"} />
-                        <FormField label={"Partner"} keyLabel={"partner.user"} />
+                        <FormField
+                          label={"Partner"}
+                          keyLabel={"partner.user"}
+                        />
                         <FormField
                           label={"Placement Camp"}
                           keyLabel={"placementCamp"}
@@ -398,59 +412,18 @@ export default function IndividualDogPage() {
           )}
         </div>
 
-        <div ref={logRef} className="mt-8 shadow-xl rounded-lg text-md w-full text-left relative overflow-hidden bg-foreground p-8">
-          <TabSection defaultTab={showLogTab ? "logs" : "information"}>
-            <div label="information">
-              <div className="w-full grid grid-cols-3 gap-16">
-                {Object.keys(dogInformationSchema).map((category) => (
-                  <div className="col" key={category}>
-                    <div className="flex-col space-y-4 text-lg">
-                      <div className="text-xl">
-                        <strong>{category}</strong>
-                      </div>
-
-                      {Object.keys(dogInformationSchema[category]).map(
-                        (col) => {
-                          const { key: formKey } =
-                            dogInformationSchema[category][col];
-
-                          return (
-                            <FormField
-                              key={col}
-                              keyLabel={formKey}
-                              label={col}
-                            />
-                          );
-                        }
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div label="logs">
-            <div className="flex-grow flex-col space-y-4">
-              <LogSearchFilterBar
-                filters={appliedFilters}
-                setFilters={setAppliedFilters}
-                setSearch={setSearchQuery}
-                addLogFunction={() => setShowLogModal(true)}
-              />
-
-              <TagDisplay tags={tags} removeTag={removeTag} />
-
-              {/* TODO: move to static array, toggle hidden field */}
-              {filteredLogs.map((log) => {
-                return <Log log={log} key={log._id} />;
-              })}
-              <div className="flex justify-center">
-                Displaying {filteredLogs.length} out of {logs.length}{" "}
-                {logs.length == 1 ? "log" : "logs"}
-              </div>
-            </div>
-          </div>
-          </TabSection>
-        </div>
+        <TabContainer
+          logRef={logRef}
+          showLogTab={showLogTab}
+          logs={logs}
+          appliedFilters={appliedFilters}
+          setAppliedFilters={setAppliedFilters}
+          setSearchQuery={setSearchQuery}
+          tags={tags}
+          removeTag={removeTag}
+          filteredLogs={filteredLogs}
+          dogInformationSchema={dogInformationSchema}
+        ></TabContainer>
       </form>
     </div>
   );
