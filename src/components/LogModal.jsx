@@ -68,7 +68,7 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
         body: JSON.stringify(formattedData),
       })
         .then((res) => {
-          onSubmit(true);
+          onSubmit(true, "add");
           onClose();
           setSaving(false);
         })

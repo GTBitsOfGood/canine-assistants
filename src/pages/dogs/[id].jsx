@@ -23,6 +23,7 @@ import Log from "@/components/Log";
 
 import FormField from "@/components/FormField";
 import { useEditDog } from "@/context/EditDogContext";
+import DeleteLogModal from "@/components/DeleteLogModal";
 /**
  *
  * @returns {React.ReactElement} The individual Dog page
@@ -30,6 +31,8 @@ import { useEditDog } from "@/context/EditDogContext";
 export default function IndividualDogPage() {
   const [data, setData] = useState();
   const [showLogModal, setShowLogModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [logIdToDelete, setLogIdToDelete] = useState(null);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [appliedFilters, setAppliedFilters] = useState({});
@@ -224,6 +227,53 @@ export default function IndividualDogPage() {
     setAppliedFilters(newFilters);
   };
 
+  const handleLogDelete = (logId) => {
+    setLogIdToDelete(logId);
+    setShowDeleteModal(true);
+  }
+
+  /*
+  * @param {boolean} success - whether or not the modal submission was successful
+  * @param {string} modalType - the type of modal that was submitted: can be "add" or "delete"
+  */
+  const modalSubmitSuccess = (success, modalType="add") => {
+    if (success) {
+      // update logs to display
+      fetch("/api/logs/search", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(search),
+      })
+        .catch((err) => setLogs([]))
+        .then((res) => res.json())
+        .then((data) =>
+          setLogs(
+            !data || data === undefined || !data.success
+              ? []
+              : data.data.reverse()
+          )
+        );
+      const message = modalType === "add" ? "was successfully added" : "was successfully deleted";
+      toast.custom((t) => (
+        <div
+          className={`h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-ca-green text-white text-lg font-normal
+          ${t.visible ? "animate-enter" : "animate-leave"}`}
+        >
+          <span className="font-bold">Log</span>&nbsp;
+          <span>{message}</span>
+        </div>
+      ));
+    } else {
+      toast.custom(() => (
+        <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
+          There was a problem saving the log, please try again.
+        </div>
+      ));
+    }
+  }
+
   return (
     // Artificial spacing until nav is created
     <div className={`container mx-auto order-b border-gray-300`}>
@@ -235,43 +285,19 @@ export default function IndividualDogPage() {
             onClose={() => {
               setShowLogModal(false);
             }}
+            onSubmit={modalSubmitSuccess}
+          />
+        </>
+      ) : null}
+      {showDeleteModal ? (
+        <>
+          <DeleteLogModal
+            logId={logIdToDelete}
+            onClose={() => {
+              setShowDeleteModal(false);
+            }}
             onSubmit={(success) => {
-              // TODO toast animation
-              if (success) {
-                // update logs to display
-                fetch("/api/logs/search", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(search),
-                })
-                  .catch((err) => setLogs([]))
-                  .then((res) => res.json())
-                  .then((data) =>
-                    setLogs(
-                      !data || data === undefined || !data.success
-                        ? []
-                        : data.data.reverse()
-                    )
-                  );
-
-                toast.custom((t) => (
-                  <div
-                    className={`h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-ca-green text-white text-lg font-normal
-                    ${t.visible ? "animate-enter" : "animate-leave"}`}
-                  >
-                    <span className="font-bold">New log</span>&nbsp;
-                    <span>was successfully added.</span>
-                  </div>
-                ));
-              } else {
-                toast.custom(() => (
-                  <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
-                    There was a problem saving the log, please try again.
-                  </div>
-                ));
-              }
+              modalSubmitSuccess(success, "delete");
             }}
           />
         </>
@@ -441,7 +467,7 @@ export default function IndividualDogPage() {
 
               {/* TODO: move to static array, toggle hidden field */}
               {filteredLogs.map((log) => {
-                return <Log log={log} key={log._id} />;
+                return <Log log={log} onDelete={handleLogDelete} key={log._id} />;
               })}
               <div className="flex justify-center">
                 Displaying {filteredLogs.length} out of {logs.length}{" "}
