@@ -14,9 +14,9 @@ import {
 import { DocumentIcon } from "@heroicons/react/24/outline";
 import { Chip, ChipTypeStyles } from "@/components/Chip";
 import Image from "next/image";
-import maleicon from "../../../public/maleicon.svg";
-import femaleicon from "../../../public/femaleicon.svg";
-import dogplaceholdericon from "../../../public/dogplaceholdericon.svg";
+import maleicon from "../../../../public/maleicon.svg";
+import femaleicon from "../../../../public/femaleicon.svg";
+import dogplaceholdericon from "../../../../public/dogplaceholdericon.svg";
 import LogSearchFilterBar from "@/components/LogSearchFilterBar";
 import LogModal from "@/components/LogModal";
 import TagDisplay from "@/components/TagDisplay";
@@ -24,7 +24,6 @@ import Log from "@/components/Log";
 
 import FormField from "@/components/FormField";
 import { useEditDog } from "@/context/EditDogContext";
-import Card from "@/components/Card";
 import { formTitleMap } from "@/utils/formUtils";
 import dateutils from "@/utils/dateutils";
 
@@ -474,19 +473,20 @@ export default function IndividualDogPage() {
               <div>
               {forms.map((form) => {
                 return (
-                  // TODO finish styling card and make it clickable
-                  <Card>
-                    <div className="flex justify-between">
-                      <div className="flex flex-row">
-                        <DocumentIcon className="h-5" />
-                        {formTitleMap[form.type]}
-                      </div>
-                      <div className="flex gap-x-4">
-                        <span>Created by: {form.user.name}</span>
-                        <span>Last updated: {dateutils.displayDateAndTime(form.updatedAt)}</span>
-                      </div>
+                  <button className="flex flex-col sm:flex-row justify-between text-start bg-secondary-background px-4 sm:px-6 py-4 rounded-lg gap-2 my-4 w-full hover:bg-primary-background"
+                    onClick={() => {
+                      router.push(`${dog._id}/forms/${form._id}`);
+                    }}
+                  >
+                    <div className="flex flex-row font-medium gap-2">
+                      <DocumentIcon className="h-5 w-5 self-center" />
+                      {formTitleMap[form.type]}
                     </div>
-                  </Card>
+                    <div className="flex flex-col sm:flex-row gap-x-4">
+                      <span>Created by: {form.user.name}</span>
+                      <span>Last updated: {dateutils.displayDateAndTime(form.updatedAt)}</span>
+                    </div>
+                  </button>
                 )
               })}
               </div>
