@@ -10,6 +10,7 @@ import {
   ChevronLeftIcon,
   PencilSquareIcon,
   TrashIcon,
+  PlusIcon
 } from "@heroicons/react/24/solid";
 import { DocumentIcon } from "@heroicons/react/24/outline";
 import { Chip, ChipTypeStyles } from "@/components/Chip";
@@ -26,6 +27,7 @@ import FormField from "@/components/FormField";
 import { useEditDog } from "@/context/EditDogContext";
 import { formTitleMap } from "@/utils/formUtils";
 import dateutils from "@/utils/dateutils";
+import DropdownMenu, { DropdownMenuOption } from "@/components/DropdownMenu";
 
 /**
  *
@@ -41,6 +43,7 @@ export default function IndividualDogPage() {
   const [logs, setLogs] = useState([]);
   const [filteredLogs, setFilteredLogs] = useState([]);
   const [ forms, setForms ] = useState([]);
+  const [ showFormDropdown, setShowFormDropdown ] = useState(false);
 
   const router = useRouter();
   const logRef = useRef(null);
@@ -243,6 +246,8 @@ export default function IndividualDogPage() {
 
     setAppliedFilters(newFilters);
   };
+
+  // TODO add listener for if user clicks out of dropdown menu to turn back into button
 
   return (
     // Artificial spacing until nav is created
@@ -470,7 +475,49 @@ export default function IndividualDogPage() {
               </div>
             </div>
             <div label="forms">
-              <div>
+              <div className="flex justify-end">
+                {showFormDropdown ? (
+                  <DropdownMenu
+                    label={"Select Form Type"}
+                    props={{
+                      singleSelect: true,
+                      extended: true,
+                      filterText: "Add Form",
+                    }}
+                    submitFilters={(type) => {
+                      let formType;
+                      if (type[0]) {
+                        formType = dog.location == "Placed" ? "MonthlyPlaced" : "MonthlyUnplaced";
+                      } else {
+                        formType = "VolunteerInteraction";
+                      }
+                      router.push(`${dog._id}/forms/new?type=${formType}`);
+                    }}
+                  >
+                    <DropdownMenuOption
+                      index={0}
+                      label={formTitleMap.MonthlyPlaced}
+                      name={formTitleMap.MonthlyPlaced}
+                    />
+                    <DropdownMenuOption
+                      index={1}
+                      label={formTitleMap.VolunteerInteraction}
+                      name={formTitleMap.VolunteerInteraction}
+                    />
+                  </DropdownMenu>
+                ) : (
+                  <button
+                    type="button"
+                    className="px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade justify-start items-center gap-2 flex"
+                    onClick={() => {
+                      setShowFormDropdown(true);
+                    }}
+                  >
+                    <div className="text-foreground h-4 w-4 relative">{<PlusIcon />}</div>
+                    <div className="text-foreground text-base font-medium">Add Form</div>
+                  </button>
+                )}
+              </div>
               {forms.map((form) => {
                 return (
                   <button className="flex flex-col sm:flex-row justify-between text-start bg-secondary-background px-4 sm:px-6 py-4 rounded-lg gap-2 my-4 w-full hover:bg-primary-background"
@@ -484,12 +531,11 @@ export default function IndividualDogPage() {
                     </div>
                     <div className="flex flex-col sm:flex-row gap-x-4">
                       <span>Created by: {form.user.name}</span>
-                      <span>Last updated: {dateutils.displayDateAndTime(form.updatedAt)}</span>
+                      <span>Last Updated: {dateutils.displayDateAndTime(form.updatedAt)}</span>
                     </div>
                   </button>
                 )
               })}
-              </div>
             </div>
           </TabSection>
         </div>
