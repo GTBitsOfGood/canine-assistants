@@ -215,13 +215,9 @@ const MONTHLY_UNPLACED_FORM = [
   {
     question:
       "Does the dog hold his end of the We Leash when asked to do so? If yes, what attachments will he hold?",
-    choices: [
-      "Handle with bone",
-      "Plain handle",
-      "Binkie",
-      "Toy (place for notes)",
-    ],
+    choices: ["Handle with bone", "Plain handle", "Binkie"],
   },
+  { question: "(place for notes)", choices: [] },
   {
     question: "How easy is it to get the dog into a car?",
     choices: ["Very easy", "Fairly easy", "Difficult", "Very difficult"],
@@ -329,13 +325,9 @@ const VOLUNTEER_FORM = [
   {
     question:
       "Did the dog hold his end of the We Leash when asked to do so? If yes, what attachment did you use?",
-    choices: [
-      "Handle with bone",
-      "Plain handle",
-      "Binkie",
-      "Toy (place for notes)",
-    ],
+    choices: ["Handle with bone", "Plain handle", "Binkie", "Toy"],
   },
+  { question: "(place for notes)", choices: [] },
   {
     question: "How easy was it to get your dog into the car?",
     choices: ["Very easy", "Fairly easy", "Difficult", "Very difficult"],
@@ -371,11 +363,11 @@ const VOLUNTEER_FORM = [
   },
   {
     question: "How many times did the dog urinate in the house?",
-    choices: ["(Place for notes)"],
+    choices: [],
   },
   {
     question: "How many times did the dog defecate in the house?",
-    choices: ["(Place for notes)"],
+    choices: [],
   },
   {
     question: "Outings: Please list everywhere you took the dog",
