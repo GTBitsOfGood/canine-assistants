@@ -2,7 +2,7 @@ import TagDisplay from "@/components/TagDisplay";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 
-export default function Log({ log, onDelete }) {
+export default function Log({ log, onDelete, onEdit }) {
   const [showMore, setShowMore] = useState(false);
   const [selectedLog, setSelectedLog] = useState(null);
   const [showLogModal, setShowLogModal] = useState(false);
@@ -19,6 +19,10 @@ export default function Log({ log, onDelete }) {
 
   const handleDeleteClick = () => {
     onDelete(log._id);
+  };
+
+  const handleEditClick = () => {
+    onEdit(log._id);
   };
 
   return (
@@ -41,7 +45,7 @@ export default function Log({ log, onDelete }) {
         <TagDisplay tags={tags} removeTag={null} />
       </div>
 
-      <button type="button" onClick={() => setShowLogModal(true)} className=" px-2 py-1.5 bg-ca-pink rounded border border-ca-pink-shade justify-start items-center gap-2 flex">
+      <button type="button" onClick={handleEditClick} className=" px-2 py-1.5 bg-ca-pink rounded border border-ca-pink-shade justify-start items-center gap-2 flex">
         {/* <div className="text-foreground h-4 w-4 relative"><PencilSquareIcon /></div> */}
         <div className="text-foreground text-base font-medium">Edit the log</div>
       </button>

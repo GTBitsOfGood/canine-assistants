@@ -33,6 +33,7 @@ export default function IndividualDogPage() {
   const [showLogModal, setShowLogModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [logIdToDelete, setLogIdToDelete] = useState(null);
+  const [logIdToEdit, setLogIdToEdit] = useState(null);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [appliedFilters, setAppliedFilters] = useState({});
@@ -232,9 +233,14 @@ export default function IndividualDogPage() {
     setShowDeleteModal(true);
   }
 
+  const handleLogEdit = (logId) => {
+    setLogIdToEdit(logId);
+    setShowLogModal(true);
+  }
+
   /*
   * @param {boolean} success - whether or not the modal submission was successful
-  * @param {string} modalType - the type of modal that was submitted: can be "add" or "delete"
+  * @param {string} modalType - the type of modal that was submitted: can be "add", "edit", or "delete"
   */
   const modalSubmitSuccess = (success, modalType="add") => {
     if (success) {
@@ -255,7 +261,13 @@ export default function IndividualDogPage() {
               : data.data.reverse()
           )
         );
-      const message = modalType === "add" ? "was successfully added" : "was successfully deleted";
+      let message = "was successfully added";
+      if (modalType === "delete") {
+        message = "was successfully deleted";
+      } else if (modalType === "edit") {
+        message = "was successfully updated";
+      }
+
       toast.custom((t) => (
         <div
           className={`h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-ca-green text-white text-lg font-normal
@@ -282,6 +294,7 @@ export default function IndividualDogPage() {
           <LogModal
             dogId={dog._id}
             userId={dog.instructors[0]._id}
+            logId={logIdToEdit}
             onClose={() => {
               setShowLogModal(false);
             }}
@@ -467,7 +480,7 @@ export default function IndividualDogPage() {
 
               {/* TODO: move to static array, toggle hidden field */}
               {filteredLogs.map((log) => {
-                return <Log log={log} onDelete={handleLogDelete} key={log._id} />;
+                return <Log log={log} onDelete={handleLogDelete} onEdit={handleLogEdit} key={log._id} />;
               })}
               <div className="flex justify-center">
                 Displaying {filteredLogs.length} out of {logs.length}{" "}
