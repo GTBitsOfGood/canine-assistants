@@ -130,8 +130,6 @@ export default function IndividualDogPage() {
     }
   }, [logs, appliedFilters, searchQuery, router.query, logRef.current]);
 
-  console.log(data);
-
   if (!data || !data.success) {
     return <div>loading</div>;
   }
@@ -159,6 +157,8 @@ export default function IndividualDogPage() {
   };
 
   const onEditSubmit = async (data) => {
+
+    console.log({data});
     // FORMAT DATA FIRST
     const removeUndefinedAndEmpty = (obj) => {
       Object.keys(obj).forEach((key) => {
@@ -176,7 +176,11 @@ export default function IndividualDogPage() {
       return obj;
     };
 
+    console.log("after");
+
     data = removeUndefinedAndEmpty(data);
+
+    console.log({data});
 
     const requestBody = {
       method: router.route === "/dogs/new" ? "POST" : "PATCH",
@@ -203,6 +207,7 @@ export default function IndividualDogPage() {
     } catch (err) {
       reset();
       console.log({err});
+      console.log("ERROR");
       notify("failure");
       setIsEdit(false);
     }
@@ -236,7 +241,6 @@ export default function IndividualDogPage() {
   };
 
   return (
-    // Artificial spacing until nav is created
     <div className={`container mx-auto order-b border-gray-300`}>
       {showLogModal ? (
         <>
@@ -349,6 +353,7 @@ export default function IndividualDogPage() {
                     <FormField label={"Sex"} keyLabel={"gender"} />
                     <FormField label={"Breed"} keyLabel={"breed"} />
                     <FormField label={"Coat Color"} keyLabel={"coatColor"} />
+                    <FormField label={"Weight (lbs)"} keyLabel={"weight"} />
                   </div>
 
                   <div className="flex-col pt-8 pl-1 text-lg space-y-2">

@@ -54,7 +54,7 @@ const dogSchema = z.object({
   name: z.string().min(1),
   gender: z.enum(consts.genderPetArray),
   breed: z.string().min(1),
-  weight: z.number(),
+  weight: z.coerce.number(),
   behavior: z.enum(consts.concernArray),
   medical: z.enum(consts.concernArray),
   other: z.enum(consts.concernArray),
@@ -183,7 +183,7 @@ const dogInformationSchema = {
     },
     "Birth Order": {
       key: "birthOrder",
-    },
+    }
   },
   ["Family"]: {
     "Litter Size": {
@@ -261,6 +261,9 @@ const computeDefaultValues = (dog) => {
     supplementalFeeding: dog?.supplementalFeeding,
     deliveryInformation: dog?.deliveryInformation, // right now set to natural, figure out default value later
     birthOrder: dog?.birthOrder,
+    
+    // Weight
+    weight: dog?.weight,
 
     // Family
     litterSize: dog?.litterSize,
