@@ -55,11 +55,7 @@ export default function IndividualDogPage() {
       });
     }
 
-    console.log(router);
-
     if (router.query.id) {
-
-      console.log("Fetching " + router.query.id);
 
       fetch(`/api/dogs/${router.query.id}`)
         .then((res) => res.json())
@@ -158,7 +154,6 @@ export default function IndividualDogPage() {
 
   const onEditSubmit = async (data) => {
 
-    console.log({data});
     // FORMAT DATA FIRST
     const removeUndefinedAndEmpty = (obj) => {
       Object.keys(obj).forEach((key) => {
@@ -176,11 +171,7 @@ export default function IndividualDogPage() {
       return obj;
     };
 
-    console.log("after");
-
     data = removeUndefinedAndEmpty(data);
-
-    console.log({data});
 
     const requestBody = {
       method: router.route === "/dogs/new" ? "POST" : "PATCH",
@@ -206,8 +197,6 @@ export default function IndividualDogPage() {
       setIsEdit(false);
     } catch (err) {
       reset();
-      console.log({err});
-      console.log("ERROR");
       notify("failure");
       setIsEdit(false);
     }
