@@ -1,6 +1,11 @@
 import { Types } from "mongoose";
-import { updateForm, deleteForm, getFormById } from "../../../../server/db/actions/Form";
+import {
+  updateForm,
+  deleteForm,
+  getFormById,
+} from "../../../../server/db/actions/Form";
 import { formUpdateSchema } from "@/utils/consts";
+import { checkIsAuthorized } from "../../../../server/middleware/checkIsAuthorized";
 
 export default async function handler(req, res) {
   if (req.method == "PUT") {
@@ -39,25 +44,14 @@ export default async function handler(req, res) {
       }
     }
 
-    let updatedFormObject;
-    // TODO: grab user from session
-    const user = {
-      role: "Admin",
-    };
+    const form = await getFormById(req.query.id);
+    const session = await checkIsAuthorized(req, res, {
+      form,
+      checkIsAuthorized: true,
+    });
+    if (!session) return;
 
-    try {
-      if (user.role == "Admin") {
-        updatedFormObject = await updateForm(req.query.id, data);
-      } else {
-        // TODO: check if the user _id from session == user _id of the form they are trying to update
-        updatedFormObject = await updateForm(req.query.id, data);
-      }
-    } catch (e) {
-      return res.status(500).send({
-        success: false,
-        message: e.message,
-      });
-    }
+    updatedFormObject = await updateForm(req.query.id, data);
 
     if (!updatedFormObject) {
       return res.status(404).json({
@@ -81,20 +75,20 @@ export default async function handler(req, res) {
       });
     }
 
+    const form = await getFormById(req.query.id);
+    const session = await checkIsAuthorized(req, res, {
+      form,
+      checkIsAuthorized: true,
+    });
+    if (!session) return;
+
     return deleteForm(req.query.id)
       .then((results) => {
-        if (!results) {
-          return res.status(404).send({
-            success: false,
-            message: "Cannot delete form because form does not exist!",
-          });
-        } else {
-          return res.status(200).send({
-            success: true,
-            message: "Form sucessfully deleted",
-            data: results._id,
-          });
-        }
+        return res.status(200).send({
+          success: true,
+          message: "Form sucessfully deleted",
+          data: results._id,
+        });
       })
       .catch((error) => {
         if (error.message == "Invalid form ID") {
@@ -128,6 +122,14 @@ export default async function handler(req, res) {
           error: "Unable to retrieve dog because it doesn't exist",
         });
       }
+      const session = await checkIsAuthorized(req, res, {
+        dog: data.dog,
+        form: data,
+        checkInstructors: true,
+        checkCaregivers: true,
+        checkUserAuthored: true,
+      });
+      if (!session) return;
 
       return res.status(200).send({
         success: true,

@@ -5,6 +5,7 @@ import {
   getDogById,
 } from "../../../../server/db/actions/Dog";
 import { dogSchema } from "@/utils/consts";
+import { checkIsAuthorized } from "../../../../server/middleware/checkIsAuthorized";
 
 export default async function handler(req, res) {
   if (req.method == "GET") {
@@ -12,13 +13,23 @@ export default async function handler(req, res) {
       const { id } = req.query;
       const data = await getDogById(id);
 
-      if (data.length === 0) {
+      if (data === null) {
         res.status(404).json({
           success: false,
           error: "Unable to retrieve dog because it doesn't exist",
         });
         return;
       }
+
+      session = await checkIsAuthorized(req, res, {
+        dog: data,
+        checkInstructors: true,
+        checkVolunteer: true,
+        checkCaregivers: true,
+        checkPartner: true,
+      });
+
+      if (!session) return;
 
       return res.status(200).json({
         success: true,
@@ -36,20 +47,27 @@ export default async function handler(req, res) {
       });
     }
 
+    console.log("here");
+    const dog = await getDogById(req.query.id);
+
+    if (dog === null) {
+      res.status(404).json({
+        success: false,
+        error: "Unable to retrieve dog because it doesn't exist",
+      });
+      return;
+    }
+
+    session = await checkIsAuthorized(req, res);
+    if (!session) return;
+
     return deleteDog(req.query.id)
       .then((results) => {
-        if (!results) {
-          return res.status(404).send({
-            success: false,
-            message: "Cannot delete dog because dog does not exist!",
-          });
-        } else {
-          return res.status(200).send({
-            success: true,
-            message: "Dog sucessfully deleted",
-            data: results._id,
-          });
-        }
+        return res.status(200).send({
+          success: true,
+          message: "Dog sucessfully deleted",
+          data: results._id,
+        });
       })
       .catch(() => {
         return res.status(500).send({
@@ -69,6 +87,23 @@ export default async function handler(req, res) {
       .partial()
       .strict()
       .safeParse(req.body);
+
+    const dog = await getDogById(req.query.id);
+
+    if (dog === null) {
+      res.status(404).json({
+        success: false,
+        error: "Unable to retrieve dog because it doesn't exist",
+      });
+      return;
+    }
+
+    session = await checkIsAuthorized(req, res, {
+      dog,
+      checkInstructors: true,
+      checkCaregivers: true,
+    });
+    if (!session) return;
 
     if (!success) {
       const code = error.errors[0].code;
@@ -93,18 +128,11 @@ export default async function handler(req, res) {
 
     return updateDog(req.query.id, data)
       .then((results) => {
-        if (!results) {
-          return res.status(404).send({
-            success: false,
-            message: "Cannot update dog because dog does not exist!",
-          });
-        } else {
-          return res.status(200).send({
-            success: true,
-            message: "Dog sucessfully updated!",
-            data: results,
-          });
-        }
+        return res.status(200).send({
+          success: true,
+          message: "Dog sucessfully updated!",
+          data: results,
+        });
       })
       .catch((e) => {
         return res.status(500).send({

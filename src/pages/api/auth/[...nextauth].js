@@ -97,15 +97,15 @@ export const authOptions = {
   },
   callbacks: {
     async signIn({ user }) {
-      if (!user.role) {
-        user.role = "Volunteer";
+      if (!user._doc.role) {
+        user.role = "Volunteer/Recipient";
       }
 
       return true;
     },
     async jwt({ token, user }) {
       if (user) {
-        token.role = user.role;
+        token.role = user._doc.role;
       }
 
       return token;

@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 import { getUserById, updateUser } from "../../../../server/db/actions/User";
 import { userUpdateSchema } from "@/utils/consts";
+import { checkIsAuthorized } from "../../../../server/middleware/checkIsAuthorized";
 
 export default async function handler(req, res) {
   if (req.method == "GET") {
@@ -75,25 +76,14 @@ export default async function handler(req, res) {
       }
     }
 
-    let updatedUserObject;
-    // TODO: grab user from session
-    const user = {
-      role: "Admin",
-    };
-    try {
-      if (user.role === "Admin") {
-        updatedUserObject = await updateUser(req.query.id, data);
-      } else {
-        delete data.role;
-        // TODO: check if the user _id from session == user _id they are trying to update
-        updatedUserObject = await updateUser(req.query.id, data);
-      }
-    } catch (e) {
-      return res.status(500).send({
-        success: false,
-        message: e.message,
-      });
-    }
+    const user = getUserById(req.query.id);
+    const session = await checkIsAuthorized(req, res, {
+      user,
+      checkUser: true,
+    });
+    if (!session) return;
+
+    updatedUserObject = await updateUser(req.query.id, data);
 
     if (!updatedUserObject) {
       return res.status(404).json({

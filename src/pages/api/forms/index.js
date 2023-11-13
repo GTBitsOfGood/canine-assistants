@@ -1,6 +1,8 @@
 import { validateForm } from "@/utils/formUtils";
 import { formSchema } from "@/utils/consts";
 import { createForm } from "../../../../server/db/actions/Form";
+import { checkIsAuthorized } from "../../../../server/middleware/checkIsAuthorized";
+import { getDogById } from "../../../../server/db/actions/Dog";
 
 export default async function handler(req, res) {
   if (req.method == "POST") {
@@ -12,6 +14,16 @@ export default async function handler(req, res) {
         message: "The field " + Object.keys(error.format())[1] + " is invalid",
       });
     }
+
+    const dog = await getDogById(data.dog);
+    const session = await checkIsAuthorized(req, res, {
+      dog,
+      checkInstructors: true,
+      checkVolunteer: true,
+      checkCaregivers: true,
+      checkPartner: true,
+    });
+    if (!session) return;
 
     const results = validateForm(data.type, data.responses);
 
