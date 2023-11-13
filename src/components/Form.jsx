@@ -16,6 +16,7 @@ import {
 import { consts } from "@/utils/consts";
 
 import { ChevronLeftIcon } from "@heroicons/react/24/solid";
+import { formActions, formMap } from "@/utils/formUtils";
 
 export default function Form(mode) {
   const [showCancelModal, setShowCancelModal] = useState(false);
@@ -33,31 +34,45 @@ export default function Form(mode) {
   form.user = session?.user._id;
   form.dog = router.query.id;
 
-  let formType = VOLUNTEER_FORM;
-  let title = "Add a New Volunteer Interaction Form";
-  form.type = consts.formTypeArray[2];
-  if (router.query.type == "monthlyPlaced") {
-    formType = MONTHLY_PLACED_FORM;
-    title = "Add a New Monthly Placed Form";
-    form.type = consts.formTypeArray[1];
-  } else if (router.query.type == "monthlyUnplaced") {
-    formType = MONTHLY_UNPLACED_FORM;
-    title = "Add a New Monthly Unplaced Form";
-    form.type = consts.formTypeArray[0];
-  }
-
+  
+  // Invalid query param redirect to /dogs/:id
   useEffect(() => {
-    fetch(`/api/dogs/${router.query.id}`)
+    if (router.query.type && !consts.formTypeArray.includes(router.query.type)) {
+      router.push(`/dogs/${router.query.id}`)
+      return
+    }
+    if (router.query.id) {
+      fetch(`/api/dogs/${router.query.id}`)
       .then((res) => res.json())
       .then((data) => {
         setDog(data);
       });
-  }, [router.query]);
+    }
+  }, [router])
 
-  if (!dog || dog === undefined || !dog.success) {
+  if (!router.query || !dog || dog === undefined || !dog.success) {
     return <div>loading</div>;
   }
+  const formType = formMap[router.query.type]
 
+  let title = "";
+  switch (formType) {
+    case MONTHLY_PLACED_FORM:
+      title = "Add a New Monthly Placed Form";
+      form.type = consts.formTypeArray[0]
+      break;
+    case MONTHLY_UNPLACED_FORM:
+      title = "Add a New Monthly Unplaced Form";
+      form.type = consts.formTypeArray[1]
+      break;
+    case VOLUNTEER_FORM:
+      title = "Add a New Volunteer Interaction"
+      form.type = consts.formTypeArray[2]
+      break;
+  }
+
+  
+  
   const name = dog.data.name;
 
   return (
@@ -106,7 +121,7 @@ export default function Form(mode) {
               } else {
                 toast.custom(() => (
                   <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
-                    There was a problem adding the log, please try again.
+                    There was a problem adding the form, please try again.
                   </div>
                 ));
               }
@@ -116,7 +131,7 @@ export default function Form(mode) {
           {formType.map((e, index) => {
             return FormQuestion(e, index + 1, register, errors, mode);
           })}
-          {mode == "view" ? (
+          {mode == formActions.VIEW ? (
             ``
           ) : (
             <div className="flex flex-row justify-end my-14">
