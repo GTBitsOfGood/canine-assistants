@@ -21,7 +21,7 @@ export default async function handler(req, res) {
         return;
       }
 
-      session = await checkIsAuthorized(req, res, {
+      const session = await checkIsAuthorized(req, res, {
         dog: data,
         checkInstructors: true,
         checkVolunteer: true,
@@ -47,7 +47,6 @@ export default async function handler(req, res) {
       });
     }
 
-    console.log("here");
     const dog = await getDogById(req.query.id);
 
     if (dog === null) {
@@ -58,7 +57,7 @@ export default async function handler(req, res) {
       return;
     }
 
-    session = await checkIsAuthorized(req, res);
+    const session = await checkIsAuthorized(req, res);
     if (!session) return;
 
     return deleteDog(req.query.id)
@@ -98,7 +97,7 @@ export default async function handler(req, res) {
       return;
     }
 
-    session = await checkIsAuthorized(req, res, {
+    const session = await checkIsAuthorized(req, res, {
       dog,
       checkInstructors: true,
       checkCaregivers: true,
