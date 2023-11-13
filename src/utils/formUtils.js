@@ -12,6 +12,11 @@ const formMap = {
   MonthlyUnplaced: MONTHLY_UNPLACED_FORM,
   VolunteerInteraction: VOLUNTEER_FORM,
 };
+const formActions = {
+  NEW: "New",
+  EDIT: "Edit",
+  VIEW: "View",
+};
 
 /**
  * Validates each array element in the responses array
@@ -45,4 +50,4 @@ const validateForm = (type, responses) => {
   return { success: true };
 };
 
-export { validateForm, formMap };
+export { validateForm, formMap, formActions };
