@@ -14,14 +14,21 @@ import {
 } from "@/utils/formConsts";
 import { consts } from "@/utils/consts";
 
-import { ChevronLeftIcon } from "@heroicons/react/24/solid";
+import {
+  ChevronLeftIcon,
+  ExclamationCircleIcon,
+} from "@heroicons/react/24/solid";
 
 export default function NewForm() {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [dog, setDog] = useState();
 
   const router = useRouter();
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const { data: session } = useSession();
 
   let form = {};
@@ -31,11 +38,11 @@ export default function NewForm() {
   let formType = VOLUNTEER_FORM;
   let title = "Add a New Volunteer Interaction Form";
   form.type = consts.formTypeArray[2];
-  if (router.query.type == "monthlyPlacedForm") {
+  if (router.query.type == "monthlyPlaced") {
     formType = MONTHLY_PLACED_FORM;
     title = "Add a New Monthly Placed Form";
     form.type = consts.formTypeArray[1];
-  } else if (router.query.type == "monthlyUnplacedForm") {
+  } else if (router.query.type == "monthlyUnplaced") {
     formType = MONTHLY_UNPLACED_FORM;
     title = "Add a New Monthly Unplaced Form";
     form.type = consts.formTypeArray[0];
@@ -125,6 +132,16 @@ export default function NewForm() {
               className="flex flex-row h-full w-32 px-4 py-2 justify-center text-foreground bg-ca-pink border rounded border-ca-pink-shade"
               type="submit"
               value="Save Form"
+              onClick={() =>
+                Object.keys(errors).length === 0
+                  ? ``
+                  : toast.custom(() => (
+                      <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
+                        Please make sure to complete all fields before
+                        submitting.
+                      </div>
+                    ))
+              }
             />
           </div>
         </form>
@@ -143,32 +160,60 @@ export default function NewForm() {
           </p>
         )}
         {formObj.choices.length == 0 ? (
-          <textarea
-            className={`min-w-96 w-1/2 h-72 pl-2 border rounded text-primary-text border-primary-gray mb-4`}
-            placeholder={
-              formObj.question == "(place for notes)"
-                ? "Additional notes go here..."
-                : ""
-            }
-            {...register(`${index}`, {
-              required: formObj.question !== "(place for notes)",
-            })}
-          />
+          <div className="mb-4">
+            <textarea
+              className={`min-w-96 w-1/2 h-72 pl-2 rounded text-primary-text${
+                errors[index]
+                  ? `border-2 border-error-red`
+                  : `border border-primary-gray`
+              }`}
+              placeholder={
+                formObj.question == "(place for notes)"
+                  ? "Additional notes go here..."
+                  : ""
+              }
+              {...register(`${index}`, {
+                required: formObj.question !== "(place for notes)",
+              })}
+            />
+            {errors[index] && (
+              <div className="flex flex-row items-center text-error-red">
+                <ExclamationCircleIcon className="mr-2 h-4" /> Please enter
+                valid text
+              </div>
+            )}
+          </div>
         ) : (
-          <div className="flex flex-row mb-4">
-            {formObj.choices.map((choice) => {
-              return (
-                <label key={formObj.question + ": " + choice} className="mr-4">
-                  <input
-                    type="radio"
-                    {...register(`${index}`, { required: true })}
-                    value={choice}
-                    className="checked:bg-ca-pink text-ca-pink checked:outline-ca-pink"
-                  />
-                  {" " + choice}
-                </label>
-              );
-            })}
+          <div className=" mb-4">
+            <div className="flex flex-row">
+              {formObj.choices.map((choice) => {
+                return (
+                  <label
+                    key={formObj.question + ": " + choice}
+                    className="mr-4"
+                  >
+                    <input
+                      type="radio"
+                      {...register(`${index}`, { required: true })}
+                      value={choice}
+                      className={`text-ca-pink focus:ring-ca-pink
+                    ${
+                      errors[index]
+                        ? `border-2 outline-error-red border-error-red focus:ring-error-red`
+                        : `focus:ring-ca-pink`
+                    }`}
+                    />
+                    {" " + choice}
+                  </label>
+                );
+              })}
+            </div>
+            {errors[index] && (
+              <div className="flex flex-row items-center text-error-red">
+                <ExclamationCircleIcon className="mr-2 h-4" /> Please select an
+                answer choice
+              </div>
+            )}
           </div>
         )}
       </div>
