@@ -48,7 +48,8 @@ export async function checkIsAuthorized(req, res, data = null) {
         isCaregiver ||
         isPartner ||
         isVolunteer ||
-        isUserAuthor);
+        isUserAuthor ||
+        isUser);
 
     if (!isAuthorized) {
       res.status(401).json({
