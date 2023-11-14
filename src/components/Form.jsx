@@ -58,7 +58,7 @@ export default function Form(mode) {
     }
   }, [ router ]);
 
-  if (!router.query || !dog || dog === undefined || !dog.success || (mode != "New" && (!router.query || !formData || formData == undefined))) {
+  if (!router.query || !dog || dog === undefined || !dog.success || (mode != formActions.NEW && (!router.query || !formData || formData == undefined))) {
     return <div>loading</div>;
   }
 
@@ -67,7 +67,7 @@ export default function Form(mode) {
   let title = "";
   switch (formType) {
     case MONTHLY_PLACED_FORM:
-      if (mode == "New") {
+      if (mode == formActions.NEW) {
         title = "Add a New Monthly Placed Form";
       } else {
         title = `${dateutils.displayDate(formData.createdAt)} Monthly Check-In`
@@ -75,7 +75,7 @@ export default function Form(mode) {
       form.type = consts.formTypeArray[0]
       break;
     case MONTHLY_UNPLACED_FORM:
-      if (mode == "New") {
+      if (mode == formActions.NEW) {
         title = "Add a New Monthly Unplaced Form";
       } else {
         title = `${dateutils.displayDate(formData.createdAt)} Monthly Check-In (Unplaced Dog)`
@@ -83,7 +83,7 @@ export default function Form(mode) {
       form.type = consts.formTypeArray[1]
       break;
     case VOLUNTEER_FORM:
-      if (mode == "New") {
+      if (mode == formActions.NEW) {
         title = "Add a New Volunteer Interaction"
       } else {
         title = `${dateutils.displayDate(formData.createdAt)} Volunteer Interaction`
@@ -111,7 +111,7 @@ export default function Form(mode) {
           Return to {name}
         </Link>
       </div>
-      {mode != "New" ? (
+      {mode != formActions.NEW ? (
         <div>
           <div className="flex gap-4 pb-2">
             <span>Created by: {formData.user.name}</span>
@@ -156,7 +156,7 @@ export default function Form(mode) {
           })}
         >
           {formType.map((e, index) => {
-              if (mode != "New") {
+              if (mode != formActions.NEW) {
                 e = { ...formData.responses[index], ...e }
               }
               return FormQuestion(e, index + 1, register, errors, mode);
