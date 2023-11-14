@@ -434,18 +434,20 @@ export default function IndividualDogPage() {
                 </div>
               ) : (
                 <div className="grow flex gap-4 justify-end">
-                  <button
-                    type="button"
-                    className="flex justify-center space-x-2 h-min"
-                    onClick={() => setIsEdit((isEdit) => !isEdit)}
-                  >
-                    <PencilSquareIcon className="h-5" />
-                    Edit
-                  </button>
-                  <div className="flex justify-center space-x-2">
-                    <TrashIcon className="h-5" />
+                  <div className="flex gap-4">
+                    <button
+                      type="button"
+                      className="flex justify-center items-center space-x-2 h-min"
+                      onClick={() => setIsEdit((isEdit) => !isEdit)}
+                    >
+                      <PencilSquareIcon className="h-5" />
+                      <div>Edit</div>
+                    </button>
+                    <div className="flex justify-center items-center space-x-2 h-min">
+                      <TrashIcon className="h-5" />
 
-                    <div>Delete</div>
+                      <div>Delete</div>
+                    </div>
                   </div>
                 </div>
               )}
