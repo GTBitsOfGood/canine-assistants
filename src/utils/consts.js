@@ -52,12 +52,12 @@ const consts = {
  */
 const dogSchema = z.object({
   name: z.string().min(1),
-  gender: z.enum(consts.genderPetArray),
+  gender: z.enum(consts.genderPetArray).default("Male"),
   breed: z.string().min(1),
   weight: z.coerce.number(),
-  behavior: z.enum(consts.concernArray),
-  medical: z.enum(consts.concernArray),
-  other: z.enum(consts.concernArray),
+  behavior: z.enum(consts.concernArray).default("None"),
+  medical: z.enum(consts.concernArray).default("None"),
+  other: z.enum(consts.concernArray).default("None"),
   recentLogs: z
     .array(
       z.string().refine((id) => {
@@ -370,6 +370,31 @@ const formSchema = z.object({
   ),
 });
 
+
+/**
+ * New Dog
+ */
+const newDog = {
+  name: "New Dog",
+  gender: "Female",
+  behavior:
+    consts.concernArray[0],
+  medical:
+    consts.concernArray[0],
+  other:
+    consts.concernArray[0],
+  dateOfBirth: new Date("2019-03-15"),
+  maternalDemeanor: [
+    1,
+    1,
+    1
+  ],
+  location:
+    consts.locationArray[
+      consts.locationArray[0]
+    ],
+};
+
 export {
   pages,
   consts,
@@ -380,4 +405,5 @@ export {
   formUpdateSchema,
   dogInformationSchema,
   computeDefaultValues,
+  newDog
 };

@@ -4,7 +4,12 @@ import { useEffect, useState, useRef } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import stringUtils from "@/utils/stringutils";
-import { dogInformationSchema, computeDefaultValues } from "@/utils/consts";
+import {
+  dogInformationSchema,
+  computeDefaultValues,
+  consts,
+  newDog,
+} from "@/utils/consts";
 
 import {
   ChevronLeftIcon,
@@ -24,6 +29,7 @@ import Log from "@/components/Log";
 import FormField from "@/components/FormField";
 import { useEditDog } from "@/context/EditDogContext";
 import TabContainer from "@/components/TabContainer";
+import LoadingAnimation from "@/components/LoadingAnimation";
 /**
  *
  * @returns {React.ReactElement} The individual Dog page
@@ -56,7 +62,6 @@ export default function IndividualDogPage() {
     }
 
     if (router.query.id) {
-
       fetch(`/api/dogs/${router.query.id}`)
         .then((res) => res.json())
         .then((data) => {
@@ -80,9 +85,10 @@ export default function IndividualDogPage() {
           )
         );
     } else if (router.route === "/dogs/new") {
-      setData({ data: { }, success: "201" });
-      reset(computeDefaultValues({}));
-    } 
+      setData({ data: newDog, success: "201" });
+      setIsEdit(true);
+      reset(computeDefaultValues(newDog));
+    }
   }, [router.query, reset]);
 
   useEffect(() => {
@@ -120,14 +126,13 @@ export default function IndividualDogPage() {
       );
     }
 
-
     if (router.query?.showLogTab && logRef.current) {
       window.scrollTo(0, logRef.current.offsetTop);
     }
   }, [logs, appliedFilters, searchQuery, router.query, logRef.current]);
 
   if (!data || !data.success) {
-    return <div>loading</div>;
+    return <LoadingAnimation/>
   }
 
   const dog = data.data;
@@ -153,7 +158,6 @@ export default function IndividualDogPage() {
   };
 
   const onEditSubmit = async (data) => {
-
     // FORMAT DATA FIRST
     const removeUndefinedAndEmpty = (obj) => {
       Object.keys(obj).forEach((key) => {
@@ -182,7 +186,6 @@ export default function IndividualDogPage() {
     };
 
     try {
-
       const res = await (
         await fetch(`/api/dogs/${router.query.id}`, requestBody)
       ).json();
@@ -191,7 +194,11 @@ export default function IndividualDogPage() {
         throw new Error(res.message);
       }
 
-      notify("success", res.data.name);
+      if (router.route === "/dogs/new") {
+        router.push(`/dogs/${res.data._id}`);
+      }
+
+      notify("success", res.data.name ?? "Dog");
       setData(res);
       reset(computeDefaultValues(res.data));
       setIsEdit(false);
@@ -290,12 +297,12 @@ export default function IndividualDogPage() {
       <form onSubmit={handleSubmit(onEditSubmit)}>
         <div className="flex gap-8">
           {dog.image ? (
-            <Image alt="Dog" width={300} height={300} src={dog.image} />
+            <Image alt="Dog" width={350} height={350} src={dog.image} />
           ) : (
             <>
               <div
                 className={
-                  "w-[300px] h-[300px] bg-primary-gray flex items-center justify-center rounded-lg"
+                  "w-[350px] h-[350px] bg-primary-gray flex items-center justify-center rounded-lg"
                 }
               >
                 <Image
@@ -304,31 +311,39 @@ export default function IndividualDogPage() {
                   alt="Dog Placeholder"
                 />
               </div>
-              <div className="flex-col">
-                <div className="flex justify-between mb-2">
-                  <div className="flex gap-4">
-                    <Chip
-                      label={dog.location}
-                      type={ChipTypeStyles[dog.location] || ChipTypeStyles.Tag}
-                    />
-                    <div className="flex justify-center items-center space-x-2">
-                      <Image
-                        priority
-                        src={dog.gender === "Male" ? maleicon : femaleicon}
-                        alt="Male Dog"
-                      />
 
-                      <div>Male</div>
-                    </div>
-                  </div>
-                </div>
-
+              <div className="flex-col gap-4 inline-flex">
                 {!isEdit && (
-                  <div className="pt-6 pl-1 font-bold text-3xl">{dog.name}</div>
+                  <>
+                    <div className="flex justify-between">
+                      <div className="flex gap-4">
+                        <Chip
+                          styles={"shadow"}
+                          label={dog.location}
+                          type={
+                            ChipTypeStyles[dog.location] || ChipTypeStyles.Tag
+                          }
+                        />
+                        <div className="flex justify-center items-center space-x-2">
+                          <Image
+                            priority
+                            src={dog.gender === "Male" ? maleicon : femaleicon}
+                            alt="Male Dog"
+                          />
+
+                          <div>{dog.gender ?? "N/A"}</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="pl-1 font-bold text-3xl pb-4 pt-2">
+                      {dog.name}
+                    </div>
+                  </>
                 )}
 
                 <div className="flex space-x-16">
-                  <div className="flex-col pt-8 pl-1 text-lg space-y-2">
+                  <div className="flex-col pl-1 text-lg gap-4 inline-flex">
                     {isEdit && (
                       <FormField
                         className="h-min pl-1 font-bold text-3xl"
@@ -345,7 +360,7 @@ export default function IndividualDogPage() {
                     <FormField label={"Weight (lbs)"} keyLabel={"weight"} />
                   </div>
 
-                  <div className="flex-col pt-8 pl-1 text-lg space-y-2">
+                  <div className="flex-col pl-1 text-lg space-y-2">
                     {dog.location === "Placed" ? (
                       <>
                         <FormField label={"Placement"} keyLabel={"placement"} />
@@ -372,8 +387,12 @@ export default function IndividualDogPage() {
                     type="button"
                     className="flex justify-center space-x-2 h-min py-1 px-8 border-2 bg-white border-gray-200 rounded"
                     onClick={() => {
-                      setIsEdit((isEdit) => !isEdit);
                       reset();
+                      if (router.route === "/dogs/new") {
+                        router.push("/dogs");
+                      } else {
+                        setIsEdit((isEdit) => !isEdit);
+                      }
                     }}
                   >
                     Cancel

@@ -15,13 +15,14 @@ export default function FormField({
 
   const nonEditingStyles =
     "outline-none border-none bg-transparent shadow-none appearance-none";
-  const editingStyles = `w-full pl-3 ${
+  const editingStyles = `w-full p-1 pt-[6px] pl-3 ${
     errors && errors[keyLabel] && "border-red-500 border-2"
   } focus:outline-none`;
 
   const checkErrors = () => {
     const formattedKey = keyLabel.split(".")[0];
     const index = keyLabel.split(".")[1];
+
 
     if (
       errors[formattedKey] &&

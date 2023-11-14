@@ -17,6 +17,7 @@ import stringUtils from "@/utils/stringutils";
 import { useRouter } from "next/router";
 import { Router } from "react-router";
 import { da } from "date-fns/locale";
+import LoadingAnimation from "./LoadingAnimation";
 
 /**
  * @returns { React.ReactElement } The DogTable component
@@ -55,7 +56,7 @@ export default function DogTable() {
       .then((data) => setData(data));
   }, [searchFilter, filters]);
 
-  if (!data) return <div>loading</div>;
+  if (!data) return <LoadingAnimation/>;
 
   if (!data.data) return <div>loading2</div>;
 
@@ -205,7 +206,8 @@ export default function DogTable() {
         rows={dogs}
         filter={searchFilter}
         elementsPerPage={10}
-        onRowClick={( _, rowIndex ) => router.push(`/dogs/${data.data[rowIndex]['_id']}`)}
+        onRowClick={( row, rowIndex ) => {
+          router.push(`/dogs/${row['_id']}`)}}
         noElements={
           <div className=" flex justify-center bg-white py-16 text-gray-500">
             No dogs were found.

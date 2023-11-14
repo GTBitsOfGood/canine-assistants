@@ -146,7 +146,7 @@ export default function Table({
             return (
               <tr
                 key={i}
-                onClick={() => onRowClick(row, i)}
+                onClick={() => onRowClick(row, i * (currentPage + 1))}
                 className={`${onRowClick ? 'cursor-pointer hover:bg-gray-100' : ''} text-gray-600 border-b ${
                   i % 2 === 0
                     ? ALTERNATING_ROW_COLOR_1
