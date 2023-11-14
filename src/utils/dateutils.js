@@ -26,11 +26,17 @@ const displayDateAndTime = (dateString) => {
     + (date.getHours() == 0 ? 12 : date.getHours() % 12) + ":" + date.getMinutes() + " " + amPmString;
 }
 
+const displayDate = (dateString) => {
+  const date = new Date(dateString);
+  return (date.getMonth() + 1) + "/" + date.getDate() + "/" + String(date.getFullYear()).slice(2);
+}
+
 const dateutils = {
   getAge,
   getDateString,
   getTimeString,
   displayDateAndTime,
+  displayDate,
 };
 
 export default dateutils;

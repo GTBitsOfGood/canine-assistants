@@ -1,3 +1,6 @@
+import Form from "@/components/Form";
+import { formActions } from "@/utils/formUtils";
+
 export default function FormPage() {
-    return <div>not done</div>
+  return Form(formActions.VIEW);
 }

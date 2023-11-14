@@ -44,6 +44,7 @@ export default function IndividualDogPage() {
   const [filteredLogs, setFilteredLogs] = useState([]);
   const [ forms, setForms ] = useState([]);
   const [ showFormDropdown, setShowFormDropdown ] = useState(false);
+  // const [ openFormDropdown, setOpenFormDropdown ] = useState(true);
 
   const router = useRouter();
   const logRef = useRef(null);
@@ -522,7 +523,7 @@ export default function IndividualDogPage() {
                 return (
                   <button className="flex flex-col sm:flex-row justify-between text-start bg-secondary-background px-4 sm:px-6 py-4 rounded-lg gap-2 my-4 w-full hover:bg-primary-background"
                     onClick={() => {
-                      router.push(`${dog._id}/forms/${form._id}`);
+                      router.push(`${dog._id}/forms/${form._id}?type=${form.type}`);
                     }}
                   >
                     <div className="flex flex-row font-medium gap-2">

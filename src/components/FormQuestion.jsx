@@ -13,14 +13,15 @@ export default function FormQuestion(formObj, index, register, errors, mode) {
       {formObj.choices.length == 0 ? (
         <div className="mb-4">
           <textarea
-            disabled={mode == "view"}
+            disabled={mode == "View"}
+            value={mode == "View" ? formObj.answer : ""}
             className={`min-w-96 w-1/2 h-72 pl-2 rounded text-primary-text${
               errors[index]
                 ? `border-2 border-error-red`
                 : `border border-primary-gray`
             }`}
             placeholder={
-              formObj.question == "(place for notes)" && mode != "view"
+              formObj.question == "(place for notes)" && mode != "View"
                 ? "Additional notes go here..."
                 : ""
             }
@@ -42,10 +43,11 @@ export default function FormQuestion(formObj, index, register, errors, mode) {
               return (
                 <label key={formObj.question + ": " + choice} className="mr-4">
                   <input
-                    disabled={mode == "view"}
+                    disabled={mode == "View"}
                     type="radio"
                     {...register(`${index}`, { required: true })}
                     value={choice}
+                    checked={mode == "View" ? choice == formObj.answer : undefined}
                     className={`text-ca-pink focus:ring-ca-pink disabled:text-secondary-text
                     ${
                       errors[index]
