@@ -1,13 +1,27 @@
+import DropdownMenu, { DropdownMenuOption } from "./DropdownMenu";
 import FormField from "./FormField";
 import Log from "./Log";
 import LogSearchFilterBar from "./LogSearchFilterBar";
 import TabSection from "./TabSection";
+
+import { PlusIcon } from "@heroicons/react/24/solid";
+
+import { DocumentIcon } from "@heroicons/react/24/outline";
 import TagDisplay from "./TagDisplay";
 
-export default function TabContainer({ logRef, logs, dogInformationSchema, showLogTab, appliedFilters, setAppliedFilters, setSearchQuery, tags, removeTag, filteredLogs }) {
-  
-  
-    return (
+export default function TabContainer({
+  logRef,
+  logs,
+  dogInformationSchema,
+  showLogTab,
+  appliedFilters,
+  setAppliedFilters,
+  setSearchQuery,
+  tags,
+  removeTag,
+  filteredLogs,
+}) {
+  return (
     <div
       ref={logRef}
       className="mt-8 mb-8 shadow-xl rounded-lg text-md w-full text-left relative overflow-hidden bg-foreground p-8"
@@ -54,6 +68,93 @@ export default function TabContainer({ logRef, logs, dogInformationSchema, showL
               Displaying {filteredLogs.length} out of {logs.length}{" "}
               {logs.length == 1 ? "log" : "logs"}
             </div>
+          </div>
+        </div>
+
+        <div label="forms">
+          <div className="flex justify-end">
+            {showFormDropdown ? (
+              <DropdownMenu
+                label={"Select Form Type"}
+                props={{
+                  singleSelect: true,
+                  extended: true,
+                  filterText: "Add Form",
+                }}
+                submitFilters={(type) => {
+                  let formType;
+                  if (type[0]) {
+                    formType =
+                      dog.location == "Placed"
+                        ? "MonthlyPlaced"
+                        : "MonthlyUnplaced";
+                  } else {
+                    formType = "VolunteerInteraction";
+                  }
+                  router.push(`${dog._id}/forms/new?type=${formType}`);
+                }}
+              >
+                <DropdownMenuOption
+                  index={0}
+                  label={formTitleMap.MonthlyPlaced}
+                  name={formTitleMap.MonthlyPlaced}
+                />
+                <DropdownMenuOption
+                  index={1}
+                  label={formTitleMap.VolunteerInteraction}
+                  name={formTitleMap.VolunteerInteraction}
+                />
+              </DropdownMenu>
+            ) : (
+              <button
+                type="button"
+                className="px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade justify-start items-center flex"
+                onClick={() => {
+                  setShowFormDropdown(true);
+                }}
+              >
+                <div className="text-foreground h-4 w-4 relative">
+                  {<PlusIcon />}
+                </div>
+                <div className="text-foreground text-base font-medium">
+                  Add Form
+                </div>
+              </button>
+            )}
+          </div>
+          <div className="mb-9">
+            {forms.length ? (
+              forms.map((form) => {
+                return (
+                  <button
+                    key={form._id}
+                    className="flex flex-col sm:flex-row justify-between text-start bg-secondary-background px-4 sm:px-6 py-4 rounded-lg gap-2 my-4 w-full hover:bg-primary-background"
+                    type="button"
+                    onClick={() => {
+                      router.push(
+                        `${dog._id}/forms/${form._id}?type=${form.type}`
+                      );
+                    }}
+                  >
+                    <div className="flex flex-row font-medium gap-2">
+                      <DocumentIcon className="h-5 w-5 self-center" />
+                      {formTitleMap[form.type]}
+                    </div>
+                    <div className="flex flex-col sm:flex-row gap-x-4">
+                      <span>Created by: {form.user.name}</span>
+                      <span>
+                        Last Updated:{" "}
+                        {dateutils.displayDateAndTime(form.updatedAt)}
+                      </span>
+                    </div>
+                  </button>
+                );
+              })
+            ) : (
+              <div className="flex justify-center align-bottom py-6">
+                Displaying 0 out of 0 forms
+              </div>
+            )}
           </div>
         </div>
       </TabSection>
