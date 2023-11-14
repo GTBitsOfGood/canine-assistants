@@ -1,4 +1,5 @@
 import TagDisplay from "@/components/TagDisplay";
+import { TrashIcon } from "@heroicons/react/20/solid";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 
@@ -42,17 +43,28 @@ export default function Log({ log, onDelete, onEdit }) {
             </p>
           </div>
         </div>
-        <TagDisplay tags={tags} removeTag={null} />
+        <div className="flex flex-col">
+          <div className="flex flex-row justify-end">
+            <button
+              type="button"
+              className="flex h-min p-2"
+              onClick={handleEditClick}
+            >
+              <PencilSquareIcon className="h-5 pr-1" />
+              Edit
+            </button>
+            <button
+              type="button"
+              className="flex h-min py-2"
+              onClick={handleDeleteClick}
+            >
+              <TrashIcon className="h-5 pr-1" />
+              Delete
+            </button>
+          </div>
+          <TagDisplay tags={tags} removeTag={null} />
+        </div>
       </div>
-
-      <button type="button" onClick={handleEditClick} className=" px-2 py-1.5 bg-ca-pink rounded border border-ca-pink-shade justify-start items-center gap-2 flex">
-        {/* <div className="text-foreground h-4 w-4 relative"><PencilSquareIcon /></div> */}
-        <div className="text-foreground text-base font-medium">Edit the log</div>
-      </button>
-
-      <button type="button" onClick={handleDeleteClick} className=" px-2 py-1.5 bg-ca-pink rounded border border-ca-pink-shade justify-start items-center gap-2 flex">
-        <div className="text-foreground text-base font-medium">Delete the log</div>
-      </button>
 
       {log.description.length > 250 ? (
         <div className="max-w-fit">
