@@ -523,7 +523,10 @@ export default function IndividualDogPage() {
               </div>
               {forms.map((form) => {
                 return (
-                  <button className="flex flex-col sm:flex-row justify-between text-start bg-secondary-background px-4 sm:px-6 py-4 rounded-lg gap-2 my-4 w-full hover:bg-primary-background"
+                  <button
+                    key={form._id}
+                    className="flex flex-col sm:flex-row justify-between text-start bg-secondary-background px-4 sm:px-6 py-4 rounded-lg gap-2 my-4 w-full hover:bg-primary-background"
+                    type="button"
                     onClick={() => {
                       router.push(`${dog._id}/forms/${form._id}?type=${form.type}`);
                     }}
