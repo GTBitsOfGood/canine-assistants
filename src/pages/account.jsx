@@ -1,4 +1,5 @@
 import Card from "@/components/Card";
+import ConfirmCancelModal from "@/components/ConfirmCancelModal";
 import userpfpplaceholder from "../../public/userpfpplaceholder.svg";
 
 import Image from "next/image";
@@ -44,7 +45,19 @@ export default function Account() {
 
   return (
     <Card cardStyle="mt-16 min-w-fit">
-      {showDeactivateModal ? deactivateModal(user, userId) : ``}
+      {showDeactivateModal
+        ? ConfirmCancelModal(
+            "Deactivate " + user.name + "?",
+            `Select “Confirm” to deactivate ` +
+              user.name +
+              ` and remove all access to
+            the Canine Assistants database. This action can only be undone by an
+            administrator.`,
+            () => deactivateModal(),
+            setShowDeactivateModal,
+            showDeactivateModal
+          )
+        : ``}
       <div className="flex flex-row min-w-fit">
         <div className="rounded-full">
           <Image
@@ -121,8 +134,7 @@ export default function Account() {
                               ));
                             }
                           })
-                          .catch((err) => {
-                          });
+                          .catch((err) => {});
                       }}
                     >
                       Save
@@ -173,48 +185,18 @@ export default function Account() {
   );
 
   function deactivateModal() {
-    return (
-      <div>
-        <div className="fixed inset-0 bg-modal-background-gray opacity-60"></div>
-        <Card cardStyle="flex flex-col justify-between fixed z-10 inset-0 mt-32 mx-96 h-fit min-w-fit">
-          <h1>Deactivate {user.name}?</h1>
-          <p className="my-8">
-            Select “Confirm” to deactivate {user.name} and remove all access to
-            the Canine Assistants database. This action can only be undone by an
-            administrator.
-          </p>
-          <div className="flex flex-row justify-end">
-            <button
-              className="flex flex-row h-full w-32 px-4 py-2 mx-4 justify-center border rounded border-primary-gray"
-              onClick={() => setShowDeactivateModal(!showDeactivateModal)}
-            >
-              Cancel
-            </button>
-            <button
-              className="flex flex-row h-full w-32 px-4 py-2 justify-center text-foreground bg-ca-pink border rounded border-ca-pink-shade"
-              onClick={() => {
-                let body = {};
-                body.role = consts.userRoleArray[3];
-                fetch("/api/users/" + userId, {
-                  method: "PATCH",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(body),
-                })
-                  .then((res) => {
-                    router.push("/login");
-                  })
-                  .catch((err) => {
-                    
-                  });
-              }}
-            >
-              Confirm
-            </button>
-          </div>
-        </Card>
-      </div>
-    );
+    let body = {};
+    body.role = consts.userRoleArray[3];
+    fetch("/api/users/" + userId, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    })
+      .then((res) => {
+        router.push("/login");
+      })
+      .catch((err) => {});
   }
 }

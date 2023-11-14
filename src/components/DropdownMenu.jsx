@@ -6,7 +6,6 @@ import {
 } from "@heroicons/react/24/solid";
 import { StopIcon as StopIconOutline } from "@heroicons/react/24/outline";
 import { useState, useRef, useEffect } from "react";
-import { ChipTypeStyles } from "./Chip";
 import useClickOff from "@/hooks/useClickOff";
 import CircleIcon from "@/components/icons/CircleIcon";
 
@@ -43,7 +42,7 @@ export default function DropdownMenu({
   children,
   props,
 }) {
-  const [extended, setExtended] = useState(false);
+  const [extended, setExtended] = useState(props?.extended);
   const [enabledOptions, setEnabledOptions] = useState(selectedOptions || {});
   const dropdownRef = useRef(null);
   const dropdownOptionRefs = useRef([]);
@@ -81,16 +80,12 @@ export default function DropdownMenu({
       onFilterSelect(newEnabledOptions);
     }
 
-    if (props?.singleSelect) {
+    if (props?.singleSelect && props?.hideFilterButton) {
       setExtended(false);
     }
 
     if (props?.hideFilterButton) {
       onFilterSelect(newEnabledOptions);
-    }
-
-    if (props?.singleSelect) {
-      setExtended(false);
     }
 
     setEnabledOptions(newEnabledOptions);
@@ -218,9 +213,9 @@ export default function DropdownMenu({
               <button
                 type="button"
                 onClick={() => handleSubmit()}
-                className="bg-secondary-gray border border-primary-gray mx-1.5 rounded w-full pt-2 pb-2"
+                className="bg-secondary-gray border border-primary-gray mx-1.5 rounded w-full pt-2 pb-2 font-medium"
             >
-              Apply Filters
+              {props?.filterText ? props.filterText : "Apply Filters"}
             </button>
           </div>
         )}

@@ -18,9 +18,9 @@ import {
 } from "@heroicons/react/24/solid";
 import { Chip, ChipTypeStyles } from "@/components/Chip";
 import Image from "next/image";
-import maleicon from "../../../public/maleicon.svg";
-import femaleicon from "../../../public/femaleicon.svg";
-import dogplaceholdericon from "../../../public/dogplaceholdericon.svg";
+import maleicon from "../../../../public/maleicon.svg";
+import femaleicon from "../../../../public/femaleicon.svg";
+import dogplaceholdericon from "../../../../public/dogplaceholdericon.svg";
 import LogSearchFilterBar from "@/components/LogSearchFilterBar";
 import LogModal from "@/components/LogModal";
 import TagDisplay from "@/components/TagDisplay";
@@ -30,6 +30,10 @@ import FormField from "@/components/FormField";
 import { useEditDog } from "@/context/EditDogContext";
 import TabContainer from "@/components/TabContainer";
 import LoadingAnimation from "@/components/LoadingAnimation";
+import { formTitleMap } from "@/utils/formUtils";
+import dateutils from "@/utils/dateutils";
+import DropdownMenu, { DropdownMenuOption } from "@/components/DropdownMenu";
+
 /**
  *
  * @returns {React.ReactElement} The individual Dog page
@@ -37,12 +41,16 @@ import LoadingAnimation from "@/components/LoadingAnimation";
 export default function IndividualDogPage() {
   const [data, setData] = useState();
   const [showLogModal, setShowLogModal] = useState(false);
+  const [showLogTab, setShowLogTab] = useState(false);
+  const [showFormTab, setShowFormTab] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [appliedFilters, setAppliedFilters] = useState({});
   const [logs, setLogs] = useState([]);
   const [filteredLogs, setFilteredLogs] = useState([]);
-  const [showLogTab, setShowLogTab] = useState(false);
+  const [forms, setForms] = useState([]);
+  const [showFormDropdown, setShowFormDropdown] = useState(false);
+  // const [ openFormDropdown, setOpenFormDropdown ] = useState(true);
 
   const router = useRouter();
   const logRef = useRef(null);
@@ -55,6 +63,7 @@ export default function IndividualDogPage() {
 
   useEffect(() => {
     setShowLogTab(router.query?.showLogTab);
+    setShowFormTab(router.query?.showFormTab);
     if (router.query?.filteredTag) {
       setAppliedFilters({
         tags: [stringUtils.upperFirstLetter(router.query?.filteredTag)],
@@ -131,8 +140,25 @@ export default function IndividualDogPage() {
     }
   }, [logs, appliedFilters, searchQuery, router.query, logRef.current]);
 
+  useEffect(() => {
+    if (data) {
+      fetch("/api/forms/search", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ dog: data.data._id }),
+      })
+        .catch((err) => setForms([]))
+        .then((res) => res.json())
+        .then((forms) => {
+          setForms(forms.data);
+        });
+    }
+  }, [data]);
+
   if (!data || !data.success) {
-    return <LoadingAnimation/>
+    return <LoadingAnimation />;
   }
 
   const dog = data.data;
@@ -235,6 +261,8 @@ export default function IndividualDogPage() {
 
     setAppliedFilters(newFilters);
   };
+
+  // TODO add listener for if user clicks out of dropdown menu to turn back into button
 
   return (
     <div className={`container mx-auto order-b border-gray-300`}>
@@ -436,7 +464,7 @@ export default function IndividualDogPage() {
           removeTag={removeTag}
           filteredLogs={filteredLogs}
           dogInformationSchema={dogInformationSchema}
-        ></TabContainer>
+        />
       </form>
     </div>
   );
