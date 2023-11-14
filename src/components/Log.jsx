@@ -63,7 +63,27 @@ export default function Log({ log, onDelete, onEdit }) {
             </p>
           </div>
         </div>
-        <TagDisplay tags={tags} removeTag={null} />
+        <div className="flex flex-col">
+          <div className="flex flex-row justify-end">
+            <button
+              type="button"
+              className="flex h-min p-2"
+              onClick={handleEditClick}
+            >
+              <PencilSquareIcon className="h-5 pr-1" />
+              Edit
+            </button>
+            <button
+              type="button"
+              className="flex h-min py-2"
+              onClick={handleDeleteClick}
+            >
+              <TrashIcon className="h-5 pr-1" />
+              Delete
+            </button>
+          </div>
+          <TagDisplay tags={tags} removeTag={null} />
+        </div>
       </div>
 
       {log.description.length > 250 ? (
