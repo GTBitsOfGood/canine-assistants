@@ -192,7 +192,7 @@ export default function DogTable() {
     setFilters(newFilters);
   };
   return (
-    <div className="flex-grow flex-col space-y-6">
+    <div className="flex-grow flex-col space-y-6 mb-8">
       <DogSearchFilterBar
         filters={filters}
         setFilters={setFilters}
