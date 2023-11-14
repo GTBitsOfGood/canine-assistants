@@ -56,11 +56,7 @@ export default function DogTable() {
       .then((data) => setData(data));
   }, [searchFilter, filters]);
 
-  if (!data) return <LoadingAnimation/>;
-
-  if (!data.data) return <div>loading2</div>;
-
-  const dogs = data.data;
+  const dogs = data ? data.data : [];
 
   /**
    * The specified columns for the DogTable
@@ -94,9 +90,7 @@ export default function DogTable() {
       label: "Location",
       icon: <MapPinIcon />,
       customRender: (rowData) => {
-        return (
-          <span>{rowData.location}</span>
-        );
+        return <span>{rowData.location}</span>;
       },
     },
     {
@@ -155,7 +149,12 @@ export default function DogTable() {
             {rowData.recentLogs.map((log) =>
               log.tags.map((tag, i) => (
                 <Chip
-                  link={"dogs/" + rowData._id + "?showLogTab=true&filteredTag=" + tag}
+                  link={
+                    "dogs/" +
+                    rowData._id +
+                    "?showLogTab=true&filteredTag=" +
+                    tag
+                  }
                   key={i}
                   label={tag}
                   type={ChipTypeStyles.Tag}
@@ -192,28 +191,32 @@ export default function DogTable() {
     setFilters(newFilters);
   };
   return (
-    <div className="flex-grow flex-col space-y-6 mb-8">
-      <DogSearchFilterBar
-        filters={filters}
-        setFilters={setFilters}
-        setSearch={setSearchFilter}
-      />
+    <>
+      { !data && <LoadingAnimation/>  }
+      <div className="flex-grow flex-col space-y-6 mb-8">
+        <DogSearchFilterBar
+          filters={filters}
+          setFilters={setFilters}
+          setSearch={setSearchFilter}
+        />
 
-      <TagDisplay tags={tags} removeTag={removeTag} />
+        <TagDisplay tags={tags} removeTag={removeTag} />
 
-      <Table
-        cols={dogTableColumns}
-        rows={dogs}
-        filter={searchFilter}
-        elementsPerPage={10}
-        onRowClick={( row, rowIndex ) => {
-          router.push(`/dogs/${row['_id']}`)}}
-        noElements={
-          <div className=" flex justify-center bg-white py-16 text-gray-500">
-            No dogs were found.
-          </div>
-        }
-      />
-    </div>
+        <Table
+          cols={dogTableColumns}
+          rows={dogs}
+          filter={searchFilter}
+          elementsPerPage={10}
+          onRowClick={(row, rowIndex) => {
+            router.push(`/dogs/${row["_id"]}`);
+          }}
+          noElements={
+            <div className=" flex justify-center bg-white py-16 text-gray-500">
+              No dogs were found.
+            </div>
+          }
+        />
+      </div>
+    </>
   );
 }
