@@ -511,7 +511,7 @@ export default function IndividualDogPage() {
                 ) : (
                   <button
                     type="button"
-                    className="px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade justify-start items-center gap-2 flex"
+                    className="px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade justify-start items-center flex"
                     onClick={() => {
                       setShowFormDropdown(true);
                     }}
@@ -521,27 +521,34 @@ export default function IndividualDogPage() {
                   </button>
                 )}
               </div>
-              {forms.map((form) => {
-                return (
-                  <button
-                    key={form._id}
-                    className="flex flex-col sm:flex-row justify-between text-start bg-secondary-background px-4 sm:px-6 py-4 rounded-lg gap-2 my-4 w-full hover:bg-primary-background"
-                    type="button"
-                    onClick={() => {
-                      router.push(`${dog._id}/forms/${form._id}?type=${form.type}`);
-                    }}
-                  >
-                    <div className="flex flex-row font-medium gap-2">
-                      <DocumentIcon className="h-5 w-5 self-center" />
-                      {formTitleMap[form.type]}
-                    </div>
-                    <div className="flex flex-col sm:flex-row gap-x-4">
-                      <span>Created by: {form.user.name}</span>
-                      <span>Last Updated: {dateutils.displayDateAndTime(form.updatedAt)}</span>
-                    </div>
-                  </button>
-                )
-              })}
+              <div className="mb-9">
+                {forms.length ?
+                  forms.map((form) => {
+                    return (
+                      <button
+                        key={form._id}
+                        className="flex flex-col sm:flex-row justify-between text-start bg-secondary-background px-4 sm:px-6 py-4 rounded-lg gap-2 my-4 w-full hover:bg-primary-background"
+                        type="button"
+                        onClick={() => {
+                          router.push(`${dog._id}/forms/${form._id}?type=${form.type}`);
+                        }}
+                      >
+                        <div className="flex flex-row font-medium gap-2">
+                          <DocumentIcon className="h-5 w-5 self-center" />
+                          {formTitleMap[form.type]}
+                        </div>
+                        <div className="flex flex-col sm:flex-row gap-x-4">
+                          <span>Created by: {form.user.name}</span>
+                          <span>Last Updated: {dateutils.displayDateAndTime(form.updatedAt)}</span>
+                        </div>
+                      </button>
+                    )
+                }) : (
+                  <div className="flex justify-center align-bottom py-6">
+                    Displaying 0 out of 0 forms
+                  </div>
+                )}
+              </div>
             </div>
           </TabSection>
         </div>

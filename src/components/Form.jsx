@@ -19,7 +19,7 @@ import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 import { formActions, formMap } from "@/utils/formUtils";
 import dateutils from "@/utils/dateutils";
 
-export default function Form(mode) {
+export default function Form({ mode }) {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [dog, setDog] = useState();
   const [ formData, setFormData ] = useState();
@@ -113,14 +113,14 @@ export default function Form(mode) {
       </div>
       {mode != formActions.NEW ? (
         <div>
-          <div className="flex gap-4 pb-2">
+          <div className="flex gap-4 pb-2 text-base font-normal">
             <span>Created by: {formData.user.name}</span>
             <span>Last Updated: {dateutils.displayDateAndTime(formData.updatedAt)}</span>
           </div>
         </div>
       ) : null}
       <h1 className="mb-6">{title}</h1>
-      <div className="flex flex-col">
+      <div className="flex flex-col w-full">
         <form
           onSubmit={handleSubmit((data) => {
             form.responses = Object.values(data).map((response) => {
@@ -167,13 +167,13 @@ export default function Form(mode) {
           ) : (
             <div className="flex flex-row justify-end my-14">
               <button
-                className="flex flex-row h-full w-32 px-4 py-2 mx-4 justify-center border rounded border-primary-gray"
+                className="flex flex-row h-full w-32 px-4 py-2 mx-4 justify-center border rounded border-primary-gray bg-foreground text-primary-text text-base font-medium"
                 onClick={() => setShowCancelModal(!showCancelModal)}
               >
                 Cancel
               </button>
               <input
-                className="flex flex-row h-full w-32 px-4 py-2 justify-center text-foreground bg-ca-pink border rounded border-ca-pink-shade"
+                className="flex flex-row h-full w-32 px-4 py-2 justify-center text-foreground bg-ca-pink border rounded border-ca-pink-shade text-base font-medium"
                 type="submit"
                 value="Save Form"
                 onClick={() => {

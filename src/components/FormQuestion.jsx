@@ -1,24 +1,25 @@
 import { ExclamationCircleIcon } from "@heroicons/react/24/solid";
 import { formActions } from "@/utils/formUtils";
+
 export default function FormQuestion(formObj, index, register, errors, mode) {
   return (
-    <div className="flex flex-col" key={formObj.question}>
+    <div className="flex flex-col mb-5" key={formObj.question}>
       {formObj.question == "(place for notes)" ? (
         ``
       ) : (
-        <p>
-          {index}. {formObj.question}
+        <p className="text-lg font-normal mb-2 pr-4 text-primary-text">
+          {formObj.question}
         </p>
       )}
       {formObj.choices.length == 0 ? (
         <div className="mb-4">
           <textarea
             disabled={mode == formActions.VIEW}
-            className={`min-w-96 w-1/2 h-72 pl-2 rounded text-primary-text${
+            className={`flex min-w-96 w-3/4 h-60 pl-2 rounded text-primary-text text-lg font-normal ${
               errors[index]
                 ? `border-2 border-error-red`
                 : `border border-primary-gray`
-            }`}
+            } ${mode == formActions.VIEW ? "resize-none" : ""}`}
             placeholder={
               mode == formActions.VIEW
               ? formObj.answer
@@ -36,18 +37,18 @@ export default function FormQuestion(formObj, index, register, errors, mode) {
           )}
         </div>
       ) : (
-        <div className=" mb-4">
-          <div className="flex flex-row">
+        <div className="">
+          <div className="flex flex-row ml-2">
             {formObj.choices.map((choice) => {
               return (
-                <label key={formObj.question + ": " + choice} className="mr-4">
+                <label key={formObj.question + ": " + choice} className="mr-4 text-lg font-normal">
                   <input
                     disabled={mode == formActions.VIEW}
                     type="radio"
                     {...register(`${index}`, { required: true })}
                     value={choice}
                     checked={mode == formActions.VIEW ? choice == formObj.answer : undefined}
-                    className={`text-ca-pink focus:ring-ca-pink disabled:text-secondary-text
+                    className={`text-ca-pink focus:ring-ca-pink disabled:text-secondary-text mr-1
                     ${
                       errors[index]
                         ? `border-2 outline-error-red border-error-red focus:ring-error-red`
