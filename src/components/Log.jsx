@@ -1,8 +1,13 @@
 import TagDisplay from "@/components/TagDisplay";
+import { TrashIcon } from "@heroicons/react/20/solid";
+import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
 
-export default function Log({ log }) {
+export default function Log({ log, onDelete, onEdit }) {
   const [showMore, setShowMore] = useState(false);
+  const [selectedLog, setSelectedLog] = useState(null);
+  const [showLogModal, setShowLogModal] = useState(false);
+
   const createdAt = new Date(log.createdAt);
 
   const tags = [
@@ -13,11 +18,39 @@ export default function Log({ log }) {
     }),
   ];
 
+  const handleDeleteClick = () => {
+    onDelete(log._id);
+  };
+
+  const handleEditClick = () => {
+    // onEdit(log._id);
+  };
+
   return (
     <div className="bg-primary-background p-4 my-4 w-full">
+      <div className="grow flex gap-4 justify-end">
+        <button
+          type="button"
+          className="flex justify-center space-x-2 h-min"
+          onClick={handleEditClick}
+        >
+          <PencilSquareIcon className="h-5" />
+          Edit
+        </button>
+        <button
+          type="button"
+          className="flex justify-center space-x-2"
+          onClick={handleDeleteClick}
+        >
+          <TrashIcon className="h-5" />
+          Delete
+        </button>
+      </div>
       <div className="flex justify-between">
+
         <div className="flex flex-col">
           <h2>{log.title}</h2>
+
           <div className="flex flex-row">
             <p className="text-secondary-text font-regular w-fit">
               {"Author: " + log.author.name}
@@ -30,8 +63,29 @@ export default function Log({ log }) {
             </p>
           </div>
         </div>
-        <TagDisplay tags={tags} removeTag={null} />
+        <div className="flex flex-col">
+          <div className="flex flex-row justify-end">
+            <button
+              type="button"
+              className="flex h-min p-2"
+              onClick={handleEditClick}
+            >
+              <PencilSquareIcon className="h-5 pr-1" />
+              Edit
+            </button>
+            <button
+              type="button"
+              className="flex h-min py-2"
+              onClick={handleDeleteClick}
+            >
+              <TrashIcon className="h-5 pr-1" />
+              Delete
+            </button>
+          </div>
+          <TagDisplay tags={tags} removeTag={null} />
+        </div>
       </div>
+
       {log.description.length > 250 ? (
         <div className="max-w-fit">
           <p className="pt-4 break-words">

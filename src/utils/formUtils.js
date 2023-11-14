@@ -26,7 +26,7 @@ const formTitleMap = {
   MonthlyPlaced: "Monthly Check-In",
   MonthlyUnplaced: "Monthly Check-In (Unplaced)",
   VolunteerInteraction: "Volunteer Interaction",
-}
+};
 
 /**
  * Validates each array element in the responses array
