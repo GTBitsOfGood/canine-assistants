@@ -14,16 +14,15 @@ export default function FormQuestion(formObj, index, register, errors, mode) {
         <div className="mb-4">
           <textarea
             disabled={mode == "View"}
-            value={mode == "View" ? formObj.answer : ""}
             className={`min-w-96 w-1/2 h-72 pl-2 rounded text-primary-text${
               errors[index]
                 ? `border-2 border-error-red`
                 : `border border-primary-gray`
             }`}
             placeholder={
-              formObj.question == "(place for notes)" && mode != "View"
-                ? "Additional notes go here..."
-                : ""
+              mode == "View"
+              ? formObj.answer
+              : "Additional notes go here..."
             }
             {...register(`${index}`, {
               required: formObj.question !== "(place for notes)",
