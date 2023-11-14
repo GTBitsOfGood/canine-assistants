@@ -37,15 +37,14 @@ export default function DeleteLogModal({ logId, onClose, onSubmit }) {
   return (
     <div className="fixed inset-0 flex items-end sm:items-center justify-center z-10">
       <div
-        onClick={() => onClose()}
-        className="fixed inset-0 bg-modal-background-gray opacity-60"
-      ></div>
-      <div
         ref={modalRef}
         className="modal-shadow-mobile sm:modal-shadow bg-white sm:bg-secondary-background px-5 sm:px-12 py-4 sm:py-9 w-full sm:w-auto h-[90%] sm:h-auto sm:min-h-[70vh] sm:max-h-[95vh] z-10 overflow-auto rounded-t-[50px] sm:rounded-t-none"
       >
         <div className="sm:hidden w-8 h-1 opacity-40 bg-zinc-500 rounded-[100px] mx-auto mb-[12px]" />
         <h1 className="mb-[3vh]"> Are you sure you want to delete this log?</h1>
+        <p className="text-secondary-text font-regular w-fit mb-3">
+          Are you sure you want to delete this log? Select Confirm to delete. This action cannot be undone.
+        </p>
 
         <div className="flex flex-col-reverse sm:flex-row justify-end gap-[2vw]">
           <button
