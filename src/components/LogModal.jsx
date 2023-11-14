@@ -38,7 +38,6 @@ export default function LogModal({ dogId, userId, logId, onClose, onSubmit }) {
       fetch("/api/logs/" + logId)
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
           setLogData({
             title: data.title,
             topicSet: { [data.topic]: true },
@@ -86,7 +85,6 @@ export default function LogModal({ dogId, userId, logId, onClose, onSubmit }) {
     };
 
     const { success, error, data } = logSchema.safeParse(formattedData);
-    console.log(success);
 
     if (success) {
       setSaving(true);
