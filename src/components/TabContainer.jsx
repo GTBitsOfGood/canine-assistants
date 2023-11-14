@@ -8,9 +8,16 @@ import { PlusIcon } from "@heroicons/react/24/solid";
 
 import { DocumentIcon } from "@heroicons/react/24/outline";
 import TagDisplay from "./TagDisplay";
+import { useRouter } from "next/router";
+import dateutils from "@/utils/dateutils";
 
 export default function TabContainer({
   logRef,
+  showFormDropdown,
+  forms,
+  setShowFormDropdown,
+  formTitleMap,
+  dog,
   logs,
   dogInformationSchema,
   showLogTab,
@@ -21,6 +28,9 @@ export default function TabContainer({
   removeTag,
   filteredLogs,
 }) {
+  const router = useRouter();
+
+
   return (
     <div
       ref={logRef}

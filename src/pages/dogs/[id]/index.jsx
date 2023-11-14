@@ -457,9 +457,14 @@ export default function IndividualDogPage() {
           logRef={logRef}
           showLogTab={showLogTab}
           logs={logs}
+          dog={dog}
           appliedFilters={appliedFilters}
           setAppliedFilters={setAppliedFilters}
           setSearchQuery={setSearchQuery}
+          showFormDropdown={showFormDropdown}
+          formTitleMap={formTitleMap}
+          setShowFormDropdown={setShowFormDropdown}
+          forms={forms}
           tags={tags}
           removeTag={removeTag}
           filteredLogs={filteredLogs}
