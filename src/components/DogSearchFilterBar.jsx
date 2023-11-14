@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 
 export default function DogSearchFilterBar({ filters, setFilters, setSearch }) {
   const router = useRouter();
-  
+
   return (
     <div className="flex items-center gap-4">
       <div className="relative grow justify-start items-center flex">
@@ -92,10 +92,18 @@ export default function DogSearchFilterBar({ filters, setFilters, setSearch }) {
         ))}
       </DropdownMenu>
 
-      <button onClick={() => router.push("/dogs/new")} className=" px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade justify-start items-center gap-2 flex">
-        <div className="text-foreground h-4 w-4 relative">{<PlusIcon />}</div>
-        <div className="text-foreground text-sm font-medium">Add Dog</div>
-      </button>
+      <div className="relative">
+        <button
+          type="button"
+          onClick={() => router.push("/dogs/new")}
+          className=" px-4 py-2.5 -mb-[1px] top-[-1px] bg-ca-pink rounded border border-ca-pink-shade justify-start items-center gap-2 flex"
+        >
+          <div className="text-foreground h-4 w-4 relative">{<PlusIcon />}</div>
+          <div className="text-foreground text-sm font-medium">
+            Add Dog
+          </div>
+        </button>
+      </div>
     </div>
   );
 }
