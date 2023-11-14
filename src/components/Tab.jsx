@@ -9,14 +9,14 @@ import stringUtils from "@/utils/stringutils";
 export default function Tab({ activeTab, label, onTabClick }) {
   return (
     <li
-      className={`${
+      className={`cursor-pointer ${
         activeTab.toLowerCase() === label.toLowerCase()
           ? "border-ca-green"
           : ""
       } text-xl font-bold px-7 sm:px-10 border-b-4 text-primary-text hover:bg-gray-100`}
       onClick={onTabClick}
     >
-      <a href="#">{stringUtils.upperFirstLetter(label)}</a>
+      {stringUtils.upperFirstLetter(label)}
     </li>
   );
 }
