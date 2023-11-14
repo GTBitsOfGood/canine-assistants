@@ -5,6 +5,8 @@
 @tailwind components;
 @tailwind utilities;
 
+input[type='text']:focus { box-shadow: none; }
+
 @layer base {
   * {
     padding: 0;

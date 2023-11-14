@@ -346,7 +346,7 @@ export default function IndividualDogPage() {
                     <div className="flex justify-between">
                       <div className="flex gap-4">
                         <Chip
-                          styles={"shadow"}
+                          innerStyles={"shadow"}
                           label={dog.location}
                           type={
                             ChipTypeStyles[dog.location] || ChipTypeStyles.Tag

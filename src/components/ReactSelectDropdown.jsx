@@ -7,6 +7,7 @@ export default function ReactSelectDropdown({
   name,
   isMulti = false,
   isDisabled,
+  isSearchable = true,
   styles,
 }) {
   const { field } = useController({
@@ -41,6 +42,7 @@ export default function ReactSelectDropdown({
       onChange={(val) => changeVal(field, val)}
       onBlur={() => field.onBlur()}
       isDisabled={isDisabled}
+      isSearchable={true}
       styles={{
         option: (provided, state) => ({
           ...provided,

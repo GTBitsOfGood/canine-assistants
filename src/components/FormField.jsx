@@ -14,7 +14,7 @@ export default function FormField({
     useEditDog();
 
   const nonEditingStyles =
-    "outline-none border-none bg-transparent shadow-none appearance-none";
+    "outline-none p-0 border-none bg-transparent shadow-none appearance-none";
   const editingStyles = `w-full p-1 pt-[6px] pl-3 ${
     errors && errors[keyLabel] && "border-red-500 border-2"
   } focus:outline-none`;
@@ -59,6 +59,7 @@ export default function FormField({
           control={control}
           options={enums[formattedKey]}
           isMulti={isMultiSelect}
+          isSearchable={false}
         />
       );
     } else if (isDateField && isEdit) {
