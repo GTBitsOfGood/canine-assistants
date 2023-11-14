@@ -67,6 +67,7 @@ export default function Table({
   rows,
   filter,
   noElements,
+  onRowClick
 }) {
   // CLamped between [1, maxPages]
   const [currentPage, setCurrentPage] = useState(0);
@@ -145,7 +146,8 @@ export default function Table({
             return (
               <tr
                 key={i}
-                className={`text-gray-600 border-b ${
+                onClick={() => onRowClick(row, i * (currentPage + 1))}
+                className={`${onRowClick ? 'cursor-pointer hover:bg-gray-100' : ''} text-gray-600 border-b ${
                   i % 2 === 0
                     ? ALTERNATING_ROW_COLOR_1
                     : ALTERNATING_ROW_COLOR_2

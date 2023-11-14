@@ -13,7 +13,7 @@ export default function DatePicker({
 }) {
   const CustomInput = React.forwardRef(({ value, onClick }, ref) => (
     <button
-      className="rounded bg-foreground border border-neutral-300 text-neutral-700 text-lg p-1 px-2 font-normal"
+      className="rounded bg-foreground border border-neutral-300 text-neutral-700 text-lg p-1 px-3 font-normal"
       onClick={onClick}
       type="button"
       ref={ref}

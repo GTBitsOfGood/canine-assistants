@@ -10,7 +10,7 @@ export const ChipTypeStyles = {
   "Topic": "border-topic-yellow-shade bg-topic-yellow",
 };
 
-export function Chip({ label, type, link = "", styles }) {
+export function Chip({ label, type, link = "", styles, innerStyles }) {
   const router = useRouter();
 
   const handleClick = (event) => {
@@ -28,7 +28,7 @@ export function Chip({ label, type, link = "", styles }) {
         href="#"
         className={`${link.length > 0 ? "" : "cursor-default"} big-red-300 max-h-10 inline-flex ${styles}`}
       >
-        <div className={`px-2.5 min-w-[5rem] justify-center border items-center rounded py-2 ${type} flex`}>
+        <div className={`${innerStyles} px-2.5 min-w-[5rem] justify-center border items-center rounded py-2 ${type} flex`}>
           <div className="text-sm font-medium">{label}</div>
         </div>
       </button>

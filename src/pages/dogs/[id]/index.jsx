@@ -4,15 +4,18 @@ import { useEffect, useState, useRef } from "react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import stringUtils from "@/utils/stringutils";
-import { dogInformationSchema, computeDefaultValues } from "@/utils/consts";
+import {
+  dogInformationSchema,
+  computeDefaultValues,
+  consts,
+  newDog,
+} from "@/utils/consts";
 
 import {
   ChevronLeftIcon,
   PencilSquareIcon,
   TrashIcon,
-  PlusIcon
 } from "@heroicons/react/24/solid";
-import { DocumentIcon } from "@heroicons/react/24/outline";
 import { Chip, ChipTypeStyles } from "@/components/Chip";
 import Image from "next/image";
 import maleicon from "../../../../public/maleicon.svg";
@@ -25,6 +28,8 @@ import Log from "@/components/Log";
 
 import FormField from "@/components/FormField";
 import { useEditDog } from "@/context/EditDogContext";
+import TabContainer from "@/components/TabContainer";
+import LoadingAnimation from "@/components/LoadingAnimation";
 import { formTitleMap } from "@/utils/formUtils";
 import dateutils from "@/utils/dateutils";
 import DropdownMenu, { DropdownMenuOption } from "@/components/DropdownMenu";
@@ -36,15 +41,15 @@ import DropdownMenu, { DropdownMenuOption } from "@/components/DropdownMenu";
 export default function IndividualDogPage() {
   const [data, setData] = useState();
   const [showLogModal, setShowLogModal] = useState(false);
-  const [ showLogTab, setShowLogTab ] = useState(false);
-  const [ showFormTab, setShowFormTab ] = useState(false);
+  const [showLogTab, setShowLogTab] = useState(false);
+  const [showFormTab, setShowFormTab] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [appliedFilters, setAppliedFilters] = useState({});
   const [logs, setLogs] = useState([]);
   const [filteredLogs, setFilteredLogs] = useState([]);
-  const [ forms, setForms ] = useState([]);
-  const [ showFormDropdown, setShowFormDropdown ] = useState(false);
+  const [forms, setForms] = useState([]);
+  const [showFormDropdown, setShowFormDropdown] = useState(false);
   // const [ openFormDropdown, setOpenFormDropdown ] = useState(true);
 
   const router = useRouter();
@@ -60,7 +65,9 @@ export default function IndividualDogPage() {
     setShowLogTab(router.query?.showLogTab);
     setShowFormTab(router.query?.showFormTab);
     if (router.query?.filteredTag) {
-      setAppliedFilters({ tags: [ stringUtils.upperFirstLetter(router.query?.filteredTag) ]});
+      setAppliedFilters({
+        tags: [stringUtils.upperFirstLetter(router.query?.filteredTag)],
+      });
     }
 
     if (router.query.id) {
@@ -86,8 +93,12 @@ export default function IndividualDogPage() {
               : data.data.reverse()
           )
         );
+    } else if (router.route === "/dogs/new") {
+      setData({ data: newDog, success: "201" });
+      setIsEdit(true);
+      reset(computeDefaultValues(newDog));
     }
-  }, [ router.query, reset ]);
+  }, [router.query, reset]);
 
   useEffect(() => {
     // filter logs by search query
@@ -127,7 +138,7 @@ export default function IndividualDogPage() {
     if (router.query?.showLogTab && logRef.current) {
       window.scrollTo(0, logRef.current.offsetTop);
     }
-  }, [ logs, appliedFilters, searchQuery, router.query, logRef.current ]);
+  }, [logs, appliedFilters, searchQuery, router.query, logRef.current]);
 
   useEffect(() => {
     if (data) {
@@ -144,10 +155,10 @@ export default function IndividualDogPage() {
           setForms(forms.data);
         });
     }
-  }, [ data ]);
+  }, [data]);
 
   if (!data || !data.success) {
-    return <div>loading</div>;
+    return <LoadingAnimation />;
   }
 
   const dog = data.data;
@@ -172,8 +183,6 @@ export default function IndividualDogPage() {
     }
   };
 
-
-
   const onEditSubmit = async (data) => {
     // FORMAT DATA FIRST
     const removeUndefinedAndEmpty = (obj) => {
@@ -194,9 +203,8 @@ export default function IndividualDogPage() {
 
     data = removeUndefinedAndEmpty(data);
 
-
     const requestBody = {
-      method: "PATCH",
+      method: router.route === "/dogs/new" ? "POST" : "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
@@ -212,7 +220,11 @@ export default function IndividualDogPage() {
         throw new Error(res.message);
       }
 
-      notify("success", res.data.name);
+      if (router.route === "/dogs/new") {
+        router.push(`/dogs/${res.data._id}`);
+      }
+
+      notify("success", res.data.name ?? "Dog");
       setData(res);
       reset(computeDefaultValues(res.data));
       setIsEdit(false);
@@ -253,7 +265,6 @@ export default function IndividualDogPage() {
   // TODO add listener for if user clicks out of dropdown menu to turn back into button
 
   return (
-    // Artificial spacing until nav is created
     <div className={`container mx-auto order-b border-gray-300`}>
       {showLogModal ? (
         <>
@@ -314,12 +325,12 @@ export default function IndividualDogPage() {
       <form onSubmit={handleSubmit(onEditSubmit)}>
         <div className="flex gap-8">
           {dog.image ? (
-            <Image alt="Dog" width={300} height={300} src={dog.image} />
+            <Image alt="Dog" width={350} height={350} src={dog.image} />
           ) : (
             <>
               <div
                 className={
-                  "w-[300px] h-[300px] bg-primary-gray flex items-center justify-center rounded-lg"
+                  "w-[350px] h-[350px] bg-primary-gray flex items-center justify-center rounded-lg"
                 }
               >
                 <Image
@@ -328,31 +339,39 @@ export default function IndividualDogPage() {
                   alt="Dog Placeholder"
                 />
               </div>
-              <div className="flex-col">
-                <div className="flex justify-between mb-2">
-                  <div className="flex gap-4">
-                    <Chip
-                      label={dog.location}
-                      type={ChipTypeStyles[dog.location] || ChipTypeStyles.Tag}
-                    />
-                    <div className="flex justify-center items-center space-x-2">
-                      <Image
-                        priority
-                        src={dog.gender === "Male" ? maleicon : femaleicon}
-                        alt="Male Dog"
-                      />
 
-                      <div>Male</div>
-                    </div>
-                  </div>
-                </div>
-
+              <div className="flex-col gap-4 inline-flex">
                 {!isEdit && (
-                  <div className="pt-6 pl-1 font-bold text-3xl">{dog.name}</div>
+                  <>
+                    <div className="flex justify-between">
+                      <div className="flex gap-4">
+                        <Chip
+                          innerStyles={"shadow"}
+                          label={dog.location}
+                          type={
+                            ChipTypeStyles[dog.location] || ChipTypeStyles.Tag
+                          }
+                        />
+                        <div className="flex justify-center items-center space-x-2">
+                          <Image
+                            priority
+                            src={dog.gender === "Male" ? maleicon : femaleicon}
+                            alt="Male Dog"
+                          />
+
+                          <div>{dog.gender ?? "N/A"}</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="pl-1 font-bold text-3xl pb-4 pt-2">
+                      {dog.name}
+                    </div>
+                  </>
                 )}
 
                 <div className="flex space-x-16">
-                  <div className="flex-col pt-8 pl-1 text-lg space-y-2">
+                  <div className="flex-col pl-1 text-lg gap-4 inline-flex">
                     {isEdit && (
                       <FormField
                         className="h-min pl-1 font-bold text-3xl"
@@ -366,13 +385,17 @@ export default function IndividualDogPage() {
                     <FormField label={"Sex"} keyLabel={"gender"} />
                     <FormField label={"Breed"} keyLabel={"breed"} />
                     <FormField label={"Coat Color"} keyLabel={"coatColor"} />
+                    <FormField label={"Weight (lbs)"} keyLabel={"weight"} />
                   </div>
 
-                  <div className="flex-col pt-8 pl-1 text-lg space-y-2">
+                  <div className="flex-col pl-1 text-lg space-y-2">
                     {dog.location === "Placed" ? (
                       <>
                         <FormField label={"Placement"} keyLabel={"placement"} />
-                        <FormField label={"Partner"} keyLabel={"partner.user"} />
+                        <FormField
+                          label={"Partner"}
+                          keyLabel={"partner.user"}
+                        />
                         <FormField
                           label={"Placement Camp"}
                           keyLabel={"placementCamp"}
@@ -392,8 +415,12 @@ export default function IndividualDogPage() {
                     type="button"
                     className="flex justify-center space-x-2 h-min py-1 px-8 border-2 bg-white border-gray-200 rounded"
                     onClick={() => {
-                      setIsEdit((isEdit) => !isEdit);
                       reset();
+                      if (router.route === "/dogs/new") {
+                        router.push("/dogs");
+                      } else {
+                        setIsEdit((isEdit) => !isEdit);
+                      }
                     }}
                   >
                     Cancel
@@ -407,18 +434,20 @@ export default function IndividualDogPage() {
                 </div>
               ) : (
                 <div className="grow flex gap-4 justify-end">
-                  <button
-                    type="button"
-                    className="flex justify-center space-x-2 h-min"
-                    onClick={() => setIsEdit((isEdit) => !isEdit)}
-                  >
-                    <PencilSquareIcon className="h-5" />
-                    Edit
-                  </button>
-                  <div className="flex justify-center space-x-2">
-                    <TrashIcon className="h-5" />
+                  <div className="flex gap-4">
+                    <button
+                      type="button"
+                      className="flex justify-center items-center space-x-2 h-min"
+                      onClick={() => setIsEdit((isEdit) => !isEdit)}
+                    >
+                      <PencilSquareIcon className="h-5" />
+                      <div>Edit</div>
+                    </button>
+                    <div className="flex justify-center items-center space-x-2 h-min">
+                      <TrashIcon className="h-5" />
 
-                    <div>Delete</div>
+                      <div>Delete</div>
+                    </div>
                   </div>
                 </div>
               )}
@@ -426,132 +455,23 @@ export default function IndividualDogPage() {
           )}
         </div>
 
-        <div ref={logRef} className="mt-8 shadow-xl rounded-lg text-md w-full text-left relative overflow-hidden bg-foreground p-8">
-          <TabSection defaultTab={showLogTab ? "logs" : (showFormTab ? "forms" : "information")}>
-            <div label="information">
-              <div className="w-full grid grid-cols-3 gap-16">
-                {Object.keys(dogInformationSchema).map((category) => (
-                  <div className="col" key={category}>
-                    <div className="flex-col space-y-4 text-lg">
-                      <div className="text-xl">
-                        <strong>{category}</strong>
-                      </div>
-
-                      {Object.keys(dogInformationSchema[category]).map(
-                        (col) => {
-                          const { key: formKey } =
-                            dogInformationSchema[category][col];
-
-                          return (
-                            <FormField
-                              key={col}
-                              keyLabel={formKey}
-                              label={col}
-                            />
-                          );
-                        }
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div label="logs">
-              <div className="flex-grow flex-col space-y-4">
-                <LogSearchFilterBar
-                  filters={appliedFilters}
-                  setFilters={setAppliedFilters}
-                  setSearch={setSearchQuery}
-                  addLogFunction={() => setShowLogModal(true)}
-                />
-
-                <TagDisplay tags={tags} removeTag={removeTag} />
-
-                {/* TODO: move to static array, toggle hidden field */}
-                {filteredLogs.map((log) => {
-                  return <Log log={log} key={log._id} />;
-                })}
-                <div className="flex justify-center">
-                  Displaying {filteredLogs.length} out of {logs.length}{" "}
-                  {logs.length == 1 ? "log" : "logs"}
-                </div>
-              </div>
-            </div>
-            <div label="forms">
-              <div className="flex justify-end">
-                {showFormDropdown ? (
-                  <DropdownMenu
-                    label={"Select Form Type"}
-                    props={{
-                      singleSelect: true,
-                      extended: true,
-                      filterText: "Add Form",
-                    }}
-                    submitFilters={(type) => {
-                      let formType;
-                      if (type[0]) {
-                        formType = dog.location == "Placed" ? "MonthlyPlaced" : "MonthlyUnplaced";
-                      } else {
-                        formType = "VolunteerInteraction";
-                      }
-                      router.push(`${dog._id}/forms/new?type=${formType}`);
-                    }}
-                  >
-                    <DropdownMenuOption
-                      index={0}
-                      label={formTitleMap.MonthlyPlaced}
-                      name={formTitleMap.MonthlyPlaced}
-                    />
-                    <DropdownMenuOption
-                      index={1}
-                      label={formTitleMap.VolunteerInteraction}
-                      name={formTitleMap.VolunteerInteraction}
-                    />
-                  </DropdownMenu>
-                ) : (
-                  <button
-                    type="button"
-                    className="px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade justify-start items-center flex"
-                    onClick={() => {
-                      setShowFormDropdown(true);
-                    }}
-                  >
-                    <div className="text-foreground h-4 w-4 relative">{<PlusIcon />}</div>
-                    <div className="text-foreground text-base font-medium">Add Form</div>
-                  </button>
-                )}
-              </div>
-              <div className="mb-9">
-                {forms.length ?
-                  forms.map((form) => {
-                    return (
-                      <button
-                        key={form._id}
-                        className="flex flex-col sm:flex-row justify-between text-start bg-secondary-background px-4 sm:px-6 py-4 rounded-lg gap-2 my-4 w-full hover:bg-primary-background"
-                        type="button"
-                        onClick={() => {
-                          router.push(`${dog._id}/forms/${form._id}?type=${form.type}`);
-                        }}
-                      >
-                        <div className="flex flex-row font-medium gap-2">
-                          <DocumentIcon className="h-5 w-5 self-center" />
-                          {formTitleMap[form.type]}
-                        </div>
-                        <div className="flex flex-col sm:flex-row gap-x-4">
-                          <span>Created by: {form.user.name}</span>
-                          <span>Last Updated: {dateutils.displayDateAndTime(form.updatedAt)}</span>
-                        </div>
-                      </button>
-                    )
-                }) : (
-                  <div className="flex justify-center align-bottom py-6">
-                    Displaying 0 out of 0 forms
-                  </div>
-                )}
-              </div>
-            </div>
-          </TabSection>
-        </div>
+        <TabContainer
+          logRef={logRef}
+          showLogTab={showLogTab}
+          logs={logs}
+          dog={dog}
+          appliedFilters={appliedFilters}
+          setAppliedFilters={setAppliedFilters}
+          setSearchQuery={setSearchQuery}
+          showFormDropdown={showFormDropdown}
+          formTitleMap={formTitleMap}
+          setShowFormDropdown={setShowFormDropdown}
+          forms={forms}
+          tags={tags}
+          removeTag={removeTag}
+          filteredLogs={filteredLogs}
+          dogInformationSchema={dogInformationSchema}
+        />
       </form>
     </div>
   );

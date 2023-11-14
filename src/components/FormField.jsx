@@ -14,14 +14,15 @@ export default function FormField({
     useEditDog();
 
   const nonEditingStyles =
-    "outline-none border-none bg-transparent shadow-none appearance-none";
-  const editingStyles = `w-full ml-1 ${
+    "outline-none p-0 border-none bg-transparent shadow-none appearance-none";
+  const editingStyles = `w-full p-1 pt-[6px] pl-3 ${
     errors && errors[keyLabel] && "border-red-500 border-2"
   } focus:outline-none`;
 
   const checkErrors = () => {
     const formattedKey = keyLabel.split(".")[0];
     const index = keyLabel.split(".")[1];
+
 
     if (
       errors[formattedKey] &&
@@ -58,6 +59,7 @@ export default function FormField({
           control={control}
           options={enums[formattedKey]}
           isMulti={isMultiSelect}
+          isSearchable={false}
         />
       );
     } else if (isDateField && isEdit) {
@@ -88,7 +90,7 @@ export default function FormField({
   return (
     <div>
       <div className="flex whitespace-nowrap items-center">
-        {label && <label>{label + ": "}</label>}
+        {label && <label className="pr-2">{label + ": "}</label>}
         <div className="w-full">
           <FormInput />
         </div>

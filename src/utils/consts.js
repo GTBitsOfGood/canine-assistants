@@ -52,12 +52,12 @@ const consts = {
  */
 const dogSchema = z.object({
   name: z.string().min(1),
-  gender: z.enum(consts.genderPetArray),
+  gender: z.enum(consts.genderPetArray).default("Male"),
   breed: z.string().min(1),
-  weight: z.number(),
-  behavior: z.enum(consts.concernArray),
-  medical: z.enum(consts.concernArray),
-  other: z.enum(consts.concernArray),
+  weight: z.coerce.number(),
+  behavior: z.enum(consts.concernArray).default("None"),
+  medical: z.enum(consts.concernArray).default("None"),
+  other: z.enum(consts.concernArray).default("None"),
   recentLogs: z
     .array(
       z.string().refine((id) => {
@@ -183,7 +183,7 @@ const dogInformationSchema = {
     },
     "Birth Order": {
       key: "birthOrder",
-    },
+    }
   },
   ["Family"]: {
     "Litter Size": {
@@ -261,6 +261,9 @@ const computeDefaultValues = (dog) => {
     supplementalFeeding: dog?.supplementalFeeding,
     deliveryInformation: dog?.deliveryInformation, // right now set to natural, figure out default value later
     birthOrder: dog?.birthOrder,
+    
+    // Weight
+    weight: dog?.weight,
 
     // Family
     litterSize: dog?.litterSize,
@@ -278,7 +281,7 @@ const computeDefaultValues = (dog) => {
     instructors: dog?.instructors?.map((instructor) =>
       instructor._id ? instructor._id : instructor,
     ),
-    caregivers: dog?.caregivers.map((caregiver) =>
+    caregivers: dog?.caregivers?.map((caregiver) =>
       caregiver._id ? caregiver._id : caregiver,
     ),
     // Feeding
@@ -367,6 +370,31 @@ const formSchema = z.object({
   ),
 });
 
+
+/**
+ * New Dog
+ */
+const newDog = {
+  name: "New Dog",
+  gender: "Female",
+  behavior:
+    consts.concernArray[0],
+  medical:
+    consts.concernArray[0],
+  other:
+    consts.concernArray[0],
+  dateOfBirth: new Date("2019-03-15"),
+  maternalDemeanor: [
+    1,
+    1,
+    1
+  ],
+  location:
+    consts.locationArray[
+      consts.locationArray[0]
+    ],
+};
+
 export {
   pages,
   consts,
@@ -377,4 +405,5 @@ export {
   formUpdateSchema,
   dogInformationSchema,
   computeDefaultValues,
+  newDog
 };

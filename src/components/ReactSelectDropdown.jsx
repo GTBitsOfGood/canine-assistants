@@ -7,6 +7,7 @@ export default function ReactSelectDropdown({
   name,
   isMulti = false,
   isDisabled,
+  isSearchable = true,
   styles,
 }) {
   const { field } = useController({
@@ -41,7 +42,28 @@ export default function ReactSelectDropdown({
       onChange={(val) => changeVal(field, val)}
       onBlur={() => field.onBlur()}
       isDisabled={isDisabled}
-      styles={styles}
+      isSearchable={true}
+      menuPlacement={"auto"}
+      styles={{
+        option: (provided, state) => ({
+          ...provided,
+          borderRadius: 0,
+          marginTop: 0,
+          backgroundColor: state.isSelected ? '#ebebeb' : 'white',
+          color: '#121212',
+          zIndex: 999999
+        }),
+        menu: base => ({
+          ...base,
+          borderRadius: 0,
+          zIndex: 9999999
+        }),
+        menuList: base => ({
+          ...base,
+          padding: 0,
+          zIndex: 9999999
+        })
+      }}
     />
   );
 }

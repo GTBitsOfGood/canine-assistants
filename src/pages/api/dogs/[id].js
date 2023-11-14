@@ -3,11 +3,42 @@ import {
   deleteDog,
   updateDog,
   getDogById,
+  createDog,
 } from "../../../../server/db/actions/Dog";
 import { dogSchema } from "@/utils/consts";
 
 export default async function handler(req, res) {
-  if (req.method == "GET") {
+  if (req.method === "POST") {
+    const { success, error, data } = dogSchema.safeParse(req.body);
+    if (!success) {
+      return res.status(422).send({
+        success: false,
+        message: "The field " + Object.keys(error.format())[1] + " is invalid",
+      });
+    }
+
+    if (data.birthOrder > data.litterSize) {
+      return res.status(422).send({
+        success: false,
+        message: "Dog birth order cannot be greater than litter size",
+      });
+    }
+
+    return createDog(data)
+      .then((id) => {
+        return res.status(201).send({
+          success: true,
+          message: "New dog successfully created!",
+          data: { _id: id },
+        });
+      })
+      .catch((error) => {
+        return res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      });
+  } else if (req.method == "GET") {
     try {
       const { id } = req.query;
       const data = await getDogById(id);
