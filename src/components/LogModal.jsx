@@ -8,11 +8,13 @@ import { Chip, ChipTypeStyles } from "./Chip";
  * Modal for creating a new log
  * @param {*} dogId string id of dog associated with the log
  * @param {*} userId string id of user creating the log
+ * @param {*} logId string id of log being edited; null if new log being created
  * @param {*} onClose function that is called when the log needs to be closed
  * @param {*} onSubmit function that is called when the user tries to save the log
  * @returns the modal component
  */
-export default function LogModal({ dogId, userId, onClose, onSubmit }) {
+export default function LogModal({ dogId, userId, logId, onClose, onSubmit }) {
+  const [retrievedLog, setRetrievedLog] = useState(false);
   const [logData, setLogData] = useState({
     title: "",
     topicSet: {},
@@ -32,6 +34,25 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
   const modalRef = useRef(null);
 
   useEffect(() => {
+    if (logId && !retrievedLog) {
+      fetch("/api/logs/" + logId)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setLogData({
+            title: data.title,
+            topicSet: { [data.topic]: true },
+            severitySet: { [data.severity]: true },
+            // tagsSet: data.tags.reduce((acc, tag) => {
+            //   acc[tag] = true;
+            //   return acc;
+            // }, {}),
+            description: data.description,
+            ...logData
+          });
+          setRetrievedLog(true);
+        });
+    }
     const scrollToBottom = () => {
       modalRef.current.scrollTop = modalRef.current.scrollHeight;
     };
@@ -43,7 +64,61 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
     return () => {
       document.removeEventListener("click", scrollToBottom);
     };
-  });
+  }, []);
+
+  const handleSubmit = (logData) => {
+    if (logId) {
+      editLog(logData);
+    } else {
+      saveLog(logData);
+    }
+  }
+
+  const editLog = (logData) => {
+    const formattedData = {
+      title: logData.title,
+      topic: Object.values(logData.topicSet)[0],
+      severity: Object.values(logData.severitySet)[0],
+      tags: Object.values(logData.tagsSet),
+      description: logData.description,
+      dog: dogId,
+      author: userId,
+    };
+
+    const { success, error, data } = logSchema.safeParse(formattedData);
+    console.log(success);
+
+    if (success) {
+      setSaving(true);
+      fetch("/api/logs/" + logId, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formattedData),
+      })
+        .then((res) => {
+          onSubmit(true, "edit");
+          onClose();
+          setSaving(false);
+        })
+        .catch((err) => {
+          setSaving(false);
+          onSubmit(false);
+        });
+    } else {
+      const errorsArray = error.format();
+      const errorsObject = {};
+
+      for (let err in errorsArray) {
+        if (err != "_errors") {
+          errorsObject[err] = true;
+        }
+      }
+
+      setErrors({ ...errors, ...errorsObject });
+    }
+  };
 
   const saveLog = (logData) => {
     const formattedData = {
@@ -68,7 +143,7 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
         body: JSON.stringify(formattedData),
       })
         .then((res) => {
-          onSubmit(true);
+          onSubmit(true, "add");
           onClose();
           setSaving(false);
         })
@@ -102,7 +177,11 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
       >
         {/* TODO add behavior for dragging downwards to close the modal on mobile */}
         <div className="sm:hidden w-8 h-1 opacity-40 bg-zinc-500 rounded-[100px] mx-auto mb-[12px]" />
-        <h1 className="mb-[3vh]"> Add a log</h1>
+        {logId ? (
+          <h1 className="mb-[3vh]"> Edit log</h1>
+        ) : (
+          <h1 className="mb-[3vh]"> Add a log</h1>
+        )}
         <h2 className="h-[5vh]">
           Title<span className="text-error-red">*</span>
         </h2>
@@ -298,7 +377,7 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
             <div className="text-primary-text text-sm font-medium">Cancel</div>
           </button>
           <button
-            onClick={() => saveLog(logData)}
+            onClick={() => handleSubmit(logData)}
             disabled={saving}
             className={`w-full sm:w-32 h-10 px-4 py-2.5 ${
               saving
