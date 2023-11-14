@@ -37,6 +37,7 @@ export default function IndividualDogPage() {
   const [data, setData] = useState();
   const [showLogModal, setShowLogModal] = useState(false);
   const [ showLogTab, setShowLogTab ] = useState(false);
+  const [ showFormTab, setShowFormTab ] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [appliedFilters, setAppliedFilters] = useState({});
@@ -57,6 +58,7 @@ export default function IndividualDogPage() {
 
   useEffect(() => {
     setShowLogTab(router.query?.showLogTab);
+    setShowFormTab(router.query?.showFormTab);
     if (router.query?.filteredTag) {
       setAppliedFilters({ tags: [ stringUtils.upperFirstLetter(router.query?.filteredTag) ]});
     }
@@ -425,7 +427,7 @@ export default function IndividualDogPage() {
         </div>
 
         <div ref={logRef} className="mt-8 shadow-xl rounded-lg text-md w-full text-left relative overflow-hidden bg-foreground p-8">
-          <TabSection defaultTab={showLogTab ? "logs" : "information"}>
+          <TabSection defaultTab={showLogTab ? "logs" : (showFormTab ? "forms" : "information")}>
             <div label="information">
               <div className="w-full grid grid-cols-3 gap-16">
                 {Object.keys(dogInformationSchema).map((category) => (

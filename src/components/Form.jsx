@@ -34,7 +34,6 @@ export default function Form(mode) {
 
   let form = {};
   form.user = session?.user._id;
-  // form.user = "6547fbf9a457aba3856d2bbf";
   form.dog = router.query.id;
   
   // Invalid query param redirect to /dogs/:id
@@ -108,10 +107,18 @@ export default function Form(mode) {
         : ``}
       <div className="py-6 flex items-center">
         <ChevronLeftIcon className="w-4 mr-2" />
-        <Link href="/dogs" className="text-lg text-secondary-text">
+        <Link href={`/dogs/${router.query.id}?showFormTab=true`} className="text-lg text-secondary-text">
           Return to {name}
         </Link>
       </div>
+      {mode != "New" ? (
+        <div>
+          <div className="flex gap-4 pb-2">
+            <span>Created by: {formData.user.name}</span>
+            <span>Last Updated: {dateutils.displayDateAndTime(formData.updatedAt)}</span>
+          </div>
+        </div>
+      ) : null}
       <h1 className="mb-6">{title}</h1>
       <div className="flex flex-col">
         <form
