@@ -23,6 +23,7 @@ export function Chip({ label, type, link = "", styles }) {
   return (
     <>
       <button
+        type="button"
         onClick={handleClick}
         href="#"
         className={`${link.length > 0 ? "" : "cursor-default"} big-red-300 max-h-10 inline-flex ${styles}`}

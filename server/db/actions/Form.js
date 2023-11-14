@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 import dbConnect from "../dbConnect";
 import Form from "../models/Form";
 import Dog from "../models/Dog";
@@ -76,5 +77,40 @@ export async function getForms(filter = {}) {
     throw new Error("Unable to get forms at this time, please try again");
   }
 
-  return Form.find(filter).populate("user").populate("dog");
+  if (filter["dog"]) {
+    filter["dog"] = new Types.ObjectId(filter["dog"]);
+  }
+
+  return await Form.aggregate([
+    {
+      $match: filter,
+    },
+    {
+      $lookup: {
+        from: "users",
+        localField: "user",
+        foreignField: "_id",
+        as: "user",
+      },
+    },
+    {
+      $lookup: {
+        from: "dogs",
+        localField: "dog",
+        foreignField: "_id",
+        as: "dog",
+      },
+    },
+    {
+      $unwind: "$user",
+    },
+    {
+      $unwind: "$dog",
+    },
+    {
+      $sort: {
+        updatedAt: -1,
+      },
+    },
+  ]);
 }

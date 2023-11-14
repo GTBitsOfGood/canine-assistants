@@ -17,10 +17,12 @@ import { consts } from "@/utils/consts";
 
 import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 import { formActions, formMap } from "@/utils/formUtils";
+import dateutils from "@/utils/dateutils";
 
 export default function Form(mode) {
   const [showCancelModal, setShowCancelModal] = useState(false);
   const [dog, setDog] = useState();
+  const [ formData, setFormData ] = useState();
 
   const router = useRouter();
   const {
@@ -33,13 +35,12 @@ export default function Form(mode) {
   let form = {};
   form.user = session?.user._id;
   form.dog = router.query.id;
-
   
   // Invalid query param redirect to /dogs/:id
   useEffect(() => {
     if (router.query.type && !consts.formTypeArray.includes(router.query.type)) {
-      router.push(`/dogs/${router.query.id}`)
-      return
+      router.push(`/dogs/${router.query.id}`);
+      return;
     }
     if (router.query.id) {
       fetch(`/api/dogs/${router.query.id}`)
@@ -48,31 +49,49 @@ export default function Form(mode) {
         setDog(data);
       });
     }
-  }, [router])
+    if (router.query.idForm) {
+      fetch(`/api/forms/${router.query.idForm}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setFormData(data.data);
+        });
+    }
+  }, [ router ]);
 
-  if (!router.query || !dog || dog === undefined || !dog.success) {
+  if (!router.query || !dog || dog === undefined || !dog.success || (mode != formActions.NEW && (!router.query || !formData || formData == undefined))) {
     return <div>loading</div>;
   }
+
   const formType = formMap[router.query.type]
 
   let title = "";
   switch (formType) {
     case MONTHLY_PLACED_FORM:
-      title = "Add a New Monthly Placed Form";
+      if (mode == formActions.NEW) {
+        title = "Add a New Monthly Placed Form";
+      } else {
+        title = `${dateutils.displayDate(formData.createdAt)} Monthly Check-In`
+      }
       form.type = consts.formTypeArray[0]
       break;
     case MONTHLY_UNPLACED_FORM:
-      title = "Add a New Monthly Unplaced Form";
+      if (mode == formActions.NEW) {
+        title = "Add a New Monthly Unplaced Form";
+      } else {
+        title = `${dateutils.displayDate(formData.createdAt)} Monthly Check-In (Unplaced Dog)`
+      }
       form.type = consts.formTypeArray[1]
       break;
     case VOLUNTEER_FORM:
-      title = "Add a New Volunteer Interaction"
+      if (mode == formActions.NEW) {
+        title = "Add a New Volunteer Interaction"
+      } else {
+        title = `${dateutils.displayDate(formData.createdAt)} Volunteer Interaction`
+      }
       form.type = consts.formTypeArray[2]
       break;
   }
 
-  
-  
   const name = dog.data.name;
 
   return (
@@ -88,10 +107,18 @@ export default function Form(mode) {
         : ``}
       <div className="py-6 flex items-center">
         <ChevronLeftIcon className="w-4 mr-2" />
-        <Link href="/dogs" className="text-lg text-secondary-text">
+        <Link href={`/dogs/${router.query.id}?showFormTab=true`} className="text-lg text-secondary-text">
           Return to {name}
         </Link>
       </div>
+      {mode != formActions.NEW ? (
+        <div>
+          <div className="flex gap-4 pb-2">
+            <span>Created by: {formData.user.name}</span>
+            <span>Last Updated: {dateutils.displayDateAndTime(formData.updatedAt)}</span>
+          </div>
+        </div>
+      ) : null}
       <h1 className="mb-6">{title}</h1>
       <div className="flex flex-col">
         <form
@@ -129,8 +156,12 @@ export default function Form(mode) {
           })}
         >
           {formType.map((e, index) => {
-            return FormQuestion(e, index + 1, register, errors, mode);
-          })}
+              if (mode != formActions.NEW) {
+                e = { ...formData.responses[index], ...e }
+              }
+              return FormQuestion(e, index + 1, register, errors, mode);
+            })
+          }
           {mode == formActions.VIEW ? (
             ``
           ) : (
