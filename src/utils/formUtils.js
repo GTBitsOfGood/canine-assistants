@@ -12,10 +12,20 @@ const formMap = {
   MonthlyUnplaced: MONTHLY_UNPLACED_FORM,
   VolunteerInteraction: VOLUNTEER_FORM,
 };
+
 const formActions = {
   NEW: "New",
   EDIT: "Edit",
   VIEW: "View",
+};
+
+/**
+ * Maps each form type to a user-readable title string
+ */
+const formTitleMap = {
+  MonthlyPlaced: "Monthly Check-In",
+  MonthlyUnplaced: "Monthly Check-In (Unplaced)",
+  VolunteerInteraction: "Volunteer Interaction",
 };
 
 /**
@@ -50,4 +60,4 @@ const validateForm = (type, responses) => {
   return { success: true };
 };
 
-export { validateForm, formMap, formActions };
+export { validateForm, formMap, formActions, formTitleMap };
