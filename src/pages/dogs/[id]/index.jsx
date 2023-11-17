@@ -1,4 +1,3 @@
-import TabSection from "@/components/TabSection";
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 import toast from "react-hot-toast";
@@ -7,7 +6,6 @@ import stringUtils from "@/utils/stringutils";
 import {
   dogInformationSchema,
   computeDefaultValues,
-  consts,
   newDog,
 } from "@/utils/consts";
 
@@ -21,18 +19,14 @@ import Image from "next/image";
 import maleicon from "../../../../public/maleicon.svg";
 import femaleicon from "../../../../public/femaleicon.svg";
 import dogplaceholdericon from "../../../../public/dogplaceholdericon.svg";
-import LogSearchFilterBar from "@/components/LogSearchFilterBar";
 import LogModal from "@/components/LogModal";
-import TagDisplay from "@/components/TagDisplay";
-import Log from "@/components/Log";
-
 import FormField from "@/components/FormField";
 import { useEditDog } from "@/context/EditDogContext";
 import TabContainer from "@/components/TabContainer";
 import LoadingAnimation from "@/components/LoadingAnimation";
 import { formTitleMap } from "@/utils/formUtils";
-import dateutils from "@/utils/dateutils";
-import DropdownMenu, { DropdownMenuOption } from "@/components/DropdownMenu";
+import DogEditingLayout from "@/components/DogEditingLayout";
+import Layout from "@/components/Layout";
 
 /**
  *
@@ -50,7 +44,6 @@ export default function IndividualDogPage() {
   const [filteredLogs, setFilteredLogs] = useState([]);
   const [forms, setForms] = useState([]);
   const [showFormDropdown, setShowFormDropdown] = useState(false);
-  // const [ openFormDropdown, setOpenFormDropdown ] = useState(true);
 
   const router = useRouter();
   const logRef = useRef(null);
@@ -476,3 +469,11 @@ export default function IndividualDogPage() {
     </div>
   );
 }
+
+IndividualDogPage.getLayout = function getLayout(page) {
+  return (
+    <Layout>
+      <DogEditingLayout>{page}</DogEditingLayout>
+    </Layout>
+  );
+};

@@ -30,7 +30,6 @@ export default function TabContainer({
 }) {
   const router = useRouter();
 
-
   return (
     <div
       ref={logRef}
@@ -133,7 +132,7 @@ export default function TabContainer({
             )}
           </div>
           <div className="mb-9">
-            {forms.length ? (
+            {forms?.length ? (
               forms.map((form) => {
                 return (
                   <button

@@ -171,7 +171,7 @@ export default function Table({
                     key={i}
                     onClick={() => onRowClick(row, i * (currentPage + 1))}
                     className={`${
-                      onRowClick ? "cursor-pointer hover:bg-gray-100" : ""
+                      onRowClick ? "h-14 cursor-pointer hover:bg-gray-100" : ""
                     } text-gray-600 border-b ${
                       i % 2 === 0
                         ? ALTERNATING_ROW_COLOR_1
@@ -181,7 +181,7 @@ export default function Table({
                     {cols.map((col, i) => {
                       return (
                         <td key={i}>
-                          <div className="py-3 px-6 text-sm">
+                          <div className="flex items-center h-[3.85rem] px-6 text-sm">
                             {formatColumnValue(
                               row,
                               row[col.id],

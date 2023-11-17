@@ -2,7 +2,7 @@ import Image from "next/image";
 import CALogo from "public/ca-logo.svg";
 import GoogleLogo from "public/google-logo.svg";
 import GreenWaves from "@/components/GreenWaves";
-import { signIn, signOut } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 /**
  * Log in page
@@ -31,8 +31,9 @@ export default function Login({ dogs }) {
           <div className="h-[120px] aspect-[5/2] relative">
             <Image
               src={CALogo}
+              priority={true}
               alt="Canine Assistants logo: cartoon dog on rightside of cartoon human"
-              layout="fill"
+              fill
             />
           </div>
           <h1 className="font-maven-pro font-medium pt-4 text-neutral-700 text-center">
@@ -79,7 +80,7 @@ export default function Login({ dogs }) {
               className="w-3/4 bg-white rounded-full shadow-sm text-neutral-700 mt-6 py-3 flex flex-row items-center justify-center text-md"
             >
               <div className="aspect-square h-7 relative mx-4">
-                <Image src={GoogleLogo} alt="Google G logo" layout="fill" />
+                <Image src={GoogleLogo} alt="Google G logo" fill/>
               </div>
               Sign in with Google
             </button>

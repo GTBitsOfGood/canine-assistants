@@ -61,8 +61,8 @@ export default function DogTable() {
         toast.error("Unable to pull dog data.");
         setData([]);
       })
-      .then((res) => { res.json(); setLoading(false); })
-      .then((data) => setData(data));
+      .then((res) => res.json())
+      .then((data) => { setData(data); setLoading(false); } );
   }, [searchFilter, filters]);
 
   const dogs = data ? data.data : [];

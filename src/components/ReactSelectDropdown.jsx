@@ -18,10 +18,10 @@ export default function ReactSelectDropdown({
   const getCurrValues = (field) => {
     if (isMulti) {
       return field.value?.map((indValue) =>
-        options.find((option) => option.value === indValue)
+        options?.find((option) => option.value === indValue)
       );
     } else {
-      return options.find((option) => option.value === field.value);
+      return options?.find((option) => option.value === field.value);
     }
   };
 
