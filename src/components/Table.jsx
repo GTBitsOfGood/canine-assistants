@@ -30,7 +30,9 @@ function TableColumn({ icon, subLabel, col, style }) {
       <div className="items-center inline-flex gap-3 justify-start p-1">
         <div className="h-4 w-4 relative">{icon}</div>
         <div className="flex-col items-center">
-          {subLabel && <div className="font-normal text-[.625rem] -mb-2">{subLabel}</div>}
+          {subLabel && (
+            <div className="font-normal text-[.625rem] -mb-2">{subLabel}</div>
+          )}
           <span className="text-sm">{col.label}</span>
         </div>
       </div>
@@ -40,9 +42,9 @@ function TableColumn({ icon, subLabel, col, style }) {
 
 function TableFooter({ elementsOnPage, rows, paginationFunctions }) {
   return (
-    <div className="flex  justify-between items-center px-6 py-4">
+    <div className="flex bg-white justify-between items-center px-6 py-4">
       <div className="text-sm font-medium">
-        Showing {elementsOnPage} of {rows.length} Results
+        Showing {elementsOnPage} of {rows?.length ?? 0} Results
       </div>
       <div>
         <TablePaginator paginationFunctions={paginationFunctions} />
@@ -63,17 +65,18 @@ const ALTERNATING_ROW_COLOR_2 = "bg-neutral-50";
  */
 export default function Table({
   elementsPerPage,
+  loading,
   cols,
   rows,
   filter,
   noElements,
-  onRowClick
+  onRowClick,
 }) {
   // CLamped between [1, maxPages]
   const [currentPage, setCurrentPage] = useState(0);
   const [currentElements, setCurrentElements] = useState([]);
 
-  const pageAmount = Math.ceil(rows.length / elementsPerPage);
+  const pageAmount = Math.ceil(rows?.length / elementsPerPage);
 
   const incrementPage = () => {
     setCurrentPage(Math.min(pageAmount - 1, currentPage + 1));
@@ -119,8 +122,8 @@ export default function Table({
   };
 
   const elementsToShow = rows
-    .filter((row) => row.name.toUpperCase().includes(filter.toUpperCase()))
-    .slice(
+    ?.filter((row) => row.name.toUpperCase().includes(filter.toUpperCase()))
+    ?.slice(
       currentPage * elementsPerPage,
       currentPage * elementsPerPage + elementsPerPage
     );
@@ -142,39 +145,61 @@ export default function Table({
           </TableHeader>
         </thead>
         <tbody>
-          {elementsToShow.map((row, i) => {
-            return (
-              <tr
-                key={i}
-                onClick={() => onRowClick(row, i * (currentPage + 1))}
-                className={`${onRowClick ? 'cursor-pointer hover:bg-gray-100' : ''} text-gray-600 border-b ${
-                  i % 2 === 0
-                    ? ALTERNATING_ROW_COLOR_1
-                    : ALTERNATING_ROW_COLOR_2
-                }`}
-              >
-                {cols.map((col, i) => {
-                  return (
-                    <td key={i}>
-                      <div className="py-3 px-6 text-sm">
-                        {formatColumnValue(
-                          row,
-                          row[col.id],
-                          col.type,
-                          col.customRender
-                        )}
-                      </div>
-                    </td>
-                  );
-                })}
-              </tr>
-            );
-          })}
+          {loading
+            ? Array(elementsPerPage)
+                .fill(null)
+                .map((x, i) => (
+                  <tr key={i} className={`border-b ${i % 2 === 0 ? ALTERNATING_ROW_COLOR_1 : ALTERNATING_ROW_COLOR_2}`}>
+                    {cols.map((col, i) => (
+                      <td key={i}>
+                        <div className="py-3 px-6 flex space-x-4 text-sm animate-pulse">
+                          <div className="flex-1 py-1 space-y-6">
+                            <div className="space-y-3">
+                              <div className="grid grid-cols-1 gap-4">
+                                <div className="rounded-full bg-slate-200 h-4 col-span-1"></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+                    ))}
+                  </tr>
+                ))
+            : elementsToShow.map((row, i) => {
+                return (
+                  <tr
+                    key={i}
+                    onClick={() => onRowClick(row, i * (currentPage + 1))}
+                    className={`${
+                      onRowClick ? "cursor-pointer hover:bg-gray-100" : ""
+                    } text-gray-600 border-b ${
+                      i % 2 === 0
+                        ? ALTERNATING_ROW_COLOR_1
+                        : ALTERNATING_ROW_COLOR_2
+                    }`}
+                  >
+                    {cols.map((col, i) => {
+                      return (
+                        <td key={i}>
+                          <div className="py-3 px-6 text-sm">
+                            {formatColumnValue(
+                              row,
+                              row[col.id],
+                              col.type,
+                              col.customRender
+                            )}
+                          </div>
+                        </td>
+                      );
+                    })}
+                  </tr>
+                );
+              })}
         </tbody>
         <tfoot></tfoot>
       </table>
       <TableFooter
-        elementsOnPage={elementsToShow.length}
+        elementsOnPage={elementsToShow ? elementsToShow.length : 0}
         rows={rows}
         paginationFunctions={{
           currentPage: currentPage,
@@ -186,7 +211,7 @@ export default function Table({
         }}
       />
 
-      {rows.length == 0 && noElements}
+      {rows?.length == 0 && !loading && noElements}
     </div>
   );
 }

@@ -4,6 +4,11 @@ import { SessionProvider } from "next-auth/react";
 import { Toaster } from "react-hot-toast";
 import { EditDogProvider } from "@/context/EditDogContext";
 
+export const metadata = {
+  title: "Canine Assistants",
+  description: "Canine Assistants"
+}
+
 export default function App({
   Component,
   pageProps: { session, ...pageProps },
