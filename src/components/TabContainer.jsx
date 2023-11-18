@@ -13,6 +13,7 @@ import dateutils from "@/utils/dateutils";
 
 export default function TabContainer({
   logRef,
+  setShowLogModal,
   showFormDropdown,
   forms,
   setShowFormDropdown,
