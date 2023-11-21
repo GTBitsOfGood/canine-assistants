@@ -201,7 +201,7 @@ export default function DogTable() {
   };
   return (
     <>
-      {loading && <LoadingAnimation />}
+      {<LoadingAnimation animated={false} />}
       <div className="flex-grow flex-col space-y-6 mb-8">
         <DogSearchFilterBar
           filters={filters}
