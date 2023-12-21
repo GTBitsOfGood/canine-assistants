@@ -451,6 +451,7 @@ export default function IndividualDogPage() {
         <TabContainer
           logRef={logRef}
           showLogTab={showLogTab}
+          setShowLogModal={setShowLogModal}
           logs={logs}
           dog={dog}
           appliedFilters={appliedFilters}
