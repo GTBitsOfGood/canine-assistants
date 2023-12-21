@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Table from "./Table";
-import Link from "next/link";
+import Table from "../Table/Table";
 import DogSearchFilterBar from "./DogSearchFilterBar";
 import {
   Bars3BottomLeftIcon,
@@ -10,14 +9,12 @@ import {
   MapPinIcon,
   TagIcon,
 } from "@heroicons/react/24/solid";
-import { Chip, ChipTypeStyles } from "./Chip";
-import TagDisplay from "./TagDisplay";
+import { Chip, ChipTypeStyles } from "../Chip";
+import TagDisplay from "../TagDisplay";
 import dateUtils from "@/utils/dateutils";
 import stringUtils from "@/utils/stringutils";
 import { useRouter } from "next/router";
-import { Router } from "react-router";
-import { da } from "date-fns/locale";
-import LoadingAnimation from "./LoadingAnimation";
+import LoadingAnimation from "../LoadingAnimation";
 import toast from "react-hot-toast";
 
 /**

@@ -1,6 +1,6 @@
-import DogEditingLayout from "@/components/DogEditingLayout";
+import DogEditingLayout from "@/layouts/DogEditingLayout";
 import IndividualDogPage from "./[id]";
-import Layout from "@/components/Layout";
+import Layout from "@/layouts/Layout";
 
 export default function NewDogPage({}) {
   return <IndividualDogPage />;

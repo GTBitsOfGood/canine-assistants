@@ -1,13 +1,13 @@
-import DropdownMenu, { DropdownMenuOption } from "./DropdownMenu";
-import FormField from "./FormField";
-import Log from "./Log";
-import LogSearchFilterBar from "./LogSearchFilterBar";
-import TabSection from "./TabSection";
+import DropdownMenu, { DropdownMenuOption } from "../Form/DropdownMenu";
+import FormField from "../Form/FormField";
+import Log from "../Log/Log";
+import LogSearchFilterBar from "../Log/LogSearchFilterBar";
+import TabSection from "../Tab/TabSection";
 
 import { PlusIcon } from "@heroicons/react/24/solid";
 
 import { DocumentIcon } from "@heroicons/react/24/outline";
-import TagDisplay from "./TagDisplay";
+import TagDisplay from "../TagDisplay";
 import { useRouter } from "next/router";
 import dateutils from "@/utils/dateutils";
 

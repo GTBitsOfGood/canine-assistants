@@ -19,14 +19,14 @@ import Image from "next/image";
 import maleicon from "../../../../public/maleicon.svg";
 import femaleicon from "../../../../public/femaleicon.svg";
 import dogplaceholdericon from "../../../../public/dogplaceholdericon.svg";
-import LogModal from "@/components/LogModal";
-import FormField from "@/components/FormField";
+import LogModal from "@/components/Log/LogModal";
+import FormField from "@/components/Form/FormField";
 import { useEditDog } from "@/context/EditDogContext";
-import TabContainer from "@/components/TabContainer";
+import TabContainer from "@/components/Tab/TabContainer";
 import LoadingAnimation from "@/components/LoadingAnimation";
 import { formTitleMap } from "@/utils/formUtils";
-import DogEditingLayout from "@/components/DogEditingLayout";
-import Layout from "@/components/Layout";
+import DogEditingLayout from "@/layouts/DogEditingLayout";
+import Layout from "@/layouts/Layout";
 
 /**
  *

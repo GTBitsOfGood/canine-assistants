@@ -7,7 +7,7 @@ import {
 import { StopIcon as StopIconOutline } from "@heroicons/react/24/outline";
 import { useState, useRef, useEffect } from "react";
 import useClickOff from "@/hooks/useClickOff";
-import CircleIcon from "@/components/icons/CircleIcon";
+import CircleIcon from "@/components/icons/CircleIcon"
 
 /**
  * Individual option for Dropdown menu component to be used with a map
