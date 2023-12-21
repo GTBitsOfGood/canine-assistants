@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
-import ConfirmCancelModal from "./ConfirmCancelModal";
+import ConfirmCancelModal from "../ConfirmCancelModal";
 import FormQuestion from "./FormQuestion";
 import {
   MONTHLY_PLACED_FORM,

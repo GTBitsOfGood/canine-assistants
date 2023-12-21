@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
 import { consts, logSchema } from "@/utils/consts";
-import DropdownMenu, { DropdownMenuOption } from "./DropdownMenu";
-import { Chip, ChipTypeStyles } from "./Chip";
+import DropdownMenu, { DropdownMenuOption } from "../Form/DropdownMenu";
+import { Chip, ChipTypeStyles } from "../Chip";
 
 /**
  * Modal for creating a new log

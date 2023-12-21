@@ -1,5 +1,5 @@
 import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/24/solid";
-import DropdownMenu, { DropdownMenuOption } from "./DropdownMenu";
+import DropdownMenu, { DropdownMenuOption } from "../Form/DropdownMenu";
 import { consts } from "@/utils/consts";
 import { useRouter } from "next/router";
 
