@@ -74,16 +74,16 @@ export function EditDogProvider({ children }) {
     housing: housingArray.map((enumValue) => {
       return { label: enumValue, value: enumValue };
     }),
-    parents: allDogsData.map((dog) => ({ value: dog._id, label: dog.name })),
-    caregivers: allUsers.map((user) => ({
+    parents: allDogsData?.map((dog) => ({ value: dog._id, label: dog.name })),
+    caregivers: allUsers?.map((user) => ({
       value: user._id,
       label: user.name,
     })),
-    instructors: allUsers.map((user) => ({
+    instructors: allUsers?.map((user) => ({
       value: user._id,
       label: user.name,
     })),
-    partner: allUsers.map((user) => ({
+    partner: allUsers?.map((user) => ({
       value: user._id,
       label: user.name,
     })),

@@ -21,6 +21,8 @@ export default function TablePaginator({ paginationFunctions }) {
           className={`p-2 flex justify-center items-center w-[0.5rem] h-[0.5rem]`}
         >
           <button
+            aria-label="Goto First Page"
+
             onClick={() => {
               gotoFirstPage();
             }}
@@ -35,6 +37,8 @@ export default function TablePaginator({ paginationFunctions }) {
           className={`p-2 flex justify-center items-center w-[0.5rem] h-[0.5rem]`}
         >
           <button
+            aria-label="Goto Previous Page"
+
             onClick={() => {
               decrementPage();
             }}
@@ -60,6 +64,7 @@ export default function TablePaginator({ paginationFunctions }) {
           className={`p-2 flex justify-center items-center w-[0.5rem] h-[0.5rem]`}
         >
           <button
+            aria-label="Goto Next Page"
             onClick={() => {
               incrementPage();
             }}
@@ -74,6 +79,7 @@ export default function TablePaginator({ paginationFunctions }) {
           className={`p-2 flex justify-center items-center w-[0.5rem] h-[0.5rem]`}
         >
           <button
+            aria-label="Goto Last Page"
             onClick={() => {
               gotoLastPage();
             }}

@@ -18,6 +18,7 @@ import { useRouter } from "next/router";
 import { Router } from "react-router";
 import { da } from "date-fns/locale";
 import LoadingAnimation from "./LoadingAnimation";
+import toast from "react-hot-toast";
 
 /**
  * @returns { React.ReactElement } The DogTable component
@@ -27,6 +28,8 @@ export default function DogTable() {
   const [data, setData] = useState();
 
   const [filters, setFilters] = useState({});
+
+  const [loading, setLoading] = useState(false);
 
   const router = useRouter();
 
@@ -44,6 +47,8 @@ export default function DogTable() {
 
     search.name = searchFilter;
 
+    setLoading(true);
+
     fetch("/api/dogs/search", {
       method: "POST",
       headers: {
@@ -51,9 +56,13 @@ export default function DogTable() {
       },
       body: JSON.stringify(search),
     })
-      .catch(() => setData([]))
+      .catch(() => {
+        setLoading(false);
+        toast.error("Unable to pull dog data.");
+        setData([]);
+      })
       .then((res) => res.json())
-      .then((data) => setData(data));
+      .then((data) => { setData(data); setLoading(false); } );
   }, [searchFilter, filters]);
 
   const dogs = data ? data.data : [];
@@ -192,7 +201,7 @@ export default function DogTable() {
   };
   return (
     <>
-      { !data && <LoadingAnimation/>  }
+      {<LoadingAnimation animated={false} />}
       <div className="flex-grow flex-col space-y-6 mb-8">
         <DogSearchFilterBar
           filters={filters}
@@ -203,6 +212,7 @@ export default function DogTable() {
         <TagDisplay tags={tags} removeTag={removeTag} />
 
         <Table
+          loading={loading}
           cols={dogTableColumns}
           rows={dogs}
           filter={searchFilter}
@@ -211,7 +221,7 @@ export default function DogTable() {
             router.push(`/dogs/${row["_id"]}`);
           }}
           noElements={
-            <div className=" flex justify-center bg-white py-16 text-gray-500">
+            <div className="flex justify-center bg-white py-16 text-gray-500">
               No dogs were found.
             </div>
           }
@@ -220,4 +230,3 @@ export default function DogTable() {
     </>
   );
 }
- 
