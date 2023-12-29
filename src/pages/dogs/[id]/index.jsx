@@ -1,47 +1,53 @@
 import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/router";
+
 import { useEffect, useState, useRef } from "react";
 import toast from "react-hot-toast";
-import { useRouter } from "next/router";
-import stringUtils from "@/utils/stringutils";
-import {
-  dogInformationSchema,
-  computeDefaultValues,
-  newDog,
-} from "@/utils/consts";
 
 import {
   ChevronLeftIcon,
   PencilSquareIcon,
   TrashIcon,
 } from "@heroicons/react/24/solid";
-import { Chip, ChipTypeStyles } from "@/components/Chip";
-import Image from "next/image";
+
 import maleicon from "../../../../public/maleicon.svg";
 import femaleicon from "../../../../public/femaleicon.svg";
 import dogplaceholdericon from "../../../../public/dogplaceholdericon.svg";
+
+import { Chip, ChipTypeStyles } from "@/components/Chip";
+import LoadingAnimation from "@/components/LoadingAnimation";
 import LogModal from "@/components/Log/LogModal";
 import FormField from "@/components/Form/FormField";
-import { useEditDog } from "@/context/EditDogContext";
 import TabContainer from "@/components/Tab/TabContainer";
-import LoadingAnimation from "@/components/LoadingAnimation";
-import { formTitleMap } from "@/utils/formUtils";
+
+import { useEditDog } from "@/context/EditDogContext";
 import DogEditingLayout from "@/layouts/DogEditingLayout";
 import Layout from "@/layouts/Layout";
 
+import stringUtils from "@/utils/stringutils";
+import {
+  dogInformationSchema,
+  computeDefaultValues,
+  newDog,
+} from "@/utils/consts";
+import { formTitleMap } from "@/utils/formUtils";
+
 /**
- *
+ * Displays information about specific dog including Logs and Forms
  * @returns {React.ReactElement} The individual Dog page
  */
 export default function IndividualDogPage() {
   const [data, setData] = useState();
+  const [searchQuery, setSearchQuery] = useState("");
+
   const [showLogModal, setShowLogModal] = useState(false);
   const [showLogTab, setShowLogTab] = useState(false);
-  const [showFormTab, setShowFormTab] = useState(false);
-
-  const [searchQuery, setSearchQuery] = useState("");
-  const [appliedFilters, setAppliedFilters] = useState({});
   const [logs, setLogs] = useState([]);
   const [filteredLogs, setFilteredLogs] = useState([]);
+  const [appliedFilters, setAppliedFilters] = useState({});
+
+  const [showFormTab, setShowFormTab] = useState(false);
   const [forms, setForms] = useState([]);
   const [showFormDropdown, setShowFormDropdown] = useState(false);
 
@@ -54,9 +60,11 @@ export default function IndividualDogPage() {
   const { setIsEdit, isEdit, handleSubmit, reset, getValues, errors } =
     useEditDog();
 
+  // Fetches information about dog if exists and sets correct tabs and filters if needed
   useEffect(() => {
     setShowLogTab(router.query?.showLogTab);
     setShowFormTab(router.query?.showFormTab);
+
     if (router.query?.filteredTag) {
       setAppliedFilters({
         tags: [stringUtils.upperFirstLetter(router.query?.filteredTag)],
@@ -70,6 +78,7 @@ export default function IndividualDogPage() {
           setData(data);
           reset(computeDefaultValues(data.data));
         });
+
       fetch("/api/logs/search", {
         method: "POST",
         headers: {
@@ -86,6 +95,8 @@ export default function IndividualDogPage() {
               : data.data.reverse()
           )
         );
+
+    // If dog is being created
     } else if (router.route === "/dogs/new") {
       setData({ data: newDog, success: "201" });
       setIsEdit(true);
@@ -93,6 +104,7 @@ export default function IndividualDogPage() {
     }
   }, [router.query, reset]);
 
+  // Shows correct logs if filtered
   useEffect(() => {
     // filter logs by search query
     const searchQueryFilteredLogs = logs.filter(
@@ -133,6 +145,7 @@ export default function IndividualDogPage() {
     }
   }, [logs, appliedFilters, searchQuery, router.query, logRef.current]);
 
+  // Fetches forms for the dog
   useEffect(() => {
     if (data) {
       fetch("/api/forms/search", {
@@ -259,6 +272,7 @@ export default function IndividualDogPage() {
 
   return (
     <div className={`container mx-auto order-b border-gray-300`}>
+      {/* Logic for the Log modal */}
       {showLogModal ? (
         <>
           <LogModal
@@ -268,7 +282,6 @@ export default function IndividualDogPage() {
               setShowLogModal(false);
             }}
             onSubmit={(success) => {
-              // TODO toast animation
               if (success) {
                 // update logs to display
                 fetch("/api/logs/search", {
@@ -308,6 +321,7 @@ export default function IndividualDogPage() {
           />
         </>
       ) : null}
+
       <div className="py-6 flex items-center">
         <ChevronLeftIcon className="w-4 mr-2" />
         <Link href="/dogs" className="text-lg text-secondary-text">
@@ -334,6 +348,7 @@ export default function IndividualDogPage() {
               </div>
 
               <div className="flex-col gap-4 inline-flex">
+                {/* Logic for showing information at top when not editing it */}
                 {!isEdit && (
                   <>
                     <div className="flex justify-between">
@@ -402,6 +417,8 @@ export default function IndividualDogPage() {
                   </div>
                 </div>
               </div>
+
+              {/* Logic for showing Save and Cancel buttons or Edit and Delete buttons depending on if editing */}
               {isEdit ? (
                 <div className="grow flex gap-4 justify-end items-center h-min">
                   <button
@@ -438,7 +455,6 @@ export default function IndividualDogPage() {
                     </button>
                     <div className="flex justify-center items-center space-x-2 h-min">
                       <TrashIcon className="h-5" />
-
                       <div>Delete</div>
                     </div>
                   </div>
@@ -457,9 +473,10 @@ export default function IndividualDogPage() {
           appliedFilters={appliedFilters}
           setAppliedFilters={setAppliedFilters}
           setSearchQuery={setSearchQuery}
+          showFormTab={showFormTab}
           showFormDropdown={showFormDropdown}
-          formTitleMap={formTitleMap}
           setShowFormDropdown={setShowFormDropdown}
+          formTitleMap={formTitleMap}
           forms={forms}
           tags={tags}
           removeTag={removeTag}
