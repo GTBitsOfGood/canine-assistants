@@ -293,23 +293,21 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
         <div className="flex flex-col-reverse sm:flex-row justify-end gap-[2vw]">
           <button
             onClick={() => onClose()}
-            className="w-full sm:w-32 h-10 px-4 py-2.5 bg-secondary-gray rounded border border-primary-gray justify-center items-center gap-2 flex"
+            className="button-base secondary-button flex w-full sm:w-32 h-10"
           >
-            <div className="text-primary-text text-sm font-medium">Cancel</div>
+            <div className="secondary-button-text">Cancel</div>
           </button>
           <button
             onClick={() => saveLog(logData)}
             disabled={saving}
-            className={`w-full sm:w-32 h-10 px-4 py-2.5 ${
+            className={`flex w-full sm:w-32 h-10 button-base ${
               saving
-                ? " bg-primary-gray border-tertiary-gray "
-                : " bg-ca-pink border-ca-pink-shade "
-            }  rounded border justify-center items-center gap-2 flex`}
+                ? " disabled-button"
+                : " primary-button"
+            }`}
           >
             <div
-              className={`${
-                saving ? "text-tertiary-gray " : "text-foreground "
-              } text-base font-medium`}
+              className={`${ saving ? "disabled-button-text" : "primary-button-text" }`}
             >
               Save
             </div>
