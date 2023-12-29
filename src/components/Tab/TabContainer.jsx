@@ -1,22 +1,28 @@
+import { useRouter } from "next/router";
+
+import { PlusIcon } from "@heroicons/react/24/solid";
+import { DocumentIcon } from "@heroicons/react/24/outline";
+
+import dateutils from "@/utils/dateutils";
+
 import DropdownMenu, { DropdownMenuOption } from "../Form/DropdownMenu";
 import FormField from "../Form/FormField";
 import Log from "../Log/Log";
 import LogSearchFilterBar from "../Log/LogSearchFilterBar";
 import TabSection from "../Tab/TabSection";
-
-import { PlusIcon } from "@heroicons/react/24/solid";
-
-import { DocumentIcon } from "@heroicons/react/24/outline";
 import TagDisplay from "../TagDisplay";
-import { useRouter } from "next/router";
-import dateutils from "@/utils/dateutils";
 
+/**
+ * Displays information within each tab on the Individual Dog page including Logs and Forms
+ * @param {*}
+ */
 export default function TabContainer({
   logRef,
   setShowLogModal,
+  showFormTab,
   showFormDropdown,
-  forms,
   setShowFormDropdown,
+  forms,
   formTitleMap,
   dog,
   logs,
@@ -36,7 +42,7 @@ export default function TabContainer({
       ref={logRef}
       className="mt-8 mb-8 shadow-xl rounded-lg text-md w-full text-left relative overflow-hidden bg-foreground p-8"
     >
-      <TabSection defaultTab={showLogTab ? "logs" : "information"}>
+      <TabSection defaultTab={ showLogTab ? "logs" : (showFormTab ? "forms" : "information") }>
         <div label="information">
           <div className="w-full grid grid-cols-3 gap-16">
             {Object.keys(dogInformationSchema).map((category) => (
