@@ -67,9 +67,19 @@ export default function IndividualDogPage() {
       fetch(`/api/dogs/${router.query.id}`)
         .then((res) => res.json())
         .then((data) => {
+          if (!data.success) {
+            router.push("/dogs")
+            toast.error("Dog does not exist.")
+            return;
+          }
           setData(data);
           reset(computeDefaultValues(data.data));
-        });
+        })
+        .catch(() => {
+          router.push("/dogs")
+          toast.error("Unable to pull dog data.");
+          return;
+      })
       fetch("/api/logs/search", {
         method: "POST",
         headers: {

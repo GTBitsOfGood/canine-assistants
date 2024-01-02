@@ -74,7 +74,6 @@ export default function Table({
 }) {
   // CLamped between [1, maxPages]
   const [currentPage, setCurrentPage] = useState(0);
-  const [currentElements, setCurrentElements] = useState([]);
 
   const pageAmount = Math.ceil(rows?.length / elementsPerPage);
 
