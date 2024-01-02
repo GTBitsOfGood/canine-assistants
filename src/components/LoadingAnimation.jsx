@@ -13,14 +13,15 @@ const loadingTextMessages = [
   "Harmonizing bits and barks...",
 ];
 
-export default function LoadingAnimation({ animated = true, loadText }) {
+export default function LoadingAnimation({ animated = true, loadText = true }) {
   const [loadingText, setLoadingText] = useState("");
   
   useEffect(() => {
-    const element = Math.floor(Math.random() * loadingTextMessages.length);
-
-    setLoadingText(loadingTextMessages[element]);
-  }, [])
+    if (loadText) {
+      const element = Math.floor(Math.random() * loadingTextMessages.length);
+      setLoadingText(loadingTextMessages[element]);
+    }
+  }, [loadText])
 
   return (
     <>

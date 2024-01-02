@@ -26,7 +26,7 @@ export default function DogTable() {
 
   const [filters, setFilters] = useState({});
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const router = useRouter();
 
@@ -43,8 +43,6 @@ export default function DogTable() {
     }
 
     search.name = searchFilter;
-
-    setLoading(true);
 
     fetch("/api/dogs/search", {
       method: "POST",
@@ -198,7 +196,7 @@ export default function DogTable() {
   };
   return (
     <>
-      {<LoadingAnimation animated={false} />}
+      {<LoadingAnimation animated={false} loadText={false} />}
       <div className="flex-grow flex-col space-y-6 mb-8">
         <DogSearchFilterBar
           filters={filters}
