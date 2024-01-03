@@ -34,7 +34,10 @@ export function EditDogProvider({ children }) {
     fetch(`/api/dogs?fields=name,_id`)
       .then((res) => res.json())
       .then((data) => {
-        setAllDogsData(data.data);
+        console.log(data, "askvnalskvnasdlkvnadslvkads");
+        if (data.success === true) {
+          setAllDogsData(data.data);
+        }
       });
   }, []);
 
@@ -42,7 +45,9 @@ export function EditDogProvider({ children }) {
     fetch(`/api/users`)
       .then((res) => res.json())
       .then((data) => {
-        setAllUsers(data.data);
+        if (data.success) {
+          setAllUsers(data.data);
+        }
       });
   }, []);
 

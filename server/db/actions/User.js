@@ -55,7 +55,6 @@ export async function updateUser(userId, userData) {
   }
 }
 
-
 export async function verifyUser(email, password) {
   try {
     await dbConnect();
@@ -68,8 +67,8 @@ export async function verifyUser(email, password) {
   if (!user) {
     return {
       status: 404,
-      message: "Unable to find user with specified email address."
-    }
+      message: "Unable to find user with specified email address.",
+    };
   }
 
   let userObj = user.toObject();
@@ -77,21 +76,24 @@ export async function verifyUser(email, password) {
   if (userObj.passwordHash === undefined) {
     return {
       status: 400,
-      message: "Invalid user."
-    }
+      message: "Invalid user.",
+    };
   }
 
-  const matchedUser = await bcrypt.compare(password + email, userObj.passwordHash);
+  const matchedUser = await bcrypt.compare(
+    password + email,
+    userObj.passwordHash,
+  );
 
   if (matchedUser) {
     return {
       status: 200,
-      message: user
-    }
+      message: user,
+    };
   } else {
     return {
       status: 400,
-      message: "Invalid username or password."
-    }
+      message: "Invalid username or password.",
+    };
   }
 }
