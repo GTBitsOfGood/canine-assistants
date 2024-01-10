@@ -84,4 +84,24 @@ input[type="text"]:focus {
   .disabled-button-text {
     @apply text-tertiary-gray text-base font-medium;
   }
+
+  .textbox-base {
+    @apply px-4 py-2.5 bg-foreground rounded border text-secondary-text text-lg font-normal focus:border-primary-text focus:ring-0;
+  }
+
+  .textbox-border {
+    @apply border-primary-gray;
+  }
+
+  .textbox-error {
+    @apply border-error-red;
+  }
+
+  .text-input {
+    @apply h-11;
+  }
+
+  .text-area {
+    @apply resize-none sm:resize-y min-h-[44px] max-h-[1000px] h-[220px];
+  }
 }

@@ -102,20 +102,18 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
       >
         {/* TODO add behavior for dragging downwards to close the modal on mobile */}
         <div className="sm:hidden w-8 h-1 opacity-40 bg-zinc-500 rounded-[100px] mx-auto mb-[12px]" />
-        <h1 className="mb-[3vh]"> Add a log</h1>
-        <h2 className="h-[5vh]">
+        <h1 className="mb-6"> Add a log</h1>
+        <h2 className="h-10 align-middle">
           Title<span className="text-error-red">*</span>
         </h2>
-        <div className="mb-[3vh]">
+        <div className="mb-6">
           <input
             value={logData.title}
             onChange={(event) => {
               setLogData({ ...logData, title: event.target.value });
               setErrors({ ...errors, title: false });
             }}
-            className={`rounded bg-foreground border ${
-              errors.title ? "border-error-red" : "border-primary-gray"
-            } focus:border-primary-gray focus:border text-secondary-text text-lg font-normal w-full h-11 px-4 py-2.5`}
+            className={`text-input textbox-base ${ errors.title ? "textbox-error" : "textbox-border" } w-full`}
           ></input>
           {errors.title ? (
             <div className="flex items-center gap-[5px] text-black text-lg font-normal">
@@ -127,7 +125,7 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
           ) : null}
         </div>
 
-        <h2 className="h-[5vh]">
+        <h2 className="h-10 align-middle">
           Tags<span className="text-error-red">*</span>
         </h2>
         <div className="flex flex-col sm:flex-row gap-[3vw]">
@@ -266,19 +264,17 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
           </div>
         </div>
 
-        <h2 className="h-[5vh]">
+        <h2 className="h-10 align-middle">
           Log Description<span className="text-error-red">*</span>
         </h2>
-        <div className="mb-[3vh]">
+        <div className="mb-6">
           <textarea
             value={logData.description}
             onChange={(event) => {
               setLogData({ ...logData, description: event.target.value });
               setErrors({ ...errors, description: false });
             }}
-            className={`rounded bg-foreground border ${
-              errors.description ? "border-error-red" : "border-primary-gray"
-            } text-secondary-text text-lg font-normal w-full h-[25vh] min-h-[44px] max-h-[25vh] resize-none sm:resize-y px-4 py-2.5`}
+            className={`text-area textbox-base ${ errors.description ? "textbox-error" : "textbox-border" } w-full`}
           ></textarea>
           {errors.description ? (
             <div className="flex items-center gap-[5px] text-black text-lg font-normal">
