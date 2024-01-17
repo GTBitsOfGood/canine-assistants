@@ -18,6 +18,7 @@ import { consts } from "@/utils/consts";
 import { ChevronLeftIcon } from "@heroicons/react/24/solid";
 import { formActions, formMap } from "@/utils/formUtils";
 import dateutils from "@/utils/dateutils";
+import Custom404 from "@/pages/404";
 
 export default function Form({ mode }) {
   const [showCancelModal, setShowCancelModal] = useState(false);
@@ -58,8 +59,10 @@ export default function Form({ mode }) {
     }
   }, [ router ]);
 
-  if (!router.query || !dog || dog === undefined || !dog.success || (mode != formActions.NEW && (!router.query || !formData || formData == undefined))) {
+  if (!router.query || !dog || dog === undefined || (mode != formActions.NEW && (!router.query || !formData || formData == undefined))) {
     return <div>loading</div>;
+  } else if (!dog.success) {
+    return <Custom404 />;
   }
 
   const formType = formMap[router.query.type]

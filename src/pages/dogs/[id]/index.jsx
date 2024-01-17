@@ -27,6 +27,7 @@ import LoadingAnimation from "@/components/LoadingAnimation";
 import { formTitleMap } from "@/utils/formUtils";
 import DogEditingLayout from "@/layouts/DogEditingLayout";
 import Layout from "@/layouts/Layout";
+import Custom404 from "@/pages/404";
 
 /**
  *
@@ -134,7 +135,7 @@ export default function IndividualDogPage() {
   }, [logs, appliedFilters, searchQuery, router.query, logRef.current]);
 
   useEffect(() => {
-    if (data) {
+    if (data && data.success) {
       fetch("/api/forms/search", {
         method: "POST",
         headers: {
@@ -150,8 +151,10 @@ export default function IndividualDogPage() {
     }
   }, [data]);
 
-  if (!data || !data.success) {
+  if (!data) {
     return <LoadingAnimation />;
+  } else if (!data.success) {
+    return <Custom404 />
   }
 
   const dog = data.data;
