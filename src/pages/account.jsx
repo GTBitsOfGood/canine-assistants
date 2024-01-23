@@ -186,7 +186,7 @@ export default function Account() {
 
   function deactivateModal() {
     let body = {};
-    body.role = consts.userRoleArray[3];
+    body.role = consts.userRoleArray[2];
     fetch("/api/users/" + userId, {
       method: "PATCH",
       headers: {

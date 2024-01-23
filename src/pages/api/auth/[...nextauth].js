@@ -85,7 +85,7 @@ export const authOptions = {
         name: message.user.name,
         email: message.user.email,
         image: message.user.image,
-        role: "Volunteer/Recipient", // TODO: Default string shouldn't be hardcoded and instead moved somewhere else
+        role: "User", // TODO: Default string shouldn't be hardcoded and instead moved somewhere else
       };
 
       const user = new User(newUserRecord);
@@ -96,7 +96,7 @@ export const authOptions = {
   callbacks: {
     async signIn({ user }) {
       if (!user.role) {
-        user.role = "Volunteer";
+        user.role = "User";
       }
 
       return true;
