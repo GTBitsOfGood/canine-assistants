@@ -23,7 +23,7 @@ const consts = {
   concernArray: ["None", "Moderate", "High"],
   locationArray: ["Facility 1", "Facility 2", "Placed"],
   roleArray: ["Service", "Companion"],
-  userRoleArray: ["Admin", "Instructor", "Volunteer/Recipient", "Inactive"],
+  userRoleArray: ["Admin", "User", "Inactive"],
   leashArray: ["Leashed", "Off-leash"],
   relationshipArray: [
     "Sibling",
@@ -183,7 +183,7 @@ const dogInformationSchema = {
     },
     "Birth Order": {
       key: "birthOrder",
-    }
+    },
   },
   ["Family"]: {
     "Litter Size": {
@@ -261,7 +261,7 @@ const computeDefaultValues = (dog) => {
     supplementalFeeding: dog?.supplementalFeeding,
     deliveryInformation: dog?.deliveryInformation, // right now set to natural, figure out default value later
     birthOrder: dog?.birthOrder,
-    
+
     // Weight
     weight: dog?.weight,
 
@@ -319,7 +319,7 @@ const computeDefaultValues = (dog) => {
  */
 const userUpdateSchema = z.object({
   name: z.string(),
-  role: z.enum(["Admin", "Instructor", "Volunteer/Recipient", "Inactive"]),
+  role: z.enum(consts.userRoleArray),
 });
 
 /**
@@ -370,29 +370,18 @@ const formSchema = z.object({
   ),
 });
 
-
 /**
  * New Dog
  */
 const newDog = {
   name: "New Dog",
   gender: "Female",
-  behavior:
-    consts.concernArray[0],
-  medical:
-    consts.concernArray[0],
-  other:
-    consts.concernArray[0],
+  behavior: consts.concernArray[0],
+  medical: consts.concernArray[0],
+  other: consts.concernArray[0],
   dateOfBirth: new Date("2019-03-15"),
-  maternalDemeanor: [
-    1,
-    1,
-    1
-  ],
-  location:
-    consts.locationArray[
-      consts.locationArray[0]
-    ],
+  maternalDemeanor: [1, 1, 1],
+  location: consts.locationArray[consts.locationArray[0]],
 };
 
 export {
@@ -405,5 +394,5 @@ export {
   formUpdateSchema,
   dogInformationSchema,
   computeDefaultValues,
-  newDog
+  newDog,
 };

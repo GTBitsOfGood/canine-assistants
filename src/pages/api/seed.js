@@ -80,7 +80,7 @@ const users = [
     email: "test@gmail.com",
     image: "",
     emailVerified: false,
-    role: "Instructor",
+    role: "User",
   },
 ];
 const logs = [
