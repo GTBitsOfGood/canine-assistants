@@ -5,7 +5,9 @@
 @tailwind components;
 @tailwind utilities;
 
-input[type='text']:focus { box-shadow: none; }
+input[type="text"]:focus {
+  box-shadow: none;
+}
 
 @layer base {
   * {
@@ -44,5 +46,62 @@ input[type='text']:focus { box-shadow: none; }
 
   .modal-shadow-mobile {
     box-shadow: 2px -2px 3px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  .button-base {
+    @apply rounded border px-4 py-2.5 items-center justify-center;
+  }
+
+  .primary-button {
+    @apply bg-ca-pink border-ca-pink-shade;
+  }
+
+  .secondary-button {
+    @apply bg-foreground border-primary-gray;
+  }
+
+  .tertiary-button {
+    @apply bg-secondary-gray border-primary-gray;
+  }
+
+  .disabled-button {
+    @apply bg-primary-gray border-tertiary-gray;
+  }
+
+  .primary-button-text {
+    @apply text-foreground text-base font-medium;
+  }
+
+  .primary-button-plus-icon {
+    @apply text-foreground h-4 w-4 relative;
+  }
+
+  /* Also used for tertiary button text */
+  .secondary-button-text {
+    @apply text-primary-text text-base font-medium;
+  }
+
+  .disabled-button-text {
+    @apply text-tertiary-gray text-base font-medium;
+  }
+
+  .textbox-base {
+    @apply px-4 py-2.5 bg-foreground rounded border text-secondary-text text-lg font-normal focus:border-primary-text focus:ring-0;
+  }
+
+  .textbox-border {
+    @apply border-primary-gray;
+  }
+
+  .textbox-error {
+    @apply border-error-red;
+  }
+
+  .text-input {
+    @apply h-11;
+  }
+
+  .text-area {
+    @apply resize-none sm:resize-y min-h-[44px] max-h-[1000px] h-[220px];
   }
 }
