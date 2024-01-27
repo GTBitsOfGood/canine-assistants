@@ -42,12 +42,12 @@ export default function IndividualDogPage() {
   const [searchQuery, setSearchQuery] = useState("");
 
   const [showLogModal, setShowLogModal] = useState(false);
-  const [showLogTab, setShowLogTab] = useState(false);
+  const [showLogTab, setShowLogTab] = useState(true);
   const [logs, setLogs] = useState([]);
   const [filteredLogs, setFilteredLogs] = useState([]);
   const [appliedFilters, setAppliedFilters] = useState({});
 
-  const [showFormTab, setShowFormTab] = useState(false);
+  const [showFormTab, setShowFormTab] = useState(true);
   const [forms, setForms] = useState([]);
   const [showFormDropdown, setShowFormDropdown] = useState(false);
 
@@ -59,12 +59,19 @@ export default function IndividualDogPage() {
 
   const { setIsEdit, isEdit, handleSubmit, reset, getValues, errors } =
     useEditDog();
+  
+  useEffect(() => {
+    if (isEdit === true) {
+      setShowFormTab(false)
+      setShowLogTab(false)
+    } else {
+      setShowFormTab(true)
+      setShowLogTab
+    }
+  }, [isEdit])
 
   // Fetches information about dog if exists and sets correct tabs and filters if needed
   useEffect(() => {
-    setShowLogTab(router.query?.showLogTab);
-    setShowFormTab(router.query?.showFormTab);
-
     if (router.query?.filteredTag) {
       setAppliedFilters({
         tags: [stringUtils.upperFirstLetter(router.query?.filteredTag)],

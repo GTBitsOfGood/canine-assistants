@@ -42,7 +42,7 @@ export default function TabContainer({
       ref={logRef}
       className="mt-8 mb-8 shadow-xl rounded-lg text-md w-full text-left relative overflow-hidden bg-foreground p-8"
     >
-      <TabSection defaultTab={ showLogTab ? "logs" : (showFormTab ? "forms" : "information") }>
+      {(showLogTab || showFormTab) ? <TabSection defaultTab="information">
         <div label="information">
           <div className="w-full grid grid-cols-3 gap-16">
             {Object.keys(dogInformationSchema).map((category) => (
@@ -65,6 +65,7 @@ export default function TabContainer({
             ))}
           </div>
         </div>
+
         <div label="logs">
           <div className="flex-grow flex-col space-y-4">
             <LogSearchFilterBar
@@ -173,7 +174,30 @@ export default function TabContainer({
             )}
           </div>
         </div>
-      </TabSection>
-    </div>
+      </TabSection> :
+
+      <div label="information">
+        <div className="w-full grid grid-cols-3 gap-16">
+          {Object.keys(dogInformationSchema).map((category) => (
+            <div className="col" key={category}>
+              <div className="flex-col space-y-4 text-lg">
+                <div className="text-xl">
+                  <strong>{category}</strong>
+                </div>
+
+                {Object.keys(dogInformationSchema[category]).map((col) => {
+                  const { key: formKey } =
+                    dogInformationSchema[category][col];
+
+                  return (
+                    <FormField key={col} keyLabel={formKey} label={col} />
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div> }
+    </div> 
   );
 }
