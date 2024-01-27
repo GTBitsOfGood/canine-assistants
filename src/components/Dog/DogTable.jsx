@@ -10,6 +10,7 @@ import {
   TagIcon,
 } from "@heroicons/react/24/solid";
 import { Chip, ChipTypeStyles } from "../Chip";
+import Hover from "../Hover";
 import TagDisplay from "../TagDisplay";
 import dateUtils from "@/utils/dateutils";
 import stringUtils from "@/utils/stringutils";
@@ -151,7 +152,7 @@ export default function DogTable() {
         return (
           <div className="flex justify-left gap-2">
             {rowData.recentLogs.map((log) =>
-              log.tags.map((tag, i) => (
+              log.tags.map((tag, i) => i < 2 && (
                 <Chip
                   link={
                     "dogs/" +
@@ -165,6 +166,11 @@ export default function DogTable() {
                 />
               ))
             )}
+            { rowData.recentLogs[0] !== undefined && rowData.recentLogs[0].tags.length > 2 ? 
+              <Hover data={rowData.recentLogs[0].tags.slice(2)} />
+               : 
+              <></>
+            }
           </div>
         );
       },
