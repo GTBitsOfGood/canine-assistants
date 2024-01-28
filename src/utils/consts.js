@@ -326,7 +326,7 @@ const userRegistrationSchema = z.object({
   firstName: z.string().min(1).trim(),
   lastName: z.string().min(1).trim(),
   email: z.string().email(),
-  password: z.string().min(8),
+  password: z.string().min(1), // change min to 8 later
 });
 
 /**
