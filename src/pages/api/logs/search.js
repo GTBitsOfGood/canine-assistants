@@ -19,7 +19,7 @@ export default async function handler(req, res) {
   const {
     success,
     error,
-    data: filter,
+    data: search,
   } = logSearch.safeParse(req.body ? req.body : {});
 
   if (req.method == "POST") {
@@ -29,6 +29,35 @@ export default async function handler(req, res) {
         message: "Invalid parameter: " + Object.keys(error.format())[1],
       });
       return;
+    }
+
+    const topic = Object.values(search.filters?.topic || {});
+    const severity = Object.values(search.filters?.severity || {});
+    const tags = Object.values(search.filters?.tags || {});
+
+    const filter = {
+      dog: search.dog,
+      $and: [
+        {
+          $or: [
+            { title: { $regex: search.query, $options: "i" } },
+            { description: { $regex: search.query, $options: "i" } },
+          ],
+        },
+      ],
+    };
+    if (topic.length > 0) {
+      filter.topic = { $in: topic };
+    }
+    if (severity.length > 0) {
+      filter.severity = { $in: severity };
+    }
+    if (tags.length > 0) {
+      filter.$and.push({
+        $or: tags.map((tag) => {
+          tags: tag;
+        }),
+      });
     }
 
     try {
