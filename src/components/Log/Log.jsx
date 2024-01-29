@@ -1,8 +1,17 @@
 import TagDisplay from "@/components/TagDisplay";
-import { useState } from "react";
+import { useState, useEffect} from "react";
+import { TrashIcon } from "@heroicons/react/20/solid";
+import { PencilSquareIcon } from "@heroicons/react/24/solid";
+import DeleteLogModal from "./DeleteLogModal";
+import toast from "react-hot-toast";
+
+
 
 export default function Log({ log }) {
   const [showMore, setShowMore] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showToast, setShowToast] = useState(true);
+  const [isDeleted, setIsDeleted] = useState(false);
   const createdAt = new Date(log.createdAt);
 
   const tags = [
@@ -13,8 +22,70 @@ export default function Log({ log }) {
     }),
   ];
 
+  useEffect(() => {
+    if (isDeleted && showToast) {
+      toast.custom((t) => (
+        <div
+          className={`h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-ca-green text-white text-lg font-normal
+          ${t.visible ? "animate-enter" : "animate-leave"}`}
+        >
+          <span className="font-bold">{log.title}</span>&nbsp;
+          <span>was successfully deleted</span>
+        </div>
+      ));
+      setShowToast(false); 
+    }
+  }, [isDeleted, showToast]);
+  
+
+  const handleDeleteClick = () => {
+    setShowDeleteModal(true);
+  };
+
+  if (isDeleted) {
+   return null;
+  }
+  
+
   return (
     <div className="bg-primary-background p-4 my-4 w-full">
+
+  {showDeleteModal ? 
+        
+          <DeleteLogModal
+            logId={log._id}
+            title = {log.title}
+            onSubmit={() => {
+              setShowDeleteModal(false);
+              setIsDeleted(true);
+              
+            }}
+            onClose={() => {
+              setShowDeleteModal(false);
+            }}>
+
+          </DeleteLogModal>
+          :
+          <></>}
+
+            <div className="grow flex gap-4 justify-end">
+        <button
+          type="button"
+          className="flex justify-center space-x-2 h-min"
+          // onClick={}
+        >
+          <PencilSquareIcon className="h-5" />
+          Edit
+        </button>
+        <button
+          type="button"
+          className="flex justify-center space-x-2"
+          onClick={handleDeleteClick}
+        >
+          <TrashIcon className="h-5" />
+          Delete
+        </button>
+      </div>
       <div className="flex justify-between">
         <div className="flex flex-col">
           <h2>{log.title}</h2>
