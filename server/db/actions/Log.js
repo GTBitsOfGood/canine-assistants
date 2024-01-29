@@ -9,7 +9,13 @@ export async function getLogs(filter = {}) {
     throw new Error("Unable to get logs at this time, please try again");
   }
 
-  return Log.find(filter).populate("author");
+  return Log.find({
+    dog: filter.dog,
+    $or: [
+      { title: { $regex: filter.query, $options: "i" } },
+      { description: { $regex: filter.query, $options: "i" } },
+    ],
+  }).populate("author");
 }
 
 export async function getLogById(id) {

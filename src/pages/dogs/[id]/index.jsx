@@ -56,6 +56,7 @@ export default function IndividualDogPage() {
 
   let search = {};
   search.dog = router.query.id;
+  search.query = "test";
 
   const { setIsEdit, isEdit, handleSubmit, reset, getValues, errors } =
     useEditDog();

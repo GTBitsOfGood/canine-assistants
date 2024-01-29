@@ -9,6 +9,7 @@ const logParams = z.object({
   dog: z.string().refine((id) => {
     return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
   }),
+  query: z.string(),
 });
 
 const logSearch = logParams.partial();
