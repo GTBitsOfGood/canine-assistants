@@ -9,13 +9,36 @@ export async function getLogs(filter = {}) {
     throw new Error("Unable to get logs at this time, please try again");
   }
 
-  return Log.find({
+  const topic = Object.values(filter.filters?.topic || {});
+  const severity = Object.values(filter.filters?.severity || {});
+  const tags = Object.values(filter.filters?.tags || {});
+
+  const dbQuery = {
     dog: filter.dog,
-    $or: [
-      { title: { $regex: filter.query, $options: "i" } },
-      { description: { $regex: filter.query, $options: "i" } },
+    $and: [
+      {
+        $or: [
+          { title: { $regex: filter.query, $options: "i" } },
+          { description: { $regex: filter.query, $options: "i" } },
+        ],
+      },
     ],
-  }).populate("author");
+  };
+  if (topic.length > 0) {
+    dbQuery.topic = { $in: topic };
+  }
+  if (severity.length > 0) {
+    dbQuery.severity = { $in: severity };
+  }
+  if (tags.length > 0) {
+    dbQuery.$and.push({
+      $or: tags.map((tag) => {
+        tags: tag;
+      }),
+    });
+  }
+
+  return Log.find(dbQuery).populate("author");
 }
 
 export async function getLogById(id) {

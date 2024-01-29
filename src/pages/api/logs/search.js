@@ -10,6 +10,7 @@ const logParams = z.object({
     return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
   }),
   query: z.string(),
+  filters: z.any(),
 });
 
 const logSearch = logParams.partial();
