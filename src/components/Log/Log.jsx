@@ -4,15 +4,16 @@ import { TrashIcon } from "@heroicons/react/20/solid";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import DeleteLogModal from "./DeleteLogModal";
 import toast from "react-hot-toast";
+import LogModal from "./LogModal";
 
 
-
-export default function Log({ log }) {
+export default function Log({ log, user, onEdit, onDelete }) {
   const [showMore, setShowMore] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [showToast, setShowToast] = useState(true);
-  const [isDeleted, setIsDeleted] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const createdAt = new Date(log.createdAt);
+
+  const isAuthor = user._id == log.author._id;
 
   const tags = [
     { group: "severity", label: log.severity },
@@ -22,44 +23,80 @@ export default function Log({ log }) {
     }),
   ];
 
-  useEffect(() => {
-    if (isDeleted && showToast) {
-      toast.custom((t) => (
-        <div
-          className={`h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-ca-green text-white text-lg font-normal
-          ${t.visible ? "animate-enter" : "animate-leave"}`}
-        >
-          <span className="font-bold">{log.title}</span>&nbsp;
-          <span>was successfully deleted</span>
-        </div>
-      ));
-      setShowToast(false); 
-    }
-  }, [isDeleted, showToast]);
-  
-
   const handleDeleteClick = () => {
     setShowDeleteModal(true);
   };
 
-  if (isDeleted) {
-   return null;
-  }
+  const handleEditClick = () => {
+    setShowEditModal(true);
+
+  };
+
   
 
   return (
     <div className="bg-primary-background p-4 my-4 w-full">
+
+{showEditModal ? (
+        <>
+          <LogModal
+            userId={user._id}
+            logId = {log._id}
+            dogId = {log.dog}
+            onClose={() => {
+              setShowEditModal(false);
+            }}
+            onSubmit={(success) => {
+              onEdit(success)
+              if (success) {
+                toast.custom((t) => (
+                  <div
+                    className={`h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-ca-green text-white text-lg font-normal
+                    ${t.visible ? "animate-enter" : "animate-leave"}`}
+                  >
+                    <span className="font-bold">{log.title}</span>&nbsp;
+                    <span>was successfully edited.</span>
+                  </div>
+                ));
+              } else {
+                toast.custom(() => (
+                  <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
+                    There was a problem saving the log, please try again.
+                  </div>
+                ));
+              }
+            }}
+          />
+        </>
+      ) : null}
 
   {showDeleteModal ? 
         
           <DeleteLogModal
             logId={log._id}
             title = {log.title}
-            onSubmit={() => {
+            onSubmit={(success) => {
               setShowDeleteModal(false);
-              setIsDeleted(true);
-              
+              onDelete(true);
+              if (success) {
+                toast.custom((t) => (
+                  <div
+                    className={`h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-ca-green text-white text-lg font-normal
+                    ${t.visible ? "animate-enter" : "animate-leave"}`}
+                  >
+                    <span className="font-bold">{log.title}</span>&nbsp;
+                    <span>was successfully deleted.</span>
+                  </div>
+                ));
+              } else {
+                toast.custom(() => (
+                  <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
+                    There was a problem deleted the log, please try again.
+                  </div>
+                ));
+              }
             }}
+              
             onClose={() => {
               setShowDeleteModal(false);
             }}>
@@ -67,12 +104,12 @@ export default function Log({ log }) {
           </DeleteLogModal>
           :
           <></>}
-
+      {isAuthor &&(
             <div className="grow flex gap-4 justify-end">
         <button
           type="button"
           className="flex justify-center space-x-2 h-min"
-          // onClick={}
+          onClick={handleEditClick}
         >
           <PencilSquareIcon className="h-5" />
           Edit
@@ -86,6 +123,7 @@ export default function Log({ log }) {
           Delete
         </button>
       </div>
+      )}
       <div className="flex justify-between">
         <div className="flex flex-col">
           <h2>{log.title}</h2>
