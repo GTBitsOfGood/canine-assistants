@@ -33,6 +33,8 @@ export default function LogModal({ dogId, userId, logId, onClose, onSubmit }) {
   const [retrievedLog, setRetrievedLog] = useState(false);
   const [fetchedDogId, setFetchedDogId] = useState(null);
 
+
+  // For log editting, gets the indices of the topic, concern, and tags
   const topicMapping = consts.topicArray.reduce((acc, topic, index) => {
     acc[topic] = index;
     return acc;
@@ -59,6 +61,7 @@ export default function LogModal({ dogId, userId, logId, onClose, onSubmit }) {
   };
   
 
+  // Updates the logData state with the log data from the database when editing
   useEffect(() => {
 
     if (logId && !retrievedLog) {
