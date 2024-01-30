@@ -66,7 +66,7 @@ export default function IndividualDogPage() {
       setShowLogTab(false)
     } else {
       setShowFormTab(true)
-      setShowLogTab
+      setShowLogTab(true)
     }
   }, [isEdit])
 
