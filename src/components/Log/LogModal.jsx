@@ -12,7 +12,7 @@ import { Chip, ChipTypeStyles } from "../Chip";
  * @param {*} onSubmit function that is called when the user tries to save the log
  * @returns the modal component
  */
-export default function LogModal({ dogId, userId, logId, onClose, onSubmit }) {
+export default function LogModal({ dogId, userId, log, onClose, onSubmit }) {
   const [logData, setLogData] = useState({
     title: "",
     topicSet: {},
@@ -70,27 +70,24 @@ export default function LogModal({ dogId, userId, logId, onClose, onSubmit }) {
   // Updates the logData state with the log data from the database when editing
   useEffect(() => {
 
-    if (logId && !retrievedLog) {
+    if (log && !retrievedLog) {
+      console.log(log)
       
-      fetch("/api/logs/" + logId)
-        .then((res) => res.json())
-        .then((data) => {
-          
-          const topicIndex = topicMapping[data.data.topic];
-          const concernIndex = concernMapping[data.data.severity];
-          const tagsObject = convertTagsArrayToObject(data.data.tags); 
+          const topicIndex = topicMapping[log.topic];
+          const concernIndex = concernMapping[log.severity];
+          const tagsObject = convertTagsArrayToObject(log.tags); 
 
           setLogData({
             ...logData,
-            title: data.data.title,
-            topicSet: { [topicIndex]: data.data.topic },
-            severitySet:{ [concernIndex]: data.data.severity },
+            title: log.title,
+            topicSet: { [topicIndex]: log.topic },
+            severitySet:{ [concernIndex]: log.severity },
             tagsSet: tagsObject,
-            description: data.data.description,
+            description: log.description,
           });
-          setFetchedDogId(data.data.dog);
+          setFetchedDogId(log.dog);
           setRetrievedLog(true);
-        });
+        
     }
 
     const scrollToBottom = () => {
@@ -107,7 +104,7 @@ export default function LogModal({ dogId, userId, logId, onClose, onSubmit }) {
   });
 
   const handleSubmit = (logData) => {
-    if (logId) {
+    if (log) {
       editLog(logData);
     } else {
       saveLog(logData);
@@ -176,7 +173,7 @@ export default function LogModal({ dogId, userId, logId, onClose, onSubmit }) {
 
     if (success) {
       setSaving(true);
-      fetch("/api/logs/" + logId, {
+      fetch("/api/logs/" + log._id, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -225,7 +222,7 @@ export default function LogModal({ dogId, userId, logId, onClose, onSubmit }) {
       >
         {/* TODO add behavior for dragging downwards to close the modal on mobile */}
         <div className="sm:hidden w-8 h-1 opacity-40 bg-zinc-500 rounded-[100px] mx-auto mb-[12px]" />
-        {logId ? (<h1 className="mb-6"> Edit a log</h1>) : (<h1 className="mb-6"> Add a log</h1>)}
+        {log ? (<h1 className="mb-6"> Edit a log</h1>) : (<h1 className="mb-6"> Add a log</h1>)}
         <h2 className="h-10 align-middle">
           Title<span className="text-error-red">*</span>
         </h2>

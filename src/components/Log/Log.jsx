@@ -12,8 +12,17 @@ export default function Log({ log, user, onEdit, onDelete }) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const createdAt = new Date(log.createdAt);
+  const [isAuthor, setIsAuthor] = useState(false);
+  const [authorName, setAuthorName] = useState("N/A");
 
-  const isAuthor = user._id == log.author._id;
+  useEffect(() => {
+  if (log.author) {
+    setIsAuthor(user._id == log.author._id);
+    setAuthorName(log.author.name);
+  }
+});
+
+  
 
   const tags = [
     { group: "severity", label: log.severity },
@@ -41,7 +50,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
         <>
           <LogModal
             userId={user._id}
-            logId = {log._id}
+            log = {log}
             dogId = {log.dog}
             onClose={() => {
               setShowEditModal(false);
@@ -108,18 +117,18 @@ export default function Log({ log, user, onEdit, onDelete }) {
             <div className="grow flex gap-4 justify-end">
         <button
           type="button"
-          className="flex justify-center space-x-2 h-min"
+          className="flex justify-center items-center"
           onClick={handleEditClick}
         >
-          <PencilSquareIcon className="h-5" />
+          <PencilSquareIcon className="h-5 mr-1" />
           Edit
         </button>
         <button
           type="button"
-          className="flex justify-center space-x-2"
+          className="flex justify-center items-center"
           onClick={handleDeleteClick}
         >
-          <TrashIcon className="h-5" />
+          <TrashIcon className="h-5 mr-1" />
           Delete
         </button>
       </div>
@@ -129,7 +138,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
           <h2>{log.title}</h2>
           <div className="flex flex-row">
             <p className="text-secondary-text font-regular w-fit">
-              {"Author: " + log.author.name}
+              {"Author: " + authorName}
             </p>
             <p className="text-secondary-text font-regular mx-5 w-fit">
               {"Date: " + createdAt.toLocaleDateString()}

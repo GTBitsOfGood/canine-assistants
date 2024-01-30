@@ -43,14 +43,6 @@ export default function TabContainer({
   const { data: session } = useSession();
   const user = session?.user;
 
-  const handleEditSuccess = (success) => {
-    if (success) {
-      // Logic to refresh logs
-      // This could involve re-fetching the logs from the server, or invoking a state update
-    }
-  };
-  
-
   return (
     <div
       ref={logRef}
