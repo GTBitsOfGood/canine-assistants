@@ -411,10 +411,11 @@ export default function LogModal({ dogId, userId, logId, onClose, onSubmit }) {
         </div>
 
         <div className="flex flex-col-reverse sm:flex-row justify-end gap-[2vw]">
-          <button
-            onClick={handleCancelClick}
-            className="button-base secondary-button flex w-full sm:w-32 h-10"
-          >
+            <button
+              type="button"
+              onClick={handleCancelClick}
+              className="button-base secondary-button flex w-full sm:w-32 h-10"
+            >
             <div className="secondary-button-text" >
               Cancel
               </div>
