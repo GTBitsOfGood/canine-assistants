@@ -322,6 +322,13 @@ const userUpdateSchema = z.object({
   role: z.enum(consts.userRoleArray),
 });
 
+const userRegistrationSchema = z.object({
+  firstName: z.string().min(1).trim(),
+  lastName: z.string().min(1).trim(),
+  email: z.string().email(),
+  password: z.string().min(1), // change min to 8 later
+});
+
 /**
  * Zod object for validating request bodies for logs
  */
@@ -390,6 +397,7 @@ export {
   dogSchema,
   logSchema,
   userUpdateSchema,
+  userRegistrationSchema,
   formSchema,
   formUpdateSchema,
   dogInformationSchema,
