@@ -71,7 +71,6 @@ export default function LogModal({ dogId, userId, log, onClose, onSubmit }) {
   useEffect(() => {
 
     if (log && !retrievedLog) {
-      console.log(log)
       
           const topicIndex = topicMapping[log.topic];
           const concernIndex = concernMapping[log.severity];
