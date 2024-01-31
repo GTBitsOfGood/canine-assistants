@@ -35,11 +35,6 @@ export default function LogModal({ dogId, userId, log, onClose, onSubmit }) {
 
   const [showCancelConfirmModal, setShowCancelConfirmModal] = useState(false);
 
-  const handleCancelClick = () => {
-    setShowCancelConfirmModal(true);
-  };
-  
-
   // For log editting, gets the indices of the topic, concern, and tags
   const topicMapping = consts.topicArray.reduce((acc, topic, index) => {
     acc[topic] = index;
@@ -66,7 +61,6 @@ export default function LogModal({ dogId, userId, log, onClose, onSubmit }) {
     }, {});
   };
   
-
   // Updates the logData state with the log data from the database when editing
   useEffect(() => {
 
@@ -409,7 +403,7 @@ export default function LogModal({ dogId, userId, log, onClose, onSubmit }) {
         <div className="flex flex-col-reverse sm:flex-row justify-end gap-[2vw]">
             <button
               type="button"
-              onClick={handleCancelClick}
+              onClick={onClose}
               className="button-base secondary-button flex w-full sm:w-32 h-10"
             >
             <div className="secondary-button-text" >
@@ -434,50 +428,7 @@ export default function LogModal({ dogId, userId, log, onClose, onSubmit }) {
         </div>
       </div>
     </div>
-    {showCancelConfirmModal && (
-      <div className="fixed inset-0 z-10 bg-gray-500 bg-opacity-50 backdrop-blur-sm">
-      <div className="flex items-end sm:items-center justify-center h-full">
-  
-      <div
-      
-        className="modal-shadow-mobile sm:modal-shadow bg-white sm:bg-secondary-background px-5 sm:px-12 py-4 sm:py-9 w-full sm:w-auto h-[25%] sm:h-auto sm:min-h-[27vh] sm:max-h-[50vh] z-10 overflow-auto rounded-t-[50px] sm:rounded-t-none"
-      >
-        <div className="sm:hidden w-8 h-1 opacity-40 bg-zinc-500 rounded-[100px] mx-auto mb-[12px]" />
-        <h1 className="mb-[3vh]"> Cancel Changes?</h1>
-        <p className="text-secondary-text font-regular w-fit mb-3">
-        Select &quot;Confirm&quot; to cancel all edits to the log. Any changes made will not be saved. Select &quot;Cancel&quot; to continue editing.
-        </p>
 
-
-        <div className="flex flex-col-reverse sm:flex-row justify-end gap-[2vw]">
-          <button
-            onClick={() => setShowCancelConfirmModal(false)}
-            className="w-full sm:w-32 h-10 px-4 py-2.5 bg-secondary-gray rounded border border-primary-gray justify-center items-center gap-2 flex"
-          >
-            <div className="text-primary-text text-sm font-medium">Cancel</div>
-          </button>
-          <button
-            onClick={() => onClose()}
-            disabled={saving}
-            className={`w-full sm:w-32 h-10 px-4 py-2.5 ${
-              saving
-                ? " bg-primary-gray border-tertiary-gray "
-                : " bg-ca-pink border-ca-pink-shade "
-            }  rounded border justify-center items-center gap-2 flex`}
-          >
-            <div
-              className={`${
-                saving ? "text-tertiary-gray " : "text-foreground "
-              } text-base font-medium`}
-            >
-              Confirm
-            </div>
-          </button>
-        </div>
-      </div>
-    </div>
-    </div>
-)}
     </>
   );
   
