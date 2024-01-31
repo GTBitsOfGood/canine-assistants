@@ -43,10 +43,10 @@ export default function Navbar() {
 
       {/* TODO: udpate links with User Management page */}
       <Link
-        href="/"
+        href="/users"
         className={
           "flex flex-col justify-center w-fit h-full border-b-4 border-ca-green " +
-          (currentPage == "/" ? "border-opacity-100" : "border-opacity-0")
+          (currentPage == "/users" ? "border-opacity-100" : "border-opacity-0")
         }
         onClick={() => setCurrentPage(router.pathname)}
       >
