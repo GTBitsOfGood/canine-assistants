@@ -1,6 +1,7 @@
 import { getLogs } from "../../../../server/db/actions/Log";
 import { z } from "zod";
 import { Types } from "mongoose";
+import { consts } from "@/utils/consts";
 
 const logParams = z.object({
   author: z.string().refine((id) => {
@@ -9,8 +10,14 @@ const logParams = z.object({
   dog: z.string().refine((id) => {
     return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
   }),
-  query: z.string(),
-  filters: z.any(),
+  query: z.string().optional(),
+  filters: z
+    .object({
+      topic: z.enum(consts.topicArray).optional(),
+      severity: z.enum(consts.concernArray).optional(),
+      tags: z.array(z.enum(consts.tagsArray)).optional(),
+    })
+    .optional(),
 });
 
 const logSearch = logParams.partial();
