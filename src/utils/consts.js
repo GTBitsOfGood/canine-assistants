@@ -23,7 +23,7 @@ const consts = {
   concernArray: ["None", "Moderate", "High"],
   locationArray: ["Facility 1", "Facility 2", "Placed"],
   roleArray: ["Service", "Companion"],
-  userRoleArray: ["Admin", "User", "Inactive"],
+  userRoleArray: ["Admin", "User"],
   leashArray: ["Leashed", "Off-leash"],
   relationshipArray: [
     "Sibling",

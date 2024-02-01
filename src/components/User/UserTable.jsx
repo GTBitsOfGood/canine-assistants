@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from "react";
 import Table from "../Table/Table";
 import UserSearchBar from "./UserSearchBar";
+import DropdownMenu, { DropdownMenuOption } from "../Form/DropdownMenu";
 import {
   Bars3BottomLeftIcon,
   IdentificationIcon,
   AtSymbolIcon,
   ClipboardIcon,
 } from "@heroicons/react/24/solid";
-import { Chip, ChipTypeStyles } from "../Chip";
-import dateUtils from "@/utils/dateutils";
-import stringUtils from "@/utils/stringutils";
 import { useRouter } from "next/router";
 import LoadingAnimation from "../LoadingAnimation";
 import toast from "react-hot-toast";
+import { consts } from "@/utils/consts";
 
 /**
  * @returns { React.ReactElement } The UserTable component
@@ -76,8 +75,24 @@ export default function UserTable() {
       id: "accessLevel",
       label: "Access Level",
       icon: <IdentificationIcon />,
-      customRender: (row, name) => {
-        return <span>{name}</span>;
+      customRender: (rowData) => {
+        return (
+          <DropdownMenu
+            label={rowData.role}
+            singleSelect={true}
+            props={{
+              singleSelect: true
+            }}
+          >
+            {consts.userRoleArray.map((concern, index) => (
+              <DropdownMenuOption
+                key={index}
+                label={concern}
+                name={concern.replaceAll(" ", "").toLowerCase()}
+              />
+            ))}
+          </DropdownMenu>
+        );
       },
     },
     {
@@ -103,7 +118,7 @@ export default function UserTable() {
           filter={searchFilter}
           elementsPerPage={10}
           onRowClick={(row, rowIndex) => {
-            router.push(`/users/${row["_id"]}`);
+           // router.push(`/users/${row["_id"]}`);
           }}
           noElements={
             <div className="flex justify-center bg-white py-16 text-gray-500">
