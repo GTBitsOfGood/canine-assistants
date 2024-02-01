@@ -10,13 +10,14 @@ import {
   TagIcon,
 } from "@heroicons/react/24/solid";
 import { Chip, ChipTypeStyles } from "../Chip";
-import Hover from "../Hover";
 import TagDisplay from "../TagDisplay";
 import dateUtils from "@/utils/dateutils";
 import stringUtils from "@/utils/stringutils";
 import { useRouter } from "next/router";
 import LoadingAnimation from "../LoadingAnimation";
 import toast from "react-hot-toast";
+import { Tooltip } from 'react-tooltip'
+
 
 /**
  * @returns { React.ReactElement } The DogTable component
@@ -167,7 +168,22 @@ export default function DogTable() {
               ))
             )}
             { rowData.recentLogs[0] !== undefined && rowData.recentLogs[0].tags.length > 2 ? 
-              <Hover data={rowData.recentLogs[0].tags.slice(2)} />
+              <div className="flex items-center">
+                <span data-tooltip-id={rowData._id}>+{rowData.recentLogs[0].tags.length - 2}</span>
+                <Tooltip 
+                  place = "bottom"
+                  content = {rowData.recentLogs[0].tags.slice(2).map((tag, i) => {
+                    if (i === rowData.recentLogs[0].tags.slice(2).length - 1) {
+                    return (tag)
+                    } else {
+                    return (tag + ", ")
+                    }
+                  })}
+                  id={rowData._id}
+                  style={{ borderRadius: "1", color: "#121212", fontFamily: "Maven Pro", padding: "4px 7px", backgroundColor: "#FFF"}}
+                  border= "1px solid #D4D4D4"
+                />
+              </div>
                : 
               <></>
             }
