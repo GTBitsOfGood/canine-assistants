@@ -56,7 +56,6 @@ export default function IndividualDogPage() {
 
   let search = {};
   search.dog = router.query.id;
-  search.query = "";
 
   /**
    * Searches logs using current search query and filters if filtering is requested.

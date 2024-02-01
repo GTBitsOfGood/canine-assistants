@@ -31,19 +31,21 @@ export default async function handler(req, res) {
       return;
     }
 
+    const query = search.query || "";
     const topic = Object.values(search.filters?.topic || {});
     const severity = Object.values(search.filters?.severity || {});
     const tags = Object.values(search.filters?.tags || {});
 
+    /* 
+    note: a log can have multiple tags, so we check if ANY of the 
+    applied tag filters match ANY of the log tags; for other types, it 
+    must be an exact match.
+    */
     const filter = {
       dog: search.dog,
-      $and: [
-        {
-          $or: [
-            { title: { $regex: search.query, $options: "i" } },
-            { description: { $regex: search.query, $options: "i" } },
-          ],
-        },
+      $or: [
+        { title: { $regex: query, $options: "i" } },
+        { description: { $regex: query, $options: "i" } },
       ],
     };
     if (topic.length > 0) {
@@ -53,11 +55,11 @@ export default async function handler(req, res) {
       filter.severity = { $in: severity };
     }
     if (tags.length > 0) {
-      filter.$and.push({
-        $or: tags.map((tag) => {
-          tags: tag;
-        }),
-      });
+      filter.tags = {
+        $elemMatch: {
+          $in: tags,
+        },
+      };
     }
 
     try {
