@@ -16,7 +16,7 @@ import stringUtils from "@/utils/stringutils";
 import { useRouter } from "next/router";
 import LoadingAnimation from "../LoadingAnimation";
 import toast from "react-hot-toast";
-import { Tooltip } from 'react-tooltip'
+import Hover from "../Hover"
 
 
 /**
@@ -151,43 +151,7 @@ export default function DogTable() {
       icon: <TagIcon />,
       customRender: (rowData) => {
         return (
-          <div className="flex justify-left gap-2">
-            {rowData.recentLogs.map((log) =>
-              log.tags.map((tag, i) => i < 2 && (
-                <Chip
-                  link={
-                    "dogs/" +
-                    rowData._id +
-                    "?showLogTab=true&filteredTag=" +
-                    tag
-                  }
-                  key={i}
-                  label={tag}
-                  type={ChipTypeStyles.Tag}
-                />
-              ))
-            )}
-            { rowData.recentLogs[0] !== undefined && rowData.recentLogs[0].tags.length > 2 ? 
-              <div className="flex items-center">
-                <span data-tooltip-id={rowData._id}>+{rowData.recentLogs[0].tags.length - 2}</span>
-                <Tooltip 
-                  place = "bottom"
-                  content = {rowData.recentLogs[0].tags.slice(2).map((tag, i) => {
-                    if (i === rowData.recentLogs[0].tags.slice(2).length - 1) {
-                    return (tag)
-                    } else {
-                    return (tag + ", ")
-                    }
-                  })}
-                  id={rowData._id}
-                  style={{ borderRadius: "1", color: "#121212", fontFamily: "Maven Pro", padding: "4px 7px", backgroundColor: "#FFF"}}
-                  border= "1px solid #D4D4D4"
-                />
-              </div>
-               : 
-              <></>
-            }
-          </div>
+          <Hover data = {rowData} />
         );
       },
     },
