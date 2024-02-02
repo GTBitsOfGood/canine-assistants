@@ -120,7 +120,6 @@ export default function Table({
 
     return value;
   };
-  console.log("DATA: " + currentPage)
   const elementsToShow = rows
     ?.filter((row) => row.name.toUpperCase().includes(filter.toUpperCase()))
     ?.slice(

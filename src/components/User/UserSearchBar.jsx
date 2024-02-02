@@ -1,5 +1,4 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
-import { consts } from "@/utils/consts";
 import { useRouter } from "next/router";
 
 export default function UserSearchBar({ setSearch }) {

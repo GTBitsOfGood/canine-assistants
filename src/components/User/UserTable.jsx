@@ -12,15 +12,21 @@ import { useRouter } from "next/router";
 import LoadingAnimation from "../LoadingAnimation";
 import toast from "react-hot-toast";
 import { consts } from "@/utils/consts";
+import ToggleSwitch from "./ToggleSwitch"
+import ConfirmationModal from './ConfirmationModal';
 
 /**
  * @returns { React.ReactElement } The UserTable component
  */
 export default function UserTable() {
   const [searchFilter, setSearchFilter] = useState("");
-  const [data, setData] = useState([]);
+  const [users, setUsers] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedUser, setSelectedUser] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [userToDeactivate, setUserToDeactivate] = useState(null);
+  const [selectedName, setSelectedName] = useState("");
 
   const router = useRouter();
   useEffect(() => {
@@ -32,24 +38,77 @@ export default function UserTable() {
     })
       .then((res) => res.json())
       .then((data) => {
-        setData(data);
-        setFilteredData(data);
+        setUsers(data?.data);
         setLoading(false);
       });
     
   }, []);
 
   useEffect(() => {
-    const filtered = Array.isArray(data)
-      ? data.filter(user =>
+    const filtered = Array.isArray(users)
+      ? users.filter(user =>
           user.name.toUpperCase().includes(searchFilter.toUpperCase())
         )
       : [];
     setFilteredData(filtered);
-  }, [searchFilter, data]);
+  }, [searchFilter, users]);
 
-  const users = data ? data.data : [];
-  console.log(users)
+  const handleToggle = (userId, currentStatus) => {
+    if (currentStatus === "Active") {
+      setUserToDeactivate(userId);
+      setIsModalOpen(true);
+    } else {
+      updateUserStatus(userId, "Active");
+    }
+  };
+  const updateUserStatus = async (userId, status) => {
+    try {
+      const response = await fetch(`/api/users/${userId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ role: status }),
+      });
+      if (!response.ok) throw new Error("Failed to update the user role");
+      const updatedUsers = users.map(user => 
+        user._id === userId ? { ...user, role: status } : user
+      );
+      setUsers(updatedUsers);
+      toast.success(`User ${status === "Active" ? "reactivated" : "deactivated"} successfully`);
+    } catch (error) {
+      console.error(error);
+      toast.error(`Error updating user role: ${error.message}`);
+    } finally {
+      setIsModalOpen(false);
+      setUserToDeactivate(null);
+    }
+  };
+
+  const applyRole = async (role) => {  
+    if (role[0] !== "Admin" && role[1] !== "User") {
+      toast.error("Invalid user ID or role");
+      return;
+    }
+    const roleValue = role[0] == "Admin" ? role[0] : role[1];
+    try {
+      const response = await fetch(`/api/users/${selectedUser}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({role : roleValue}),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to update the user role");
+      }
+      
+      toast.success('User role updated successfully');
+    } catch (error) {
+      console.error(error);
+      toast.error(`Error updating user role: ${error.message}`);
+    }
+  };
+
   /**
    * The specified columns for the UserTable
    */
@@ -59,16 +118,16 @@ export default function UserTable() {
       id: "name",
       label: "Name",
       icon: <Bars3BottomLeftIcon />,
-      customRender: (row, name) => {
-        return <span>{name}</span>;
+      customRender: (rowData) => {
+        return <span>{rowData.name}</span>;
       },
     },
     {
       id: "email",
       label: "Email",
       icon: <AtSymbolIcon />,
-      customRender: (row, name) => {
-        return <span>{name}</span>;
+      customRender: (rowData) => {
+        return <span>{rowData.email}</span>;
       },
     },
     {
@@ -78,28 +137,34 @@ export default function UserTable() {
       customRender: (rowData) => {
         return (
           <DropdownMenu
+            submitFilters={(selectedRole) => {
+              applyRole(selectedRole)
+              rowData.role=selectedRole[0] == "Admin" ? "Admin" : "User"
+            }}
             label={rowData.role}
-            singleSelect={true}
             props={{
-              singleSelect: true
+              singleSelect: true,
+              filterText: "Apply Role"
             }}
           >
-            {consts.userRoleArray.map((concern, index) => (
+            {consts.userAccessArray.map((roles, index) => (
               <DropdownMenuOption
                 key={index}
-                label={concern}
-                name={concern.replaceAll(" ", "").toLowerCase()}
+                label={roles}
+                name={roles}
               />
             ))}
           </DropdownMenu>
         );
       },
     },
-    {
+   {
       id: "status",
       label: "Status",
       icon: <ClipboardIcon />,
-      customRender: (row, name) => <span>{name}</span>,
+      customRender: (rowData) => {
+        return <ToggleSwitch isActive={rowData.role !== "Inactive"} onToggle={() => handleToggle(rowData._id, rowData.role !== "Inactive" ? "Active" : "Inactive")} />;
+      },
     },
 
     
@@ -118,7 +183,7 @@ export default function UserTable() {
           filter={searchFilter}
           elementsPerPage={10}
           onRowClick={(row, rowIndex) => {
-           // router.push(`/users/${row["_id"]}`);
+            setSelectedUser(row["_id"])
           }}
           noElements={
             <div className="flex justify-center bg-white py-16 text-gray-500">
@@ -127,6 +192,13 @@ export default function UserTable() {
           }
         />
       </div>
+      <ConfirmationModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onConfirm={() => updateUserStatus(userToDeactivate, "Inactive")}
+        userName={selectedName}
+        message={"Select “Confirm” to deactivate Akash and remove all access to the Canine Assistants platform. This action can only be undone by an administrator."}
+      />
     </>
   );
 }

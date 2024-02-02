@@ -207,9 +207,9 @@ export default function DropdownMenu({
         })}
 
         {props?.hideFilterButton ? (
-          <div className="justify-center w-full pt-1 pb-4 whitespace-nowrap bg-white border-x border-b rounded-b border-neutral-300 items-center gap-2 inline-flex"></div>
+          <div className="z-50 justify-center w-full pt-1 pb-4 whitespace-nowrap bg-white border-x border-b rounded-b border-neutral-300 items-center gap-2 inline-flex"></div>
         ) : (
-          <div className="justify-center w-full px-3 pt-2 pb-4 whitespace-nowrap bg-white border-x border-b rounded-b border-neutral-300 items-center gap-2 inline-flex">
+          <div className="z-50justify-center w-full px-3 pt-2 pb-4 whitespace-nowrap bg-white border-x border-b rounded-b border-neutral-300 items-center gap-2 inline-flex">
               <button
                 type="button"
                 onClick={() => handleSubmit()}
