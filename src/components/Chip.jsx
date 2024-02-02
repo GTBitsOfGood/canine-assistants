@@ -16,6 +16,7 @@ export function Chip({ label, type, link = "", styles, innerStyles }) {
   const handleClick = (event) => {
     if (link.length > 0) {
       event.preventDefault();
+      event.stopPropagation()
       router.push(link);
     }
   };
