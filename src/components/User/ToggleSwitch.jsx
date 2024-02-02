@@ -1,5 +1,12 @@
 import React from 'react';
 
+/**
+ * Active/Inactive toggle switch for User managment dashboard
+ * @param {*} isActive state representing if the user is set to active or inactive
+ * @param {*} onToggle action to be performed on toggle
+ * @returns HTML toggle switch component
+ */
+
 const ToggleSwitch = ({ isActive, onToggle }) => {
   return (
     <label className="flex items-center cursor-pointer">

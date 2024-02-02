@@ -1,8 +1,11 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
-import { useRouter } from "next/router";
 
+/**
+ * UserSearchBar component to be used in user management page
+ * @param {*} setSearch function to set search parameter
+ * @returns HTML user search bar 
+ */
 export default function UserSearchBar({ setSearch }) {
-  const router = useRouter();
 
   return (
     <div className="flex items-center gap-4">

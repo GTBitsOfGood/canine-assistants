@@ -18,6 +18,7 @@ import ConfirmationModal from './ConfirmationModal';
 /**
  * @returns { React.ReactElement } The UserTable component
  */
+
 export default function UserTable() {
   const [searchFilter, setSearchFilter] = useState("");
   const [users, setUsers] = useState([]);
@@ -28,8 +29,9 @@ export default function UserTable() {
   const [userToDeactivate, setUserToDeactivate] = useState(null);
   const [selectedName, setSelectedName] = useState("");
 
-  const router = useRouter();
-  useEffect(() => {
+  const router = useRouter();  // Router to direct to user/[id] when specified user is pressed on
+
+  useEffect(() => {  // Pull all user data
     fetch("/api/users")
     .catch(() => {
       setLoading(false);
@@ -44,7 +46,7 @@ export default function UserTable() {
     
   }, []);
 
-  useEffect(() => {
+  useEffect(() => {  // Searching functionality
     const filtered = Array.isArray(users)
       ? users.filter(user =>
           user.name.toUpperCase().includes(searchFilter.toUpperCase())
@@ -53,7 +55,7 @@ export default function UserTable() {
     setFilteredData(filtered);
   }, [searchFilter, users]);
 
-  const handleToggle = (userId, currentStatus) => {
+  const handleToggle = (userId, currentStatus) => {  // Active/Inactive toggle handling, opens confirmation modal
     if (currentStatus === "Active") {
       setUserToDeactivate(userId);
       setIsModalOpen(true);
@@ -61,7 +63,8 @@ export default function UserTable() {
       updateUserStatus(userId, "Active");
     }
   };
-  const updateUserStatus = async (userId, status) => {
+
+  const updateUserStatus = async (userId, status) => {  // PATCH sent when active/inactive toggle pressed
     try {
       const response = await fetch(`/api/users/${userId}`, {
         method: 'PATCH',
@@ -83,7 +86,7 @@ export default function UserTable() {
     }
   };
 
-  const applyRole = async (role) => {  
+  const applyRole = async (role) => {  // PATCH sent when role is changed through dropdown menu
     if (role[0] !== "Admin" && role[1] !== "User") {
       toast.error("Invalid user ID or role");
       return;
@@ -119,7 +122,7 @@ export default function UserTable() {
       label: "Name",
       icon: <Bars3BottomLeftIcon />,
       customRender: (rowData) => {
-        return <span>{rowData.name}</span>;
+        return <span className="mx-3">{rowData.name}</span>;
       },
     },
     {
@@ -140,6 +143,7 @@ export default function UserTable() {
             submitFilters={(selectedRole) => {
               applyRole(selectedRole)
               rowData.role=selectedRole[0] == "Admin" ? "Admin" : "User"
+              window.location.reload();  // temporary fix: reload page whenever a role is assigned, to update role in UI
             }}
             label={rowData.role}
             props={{
@@ -163,11 +167,16 @@ export default function UserTable() {
       label: "Status",
       icon: <ClipboardIcon />,
       customRender: (rowData) => {
-        return <ToggleSwitch isActive={rowData.role !== "Inactive"} onToggle={() => handleToggle(rowData._id, rowData.role !== "Inactive" ? "Active" : "Inactive")} />;
+        return (
+          <>
+            <ToggleSwitch isActive={rowData.role !== "Inactive"} onToggle={() => handleToggle(rowData._id, rowData.role !== "Inactive" ? "Active" : "Inactive")} />
+            <div className="mx-3">
+              {rowData.role === "Inactive" ? "Inactive" : "Active"}
+            </div>
+          </>
+        );
       },
     },
-
-    
   ];
   
   return(
@@ -176,7 +185,7 @@ export default function UserTable() {
       <div className="flex-grow flex-col space-y-6 mb-8">
         <UserSearchBar setSearch={setSearchFilter} />
 
-        <Table
+        <Table  // Data comes in as "users" state
           loading={loading}
           cols={userTableColumns}
           rows={users}
@@ -184,6 +193,7 @@ export default function UserTable() {
           elementsPerPage={10}
           onRowClick={(row, rowIndex) => {
             setSelectedUser(row["_id"])
+            //supposed to direct to users/[id] as well, but buggy with accessing dropdown or toggle features
           }}
           noElements={
             <div className="flex justify-center bg-white py-16 text-gray-500">
@@ -192,12 +202,12 @@ export default function UserTable() {
           }
         />
       </div>
-      <ConfirmationModal
+      <ConfirmationModal  // Prompted when user intends to deactivate a row
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onConfirm={() => updateUserStatus(userToDeactivate, "Inactive")}
         userName={selectedName}
-        message={"Select “Confirm” to deactivate Akash and remove all access to the Canine Assistants platform. This action can only be undone by an administrator."}
+        message={"Select “Confirm” to deactivate Akash and remove all access to the Canine Assistants platform. This action can only be undone by an administrator."} // change this later to specify which user
       />
     </>
   );

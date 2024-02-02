@@ -1,5 +1,14 @@
 import React from 'react';
 
+/**
+ * A modal component that displays a confirmation dialog.
+ *
+ * @param {boolean} isOpen - Determines if the modal is currently open.
+ * @param {Function} onClose - A callback function that is called when the modal should be closed.
+ * @param {Function} onConfirm - A callback function that is called when the confirmation action is taken.
+ * @param {string} message - The message to be displayed in the modal.
+ * @returns {JSX.Element | null} The component renders a modal with the provided message and buttons to confirm or cancel.
+ */
 const ConfirmationModal = ({ isOpen, onClose, onConfirm, message }) => {
   if (!isOpen) return null;
 
