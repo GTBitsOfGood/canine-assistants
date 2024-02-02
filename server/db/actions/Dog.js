@@ -2,6 +2,7 @@ import dbConnect from "../dbConnect";
 import Dog from "../models/Dog";
 import Log from "../models/Log";
 import User from "../models/User";
+import { deleteImage } from "./Image";
 
 export async function getDogs(filter = {}, fields = null) {
   try {
@@ -109,6 +110,8 @@ export async function updateDog(dogId, dogData) {
 
   await validateDogData(dogData);
 
+  // TODO if updating the image, upload new image and delete old one
+
   try {
     return await Dog.findByIdAndUpdate({ _id: dogId }, dogData, {
       returnDocument: "after",
@@ -127,8 +130,16 @@ export async function updateDog(dogId, dogData) {
 export async function deleteDog(id) {
   try {
     await dbConnect();
+
     await Log.deleteMany({ dog: id });
-    return await Dog.findByIdAndDelete({ _id: id });
+
+    const dog = await Dog.findByIdAndDelete({ _id: id });
+
+    if (dog.image && dog.image != "") {
+      await deleteImage(id, dog.image);
+    }
+
+    return dog;
   } catch (e) {
     throw new Error("Unable to delete dog");
   }
