@@ -8,7 +8,7 @@ What does this PR change and why?
 
 - [ ] Requirements have been implemented
 - [ ] Acceptance criteria is met
-- [ ] Database schema [docs](https://www.notion.so/gtbitsofgood/Database-Schema-Docs-a841a38d02db4428a7cdc85dcbb8a35c?pvs=4) have been updated or are not necessary
+- [ ] Database schema [docs](https://www.notion.so/gtbitsofgood/Database-Schema-Docs-fd377ded10b54890b65fd99025488cee?pvs=4) have been updated or are not necessary
 - [ ] Relevant reviewers (EM) have been assigned to this PR
 
 ### Critical Changes

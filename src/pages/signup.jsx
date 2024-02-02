@@ -1,8 +1,8 @@
 import Image from "next/image";
 import CALogo from "public/ca-logo.svg";
-import GoogleLogo from "public/google-logo.svg";
 import GreenWaves from "@/components/GreenWaves";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 
 /**
  * Sign up page
@@ -13,15 +13,27 @@ export default function Signup({ dogs }) {
   const onSubmitForm = async (event) => {
     event.preventDefault(true);
 
-    const response = await signIn("credentials", {
-      redirect: false,
+    let res = await fetch("/api/users/register", {
+      body: JSON.stringify({
+        firstName: event.target.firstName.value,
+        lastName: event.target.lastName.value,
+        email: event.target.email.value,
+        password: event.target.password.value,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+    });
+    res = await res.json();
+    if (!res.success) {
+      return;
+    }
+    await signIn('credentials', {
       email: event.target.email.value,
       password: event.target.password.value,
+      callbackUrl: '/dogs'
     });
-
-    if (response.error) {
-      console.log(response.error);
-    }
   };
 
   return (
@@ -39,7 +51,59 @@ export default function Signup({ dogs }) {
             Educating the dogs who change the world
           </h1>
         </div>
+        <form onSubmit={onSubmitForm} className="w-[25rem] pt-8 flex-col items-center justify-center">
+           <label className="text-sm text-neutral-500" htmlFor="firstName">
+            First Name
+          </label>
+          <input
+            id="firstName"
+            placeholder="First Name"
+            type="text"
+            className="p-1 bg-secondary-background mb-4 w-full border-b-[2px]"
+          ></input>
+           <label className="text-sm text-neutral-500" htmlFor="lastName">
+            Last Name
+          </label>
+          <input
+            id="lastName"
+            placeholder="Last Name"
+            type="text"
+            className="p-1 bg-secondary-background mb-4 w-full border-b-[2px]"
+          ></input>
+          <label className="text-sm text-neutral-500" htmlFor="email">
+            Email address
+          </label>
+          <input
+            id="email"
+            placeholder="Email"
+            type="email"
+            className="p-1 bg-secondary-background mb-4 w-full border-b-[2px]"
+          ></input>
 
+          <label className="text-sm text-neutral-500" htmlFor="email">
+            Password
+          </label>
+          <input
+            id="password"
+            placeholder="Password"
+            type="password"
+            className="p-1 bg-secondary-background w-full border-b-[2px]"
+          ></input>
+
+          <div className="flex pt-8 w-full justify-center">
+            <button className="bg-[#00886d] text-white shadow-sm rounded-full items-center mt-2 py-3 w-3/4">
+              Sign Up
+            </button>
+          </div>
+
+          <div className="pt-6 mx-10 border-b-2 leading-[0.1rem] text-center">
+            <span className="bg-secondary-background px-7 text-neutral-500">
+              or
+            </span>
+          </div>
+          <div className="w-full flex justify-center">
+          </div>
+        </form>
         <div>
           <p className="mt-6 text-neutral-500 text-md text-center">
             Already have an account?{" "}
