@@ -76,7 +76,7 @@ export default function Table({
   const [currentPage, setCurrentPage] = useState(0);
   const [currentElements, setCurrentElements] = useState([]);
 
-  const pageAmount = Math.ceil(rows?.length / elementsPerPage);
+  const pageAmount = Math.ceil(( rows?.length || 0 )/ elementsPerPage);
 
   const incrementPage = () => {
     setCurrentPage(Math.min(pageAmount - 1, currentPage + 1));
@@ -120,7 +120,6 @@ export default function Table({
 
     return value;
   };
-
   const elementsToShow = rows
     ?.filter((row) => row.name.toUpperCase().includes(filter.toUpperCase()))
     ?.slice(
