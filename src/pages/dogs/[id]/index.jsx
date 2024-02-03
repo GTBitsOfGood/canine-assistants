@@ -9,6 +9,7 @@ import {
   ChevronLeftIcon,
   PencilSquareIcon,
   TrashIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/solid";
 
 import maleicon from "../../../../public/maleicon.svg";
@@ -32,6 +33,7 @@ import {
   newDog,
 } from "@/utils/consts";
 import { formTitleMap } from "@/utils/formUtils";
+import ImageUpload from "@/components/ImageUpload";
 
 /**
  * Displays information about specific dog including Logs and Forms
@@ -267,7 +269,7 @@ export default function IndividualDogPage() {
 
     setAppliedFilters(newFilters);
   };
-
+  
   // TODO add listener for if user clicks out of dropdown menu to turn back into button
 
   return (
@@ -332,20 +334,41 @@ export default function IndividualDogPage() {
       <form onSubmit={handleSubmit(onEditSubmit)}>
         <div className="flex gap-8">
           {dog.image ? (
-            <Image alt="Dog" width={350} height={350} src={dog.image} />
+            <div className="relative flex items-center">
+              <Image alt="Dog" width={350} height={350} src={dog.image} />
+              {isEdit && (
+                <div className="z-10 absolute bottom-10 flex justify-around items-center w-full ">
+                  <label className=" text-lg py-1 px-3 cursor-pointer bg-white  border border-solid border-primary-gray border-2 font-medium rounded-md flex justify-around items-center">
+                    <h3>Delete</h3>
+                    <XMarkIcon className="h-8 w-8 pl-3"/>
+                    <button onClick={() => {dog.image = ""}}></button>
+                  </label>
+                  <ImageUpload title={"Replace Image"} />
+                </div>
+              )}
+            </div>
           ) : (
             <>
               <div
                 className={
-                  "w-[350px] h-[350px] bg-primary-gray flex items-center justify-center rounded-lg"
+                  "w-[350px] h-[350px] bg-primary-gray flex items-center justify-center rounded-lg relative"
                 }
               >
                 <Image
                   priority
                   src={dogplaceholdericon}
                   alt="Dog Placeholder"
+                  
                 />
+                {isEdit && (
+                  <div className="z-10 absolute bottom-10">
+                    <ImageUpload title={"Upload Image"} />
+                  </div>
+                )}
               </div>
+            </>
+            )}
+            <> 
 
               <div className="flex-col gap-4 inline-flex">
                 {/* Logic for showing information at top when not editing it */}
@@ -461,7 +484,7 @@ export default function IndividualDogPage() {
                 </div>
               )}
             </>
-          )}
+          
         </div>
 
         <TabContainer
