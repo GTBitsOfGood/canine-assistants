@@ -60,6 +60,13 @@ export default function IndividualDogPage() {
   const { setIsEdit, isEdit, handleSubmit, reset, getValues, errors } =
     useEditDog();
   
+  useEffect(() => {
+    if (isEdit === true) {
+      setShowFormTab(false)
+      setShowLogTab(false)
+    }
+  }, [isEdit])
+
   // Fetches information about dog if exists and sets correct tabs and filters if needed
   useEffect(() => {
     
@@ -135,7 +142,7 @@ export default function IndividualDogPage() {
             */
             return (
               acc ||
-              (filterType == "tags"
+              (filterType === "tags"
                 ? Object.values(appliedFilters[filterType]).includes(
                     ...log[filterType]
                   )
@@ -490,6 +497,7 @@ export default function IndividualDogPage() {
           removeTag={removeTag}
           filteredLogs={filteredLogs}
           dogInformationSchema={dogInformationSchema}
+          isEdit = {isEdit}
         />
       </form>
     </div>
