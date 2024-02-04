@@ -16,6 +16,8 @@ import stringUtils from "@/utils/stringutils";
 import { useRouter } from "next/router";
 import LoadingAnimation from "../LoadingAnimation";
 import toast from "react-hot-toast";
+import Hover from "../Hover"
+
 
 /**
  * @returns { React.ReactElement } The DogTable component
@@ -149,23 +151,7 @@ export default function DogTable() {
       icon: <TagIcon />,
       customRender: (rowData) => {
         return (
-          <div className="flex justify-left gap-2">
-            {rowData.recentLogs.map((log) =>
-              log.tags.map((tag, i) => (
-                <Chip
-                  link={
-                    "dogs/" +
-                    rowData._id +
-                    "?showLogTab=true&filteredTag=" +
-                    tag
-                  }
-                  key={i}
-                  label={tag}
-                  type={ChipTypeStyles.Tag}
-                />
-              ))
-            )}
-          </div>
+          <Hover data = {rowData} />
         );
       },
     },
