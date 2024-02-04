@@ -1,8 +1,10 @@
 import B2 from "backblaze-b2";
+import fs from "fs";
+import formidable from "formidable";
 
 const uploadHandler = async (req, res) => {
   // reconstruct file buffer from stream
-  const file = await new Promise((resolve) => {
+  /*const file = await new Promise((resolve) => {
     const chunks = [];
 
     req.on("readable", () => {
@@ -16,7 +18,18 @@ const uploadHandler = async (req, res) => {
     req.on("end", () => {
       resolve(Buffer.concat(chunks));
     });
+  });*/
+
+  var form = formidable({ uploadDir: "src" });
+  form.on("fileBegin", function (name, file) {
+    file.filepath = form.uploadDir + "\\" + "newfile.png";
   });
+
+  const [fields, files] = await form.parse(req);
+  console.log(files);
+
+  const finalFile = fs.readFileSync(files.samplefile[0].filepath);
+  console.log(files.samplefile[0].filepath);
 
   const b2 = new B2({
     applicationKeyId: process.env.BACKBLAZE_KEY_ID,
@@ -32,19 +45,19 @@ const uploadHandler = async (req, res) => {
   });
 
   // TODO figure out how to parse file name from form data
-  const reqFileName = req.headers["x-filename"];
-  const reqContentLen = req.headers["contentlen"];
-  console.log(req);
+  //const reqFileName = req.headers["x-filename"];
+  //const reqContentLen = req.headers["contentlen"];
+  //console.log(req.file);
 
   const { data } = await b2.uploadFile({
     uploadUrl: uploadData.uploadUrl,
     uploadAuthToken: uploadData.authorizationToken,
-    data: file,
+    data: finalFile,
     // there are no real directories in b2, if you want to place
     // your file in a folder structure, do so with slashes. ex:
     //   fileName: `/my-subfolder/uploads/${fileName}`
-    fileName: reqFileName,
-    contentLength: reqContentLen,
+    fileName: "filename.png",
+    //contentLength: reqContentLen,
     // info: {}, // store optional info, like original file name
   });
 

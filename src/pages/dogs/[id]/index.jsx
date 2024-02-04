@@ -53,6 +53,8 @@ export default function IndividualDogPage() {
   const [forms, setForms] = useState([]);
   const [showFormDropdown, setShowFormDropdown] = useState(false);
 
+  const [fileParam, setFileParam] = useState(null);
+
   const router = useRouter();
   const logRef = useRef(null);
 
@@ -269,6 +271,30 @@ export default function IndividualDogPage() {
 
     setAppliedFilters(newFilters);
   };
+
+  /**
+   * uploads image file to backblaze via api/media/image
+   * fileParam is set in image upload component
+   */
+  const upload = async () => {
+    const { fileparam } = fileParam;
+    
+    const formData = new FormData();
+    formData.append("samplefile", fileparam);
+    try {
+      
+      const { data } = await fetch(`/api/media/upload`, {
+        method: "POST",
+        body: formData,
+      });
+      console.log(data);
+      
+    } catch (err) {
+      console.error(err);
+    }
+
+    
+  };
   
   // TODO add listener for if user clicks out of dropdown menu to turn back into button
 
@@ -333,21 +359,16 @@ export default function IndividualDogPage() {
 
       <form onSubmit={handleSubmit(onEditSubmit)}>
         <div className="flex gap-8">
-          {dog.image ? (
-            <div className="relative flex items-center">
+          {dog.image ? 
+            <div className="relative">
               <Image alt="Dog" width={350} height={350} src={dog.image} />
-              {isEdit && (
-                <div className="z-10 absolute bottom-10 flex justify-around items-center w-full ">
-                  <label className=" text-lg py-1 px-3 cursor-pointer bg-white  border border-solid border-primary-gray border-2 font-medium rounded-md flex justify-around items-center">
-                    <h3>Delete</h3>
-                    <XMarkIcon className="h-8 w-8 pl-3"/>
-                    <button onClick={() => {dog.image = ""}}></button>
-                  </label>
-                  <ImageUpload title={"Replace Image"} />
-                </div>
-              )}
+              {isEdit && 
+              <div>
+                <ImageUpload preview={true} setFileParam={setFileParam}/>
+              </div>}
             </div>
-          ) : (
+            
+           : 
             <>
               <div
                 className={
@@ -362,12 +383,12 @@ export default function IndividualDogPage() {
                 />
                 {isEdit && (
                   <div className="z-10 absolute bottom-10">
-                    <ImageUpload title={"Upload Image"} />
+                    <ImageUpload preview={false} setFileParam={setFileParam}/>
                   </div>
                 )}
               </div>
             </>
-            )}
+            }
             <> 
 
               <div className="flex-col gap-4 inline-flex">
