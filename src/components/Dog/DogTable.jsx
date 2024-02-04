@@ -16,7 +16,7 @@ import stringUtils from "@/utils/stringutils";
 import { useRouter } from "next/router";
 import LoadingAnimation from "../LoadingAnimation";
 import toast from "react-hot-toast";
-import Hover from "../Hover"
+import RecentTags from "../RecentTags"
 
 
 /**
@@ -151,7 +151,7 @@ export default function DogTable() {
       icon: <TagIcon />,
       customRender: (rowData) => {
         return (
-          <Hover data = {rowData} />
+          <RecentTags data = {rowData} />
         );
       },
     },

@@ -1,7 +1,7 @@
 import { Chip, ChipTypeStyles } from "./Chip"
 import { Tooltip } from 'react-tooltip'
 
-export default function Hover( data ) {
+export default function RecentTags( data ) {
     const rowData = data.data
     let recentLogs = []
     const reversed = [...rowData.recentLogs].reverse()
