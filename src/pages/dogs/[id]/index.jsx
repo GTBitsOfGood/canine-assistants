@@ -38,6 +38,7 @@ import { formTitleMap } from "@/utils/formUtils";
  * @returns {React.ReactElement} The individual Dog page
  */
 export default function IndividualDogPage() {
+  const router = useRouter();
   const [data, setData] = useState();
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -51,7 +52,6 @@ export default function IndividualDogPage() {
   const [forms, setForms] = useState([]);
   const [showFormDropdown, setShowFormDropdown] = useState(false);
 
-  const router = useRouter();
   const logRef = useRef(null);
 
   let search = {};
@@ -59,9 +59,10 @@ export default function IndividualDogPage() {
 
   const { setIsEdit, isEdit, handleSubmit, reset, getValues, errors } =
     useEditDog();
-
+  
   // Fetches information about dog if exists and sets correct tabs and filters if needed
   useEffect(() => {
+    
     setShowLogTab(router.query?.showLogTab);
     setShowFormTab(router.query?.showFormTab);
 
@@ -75,6 +76,10 @@ export default function IndividualDogPage() {
       fetch(`/api/dogs/${router.query.id}`)
         .then((res) => res.json())
         .then((data) => {
+          if (!data || data === undefined || !data.success) {
+            router.push("/dogs");
+            return;
+          }
           setData(data);
           reset(computeDefaultValues(data.data));
         });
@@ -84,16 +89,19 @@ export default function IndividualDogPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(search),
+        body: JSON.stringify({
+          dog: router.query.id,
+        }),
       })
         .catch((err) => setLogs([]))
         .then((res) => res.json())
-        .then((data) =>
+        .then((data) => {
           setLogs(
             !data || data === undefined || !data.success
               ? []
               : data.data.reverse()
           )
+        }
         );
 
     // If dog is being created
@@ -289,7 +297,7 @@ export default function IndividualDogPage() {
                   headers: {
                     "Content-Type": "application/json",
                   },
-                  body: JSON.stringify(search),
+                  body: JSON.stringify({ dog: dog._id}),
                 })
                   .catch((err) => setLogs([]))
                   .then((res) => res.json())
