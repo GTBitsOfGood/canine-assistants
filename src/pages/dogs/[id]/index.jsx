@@ -64,6 +64,14 @@ export default function IndividualDogPage() {
    * Setting filtered = false also calls setLogs, which is useful for storing the total number of logs.
    */
   function searchLogs(filtered = true) {
+    // Convert each filter to an array
+    const filters = { ...appliedFilters };
+    for (const key in filters) {
+      if (filters[key] && typeof(filters[key]) == "object") {
+        filters[key] = Object.values(filters[key]);
+      }
+    }
+
     fetch("/api/logs/search", {
       method: "POST",
       headers: {
@@ -71,7 +79,7 @@ export default function IndividualDogPage() {
       },
       body: JSON.stringify(
         filtered
-          ? {...search, query: searchQuery, filters: appliedFilters} 
+          ? {...search, query: searchQuery, filters: filters} 
           : search
       ),
     })

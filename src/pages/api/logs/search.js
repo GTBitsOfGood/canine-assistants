@@ -13,8 +13,8 @@ const logParams = z.object({
   query: z.string().optional(),
   filters: z
     .object({
-      topic: z.enum(consts.topicArray).optional(),
-      severity: z.enum(consts.concernArray).optional(),
+      topic: z.array(z.enum(consts.topicArray)).optional(),
+      severity: z.array(z.enum(consts.concernArray)).optional(),
       tags: z.array(z.enum(consts.tagsArray)).optional(),
     })
     .optional(),
@@ -39,9 +39,9 @@ export default async function handler(req, res) {
     }
 
     const query = search.query || "";
-    const topic = Object.values(search.filters?.topic || {});
-    const severity = Object.values(search.filters?.severity || {});
-    const tags = Object.values(search.filters?.tags || {});
+    const topic = search.filters?.topic || [];
+    const severity = search.filters?.severity || [];
+    const tags = search.filters?.tags || [];
 
     /* 
     note: a log can have multiple tags, so we check if ANY of the 
