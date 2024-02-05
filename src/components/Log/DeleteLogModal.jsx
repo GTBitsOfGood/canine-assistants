@@ -41,7 +41,7 @@ export default function DeleteLogModal({ logId, title, onClose, onSubmit }) {
       >
         <div className="sm:hidden w-8 h-1 opacity-40 bg-zinc-500 rounded-[100px] mx-auto mb-[12px]" />
         <h1 className="mb-[3vh]"> Delete {title}?</h1>
-        <p className="text-secondary-text font-regular w-fit mb-3">
+        <p className="text-secondary-text font-regular w-fit mb-6">
         Are you sure you want to delete {title}? Select &quot;Confirm&quot; to delete. This action cannot be undone.
         </p>
 

@@ -215,7 +215,7 @@ export default function LogModal({ dogId, userId, log, onClose, onSubmit }) {
       >
         {/* TODO add behavior for dragging downwards to close the modal on mobile */}
         <div className="sm:hidden w-8 h-1 opacity-40 bg-zinc-500 rounded-[100px] mx-auto mb-[12px]" />
-        {log ? (<h1 className="mb-6"> Edit a log</h1>) : (<h1 className="mb-6"> Add a log</h1>)}
+        {log ? (<h1 className="mb-6"> Edit Log</h1>) : (<h1 className="mb-6"> Add a log</h1>)}
         <h2 className="h-10 align-middle">
           Title<span className="text-error-red">*</span>
         </h2>
