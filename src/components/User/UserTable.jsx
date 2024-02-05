@@ -78,7 +78,6 @@ export default function UserTable() {
         user._id === userId ? { ...user, role: status } : user
       );
       setUsers(updatedUsers);
-      toast.success(`User ${status === "Active" ? "reactivated" : "deactivated"} successfully`);
     } catch (error) {
       console.error(error);
       toast.error(`Error updating user role: ${error.message}`);
