@@ -13,7 +13,7 @@ import LoadingAnimation from "../LoadingAnimation";
 import toast from "react-hot-toast";
 import { consts } from "@/utils/consts";
 import ToggleSwitch from "./ToggleSwitch"
-import ConfirmationModal from './ConfirmationModal';
+import ConfirmCancelModal from "../ConfirmCancelModal";
 
 /**
  * @returns { React.ReactElement } The UserTable component
@@ -24,10 +24,12 @@ export default function UserTable() {
   const [users, setUsers] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedUser, setSelectedUser] = useState("");
+  const [selectedUserId, setSelectedUserId] = useState("");
+  const [selectedUserName, setSelectedUserName] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userToDeactivate, setUserToDeactivate] = useState(null);
   const [selectedName, setSelectedName] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   const router = useRouter();  // Router to direct to user/[id] when specified user is pressed on
 
@@ -58,7 +60,7 @@ export default function UserTable() {
   const handleToggle = (userId, currentStatus) => {  // Active/Inactive toggle handling, opens confirmation modal
     if (currentStatus === "Active") {
       setUserToDeactivate(userId);
-      setIsModalOpen(true);
+      setShowModal(!showModal)
     } else {
       updateUserStatus(userId, "Active");
     }
@@ -81,7 +83,7 @@ export default function UserTable() {
       console.error(error);
       toast.error(`Error updating user role: ${error.message}`);
     } finally {
-      setIsModalOpen(false);
+      setShowModal(false)
       setUserToDeactivate(null);
     }
   };
@@ -93,7 +95,7 @@ export default function UserTable() {
     }
     const roleValue = role[0] == "Admin" ? role[0] : role[1];
     try {
-      const response = await fetch(`/api/users/${selectedUser}`, {
+      const response = await fetch(`/api/users/${selectedUserId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -192,7 +194,8 @@ export default function UserTable() {
           filter={searchFilter}
           elementsPerPage={10}
           onRowClick={(row, rowIndex) => {
-            setSelectedUser(row["_id"]) 
+            setSelectedUserId(row["_id"])
+            setSelectedUserName(row["name"])
           }}
           noElements={
             <div className="flex justify-center bg-white py-16 text-gray-500">
@@ -201,13 +204,15 @@ export default function UserTable() {
           }
         />
       </div>
-      <ConfirmationModal  // Prompted when user intends to deactivate a row
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onConfirm={() => updateUserStatus(userToDeactivate, "Inactive")}
-        userName={selectedName}
-        message={"Select “Confirm” to deactivate Akash and remove all access to the Canine Assistants platform. This action can only be undone by an administrator."} // change this later to specify which user
-      />
+      {showModal
+        ? ConfirmCancelModal(  // Prompted when user intends to deactivate a row
+          `Deactivate ${selectedUserName}?`,
+          `Select “Confirm” to deactivate ${selectedUserName} and remove all access to the Canine Assistants platform. This action can only be undone by an administrator.`,
+          () => updateUserStatus(userToDeactivate, "Inactive"),
+          setShowModal,
+          showModal
+        )
+      : ``}
     </>
   );
 }
