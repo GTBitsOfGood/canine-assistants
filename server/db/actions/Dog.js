@@ -157,6 +157,9 @@ export async function createDog(dogData) {
 
   await validateDogData(dogData);
 
+  // Set image to empty string to be populated by uploadImage endpoint
+  dogData["image"] = "";
+
   const dog = new Dog(dogData);
 
   try {

@@ -1,4 +1,4 @@
-import { getDogById } from "../../../../server/db/actions/Dog";
+import { getDogById, updateDog } from "../../../../server/db/actions/Dog";
 import {
   backblazeConnect,
   uploadImage,
@@ -65,10 +65,23 @@ export default async function handler(req, res) {
 
     const results = await uploadImage(dogId, image);
 
+    const updateResults = await updateDog(dogId, {
+      image: `https://f004.backblazeb2.com/b2api/v1/b2_download_file_by_id?fileId=${results.data.fileId}`,
+    }).catch(() => {
+      return "err";
+    });
+
+    if (updateResults == "err") {
+      return res.status(404).send({
+        success: false,
+        message: "There was a problem updating the dog's image URL",
+      });
+    }
+
     if (results.success) {
       return res.status(200).send({
         success: true,
-        data: `https://f004.backblazeb2.com/b2api/v1/b2_download_file_by_id?fileId=${results.data.fileId}`,
+        data: results.data,
       });
     } else {
       return res.status(400).send({

@@ -408,6 +408,7 @@ export default async function handler(req, res) {
           name: dogNames[getRandomInt(0, dogNames.length - 1)],
           disability: disabilities[getRandomInt(0, disabilities.length - 1)],
         },
+        image: "",
       };
 
       dogs[i].instructors = [userIds[0]];
