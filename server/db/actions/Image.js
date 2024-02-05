@@ -116,7 +116,7 @@ export async function deleteImage(dogId, imageUrl) {
 
   const imageName = (
     typeof dogId === "object" ? dogId.toString() : dogId
-  ).concat(".jpg");
+  ).concat(".png");
   const imageId = imageUrl.split("fileId=")[1];
 
   return fetch(

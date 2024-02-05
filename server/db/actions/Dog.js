@@ -110,8 +110,6 @@ export async function updateDog(dogId, dogData) {
 
   await validateDogData(dogData);
 
-  // TODO if updating the image, upload new image and delete old one
-
   try {
     return await Dog.findByIdAndUpdate({ _id: dogId }, dogData, {
       returnDocument: "after",

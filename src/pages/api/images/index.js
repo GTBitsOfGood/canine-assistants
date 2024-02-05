@@ -1,6 +1,8 @@
+import { getDogById } from "../../../../server/db/actions/Dog";
 import {
   backblazeConnect,
   uploadImage,
+  deleteImage,
 } from "../../../../server/db/actions/Image";
 
 export default async function handler(req, res) {
@@ -20,6 +22,34 @@ export default async function handler(req, res) {
       });
     }
   } else if (req.method === "POST") {
+    const dogId = req.headers["dog-id"];
+
+    const dog = await getDogById(dogId).catch(() => {
+      return false;
+    });
+
+    if (!dog) {
+      return res.status(404).send({
+        success: false,
+        message: "Dog ID does not exist",
+      });
+    }
+
+    // Delete previous image if it exist
+    if (dog.image && dog.image != "") {
+      const res = await deleteImage(dogId, dog.image).catch(() => {
+        return false;
+      });
+
+      if (!res || !res.success) {
+        return res.status(500).send({
+          success: false,
+          message:
+            "There was a problem deleting the existing image, please reupload the new image and try again",
+        });
+      }
+    }
+
     // Create file buffer from requst stream
     const image = await new Promise((resolve) => {
       const chunks = [];
@@ -33,13 +63,12 @@ export default async function handler(req, res) {
       });
     });
 
-    const results = await uploadImage(req.headers["dog-id"], image);
+    const results = await uploadImage(dogId, image);
 
     if (results.success) {
       return res.status(200).send({
         success: true,
-        message: "Image successfully uploaded",
-        data: results.data,
+        data: `https://f004.backblazeb2.com/b2api/v1/b2_download_file_by_id?fileId=${results.data.fileId}`,
       });
     } else {
       return res.status(400).send({
