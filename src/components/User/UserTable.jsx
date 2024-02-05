@@ -181,7 +181,7 @@ export default function UserTable() {
   
   return(
     <>
-      <LoadingAnimation animated={!loading} loadText={loading} />
+      <LoadingAnimation animated={false} loadText={false} />
       <div className="flex-grow flex-col space-y-6 mb-8">
         <UserSearchBar setSearch={setSearchFilter} />
 
@@ -192,8 +192,7 @@ export default function UserTable() {
           filter={searchFilter}
           elementsPerPage={10}
           onRowClick={(row, rowIndex) => {
-            setSelectedUser(row["_id"])
-            //supposed to direct to users/[id] as well, but buggy with accessing dropdown or toggle features
+            setSelectedUser(row["_id"]) 
           }}
           noElements={
             <div className="flex justify-center bg-white py-16 text-gray-500">
