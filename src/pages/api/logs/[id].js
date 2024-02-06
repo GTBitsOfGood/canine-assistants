@@ -89,10 +89,8 @@ export default async function handler(req, res) {
         message: "Unable to update because log ID is not in valid format.",
       });
     }
-    const { success, error, data } = logSchema
-      .partial()
-      .strict()
-      .safeParse(req.body);
+
+    const { success, error, data } = logSchema.safeParse(req.body);
 
     if (!success) {
       const code = error.errors[0].code;
