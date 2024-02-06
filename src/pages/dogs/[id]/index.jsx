@@ -10,6 +10,7 @@ import {
   ChevronLeftIcon,
   PencilSquareIcon,
   TrashIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/solid";
 
 import maleicon from "../../../../public/maleicon.svg";
@@ -33,6 +34,7 @@ import {
   newDog,
 } from "@/utils/consts";
 import { formTitleMap } from "@/utils/formUtils";
+import ImageUpload from "@/components/ImageUpload";
 
 /**
  * Displays information about specific dog including Logs and Forms
@@ -52,6 +54,8 @@ export default function IndividualDogPage() {
   const [showFormTab, setShowFormTab] = useState(false);
   const [forms, setForms] = useState([]);
   const [showFormDropdown, setShowFormDropdown] = useState(false);
+
+  const [fileParam, setFileParam] = useState(null);
 
   const [changeInLogs, setChangeInLogs] = useState(false);
   const logRef = useRef(null);
@@ -283,8 +287,30 @@ export default function IndividualDogPage() {
     setAppliedFilters(newFilters);
   };
 
+  /**
+   * uploads image file to backblaze via api/media/image
+   * fileParam is set in image upload component
+   */
+  const upload = async () => {
+    const { fileparam } = fileParam;
+    
+    const formData = new FormData();
+    formData.append("samplefile", fileparam);
+    try {
+      
+      const { data } = await fetch(`/api/media/upload`, {
+        method: "POST",
+        body: formData,
+      });
+      console.log(data);
+      
+    } catch (err) {
+      console.error(err);
+    }
 
-
+    
+  };
+  
   // TODO add listener for if user clicks out of dropdown menu to turn back into button
 
   return (
@@ -333,21 +359,37 @@ export default function IndividualDogPage() {
 
       <form onSubmit={handleSubmit(onEditSubmit)}>
         <div className="flex gap-8">
-          {dog.image ? (
-            <Image alt="Dog" width={350} height={350} src={dog.image} />
-          ) : (
+          {dog.image ? 
+            <div className="relative">
+              <Image alt="Dog" width={350} height={350} src={dog.image} />
+              {isEdit && 
+              <div>
+                <ImageUpload preview={true} setFileParam={setFileParam}/>
+              </div>}
+            </div>
+            
+           : 
             <>
               <div
                 className={
-                  "w-[350px] h-[350px] bg-primary-gray flex items-center justify-center rounded-lg"
+                  "w-[350px] h-[350px] bg-primary-gray flex items-center justify-center rounded-lg relative"
                 }
               >
                 <Image
                   priority
                   src={dogplaceholdericon}
                   alt="Dog Placeholder"
+                  
                 />
+                {isEdit && (
+                  <div className="z-10 absolute bottom-10">
+                    <ImageUpload preview={false} setFileParam={setFileParam}/>
+                  </div>
+                )}
               </div>
+            </>
+            }
+            <> 
 
               <div className="flex-col gap-4 inline-flex">
                 {/* Logic for showing information at top when not editing it */}
@@ -463,7 +505,7 @@ export default function IndividualDogPage() {
                 </div>
               )}
             </>
-          )}
+          
         </div>
 
         <TabContainer
