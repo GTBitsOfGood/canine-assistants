@@ -60,6 +60,50 @@ export default function IndividualDogPage() {
   let search = {};
   search.dog = router.query.id;
 
+  /**
+   * Searches logs using current search query and filters if filtering is requested.
+   * Filtering logic is handled on the backend.
+   * @param {boolean} filtered Whether to use current search query and filters.
+   * Setting filtered = false also calls setLogs, which is useful for storing the total number of logs.
+   */
+  function searchLogs(filtered = true) {
+    // Convert each filter to an array
+    const filters = { ...appliedFilters };
+    for (const key in filters) {
+      if (filters[key] && typeof(filters[key]) == "object") {
+        filters[key] = Object.values(filters[key]);
+      }
+    }
+
+    fetch("/api/logs/search", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(
+        filtered
+          ? {...search, query: searchQuery, filters: filters} 
+          : search
+      ),
+    })
+      .catch((err) => {
+        setFilteredLogs([]);
+        if (!filtered) {
+          setLogs([]);
+        }
+      })
+      .then((res) => res.json())
+      .then((data) => {
+        const res = !data || data === undefined || !data.success
+          ? []
+          : data.data.reverse();
+        setFilteredLogs(res);
+        if (!filtered) {
+          setLogs(res);
+        }
+      }
+    );
+  }
   const { data: session } = useSession();
   const user = session?.user;
 
@@ -86,24 +130,9 @@ export default function IndividualDogPage() {
           reset(computeDefaultValues(data.data));
         });
 
-      fetch("/api/logs/search", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(search),
-      })
-        .catch((err) => setLogs([]))
-        .then((res) => res.json())
-        .then((data) =>
-          setLogs(
-            !data || data === undefined || !data.success
-              ? []
-              : data.data.reverse()
-          )
-        );
-    
-        setChangeInLogs(false);
+      // Initial log fetch
+      searchLogs(false);
+      setChangeInLogs(false);
     // If dog is being created
     } else if (router.route === "/dogs/new") {
       setData({ data: newDog, success: "201" });
@@ -114,47 +143,11 @@ export default function IndividualDogPage() {
 
   // Shows correct logs if filtered
   useEffect(() => {
-    
-    // filter logs by search query
-    const searchQueryFilteredLogs = logs.filter(
-      (log) =>
-        log.title.toLowerCase().includes(searchQuery) ||
-        log.description.toLowerCase().includes(searchQuery)
-    );
-    
-    
-
-    // if filters are applied, filter the log list further
-    if (Object.keys(appliedFilters).length === 0) {
-      setFilteredLogs(searchQueryFilteredLogs);
-    } else {
-      setFilteredLogs(
-        searchQueryFilteredLogs.filter((log) => {
-          return Object.keys(appliedFilters).reduce((acc, filterType) => {
-            /* 
-            note: a log can have multiple tags, so we check if ANY of the 
-            applied tag filters match ANY of the log tags; for other types, it 
-            must be an exact match.
-            */
-            return (
-              acc ||
-              (filterType == "tags"
-                ? Object.values(appliedFilters[filterType]).includes(
-                    ...log[filterType]
-                  )
-                : Object.values(appliedFilters[filterType]).includes(
-                    log[filterType]
-                  ))
-            );
-          }, false);
-        })
-      );
-    }
-
+    searchLogs();
     if (router.query?.showLogTab && logRef.current) {
       window.scrollTo(0, logRef.current.offsetTop);
     }
-  }, [logs, appliedFilters, searchQuery, router.query, logRef.current, changeInLogs]);
+  }, [appliedFilters, searchQuery, router.query, logRef.current, changeInLogs]);
 
   // Fetches forms for the dog
   useEffect(() => {
@@ -297,22 +290,7 @@ export default function IndividualDogPage() {
             onSubmit={(success) => {
               if (success) {
                 // update logs to display
-                fetch("/api/logs/search", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(search),
-                })
-                  .catch((err) => setLogs([]))
-                  .then((res) => res.json())
-                  .then((data) =>
-                    setLogs(
-                      !data || data === undefined || !data.success
-                        ? []
-                        : data.data.reverse()
-                    )
-                  );
+                searchLogs();
 
                 toast.custom((t) => (
                   <div
