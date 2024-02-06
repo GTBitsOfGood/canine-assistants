@@ -39,6 +39,7 @@ import { formTitleMap } from "@/utils/formUtils";
  * @returns {React.ReactElement} The individual Dog page
  */
 export default function IndividualDogPage() {
+  const router = useRouter();
   const [data, setData] = useState();
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -54,7 +55,6 @@ export default function IndividualDogPage() {
 
   const [changeInLogs, setChangeInLogs] = useState(false);
 
-  const router = useRouter();
   const logRef = useRef(null);
 
   let search = {};
@@ -109,6 +109,13 @@ export default function IndividualDogPage() {
 
   const { setIsEdit, isEdit, handleSubmit, reset, getValues, errors } =
     useEditDog();
+  
+  useEffect(() => {
+    if (isEdit === true) {
+      setShowFormTab(false)
+      setShowLogTab(false)
+    }
+  }, [isEdit])
 
   // Fetches information about dog if exists and sets correct tabs and filters if needed
   useEffect(() => {
@@ -126,6 +133,10 @@ export default function IndividualDogPage() {
       fetch(`/api/dogs/${router.query.id}`)
         .then((res) => res.json())
         .then((data) => {
+          if (!data || data === undefined || !data.success) {
+            router.push("/dogs");
+            return;
+          }
           setData(data);
           reset(computeDefaultValues(data.data));
         });
@@ -147,7 +158,7 @@ export default function IndividualDogPage() {
     if (router.query?.showLogTab && logRef.current) {
       window.scrollTo(0, logRef.current.offsetTop);
     }
-  }, [appliedFilters, searchQuery, router.query, logRef.current, changeInLogs]);
+  }, [appliedFilters, searchQuery, router.query, changeInLogs, logRef.current]);
 
   // Fetches forms for the dog
   useEffect(() => {
@@ -473,6 +484,7 @@ export default function IndividualDogPage() {
           removeTag={removeTag}
           filteredLogs={filteredLogs}
           dogInformationSchema={dogInformationSchema}
+          isEdit = {isEdit}
           onEditLog={(success) => {
 
             if (success) {
