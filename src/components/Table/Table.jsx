@@ -214,7 +214,7 @@ export default function Table({
         }}
       />
 
-      {elementsToShow.length === 0 ? noElements : ""}
+      {elementsToShow.length === 0 && !loading && noElements}
     </div>
   );
 }
