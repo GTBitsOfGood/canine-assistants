@@ -98,6 +98,10 @@ export default function Table({
     setCurrentPage(Math.max(Math.min(currentPage, pageAmount - 1), 0));
   }, [cols, currentPage, pageAmount]);
 
+  useEffect(() => {
+    setCurrentPage(0);
+  }, [filter]);
+
   /**
    * Formats each value in the table depending on settings provided
    *
@@ -210,7 +214,7 @@ export default function Table({
         }}
       />
 
-      {rows?.length == 0 && !loading && noElements}
+      {elementsToShow.length === 0 ? noElements : ""}
     </div>
   );
 }

@@ -42,14 +42,6 @@ export default function UserTable() {
     
   }, []);
 
-  useEffect(() => {  // Searching functionality
-    const filtered = Array.isArray(users)
-      ? users.filter(user =>
-          user.name.toUpperCase().includes(searchFilter.toUpperCase())
-        )
-      : [];
-  }, [searchFilter, users]);
-
   const handleToggle = (userId, currentStatus) => {  // Active/Inactive toggle handling, opens confirmation modal
     if (currentStatus === "Active") {
       setUserToDeactivate(userId);
@@ -195,7 +187,7 @@ export default function UserTable() {
           cols={userTableColumns}
           rows={users}
           filter={searchFilter}
-          elementsPerPage={1}
+          elementsPerPage={10}
           onRowClick={(row, rowIndex) => {
             setSelectedUserId(row["_id"])
             setSelectedUserName(row["name"])
