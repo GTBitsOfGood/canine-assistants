@@ -1,7 +1,7 @@
 import React from 'react';
 
 /**
- * Active/Inactive toggle switch for User managment dashboard
+ * Active/Inactive toggle switch for User management dashboard
  * @param {*} isActive state representing if the user is set to active or inactive
  * @param {*} onToggle action to be performed on toggle
  * @returns HTML toggle switch component
@@ -18,13 +18,13 @@ const ToggleSwitch = ({ isActive, onToggle }) => {
           onChange={onToggle}
         />
         <div
-          className={`block w-14 h-8 rounded-full transition-colors ${
+          className={`block w-10 h-5 rounded-full transition-colors ${
             isActive ? 'bg-rose-800' : 'bg-gray-300'
           }`}
         ></div>
         <div
-          className={`dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition-transform ${
-            isActive ? 'translate-x-6' : 'translate-x-0'
+          className={`dot absolute left-0.5 top-0.5 bg-white w-4 h-4 rounded-full transition-transform ${
+            isActive ? 'translate-x-5' : 'translate-x-0'
           }`}
         ></div>
       </div>
