@@ -54,7 +54,6 @@ export default function IndividualDogPage() {
   const [showFormDropdown, setShowFormDropdown] = useState(false);
 
   const [changeInLogs, setChangeInLogs] = useState(false);
-
   const logRef = useRef(null);
 
   let search = {};
@@ -140,10 +139,11 @@ export default function IndividualDogPage() {
           setData(data);
           reset(computeDefaultValues(data.data));
         });
-
+      
       // Initial log fetch
       searchLogs(false);
       setChangeInLogs(false);
+      
     // If dog is being created
     } else if (router.route === "/dogs/new") {
       setData({ data: newDog, success: "201" });

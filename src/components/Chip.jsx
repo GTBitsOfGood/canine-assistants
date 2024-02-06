@@ -1,4 +1,3 @@
-import {useRouter} from "next/router";
 export const ChipTypeStyles = {
   Tag: "border-neutral-chip-shade bg-neutral-chip",
   "High": "border-high-concern-shade bg-high-concern",
@@ -10,16 +9,6 @@ export const ChipTypeStyles = {
 };
 
 export function Chip({ label, type, link = "", styles, innerStyles }) {
-  const router = useRouter();
-
-  const handleClick = (event) => {
-    if (link.length > 0) {
-      event.preventDefault();
-      event.stopPropagation()
-      router.push(link);
-    }
-  };
-
   return (
     <>
       <a
