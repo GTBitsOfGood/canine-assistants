@@ -57,7 +57,6 @@ export default function IndividualDogPage() {
 
   const [fileParam, setFileParam] = useState(null);
 
-  const router = useRouter();
   const [changeInLogs, setChangeInLogs] = useState(false);
   const logRef = useRef(null);
 
