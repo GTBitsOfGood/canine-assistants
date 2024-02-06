@@ -1,5 +1,4 @@
 #!/bin/bash
-
 if [ ! -f "./.env" ]; then
   echo "Secrets not found. Pulling files from Bitwarden..."
   if [[ -z "${BW_PASSWORD}" ]]; then

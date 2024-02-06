@@ -24,6 +24,7 @@ const consts = {
   locationArray: ["Facility 1", "Facility 2", "Placed"],
   roleArray: ["Service", "Companion"],
   userRoleArray: ["Admin", "User", "Inactive"],
+  userAccessArray: ["Admin", "User"],
   leashArray: ["Leashed", "Off-leash"],
   relationshipArray: [
     "Sibling",
