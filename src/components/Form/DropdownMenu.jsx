@@ -61,6 +61,11 @@ export default function DropdownMenu({
     setEnabledOptions(selectedOptions || []);
   };
 
+  useEffect(() => {
+    setEnabledOptions(selectedOptions || []);
+  }, [selectedOptions]);
+  
+
   const toggleOption = (option, index) => {
     let newEnabledOptions;
 

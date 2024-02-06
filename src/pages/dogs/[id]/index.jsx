@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 
 import { useEffect, useState, useRef } from "react";
 import toast from "react-hot-toast";
+import { useSession } from "next-auth/react";
 
 import {
   ChevronLeftIcon,
@@ -50,6 +51,8 @@ export default function IndividualDogPage() {
   const [showFormTab, setShowFormTab] = useState(false);
   const [forms, setForms] = useState([]);
   const [showFormDropdown, setShowFormDropdown] = useState(false);
+
+  const [changeInLogs, setChangeInLogs] = useState(false);
 
   const router = useRouter();
   const logRef = useRef(null);
@@ -101,12 +104,15 @@ export default function IndividualDogPage() {
       }
     );
   }
+  const { data: session } = useSession();
+  const user = session?.user;
 
   const { setIsEdit, isEdit, handleSubmit, reset, getValues, errors } =
     useEditDog();
 
   // Fetches information about dog if exists and sets correct tabs and filters if needed
   useEffect(() => {
+    
     setShowLogTab(router.query?.showLogTab);
     setShowFormTab(router.query?.showFormTab);
 
@@ -126,14 +132,14 @@ export default function IndividualDogPage() {
 
       // Initial log fetch
       searchLogs(false);
-
+      setChangeInLogs(false);
     // If dog is being created
     } else if (router.route === "/dogs/new") {
       setData({ data: newDog, success: "201" });
       setIsEdit(true);
       reset(computeDefaultValues(newDog));
     }
-  }, [router.query, reset]);
+  }, [router.query, reset, changeInLogs]);
 
   // Shows correct logs if filtered
   useEffect(() => {
@@ -141,7 +147,7 @@ export default function IndividualDogPage() {
     if (router.query?.showLogTab && logRef.current) {
       window.scrollTo(0, logRef.current.offsetTop);
     }
-  }, [appliedFilters, searchQuery, router.query, logRef.current]);
+  }, [appliedFilters, searchQuery, router.query, logRef.current, changeInLogs]);
 
   // Fetches forms for the dog
   useEffect(() => {
@@ -266,6 +272,8 @@ export default function IndividualDogPage() {
     setAppliedFilters(newFilters);
   };
 
+
+
   // TODO add listener for if user clicks out of dropdown menu to turn back into button
 
   return (
@@ -275,7 +283,7 @@ export default function IndividualDogPage() {
         <>
           <LogModal
             dogId={dog._id}
-            userId={dog.instructors[0]._id}
+            userId={user._id}
             onClose={() => {
               setShowLogModal(false);
             }}
@@ -465,6 +473,18 @@ export default function IndividualDogPage() {
           removeTag={removeTag}
           filteredLogs={filteredLogs}
           dogInformationSchema={dogInformationSchema}
+          onEditLog={(success) => {
+
+            if (success) {
+              setChangeInLogs(true);
+            }
+          }}
+          onDeleteLog={(success) => {
+
+            if (success) {
+              setChangeInLogs(true);
+            }
+          }}
         />
       </form>
     </div>

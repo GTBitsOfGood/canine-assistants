@@ -1,9 +1,28 @@
 import TagDisplay from "@/components/TagDisplay";
-import { useState } from "react";
+import { useState, useEffect} from "react";
+import { TrashIcon } from "@heroicons/react/20/solid";
+import { PencilSquareIcon } from "@heroicons/react/24/solid";
+import DeleteLogModal from "./DeleteLogModal";
+import toast from "react-hot-toast";
+import LogModal from "./LogModal";
 
-export default function Log({ log }) {
+
+export default function Log({ log, user, onEdit, onDelete }) {
   const [showMore, setShowMore] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const createdAt = new Date(log.createdAt);
+  const [isAuthor, setIsAuthor] = useState(false);
+  const [authorName, setAuthorName] = useState("N/A");
+
+  useEffect(() => {
+  if (log.author) {
+    setIsAuthor(user._id == log.author._id);
+    setAuthorName(log.author.name);
+  }
+});
+
+  
 
   const tags = [
     { group: "severity", label: log.severity },
@@ -13,14 +32,113 @@ export default function Log({ log }) {
     }),
   ];
 
+  const handleDeleteClick = () => {
+    setShowDeleteModal(true);
+  };
+
+  const handleEditClick = () => {
+    setShowEditModal(true);
+
+  };
+
+  
+
   return (
     <div className="bg-primary-background p-4 my-4 w-full">
+
+{showEditModal ? (
+        <>
+          <LogModal
+            userId={user._id}
+            log = {log}
+            dogId = {log.dog}
+            onClose={() => {
+              setShowEditModal(false);
+            }}
+            onSubmit={(success) => {
+              onEdit(success)
+              if (success) {
+                toast.custom((t) => (
+                  <div
+                    className={`h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-ca-green text-white text-lg font-normal
+                    ${t.visible ? "animate-enter" : "animate-leave"}`}
+                  >
+                    <span className="font-bold">{log.title}</span>&nbsp;
+                    <span>was successfully edited.</span>
+                  </div>
+                ));
+              } else {
+                toast.custom(() => (
+                  <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
+                    There was a problem saving the log, please try again.
+                  </div>
+                ));
+              }
+            }}
+          />
+        </>
+      ) : null}
+
+  {showDeleteModal ? 
+        
+          <DeleteLogModal
+            logId={log._id}
+            title = {log.title}
+            onSubmit={(success) => {
+              setShowDeleteModal(false);
+              onDelete(true);
+              if (success) {
+                toast.custom((t) => (
+                  <div
+                    className={`h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-ca-green text-white text-lg font-normal
+                    ${t.visible ? "animate-enter" : "animate-leave"}`}
+                  >
+                    <span className="font-bold">{log.title}</span>&nbsp;
+                    <span>was successfully deleted.</span>
+                  </div>
+                ));
+              } else {
+                toast.custom(() => (
+                  <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
+                    There was a problem deleted the log, please try again.
+                  </div>
+                ));
+              }
+            }}
+              
+            onClose={() => {
+              setShowDeleteModal(false);
+            }}>
+
+          </DeleteLogModal>
+          :
+          <></>}
+      {isAuthor &&(
+            <div className="grow flex gap-4 justify-end">
+        <button
+          type="button"
+          className="flex justify-center items-center"
+          onClick={handleEditClick}
+        >
+          <PencilSquareIcon className="h-5 mr-1" />
+          Edit
+        </button>
+        <button
+          type="button"
+          className="flex justify-center items-center"
+          onClick={handleDeleteClick}
+        >
+          <TrashIcon className="h-5 mr-1" />
+          Delete
+        </button>
+      </div>
+      )}
       <div className="flex justify-between">
         <div className="flex flex-col">
           <h2>{log.title}</h2>
           <div className="flex flex-row">
             <p className="text-secondary-text font-regular w-fit">
-              {"Author: " + log.author.name}
+              {"Author: " + authorName}
             </p>
             <p className="text-secondary-text font-regular mx-5 w-fit">
               {"Date: " + createdAt.toLocaleDateString()}
