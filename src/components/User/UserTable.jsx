@@ -8,7 +8,6 @@ import {
   AtSymbolIcon,
   ClipboardIcon,
 } from "@heroicons/react/24/solid";
-import { useRouter } from "next/router";
 import LoadingAnimation from "../LoadingAnimation";
 import toast from "react-hot-toast";
 import { consts } from "@/utils/consts";
@@ -22,16 +21,11 @@ import ConfirmCancelModal from "../ConfirmCancelModal";
 export default function UserTable() {
   const [searchFilter, setSearchFilter] = useState("");
   const [users, setUsers] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedUserId, setSelectedUserId] = useState("");
   const [selectedUserName, setSelectedUserName] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [userToDeactivate, setUserToDeactivate] = useState(null);
-  const [selectedName, setSelectedName] = useState("");
   const [showModal, setShowModal] = useState(false);
-
-  const router = useRouter();  // Router to direct to user/[id] when specified user is pressed on
 
   useEffect(() => {  // Pull all user data
     fetch("/api/users")
@@ -54,7 +48,6 @@ export default function UserTable() {
           user.name.toUpperCase().includes(searchFilter.toUpperCase())
         )
       : [];
-    setFilteredData(filtered);
   }, [searchFilter, users]);
 
   const handleToggle = (userId, currentStatus) => {  // Active/Inactive toggle handling, opens confirmation modal
@@ -123,7 +116,11 @@ export default function UserTable() {
       label: "Name",
       icon: <Bars3BottomLeftIcon />,
       customRender: (rowData) => {
-        return <span className="mx-3">{rowData.name}</span>;
+        return(
+          <div className="w-32 break-words">
+            <span>{rowData.name}</span>
+          </div>
+        );
       },
     },
     {
@@ -131,7 +128,11 @@ export default function UserTable() {
       label: "Email",
       icon: <AtSymbolIcon />,
       customRender: (rowData) => {
-        return <span>{rowData.email}</span>;
+        return(
+          <div className="w-32 break-words">
+            {rowData.email}
+          </div>
+        );
       },
     },
     {
@@ -140,26 +141,29 @@ export default function UserTable() {
       icon: <IdentificationIcon />,
       customRender: (rowData) => {
         return (
-          <DropdownMenu
-            submitFilters={(selectedRole) => {
-              applyRole(selectedRole)
-              rowData.role=selectedRole[0] == "Admin" ? "Admin" : "User"
-              window.location.reload();  // temporary fix: reload page whenever a role is assigned, to update role in UI
-            }}
-            label={rowData.role}
-            props={{
-              singleSelect: true,
-              filterText: "Apply Role"
-            }}
-          >
-            {consts.userAccessArray.map((roles, index) => (
-              <DropdownMenuOption
-                key={index}
-                label={roles}
-                name={roles}
-              />
-            ))}
-          </DropdownMenu>
+          <div className="">
+            <DropdownMenu
+              submitFilters={(selectedRole) => {
+                applyRole(selectedRole)
+                rowData.role=selectedRole[0] == "Admin" ? "Admin" : "User"
+                window.location.reload();  // temporary fix: reload page whenever a role is assigned, to update role in UI
+              }}
+              label={rowData.role}
+              props={{
+                singleSelect: true,
+                filterText: "Apply Role"
+              }}
+            >
+              {consts.userAccessArray.map((roles, index) => (
+                <DropdownMenuOption
+                  key={index}
+                  label={roles}
+                  name={roles}
+                />
+              ))}
+            </DropdownMenu>
+          </div>
+            
         );
       },
     },
@@ -191,7 +195,7 @@ export default function UserTable() {
           cols={userTableColumns}
           rows={users}
           filter={searchFilter}
-          elementsPerPage={10}
+          elementsPerPage={1}
           onRowClick={(row, rowIndex) => {
             setSelectedUserId(row["_id"])
             setSelectedUserName(row["name"])
