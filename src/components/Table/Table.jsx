@@ -129,8 +129,8 @@ export default function Table({
     );
 
   return (
-    <div className="shadow-xl rounded-lg text-md w-full text-left relative overflow-hidden">
-      <table className="divide-y divide-gray-300 text-md w-full text-left relative overflow-hidden">
+    <div className="shadow-xl rounded-lg text-md w-full text-left relative">
+      <table className="divide-y divide-gray-300 text-md w-full text-left relative">
         <thead className="bg-foreground">
           <TableHeader>
             {cols.map((col) => (

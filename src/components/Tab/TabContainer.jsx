@@ -11,6 +11,7 @@ import Log from "../Log/Log";
 import LogSearchFilterBar from "../Log/LogSearchFilterBar";
 import TabSection from "../Tab/TabSection";
 import TagDisplay from "../TagDisplay";
+import { useSession } from "next-auth/react";
 
 /**
  * Displays information within each tab on the Individual Dog page including Logs and Forms
@@ -34,14 +35,45 @@ export default function TabContainer({
   tags,
   removeTag,
   filteredLogs,
+  isEdit,
+  onEditLog,
+  onDeleteLog
 }) {
   const router = useRouter();
+
+  const { data: session } = useSession();
+  const user = session?.user;
 
   return (
     <div
       ref={logRef}
       className="mt-8 mb-8 shadow-xl rounded-lg text-md w-full text-left relative overflow-hidden bg-foreground p-8"
     >
+      {isEdit ? 
+      <TabSection defaultTab={"information"} isEdit={isEdit}>
+        <div label="information">
+          <div className="w-full grid grid-cols-3 gap-16">
+            {Object.keys(dogInformationSchema).map((category) => (
+              <div className="col" key={category}>
+                <div className="flex-col space-y-4 text-lg">
+                  <div className="text-xl">
+                    <strong>{category}</strong>
+                  </div>
+
+                  {Object.keys(dogInformationSchema[category]).map((col) => {
+                    const { key: formKey } =
+                      dogInformationSchema[category][col];
+
+                    return (
+                      <FormField key={col} keyLabel={formKey} label={col} />
+                    );
+                  })}
+                </div>
+              </div>
+              ))}
+            </div>
+          </div>
+        </TabSection> :
       <TabSection defaultTab={ showLogTab ? "logs" : (showFormTab ? "forms" : "information") }>
         <div label="information">
           <div className="w-full grid grid-cols-3 gap-16">
@@ -65,6 +97,7 @@ export default function TabContainer({
             ))}
           </div>
         </div>
+
         <div label="logs">
           <div className="flex-grow flex-col space-y-4">
             <LogSearchFilterBar
@@ -78,8 +111,21 @@ export default function TabContainer({
 
             {/* TODO: move to static array, toggle hidden field */}
             {filteredLogs.map((log) => {
-              return <Log log={log} key={log._id} />;
+              return (
+                <Log 
+                  log={log} 
+                  key={log._id} 
+                  user={user} 
+                  onEdit={(success) => {
+                    onEditLog(success);
+                  }}
+                  onDelete={(success) => {
+                    onDeleteLog(success);
+                  }}
+                />
+              );
             })}
+
             <div className="flex justify-center">
               Displaying {filteredLogs.length} out of {logs.length}{" "}
               {logs.length == 1 ? "log" : "logs"}
@@ -173,7 +219,7 @@ export default function TabContainer({
             )}
           </div>
         </div>
-      </TabSection>
-    </div>
+      </TabSection> }
+    </div> 
   );
 }

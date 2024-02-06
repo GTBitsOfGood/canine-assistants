@@ -12,7 +12,7 @@ import { Chip, ChipTypeStyles } from "../Chip";
  * @param {*} onSubmit function that is called when the user tries to save the log
  * @returns the modal component
  */
-export default function LogModal({ dogId, userId, onClose, onSubmit }) {
+export default function LogModal({ dogId, userId, log, onClose, onSubmit }) {
   const [logData, setLogData] = useState({
     title: "",
     topicSet: {},
@@ -30,8 +30,59 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
 
   const [saving, setSaving] = useState(false);
   const modalRef = useRef(null);
+  const [retrievedLog, setRetrievedLog] = useState(false);
+  const [fetchedDogId, setFetchedDogId] = useState(null);
 
+  const [showCancelConfirmModal, setShowCancelConfirmModal] = useState(false);
+
+  // For log editting, gets the indices of the topic, concern, and tags
+  const topicMapping = consts.topicArray.reduce((acc, topic, index) => {
+    acc[topic] = index;
+    return acc;
+  }, {});
+  
+  const concernMapping = consts.concernArray.reduce((acc, concern, index) => {
+    acc[concern] = index;
+    return acc;
+  }, {});
+  
+  const tagsMapping = consts.tagsArray.reduce((acc, tag, index) => {
+    acc[tag] = index;
+    return acc;
+  }, {});
+  
+  const convertTagsArrayToObject = (tagsArray) => {
+    return tagsArray.reduce((acc, tag) => {
+      const tagIndex = tagsMapping[tag];
+      if (tagIndex !== undefined) {
+        acc[tagIndex] = tag;
+      }
+      return acc;
+    }, {});
+  };
+  
+  // Updates the logData state with the log data from the database when editing
   useEffect(() => {
+
+    if (log && !retrievedLog) {
+      
+          const topicIndex = topicMapping[log.topic];
+          const concernIndex = concernMapping[log.severity];
+          const tagsObject = convertTagsArrayToObject(log.tags); 
+
+          setLogData({
+            ...logData,
+            title: log.title,
+            topicSet: { [topicIndex]: log.topic },
+            severitySet:{ [concernIndex]: log.severity },
+            tagsSet: tagsObject,
+            description: log.description,
+          });
+          setFetchedDogId(log.dog);
+          setRetrievedLog(true);
+        
+    }
+
     const scrollToBottom = () => {
       modalRef.current.scrollTop = modalRef.current.scrollHeight;
     };
@@ -44,6 +95,14 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
       document.removeEventListener("click", scrollToBottom);
     };
   });
+
+  const handleSubmit = (logData) => {
+    if (log) {
+      editLog(logData);
+    } else {
+      saveLog(logData);
+    }
+  };
 
   const saveLog = (logData) => {
     const formattedData = {
@@ -68,7 +127,7 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
         body: JSON.stringify(formattedData),
       })
         .then((res) => {
-          onSubmit(true);
+          onSubmit(true, "add");
           onClose();
           setSaving(false);
         })
@@ -90,8 +149,62 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
     }
   };
 
+  const editLog = (logData) => {
+    const formattedData = {
+      title: logData.title,
+      topic: Object.values(logData.topicSet)[0],
+      severity: Object.values(logData.severitySet)[0],
+      tags: Object.values(logData.tagsSet),
+      description: logData.description,
+      dog: fetchedDogId,
+      author: userId,
+    };
+
+
+    const { success, error, data } = logSchema.safeParse(formattedData);
+    
+
+    if (success) {
+      setSaving(true);
+      fetch("/api/logs/" + log._id, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formattedData),
+      })
+        .then((res) => {
+          onSubmit(true, "edit");
+          onClose();
+          setSaving(false);
+        })
+        .catch((err) => {
+          setSaving(false);
+          onSubmit(false);
+        });
+    } else {
+      
+      const errorsArray = error.format();
+      const errorsObject = {};
+
+      for (let err in errorsArray) {
+        if (err != "_errors") {
+          errorsObject[err] = true;
+        }
+      }
+
+      setErrors({ ...errors, ...errorsObject });
+    }
+
+  };
+
   return (
+    <>
+    
     <div className="fixed inset-0 flex items-end sm:items-center justify-center z-10">
+
+
+
       <div
         onClick={() => onClose()}
         className="fixed inset-0 bg-modal-background-gray opacity-60"
@@ -102,7 +215,7 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
       >
         {/* TODO add behavior for dragging downwards to close the modal on mobile */}
         <div className="sm:hidden w-8 h-1 opacity-40 bg-zinc-500 rounded-[100px] mx-auto mb-[12px]" />
-        <h1 className="mb-6"> Add a log</h1>
+        {log ? (<h1 className="mb-6"> Edit Log</h1>) : (<h1 className="mb-6"> Add a log</h1>)}
         <h2 className="h-10 align-middle">
           Title<span className="text-error-red">*</span>
         </h2>
@@ -236,6 +349,7 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
               selectedOptions={logData.tagsSet}
               onFilterSelect={(data) => {
                 if (data !== undefined) {
+      
                   setLogData({ ...logData, tagsSet: data });
                 }
               }}
@@ -287,14 +401,17 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
         </div>
 
         <div className="flex flex-col-reverse sm:flex-row justify-end gap-[2vw]">
-          <button
-            onClick={() => onClose()}
-            className="button-base secondary-button flex w-full sm:w-32 h-10"
-          >
-            <div className="secondary-button-text">Cancel</div>
+            <button
+              type="button"
+              onClick={onClose}
+              className="button-base secondary-button flex w-full sm:w-32 h-10"
+            >
+            <div className="secondary-button-text" >
+              Cancel
+              </div>
           </button>
           <button
-            onClick={() => saveLog(logData)}
+            onClick={() => handleSubmit(logData)}
             disabled={saving}
             className={`flex w-full sm:w-32 h-10 button-base ${
               saving
@@ -311,5 +428,8 @@ export default function LogModal({ dogId, userId, onClose, onSubmit }) {
         </div>
       </div>
     </div>
+
+    </>
   );
+  
 }
