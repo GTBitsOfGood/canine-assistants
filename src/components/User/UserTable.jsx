@@ -47,7 +47,7 @@ export default function UserTable() {
       setUserToDeactivate(userId);
       setShowModal(!showModal)
     } else {
-      updateUserStatus(userId, "Active");
+      updateUserStatus(userId, true);
     }
   };
 
@@ -56,15 +56,14 @@ export default function UserTable() {
       const response = await fetch(`/api/users/${userId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ role: status }),
+        body: JSON.stringify({ isActive: status }),
       });
       if (!response.ok) throw new Error("Failed to update the user role");
       const updatedUsers = users.map(user => 
-        user._id === userId ? { ...user, role: status } : user
+        user._id === userId ? { ...user, isActive: status } : user
       );
       setUsers(updatedUsers);
     } catch (error) {
-      console.error(error);
       toast.error(`Error updating user role: ${error.message}`);
     } finally {
       setShowModal(false)
@@ -73,11 +72,12 @@ export default function UserTable() {
   };
 
   const applyRole = async (role) => {  // PATCH sent when role is changed through dropdown menu
-    if (role[0] !== "Admin" && role[1] !== "User") {
+    console.log(role, consts.userAccess)
+    if (!consts.userAccess.hasOwnProperty(Object.values(role)[0])) {
       toast.error("Invalid user ID or role");
       return;
     }
-    const roleValue = role[0] == "Admin" ? role[0] : role[1];
+    const roleValue = Object.values(role)[0]
     try {
       const response = await fetch(`/api/users/${selectedUserId}`, {
         method: 'PATCH',
@@ -137,7 +137,7 @@ export default function UserTable() {
             <DropdownMenu
               submitFilters={(selectedRole) => {
                 applyRole(selectedRole)
-                rowData.role=selectedRole[0] == "Admin" ? "Admin" : "User"
+                rowData.role=consts.userAccess[selectedRole[0]]
                 window.location.reload();  // temporary fix: reload page whenever a role is assigned, to update role in UI
               }}
               label={rowData.role}
@@ -146,11 +146,11 @@ export default function UserTable() {
                 filterText: "Apply Role"
               }}
             >
-              {consts.userAccessArray.map((roles, index) => (
+              {Object.values(consts.userAccess).map((role, index) => (
                 <DropdownMenuOption
                   key={index}
-                  label={roles}
-                  name={roles}
+                  label={role}
+                  name={role}
                 />
               ))}
             </DropdownMenu>
@@ -163,12 +163,12 @@ export default function UserTable() {
       id: "status",
       label: "Status",
       icon: <ClipboardIcon />,
-      customRender: (rowData) => {
+     customRender: (rowData) => {
         return (
           <>
-            <ToggleSwitch isActive={rowData.role !== "Inactive"} onToggle={() => handleToggle(rowData._id, rowData.role !== "Inactive" ? "Active" : "Inactive")} />
+            <ToggleSwitch isActive={rowData.isActive} onToggle={() => handleToggle(rowData._id, rowData.isActive ? "Active" : "Inactive")} />
             <div className="mx-3">
-              {rowData.role === "Inactive" ? "Inactive" : "Active"}
+              {rowData.isActive ? "Active": "Inactive"}
             </div>
           </>
         );
@@ -203,7 +203,7 @@ export default function UserTable() {
         ? ConfirmCancelModal(  // Prompted when user intends to deactivate a row
           `Deactivate ${selectedUserName}?`,
           `Select “Confirm” to deactivate ${selectedUserName} and remove all access to the Canine Assistants platform. This action can only be undone by an administrator.`,
-          () => updateUserStatus(userToDeactivate, "Inactive"),
+          () => updateUserStatus(userToDeactivate, false),
           setShowModal,
           showModal
         )

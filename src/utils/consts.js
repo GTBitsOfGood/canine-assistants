@@ -23,8 +23,12 @@ const consts = {
   concernArray: ["None", "Moderate", "High"],
   locationArray: ["Facility 1", "Facility 2", "Placed"],
   roleArray: ["Service", "Companion"],
-  userRoleArray: ["Admin", "User", "Inactive"],
-  userAccessArray: ["Admin", "User"],
+  userRoleArray: ["Manager", "Admin", "User"],
+  userAccess: {
+    Manager: "Manager",
+    Admin: "Admin",
+    User: "User",
+  },
   leashArray: ["Leashed", "Off-leash"],
   relationshipArray: [
     "Sibling",
@@ -321,6 +325,8 @@ const computeDefaultValues = (dog) => {
 const userUpdateSchema = z.object({
   name: z.string(),
   role: z.enum(consts.userRoleArray),
+  isActive: z.boolean(),
+  acceptedInvite: z.boolean(),
 });
 
 const userRegistrationSchema = z.object({

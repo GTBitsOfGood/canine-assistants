@@ -26,6 +26,16 @@ const UserSchema = new Schema({
   passwordHash: {
     type: String,
   },
+  isActive: {
+    type: Boolean,
+    default: true,
+    required: true,
+  },
+  acceptedInvite: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
 });
 
 export default mongoose.models?.User ?? mongoose.model("User", UserSchema);
