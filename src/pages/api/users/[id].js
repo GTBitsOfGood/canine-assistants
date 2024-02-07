@@ -47,8 +47,12 @@ export default async function handler(req, res) {
       .partial()
       .strict()
       .refine(
-        (data) => data.name || data.role,
-        "Must update either name or role",
+        (data) =>
+          data.name ||
+          data.role ||
+          data.hasOwnProperty("isActive") ||
+          data.hasOwnProperty("acceptedInvite"),
+        "Must update either name, role, status, or invite status.",
       )
       .safeParse(req.body);
 
