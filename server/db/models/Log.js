@@ -25,6 +25,13 @@ const LogSchema = new Schema({
   description: {
     type: String,
   },
+  resolved: {
+    type: boolean,
+    required: true,
+  },
+  resolution: {
+    type: String,
+  },
   author: {
     type: SchemaTypes.ObjectId,
     ref: "User",
@@ -34,6 +41,10 @@ const LogSchema = new Schema({
     type: SchemaTypes.ObjectId,
     ref: "Dog",
     required: true,
+  },
+  resolver: {
+    type: SchemaTypes.ObjectId,
+    ref: "User",
   },
 });
 // tell mongodb to autogenerate createdAt + updatedAt fields
