@@ -345,12 +345,20 @@ const logSchema = z.object({
   tags: z.array(z.enum(consts.tagsArray)).optional(),
   severity: z.enum(consts.concernArray),
   description: z.string().min(1).optional(),
+  resolved: z.boolean(),
+  resolution: z.string().min(1).optional(),
   author: z.string().refine((id) => {
     return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
   }),
   dog: z.string().refine((id) => {
     return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
   }),
+  resolver: z
+    .string()
+    .refine((id) => {
+      return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
+    })
+    .optional(),
 });
 
 /**

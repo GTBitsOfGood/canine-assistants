@@ -28,6 +28,7 @@ const LogSchema = new Schema({
   resolved: {
     type: boolean,
     required: true,
+    default: false,
   },
   resolution: {
     type: String,

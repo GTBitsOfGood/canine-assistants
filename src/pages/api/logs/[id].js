@@ -4,6 +4,7 @@ import {
   deleteLog,
   getLogById,
 } from "../../../../server/db/actions/Log";
+import { getUserById } from "../../../../server/db/actions/User";
 import { z } from "zod";
 import { consts } from "@/utils/consts";
 
@@ -13,6 +14,8 @@ const logSchema = z.object({
   tags: z.enum(consts.tagsArray).array(),
   severity: z.enum(consts.concernArray),
   description: z.string(),
+  resolved: z.boolean(),
+  resolution: z.string(),
 });
 
 export default async function handler(req, res) {
@@ -122,6 +125,33 @@ export default async function handler(req, res) {
           message: message,
         });
       }
+    }
+
+    if (data.resolved && data.resolver) {
+      // ensure resolved and resolver exists
+      let user;
+      try {
+        user = await getUserById(data.resolver); //get the resolver by id
+      } catch (e) {
+        return res.status(500).send({
+          success: false,
+          message: "Unable to get user.",
+        });
+      }
+
+      if (!user || user.role !== "Manager") {
+        // check if resolver role === "Manager"
+        return res.status(403).send({
+          success: false,
+          message: "Only managers are allowd to resolve logs",
+        });
+      }
+    } else if (data.resolved && !data.resolver) {
+      //ensure resol
+      return res.status(400).send({
+        success: false,
+        message: "Missing resolver ID for resolving the log.",
+      });
     }
 
     return updateLog(req.query.id, data)
