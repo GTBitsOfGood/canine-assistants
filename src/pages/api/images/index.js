@@ -65,6 +65,13 @@ export default async function handler(req, res) {
 
     const results = await uploadImage(dogId, image);
 
+    if (!results.success) {
+      return res.status(500).send({
+        success: false,
+        message: "There was a problem uploading the image, please try again",
+      });
+    }
+
     const updateResults = await updateDog(dogId, {
       image: `https://f004.backblazeb2.com/b2api/v1/b2_download_file_by_id?fileId=${results.data.fileId}`,
     }).catch(() => {
@@ -81,7 +88,10 @@ export default async function handler(req, res) {
     if (results.success) {
       return res.status(200).send({
         success: true,
-        data: results.data,
+        data: {
+          ...results.data,
+          imageUrl: `https://f004.backblazeb2.com/b2api/v1/b2_download_file_by_id?fileId=${results.data.fileId}`,
+        },
       });
     } else {
       return res.status(400).send({

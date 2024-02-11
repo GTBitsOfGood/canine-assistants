@@ -245,6 +245,20 @@ export default function IndividualDogPage() {
         throw new Error(res.message);
       }
 
+      const imageRes = await fetch("/api/images", {
+        method: "POST",
+        headers: {
+          "Dog-Id": res.data._id
+        },
+        body: fileParam,
+      }).then((res) => { return res.json() });
+
+      if (!imageRes.success) {
+        throw new Error(imageRes.data);
+      } else {
+        setFileParam(imageRes.imageUrl)
+      }
+
       if (router.route === "/dogs/new") {
         router.push(`/dogs/${res.data._id}`);
       }
@@ -287,30 +301,6 @@ export default function IndividualDogPage() {
     setAppliedFilters(newFilters);
   };
 
-  /**
-   * uploads image file to backblaze via api/media/image
-   * fileParam is set in image upload component
-   */
-  const upload = async () => {
-    const { fileparam } = fileParam;
-    
-    const formData = new FormData();
-    formData.append("samplefile", fileparam);
-    try {
-      
-      const { data } = await fetch(`/api/media/upload`, {
-        method: "POST",
-        body: formData,
-      });
-      console.log(data);
-      
-    } catch (err) {
-      console.error(err);
-    }
-
-    
-  };
-  
   // TODO add listener for if user clicks out of dropdown menu to turn back into button
 
   return (
@@ -361,11 +351,11 @@ export default function IndividualDogPage() {
         <div className="flex gap-8">
           {dog.image ? 
             <div className="relative">
-              <Image alt="Dog" width={350} height={350} src={dog.image} />
-              {isEdit && 
-              <div>
-                <ImageUpload preview={true} setFileParam={setFileParam}/>
-              </div>}
+              {isEdit ? (
+                <ImageUpload preview={true} setFileParam={setFileParam} previewImage={dog.image}/>
+              ) : (
+                <Image alt="Dog" width={350} height={350} src={dog.image} />
+              )}
             </div>
             
            : 
