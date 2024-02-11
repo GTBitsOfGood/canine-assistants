@@ -16,14 +16,14 @@ export async function backblazeConnect() {
     .then((response) => response.json())
     .then((res) => {
       return {
-        success: true,
+        success: !res.status || res.status == "200",
         data: res,
       };
     })
     .catch((err) => {
       return {
         success: false,
-        error: err,
+        data: err,
       };
     });
 }
@@ -53,14 +53,14 @@ export async function uploadImage(dogId, image) {
     .then((response) => response.json())
     .then((res) => {
       return {
-        success: true,
+        success: !res.status || res.status == "200",
         data: res,
       };
     })
     .catch((err) => {
       return {
         success: false,
-        error: err,
+        data: err,
       };
     });
 
@@ -89,14 +89,14 @@ export async function uploadImage(dogId, image) {
     .then((response) => response.json())
     .then((res) => {
       return {
-        success: true,
+        success: !res.status || res.status == "200",
         data: res,
       };
     })
     .catch((err) => {
       return {
         success: false,
-        error: err,
+        data: err,
       };
     });
 }
@@ -135,14 +135,14 @@ export async function deleteImage(dogId, imageUrl) {
     .then((response) => response.json())
     .then((res) => {
       return {
-        success: true,
+        success: !res.status || res.status == "200",
         data: res,
       };
     })
     .catch((err) => {
       return {
         success: false,
-        error: err,
+        data: err,
       };
     });
 }

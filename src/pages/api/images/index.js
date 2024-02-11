@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     } else {
       return res.status(400).send({
         success: false,
-        data: results.error,
+        data: results.data,
       });
     }
   } else if (req.method === "POST") {
@@ -86,7 +86,7 @@ export default async function handler(req, res) {
     } else {
       return res.status(400).send({
         success: false,
-        data: results.error,
+        data: results.data,
       });
     }
   }
