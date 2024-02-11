@@ -11,7 +11,7 @@ import { MongoClient, ObjectId } from "mongodb";
 import User from "../../../../server/db/models/User";
 
 import CredentialsProvider from "next-auth/providers/credentials";
-import { verifyUser } from "../../../../server/db/actions/User";
+import { verifyUser, updateUser } from "../../../../server/db/actions/User";
 
 const client = new MongoClient(DB_CONNECTION_STRING);
 
@@ -52,12 +52,43 @@ export const authOptions = {
             ...response.message,
           };
         } else {
-          return null;
+          return {
+            status: response.status,
+            message: response.message,
+          };
         }
       },
       credentials: {
         email: { label: "Email", type: "text" },
         password: { label: "Password", type: "password" },
+      },
+    }),
+    CredentialsProvider({
+      id: "signup",
+      name: "Signup with Email and Password",
+
+      async authorize(credentials) {
+        const response = await updateUser(
+          credentials.email,
+          credentials.password,
+          credentials.name,
+        );
+
+        console.log(response);
+
+        if (response.status === 200) {
+          return {
+            id: response.message._id,
+            ...response.message,
+          };
+        } else {
+          return response;
+        }
+      },
+      credentials: {
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
+        name: { label: "Name", type: "text" },
       },
     }),
     GoogleProvider({
@@ -68,12 +99,14 @@ export const authOptions = {
   ],
   pages: {
     signIn: "/login",
-    // newUser: "/dogs",
+    // newUser: "/signup",
     // error: "/login",
   },
   events: {
-    createUser: async (message) => {
-      await dbConnect();
+    updateUser: async (message) => {
+      console.log(message);
+      // await dbConnect();
+      const response = await createUser(message);
 
       const _id = new ObjectId(message.user.id);
 

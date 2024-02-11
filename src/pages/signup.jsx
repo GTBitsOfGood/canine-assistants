@@ -4,6 +4,7 @@ import GreenWaves from "@/components/GreenWaves";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 
+
 /**
  * Sign up page
  *
@@ -13,27 +14,16 @@ export default function Signup({ dogs }) {
   const onSubmitForm = async (event) => {
     event.preventDefault(true);
 
-    let res = await fetch("/api/users/register", {
-      body: JSON.stringify({
-        firstName: event.target.firstName.value,
-        lastName: event.target.lastName.value,
-        email: event.target.email.value,
-        password: event.target.password.value,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-    });
-    res = await res.json();
-    if (!res.success) {
-      return;
-    }
-    await signIn('credentials', {
+    const response = await signIn('signup', {
       email: event.target.email.value,
       password: event.target.password.value,
+      name: event.target.firstName.value + " " + event.target.lastName.value,
       callbackUrl: '/dogs'
     });
+
+    if (!response || response.error) {
+      console.log("Error occurred");
+    }
   };
 
   return (
