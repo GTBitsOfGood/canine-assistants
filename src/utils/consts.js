@@ -385,6 +385,28 @@ const formSchema = z.object({
 });
 
 /**
+ * Zod object for validating request bodies for signup
+ */
+const signUpSchema = z
+  .object({
+    name: z.string().min(1, { message: "Please enter a valid name" }).trim(),
+    email: z.string().email({ message: "Please enter a valid email address" }),
+    password: z.string().min(8, { message: "Please enter a valid password" }),
+    confirmPassword: z
+      .string()
+      .min(8, { message: "Please enter a valid password" }),
+  })
+  .refine(
+    (values) => {
+      return values.password === values.confirmPassword;
+    },
+    {
+      message: "Passwords must match!",
+      path: ["confirmPassword"],
+    },
+  );
+
+/**
  * New Dog
  */
 const newDog = {
@@ -407,6 +429,7 @@ export {
   userRegistrationSchema,
   formSchema,
   formUpdateSchema,
+  signUpSchema,
   dogInformationSchema,
   computeDefaultValues,
   newDog,
