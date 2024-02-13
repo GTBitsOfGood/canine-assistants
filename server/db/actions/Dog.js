@@ -134,7 +134,13 @@ export async function deleteDog(id) {
     const dog = await Dog.findByIdAndDelete({ _id: id });
 
     if (dog.image && dog.image != "") {
-      await deleteImage(id, dog.image);
+      const imageRes = await (await deleteImage(id, dog.image)).json();
+
+      if (!imageRes.success) {
+        throw new Error(
+          "There was a problem deleting the dog's image, please delete manually",
+        );
+      }
     }
 
     return dog;

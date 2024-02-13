@@ -245,18 +245,30 @@ export default function IndividualDogPage() {
         throw new Error(res.message);
       }
 
-      const imageRes = await fetch("/api/images", {
-        method: "POST",
-        headers: {
-          "Dog-Id": res.data._id
-        },
-        body: fileParam,
-      }).then((res) => { return res.json() });
+      if (fileParam) {
+        const imageRes = await fetch("/api/images", {
+          method: "POST",
+          headers: {
+            "Dog-Id": res.data._id
+          },
+          body: fileParam,
+        }).then((res) => { return res.json() });
 
-      if (!imageRes.success) {
-        throw new Error(imageRes.data);
+        if (!imageRes.success) {
+          throw new Error(imageRes.data);
+        } else {
+          setFileParam(imageRes.imageUrl)
+        }
       } else {
-        setFileParam(imageRes.imageUrl)
+        const deleteRes = await fetch(`/api/images/${res.data._id}`, {
+          method: "DELETE",
+        }).then((res) => { return res.json() });
+
+        if (!deleteRes.success) {
+          throw new Error(imageRes.data);
+        } else {
+          setFileParam(null)
+        }
       }
 
       if (router.route === "/dogs/new") {
@@ -352,12 +364,11 @@ export default function IndividualDogPage() {
           {dog.image ? 
             <div className="relative">
               {isEdit ? (
-                <ImageUpload preview={true} setFileParam={setFileParam} previewImage={dog.image}/>
+                <ImageUpload preview={true} setFileParam={setFileParam} previewImage={dog.image} />
               ) : (
                 <Image alt="Dog" width={350} height={350} src={dog.image} />
               )}
             </div>
-            
            : 
             <>
               <div
@@ -365,16 +376,16 @@ export default function IndividualDogPage() {
                   "w-[350px] h-[350px] bg-primary-gray flex items-center justify-center rounded-lg relative"
                 }
               >
-                <Image
-                  priority
-                  src={dogplaceholdericon}
-                  alt="Dog Placeholder"
-                  
-                />
-                {isEdit && (
+                {isEdit ? (
                   <div className="z-10 absolute bottom-10">
                     <ImageUpload preview={false} setFileParam={setFileParam}/>
                   </div>
+                ) : (
+                  <Image
+                    priority
+                    src={dogplaceholdericon}
+                    alt="Dog Placeholder"
+                  />
                 )}
               </div>
             </>

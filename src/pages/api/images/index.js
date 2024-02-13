@@ -37,11 +37,11 @@ export default async function handler(req, res) {
 
     // Delete previous image if it exist
     if (dog.image && dog.image != "") {
-      const res = await deleteImage(dogId, dog.image).catch(() => {
+      const deleteRes = await deleteImage(dogId, dog.image).catch(() => {
         return false;
       });
 
-      if (!res || !res.success) {
+      if (!deleteRes || !deleteRes.success) {
         return res.status(500).send({
           success: false,
           message:
