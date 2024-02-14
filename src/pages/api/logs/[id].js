@@ -7,15 +7,18 @@ import {
 import { getUserById } from "../../../../server/db/actions/User";
 import { z } from "zod";
 import { consts } from "@/utils/consts";
+import { getServerSession } from "next-auth/react";
+import { authOptions } from "../auth/[...nextauth].js";
 
 const logSchema = z.object({
   title: z.string(),
   topic: z.enum(consts.topicArray),
   tags: z.enum(consts.tagsArray).array(),
   severity: z.enum(consts.concernArray),
-  description: z.string(),
+  description: z.string().optional(),
   resolved: z.boolean(),
-  resolution: z.string(),
+  resolution: z.string().optional(),
+  resolver: z.string().optional(),
 });
 
 export default async function handler(req, res) {
@@ -126,55 +129,58 @@ export default async function handler(req, res) {
         });
       }
     }
-
-    if (data.resolved && data.resolver) {
-      // ensure resolved and resolver exists
-      let user;
-      try {
-        user = await getUserById(data.resolver); //get the resolver by id
-      } catch (e) {
-        return res.status(500).send({
-          success: false,
-          message: "Unable to get user.",
-        });
-      }
-
-      if (!user || user.role !== "Manager") {
-        // check if resolver role === "Manager"
-        return res.status(403).send({
-          success: false,
-          message: "Only managers are allowd to resolve logs",
-        });
-      }
-    } else if (data.resolved && !data.resolver) {
-      //ensure resol
-      return res.status(400).send({
+    const session = await getServerSession(req, res, authOptions);
+    if (!session || session.user.role !== "Manager") {
+      return res.status(403).send({
         success: false,
-        message: "Missing resolver ID for resolving the log.",
+        message: "Only managers are allowed to resolve logs",
       });
     }
 
-    return updateLog(req.query.id, data)
-      .then((updatedLogObject) => {
-        if (!updatedLogObject) {
-          return res.status(404).send({
+    if (data.resolved) {
+      if (!data.resolver) {
+        data.resolver = session.user.id;
+      } else {
+        let resolverUser;
+        try {
+          resolverUser = await getUserById(data.resolver);
+        } catch (error) {
+          return res.status(500).send({
             success: false,
-            message: "Cannot update log because log does not exist!",
-          });
-        } else {
-          return res.status(200).send({
-            success: true,
-            message: "Sucessfully updated log",
-            data: updatedLogObject,
+            message: "Error fetching user data for the provided resolver ID.",
           });
         }
-      })
-      .catch((e) => {
-        return res.status(500).send({
-          success: false,
-          message: e.message,
+        if (!resolverUser || resolverUser.role !== "Manager") {
+          return res.status(403).send({
+            success: false,
+            message: "Provided resolver ID does not match a Manager user.",
+          });
+        }
+      }
+
+      return updateLog(req.query.id, data)
+        .then((updatedLogObject) => {
+          if (!updatedLogObject) {
+            return res.status(404).send({
+              success: false,
+              message: "Cannot update log because log does not exist!",
+            });
+          } else {
+            return res.status(200).send({
+              success: true,
+              message: "Successfully updated log",
+              data: updatedLogObject,
+            });
+          }
+        })
+        .catch((error) => {
+          return res.status(500).send({
+            success: false,
+            message: "An error occurred while updating the log.",
+            error: error.message,
+          });
         });
-      });
+    }
   }
 
   return res.status(405).json({

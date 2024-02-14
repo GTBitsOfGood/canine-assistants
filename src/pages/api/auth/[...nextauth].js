@@ -85,7 +85,7 @@ export const authOptions = {
         name: message.user.name,
         email: message.user.email,
         image: message.user.image,
-        role: "User", // TODO: Default string shouldn't be hardcoded and instead moved somewhere else
+        role: "Manager", // TODO: Default string shouldn't be hardcoded and instead moved somewhere else
       };
 
       const user = new User(newUserRecord);
