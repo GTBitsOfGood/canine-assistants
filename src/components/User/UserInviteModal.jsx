@@ -102,7 +102,6 @@ export default function UserInviteModal({ userId, onClose, onSubmit }) {
         </h2>
         <div className="mb-6">
           <input
-            // value={logData.title}
             onChange={(event) => {
               setInviteData({ ...inviteData, email: event.target.value });
               setErrors({ ...errors, title: false });
