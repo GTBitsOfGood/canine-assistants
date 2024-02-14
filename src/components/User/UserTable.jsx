@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 import Table from "../Table/Table";
 import UserSearchBar from "./UserSearchBar";
+import UserInviteModal from "./UserInviteModal";
 import DropdownMenu, { DropdownMenuOption } from "../Form/DropdownMenu";
 import {
   Bars3BottomLeftIcon,
   IdentificationIcon,
   AtSymbolIcon,
   ClipboardIcon,
+  PlusIcon,
 } from "@heroicons/react/24/solid";
 import LoadingAnimation from "../LoadingAnimation";
 import toast from "react-hot-toast";
 import { consts } from "@/utils/consts";
 import ToggleSwitch from "./ToggleSwitch"
 import ConfirmCancelModal from "../ConfirmCancelModal";
+import { set } from "mongoose";
 
 /**
  * @returns { React.ReactElement } The UserTable component
@@ -26,8 +29,11 @@ export default function UserTable() {
   const [selectedUserName, setSelectedUserName] = useState("");
   const [userToDeactivate, setUserToDeactivate] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [showChange, setShowChange] = useState(false);
 
   useEffect(() => {  // Pull all user data
+    setShowChange(false)
     fetch("/api/users")
     .catch(() => {
       setLoading(false);
@@ -40,7 +46,7 @@ export default function UserTable() {
         setLoading(false);
       });
     
-  }, []);
+  }, [showChange]);
 
   const handleToggle = (userId, currentStatus) => {  // Active/Inactive toggle handling, opens confirmation modal
     if (currentStatus === "Active") {
@@ -138,7 +144,7 @@ export default function UserTable() {
               submitFilters={(selectedRole) => {
                 applyRole(selectedRole)
                 rowData.role=consts.userAccess[selectedRole[0]]
-                window.location.reload();  // temporary fix: reload page whenever a role is assigned, to update role in UI
+                setShowChange(true)
               }}
               label={rowData.role}
               props={{
@@ -163,24 +169,76 @@ export default function UserTable() {
       id: "status",
       label: "Status",
       icon: <ClipboardIcon />,
-     customRender: (rowData) => {
-        return (
+      customRender: (rowData) => {
+        return rowData.acceptedInvite ? (
           <>
             <ToggleSwitch isActive={rowData.isActive} onToggle={() => handleToggle(rowData._id, rowData.isActive ? "Active" : "Inactive")} />
             <div className="mx-3">
-              {rowData.isActive ? "Active": "Inactive"}
+              {rowData.isActive ? "Active" : "Inactive"}
             </div>
+          </>
+        ) : (
+          <>
+            <div className="w-32 break-words">
+            Invite Pending
+          </div>
           </>
         );
       },
+      
     },
   ];
   
   return(
     <>
+      {showInviteModal ? (
+        <>
+          <UserInviteModal
+          onClose={() => {
+            setShowInviteModal(false);
+          }}
+          onSubmit={(success) => {
+            if (success) {
+              setShowChange(true)
+              toast.custom((t) => (
+                <div
+                  className={`h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-ca-green text-white text-lg font-normal
+                  ${t.visible ? "animate-enter" : "animate-leave"}`}
+                >
+                  <span>User was successfully invited.</span>
+                </div>
+              ));
+            } else {
+              toast.custom(() => (
+                <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
+                  There was a problem inviting the user, please try again.
+                </div>
+              ));
+            }
+          }}
+          />
+        </>
+      ) : null}
+
       <LoadingAnimation animated={false} loadText={false} />
       <div className="flex-grow flex-col space-y-6 mb-8">
-        <UserSearchBar setSearch={setSearchFilter} />
+      <div className="space-x-10 md:space-x-20 flex flex-row items-center">
+            <div className="flex-grow" style={{ flexBasis: '70%' }}>
+                <UserSearchBar setSearch={setSearchFilter} />
+            </div>
+            <div className="flex-grow" style={{ flexBasis: '20%' }}>
+                <button
+                    className="flex w-full px-4 py-1.5 height: 'fit-content justify-center items-center button-base primary-button flex gap-2"
+                    onClick={() => setShowInviteModal(true)}
+                >
+                    <div className="primary-button-plus-icon">{<PlusIcon />}</div>
+                    <div className="primary-button-text">Invite a User</div>
+                </button>
+            </div>
+        </div>
+
+
+        
 
         <Table  // Data comes in as "users" state
           loading={loading}
