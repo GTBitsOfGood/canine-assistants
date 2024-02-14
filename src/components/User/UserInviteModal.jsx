@@ -42,6 +42,7 @@ export default function UserInviteModal({ userId, onClose, onSubmit }) {
 
     if (success) {
         setSaving(true);
+        
         fetch("/api/users", {
             method: "POST",
             headers: {
@@ -50,10 +51,16 @@ export default function UserInviteModal({ userId, onClose, onSubmit }) {
             body: JSON.stringify(formattedData),
           })
             .then((res) => {
-        
-              onSubmit(true);
-              onClose();
-              setSaving(false);
+                setSaving(false);
+                const status = res.status;
+                if (status === 200) {
+                    onSubmit(true);
+                    onClose();
+                } else if (status === 409) {
+                    onSubmit(false, 409);
+                } else {
+                    onSubmit(false);
+                }    
             })
             .catch((err) => {
               setSaving(false);

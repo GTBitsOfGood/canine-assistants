@@ -31,6 +31,14 @@ export default async function handler(req, res) {
     try {
       const { name, email, role, acceptedInvite, isActive } = data;
 
+      const existingUser = await getUsers({ email: email });
+      if (existingUser.length > 0) {
+        return res.status(409).json({
+          success: false,
+          message: "User with email already exists",
+        });
+      }
+
       try {
         await createUser({
           name: name,

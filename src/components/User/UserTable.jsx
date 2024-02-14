@@ -42,7 +42,23 @@ export default function UserTable() {
     })
       .then((res) => res.json())
       .then((data) => {
-        setUsers(data?.data);
+        const sortedData = data?.data.sort((a, b) => {
+          
+          const getPriority = (entry) => {
+              if (entry.acceptedInvite && entry.isActive) return 1;
+              if (!entry.acceptedInvite) return 2;
+              if (entry.acceptedInvite && !entry.isActive) return 3;
+              return 4; // Fallback
+          };
+      
+          const priorityA = getPriority(a);
+          const priorityB = getPriority(b);
+      
+          return priorityA - priorityB;
+      });
+      
+  
+        setUsers(sortedData);
         setLoading(false);
       });
     
@@ -197,7 +213,7 @@ export default function UserTable() {
           onClose={() => {
             setShowInviteModal(false);
           }}
-          onSubmit={(success) => {
+          onSubmit={(success, statusCode) => {
             if (success) {
               setShowChange(true)
               toast.custom((t) => (
@@ -209,11 +225,19 @@ export default function UserTable() {
                 </div>
               ));
             } else {
+              if (statusCode === 409) {
+                toast.custom(() => (
+                    <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
+                        A user with that email already exists.
+                    </div>
+                ));
+            } else {
               toast.custom(() => (
                 <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
                   There was a problem inviting the user, please try again.
                 </div>
               ));
+            }
             }
           }}
           />
