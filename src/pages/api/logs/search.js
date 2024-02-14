@@ -10,12 +10,18 @@ const logParams = z.object({
   dog: z.string().refine((id) => {
     return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
   }),
+  resolver: z.string().refine((id) => {
+    return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
+  }),
   query: z.string().optional(),
+  resolved: z.boolean().optional(),
+  resolution: z.string().optional(),
   filters: z
     .object({
       topic: z.array(z.enum(consts.topicArray)).optional(),
       severity: z.array(z.enum(consts.concernArray)).optional(),
       tags: z.array(z.enum(consts.tagsArray)).optional(),
+      resolved: z.array(z),
     })
     .optional(),
 });
@@ -55,6 +61,14 @@ export default async function handler(req, res) {
         { description: { $regex: query, $options: "i" } },
       ],
     };
+    const resolved = search.resolved;
+    if (resolved !== undefined) {
+      filter.resolved = resolved;
+    }
+    if (search.resolver) {
+      //does this need to be searched for? idk we could remove it
+      filter.resolver = search.resolver;
+    }
     if (topic.length > 0) {
       filter.topic = { $in: topic };
     }
