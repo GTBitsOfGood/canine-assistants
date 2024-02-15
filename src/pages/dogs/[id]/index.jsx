@@ -141,6 +141,7 @@ export default function IndividualDogPage() {
             return;
           }
           setData(data);
+          setFileParam(data.data.image);
           reset(computeDefaultValues(data.data));
         });
       
@@ -245,7 +246,7 @@ export default function IndividualDogPage() {
         throw new Error(res.message);
       }
 
-      if (fileParam) {
+      if (fileParam && fileParam != "") {
         const imageRes = await fetch("/api/images", {
           method: "POST",
           headers: {
@@ -257,17 +258,19 @@ export default function IndividualDogPage() {
         if (!imageRes.success) {
           throw new Error(imageRes.data);
         } else {
-          setFileParam(imageRes.imageUrl)
+          setFileParam(() => { return imageRes.data.imageUrl });
         }
       } else {
-        const deleteRes = await fetch(`/api/images/${res.data._id}`, {
-          method: "DELETE",
-        }).then((res) => { return res.json() });
+        if (router.route != "/dogs/new" && dog.image != "") {
+          const deleteRes = await fetch(`/api/images/${res.data._id}`, {
+            method: "DELETE",
+          }).then((res) => { return res.json() });
 
-        if (!deleteRes.success) {
-          throw new Error(imageRes.data);
-        } else {
-          setFileParam(null)
+          if (!deleteRes.success) {
+            throw new Error(imageRes.data);
+          } else {
+            setFileParam(() => { return "" });
+          }
         }
       }
 
@@ -360,38 +363,27 @@ export default function IndividualDogPage() {
       </div>
 
       <form onSubmit={handleSubmit(onEditSubmit)}>
-        <div className="flex gap-8">
-          {dog.image ? 
-            <div className="relative">
-              {isEdit ? (
-                <ImageUpload preview={true} setFileParam={setFileParam} previewImage={dog.image} />
+        <div className="flex gap-8 ">
+          <div className="flex w-[350px] h-[350px] items-center justify-center rounded-lg relative bg-primary-gray">
+            {fileParam && fileParam != "" ? (
+              isEdit ? (
+                <ImageUpload preview={true} setFileParam={setFileParam} previewImage={fileParam} />
               ) : (
-                <Image alt="Dog" width={350} height={350} src={dog.image} />
-              )}
-            </div>
-           : 
-            <>
-              <div
-                className={
-                  "w-[350px] h-[350px] bg-primary-gray flex items-center justify-center rounded-lg relative"
-                }
-              >
-                {isEdit ? (
-                  <div className="z-10 absolute bottom-10">
-                    <ImageUpload preview={false} setFileParam={setFileParam}/>
-                  </div>
-                ) : (
-                  <Image
-                    priority
-                    src={dogplaceholdericon}
-                    alt="Dog Placeholder"
-                  />
-                )}
-              </div>
-            </>
-            }
+                <Image alt="Dog" width={350} height={350} src={fileParam} />
+              )
+            ) : (
+              isEdit ? (
+                <ImageUpload preview={false} setFileParam={setFileParam} />
+              ) : (
+                <Image
+                  priority
+                  src={dogplaceholdericon}
+                  alt="Dog Placeholder"
+                />
+              )
+            )}
+          </div>
             <> 
-
               <div className="flex-col gap-4 inline-flex">
                 {/* Logic for showing information at top when not editing it */}
                 {!isEdit && (
