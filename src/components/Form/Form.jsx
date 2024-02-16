@@ -4,10 +4,11 @@ import { useSession } from "next-auth/react";
 
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
 
 import ConfirmCancelModal from "../ConfirmCancelModal";
 import FormQuestion from "./FormQuestion";
+import { Toast } from "../Toast";
+
 import {
   MONTHLY_PLACED_FORM,
   MONTHLY_UNPLACED_FORM,
@@ -134,23 +135,10 @@ export default function Form({ mode }) {
               body: JSON.stringify(form),
             }).then((res) => {
               if (res.ok) {
-                toast.custom((t) => (
-                  <div
-                    className={`h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-ca-green text-white text-lg font-normal
-                      ${t.visible ? "animate-enter" : "animate-leave"}`}
-                  >
-                    <span className="font-bold">New Form</span>
-                    &nbsp;
-                    <span> was successfully added.</span>
-                  </div>
-                ));
+                Toast({ success: true, bold: "New Form", message: "was successfully added." });
                 router.push("/dogs/" + router.query.id);
               } else {
-                toast.custom(() => (
-                  <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
-                    There was a problem adding the form, please try again.
-                  </div>
-                ));
+                Toast({ success: false, message: "There was a problem submitting the form, please try again." });
               }
             });
           })}
@@ -179,12 +167,7 @@ export default function Form({ mode }) {
                 onClick={() => {
                   Object.keys(errors).length === 0
                     ? ``
-                    : toast.custom(() => (
-                        <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
-                          Please make sure to complete all fields before
-                          submitting.
-                        </div>
-                      ));
+                    : Toast({ success: false, message: "Please make sure to complete all fields before submitting." });
                 }}
               />
             </div>

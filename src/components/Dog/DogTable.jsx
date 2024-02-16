@@ -15,8 +15,8 @@ import dateUtils from "@/utils/dateutils";
 import stringUtils from "@/utils/stringutils";
 import { useRouter } from "next/router";
 import LoadingAnimation from "../LoadingAnimation";
-import toast from "react-hot-toast";
 import RecentTags from "../RecentTags"
+import { Toast } from "../Toast";
 
 
 /**
@@ -55,7 +55,7 @@ export default function DogTable() {
     })
       .catch(() => {
         setLoading(false);
-        toast.error("Unable to pull dog data.");
+        Toast({ success: false, message: "Unable to pull dog data." });
         setData([]);
       })
       .then((res) => res.json())
