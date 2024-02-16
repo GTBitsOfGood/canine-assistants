@@ -97,7 +97,6 @@ export default async function handler(req, res) {
     }
 
     const { success, error, data } = logSchema.safeParse(req.body);
-
     if (!success) {
       const code = error.errors[0].code;
       if (code == "invalid_type") {
@@ -130,35 +129,49 @@ export default async function handler(req, res) {
       }
     }
     const session = await getServerSession(req, res, authOptions);
-    console.log("Daniels ID: " + session.user.role);
     if (!session || session.user.role !== "User") {
+      //TODO: Change this after testing to Manager, it's just easier to test the session as role === user
       return res.status(403).send({
         success: false,
-        message: "Only users are allowed to resolve logs",
+        message: "Only Managers are allowed to resolve logs",
       });
     }
 
+    console.log(
+      "Someone with a " +
+        session.user.role +
+        " role is updating log resolution",
+    );
     if (data.resolved) {
-      if (!data.resolver) {
-        data.resolver = session.user.id;
-      } else {
-        let resolverUser;
-        try {
-          resolverUser = await getUserById(data.resolver);
-        } catch (error) {
+      // only if request contains resolved: true
+      data.resolver = session.user._id;
+
+      return updateLog(req.query.id, data)
+        .then((updatedLogObject) => {
+          if (!updatedLogObject) {
+            return res.status(404).send({
+              success: false,
+              message: "Cannot update log because log does not exist!",
+            });
+          } else {
+            return res.status(200).send({
+              success: true,
+              message: "Successfully updated log",
+              data: updatedLogObject,
+            });
+          }
+        })
+        .catch((error) => {
           return res.status(500).send({
             success: false,
-            message: "Error fetching user data for the provided resolver ID.",
+            message: "An error occurred while updating the log.",
+            error: error.message,
           });
-        }
-        if (!resolverUser || resolverUser.role !== "User") {
-          return res.status(403).send({
-            success: false,
-            message: "Provided resolver ID does not match a Manager user.",
-          });
-        }
-      }
-
+        });
+    } else {
+      // is request contains resolved = false
+      data.resolution = "";
+      data.resolver = null;
       return updateLog(req.query.id, data)
         .then((updatedLogObject) => {
           if (!updatedLogObject) {

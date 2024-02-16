@@ -46,10 +46,6 @@ const LogSchema = new Schema({
     ref: "Dog",
     required: true,
   },
-  resolver: {
-    type: SchemaTypes.ObjectId,
-    ref: "User",
-  },
 });
 // tell mongodb to autogenerate createdAt + updatedAt fields
 LogSchema.set("timestamps", true);
