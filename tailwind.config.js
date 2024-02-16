@@ -21,6 +21,7 @@ module.exports = {
         "primary-background": "#F0F2F2",
         "secondary-background": "#F8F8F8",
         "ca-green": "#17603D",
+        "ca-green-shade": "#052E16",
         "ca-pink": "#A70C53",
         "ca-pink-shade": "#730034",
         foreground: "#ffffff",
