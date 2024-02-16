@@ -385,6 +385,20 @@ const formSchema = z.object({
 });
 
 /**
+ * Zod object for information returned when user with limited association views dog
+ * Used to strip all but the basic details from the dog data
+ */
+const limitedDogSchema = z.object({
+  name: z.string().min(1),
+  gender: z.enum(consts.genderPetArray).default("Male"),
+  breed: z.string().min(1),
+  weight: z.coerce.number(),
+  dateOfBirth: z.coerce.date(),
+  location: z.enum(consts.locationArray),
+  coatColor: z.string().optional(),
+});
+
+/**
  * New Dog
  */
 const newDog = {
@@ -410,4 +424,5 @@ export {
   dogInformationSchema,
   computeDefaultValues,
   newDog,
+  limitedDogSchema,
 };

@@ -5,7 +5,8 @@ import {
   getDogById,
   createDog,
 } from "../../../../server/db/actions/Dog";
-import { dogSchema } from "@/utils/consts";
+import { dogSchema, limitedDogSchema } from "@/utils/consts";
+import { getToken } from "next-auth/jwt";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
@@ -41,7 +42,7 @@ export default async function handler(req, res) {
   } else if (req.method == "GET") {
     try {
       const { id } = req.query;
-      const data = await getDogById(id);
+      let data = await getDogById(id);
 
       if (data.length === 0) {
         res.status(404).json({
@@ -49,6 +50,18 @@ export default async function handler(req, res) {
           error: "Unable to retrieve dog because it doesn't exist",
         });
         return;
+      }
+
+      const user = await getToken({ req });
+      user.role = "User";
+      // Only filter keys if association is partner/volunteer and nothing else
+      if (
+        user.role !== "Admin" &&
+        !data.instructors.map((o) => o._id).includes(user.sub) &&
+        !data.caregivers.map((o) => o._id).includes(user.sub) &&
+        (true || data.partner.user === user.sub || data.volunteer === user.sub)
+      ) {
+        data = limitedDogSchema.safeParse(data.toJSON());
       }
 
       return res.status(200).json({
