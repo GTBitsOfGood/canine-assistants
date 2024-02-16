@@ -81,6 +81,18 @@ export async function getDogs(filter = {}, fields = null) {
   }
 }
 
+export async function getAssociatedDogs(userId, filter = {}, fields = null) {
+  const associatedFilter = {
+    $or: [
+      { partner: { user: userId } },
+      { instructors: userId },
+      { caregivers: userId },
+      { volunteer: userId },
+    ],
+  };
+  return await getDogs({ ...filter, ...associatedFilter }, fields);
+}
+
 export async function getDogById(id) {
   try {
     await dbConnect();

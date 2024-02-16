@@ -1,9 +1,8 @@
-import { getDogs } from "../../../../server/db/actions/Dog";
+import { getAssociatedDogs, getDogs } from "../../../../server/db/actions/Dog";
 import { z } from "zod";
 import { Types } from "mongoose";
 import { consts } from "@/utils/consts";
 import { getToken } from "next-auth/jwt";
-import { getUserAssociatedFilter } from "@/utils/dogUtils";
 
 const dogSchema = z.object({
   name: z.string().optional(),
@@ -58,11 +57,9 @@ export default async function handler(req, res) {
 
     try {
       const user = await getToken({ req });
-      const data = await getDogs(
-        user.role === "Admin"
-          ? filter
-          : { ...filter, ...getUserAssociatedFilter(user.sub) },
-      );
+      const data = await (user.role === "Admin"
+        ? getDogs(filter)
+        : getAssociatedDogs(user.sub, filter));
 
       res.status(200).json({ success: true, data: data });
     } catch (error) {
