@@ -26,9 +26,8 @@ const LogSchema = new Schema({
     type: String,
   },
   resolved: {
-    type: boolean,
+    type: Boolean,
     required: true,
-    default: false,
   },
   resolution: {
     type: String,
@@ -37,6 +36,10 @@ const LogSchema = new Schema({
     type: SchemaTypes.ObjectId,
     ref: "User",
     required: true,
+  },
+  resolver: {
+    type: SchemaTypes.ObjectId,
+    ref: "User",
   },
   dog: {
     type: SchemaTypes.ObjectId,

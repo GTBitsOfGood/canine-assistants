@@ -7,7 +7,7 @@ import {
 import { getUserById } from "../../../../server/db/actions/User";
 import { z } from "zod";
 import { consts } from "@/utils/consts";
-import { getServerSession } from "next-auth/react";
+import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth].js";
 
 const logSchema = z.object({
@@ -130,10 +130,11 @@ export default async function handler(req, res) {
       }
     }
     const session = await getServerSession(req, res, authOptions);
-    if (!session || session.user.role !== "Manager") {
+    console.log("Daniels ID: " + session.user.role);
+    if (!session || session.user.role !== "User") {
       return res.status(403).send({
         success: false,
-        message: "Only managers are allowed to resolve logs",
+        message: "Only users are allowed to resolve logs",
       });
     }
 
@@ -150,7 +151,7 @@ export default async function handler(req, res) {
             message: "Error fetching user data for the provided resolver ID.",
           });
         }
-        if (!resolverUser || resolverUser.role !== "Manager") {
+        if (!resolverUser || resolverUser.role !== "User") {
           return res.status(403).send({
             success: false,
             message: "Provided resolver ID does not match a Manager user.",
