@@ -1,3 +1,9 @@
+/**
+ * Testing page to resolve and unresolve logs
+ *
+ * @returns {React.ReactElement} The TestLog page
+ */
+
 export default function TestLog() {
     async function updateLogResolution(resolved) {
         try {
