@@ -67,7 +67,7 @@ export async function updateUser(email, password, name) {
       try {
         await User.findByIdAndUpdate(
           user.id,
-          { name: name, passwordHash: hash },
+          { name: name, passwordHash: hash, acceptedInvite: true },
           {
             returnDocument: "after",
           },
@@ -77,7 +77,6 @@ export async function updateUser(email, password, name) {
       }
     }
   });
-
   return user;
 }
 

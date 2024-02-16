@@ -52,10 +52,7 @@ export const authOptions = {
             ...response.message,
           };
         } else {
-          return {
-            status: response.status,
-            message: response.message,
-          };
+          return response;
         }
       },
       credentials: {
@@ -73,8 +70,6 @@ export const authOptions = {
           credentials.password,
           credentials.name,
         );
-
-        console.log(response);
 
         if (response.status === 200) {
           return {
