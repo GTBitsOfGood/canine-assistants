@@ -81,15 +81,18 @@ export async function getDogs(filter = {}, fields = null) {
   }
 }
 
-export async function getAssociatedDogs(userId, filter = {}, fields = null) {
-  const associatedFilter = {
-    $or: [
-      { partner: { user: userId } },
-      { instructors: userId },
-      { caregivers: userId },
-      { volunteer: userId },
-    ],
-  };
+export async function getAssociatedDogs(user, filter = {}, fields = null) {
+  const associatedFilter =
+    user.role === "Admin"
+      ? {}
+      : {
+          $or: [
+            { partner: { user: user._id } },
+            { instructors: user._id },
+            { caregivers: user._id },
+            { volunteer: user._id },
+          ],
+        };
   return await getDogs({ ...filter, ...associatedFilter }, fields);
 }
 
