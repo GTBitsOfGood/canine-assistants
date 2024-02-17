@@ -48,12 +48,7 @@ export default function FormQuestion(formObj, index, register, errors, mode) {
                     {...register(`${index}`, { required: true })}
                     value={choice}
                     checked={mode == formActions.VIEW ? choice == formObj.answer : undefined}
-                    className={`text-ca-pink focus:ring-ca-pink disabled:text-secondary-text mr-1
-                    ${
-                      errors[index]
-                        ? `border-2 outline-error-red border-error-red focus:ring-error-red`
-                        : `focus:ring-ca-pink`
-                    }`}
+                    className={`mr-1 ${ errors[index] ?  "!outline-error-red !border-error-red !ring-0" : "" }`}
                   />
                   {" " + choice}
                 </label>
