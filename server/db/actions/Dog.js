@@ -87,7 +87,7 @@ export async function getAssociatedDogs(user, filter = {}, fields = null) {
       ? {}
       : {
           $or: [
-            { partner: { user: user._id } },
+            { "partner.user": user._id },
             { instructors: user._id },
             { caregivers: user._id },
             { volunteer: user._id },
