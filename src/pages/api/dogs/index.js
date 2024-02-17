@@ -13,8 +13,8 @@ export default async function handler(req, res) {
         ? req.query.fields.split(",").join(" ")
         : "";
 
-      const token = getToken({ req });
-      const user = getUserById(token.sub);
+      const token = await getToken({ req });
+      const user = await getUserById(token.sub);
       const data = await getAssociatedDogs(user, {}, fields);
 
       return res.status(200).json({
