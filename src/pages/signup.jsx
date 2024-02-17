@@ -139,7 +139,7 @@ export default function Signup({ dogs }) {
         <div>
           <p className="mt-6 text-neutral-500 font-medium text-md text-center">
             Have an account?{" "}
-            <Link className="font-bold text-[#1e1e1e]/70 cursor-pointer" href="login">
+            <Link className="font-bold text-[#1e1e1e]/70 cursor-pointer underline" href="login">
               Log in
             </Link>
           </p>

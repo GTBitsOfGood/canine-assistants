@@ -1,3 +1,5 @@
 export { default } from "next-auth/middleware";
 
-export const config = { matcher: ["/((?!login|signup|api/users/register).*)"] };
+export const config = {
+  matcher: ["/((?!login|signup|api/users/register|api/seed).*)"],
+};
