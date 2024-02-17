@@ -7,6 +7,7 @@ import {
 } from "../../../../server/db/actions/Dog";
 import { dogSchema, limitedDogSchema } from "@/utils/consts";
 import { getToken } from "next-auth/jwt";
+import { getUserById } from "../../../../server/db/actions/User";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
@@ -52,16 +53,25 @@ export default async function handler(req, res) {
         return;
       }
 
-      const user = await getToken({ req });
-      user.role = "User";
+      const token = await getToken({ req });
+      const user = await getUserById(token.sub);
       // Only filter keys if association is partner/volunteer and nothing else
+      // Throw an error if there is no association
       if (
         user.role !== "Admin" &&
-        !data.instructors.map((o) => o._id).includes(user.sub) &&
-        !data.caregivers.map((o) => o._id).includes(user.sub) &&
-        (true || data.partner.user === user.sub || data.volunteer === user.sub)
+        !data.instructors?.some((o) => o._id.equals(user._id)) &&
+        !data.caregivers?.some((o) => o._id.equals(user._id))
       ) {
-        data = limitedDogSchema.safeParse(data.toJSON());
+        if (
+          data.partner?.user?.equals(user._id) ||
+          data.volunteer?.equals(user._id)
+        ) {
+          data = limitedDogSchema.safeParse(data.toJSON());
+        } else {
+          return res
+            .status(405)
+            .json({ success: false, error: "Not associated with this dog" });
+        }
       }
 
       return res.status(200).json({
