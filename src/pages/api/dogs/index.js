@@ -1,5 +1,10 @@
-import { getDogs, createDog } from "../../../../server/db/actions/Dog";
+import { getToken } from "next-auth/jwt";
+import {
+  createDog,
+  getAssociatedDogs,
+} from "../../../../server/db/actions/Dog";
 import { dogSchema } from "@/utils/consts";
+import { getUserById } from "../../../../server/db/actions/User";
 
 export default async function handler(req, res) {
   if (req.method == "GET") {
@@ -8,7 +13,9 @@ export default async function handler(req, res) {
         ? req.query.fields.split(",").join(" ")
         : "";
 
-      const data = await getDogs({}, fields);
+      const token = getToken({ req });
+      const user = getUserById(token.sub);
+      const data = await getAssociatedDogs(user, {}, fields);
 
       return res.status(200).json({
         success: true,

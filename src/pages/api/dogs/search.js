@@ -1,4 +1,4 @@
-import { getAssociatedDogs, getDogs } from "../../../../server/db/actions/Dog";
+import { getAssociatedDogs } from "../../../../server/db/actions/Dog";
 import { z } from "zod";
 import { Types } from "mongoose";
 import { consts } from "@/utils/consts";
