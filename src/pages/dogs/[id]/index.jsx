@@ -359,7 +359,7 @@ export default function IndividualDogPage() {
             )}
           </div>
             <> 
-              <div className="flex-col gap-4 inline-flex">
+              <div className="flex-col gap-4 inline-flex w-7/12">
                 {/* Logic for showing information at top when not editing it */}
                 {!isEdit && (
                   <>
@@ -391,7 +391,7 @@ export default function IndividualDogPage() {
                 )}
 
                 <div className="flex space-x-16">
-                  <div className="flex-col pl-1 text-lg gap-4 inline-flex">
+                  <div className="flex-col pl-1 text-lg gap-4 inline-flex w-1/2">
                     {isEdit && (
                       <FormField
                         className="h-min pl-1 font-bold text-3xl"
@@ -408,7 +408,7 @@ export default function IndividualDogPage() {
                     <FormField label={"Weight (lbs)"} keyLabel={"weight"} />
                   </div>
 
-                  <div className="flex-col pl-1 text-lg space-y-2">
+                  <div className="flex-col pl-1 text-lg gap-4 inline-flex w-1/2">
                     {dog.location === "Placed" ? (
                       <>
                         <FormField label={"Placement"} keyLabel={"placement"} />
