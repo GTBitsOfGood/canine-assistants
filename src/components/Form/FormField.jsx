@@ -16,8 +16,8 @@ export default function FormField({
   const nonEditingStyles =
     "outline-none p-0 border-none bg-transparent shadow-none appearance-none";
   const editingStyles = `w-full p-1 pt-[6px] pl-3 ${
-    errors && errors[keyLabel] && "border-red-500 border-2"
-  } focus:outline-none`;
+    errors && errors[keyLabel] && "!border-error-red"
+  } focus:outline-0 focus:ring-0 focus:border-ca-pink`;
 
   const checkErrors = () => {
     const formattedKey = keyLabel.split(".")[0];
@@ -60,6 +60,7 @@ export default function FormField({
           options={enums[formattedKey]}
           isMulti={isMultiSelect}
           isSearchable={false}
+          isError={checkErrors()}
         />
       );
     } else if (isDateField && isEdit) {
