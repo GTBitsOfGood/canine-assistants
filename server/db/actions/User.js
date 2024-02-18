@@ -34,7 +34,27 @@ export async function getUserById(id) {
   }
 }
 
-export async function updateUser(email, password, name) {
+/*
+@param {*} userId ObjectId of log to update
+@param {*} userData Object with log updates
+*/
+export async function updateUser(userId, userData) {
+  try {
+    await dbConnect();
+  } catch (e) {
+    throw new Error("Unable to update user, please try again.");
+  }
+
+  try {
+    return await User.findByIdAndUpdate(userId, userData, {
+      returnDocument: "after",
+    });
+  } catch (e) {
+    throw new Error("Unable to update user");
+  }
+}
+
+export async function signup(email, password, name) {
   try {
     await dbConnect();
   } catch (e) {

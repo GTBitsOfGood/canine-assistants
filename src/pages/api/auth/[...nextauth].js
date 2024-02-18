@@ -11,7 +11,7 @@ import { MongoClient, ObjectId } from "mongodb";
 import User from "../../../../server/db/models/User";
 
 import CredentialsProvider from "next-auth/providers/credentials";
-import { verifyUser, updateUser } from "../../../../server/db/actions/User";
+import { verifyUser, signup } from "../../../../server/db/actions/User";
 
 const client = new MongoClient(DB_CONNECTION_STRING);
 
@@ -52,7 +52,7 @@ export const authOptions = {
             ...response.message,
           };
         } else {
-          return response;
+          throw new Error(response.message);
         }
       },
       credentials: {
@@ -65,7 +65,7 @@ export const authOptions = {
       name: "Signup with Email and Password",
 
       async authorize(credentials) {
-        const response = await updateUser(
+        const response = await signup(
           credentials.email,
           credentials.password,
           credentials.name,
@@ -77,7 +77,7 @@ export const authOptions = {
             ...response.message,
           };
         } else {
-          return response;
+          throw new Error(response.message);
         }
       },
       credentials: {
@@ -99,7 +99,6 @@ export const authOptions = {
   },
   events: {
     updateUser: async (message) => {
-      console.log(message);
       // await dbConnect();
       const response = await createUser(message);
 

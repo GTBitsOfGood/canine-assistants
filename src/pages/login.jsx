@@ -3,6 +3,7 @@ import CALogo from "public/ca-logo.svg";
 import GoogleLogo from "public/google-logo.svg";
 import GreenWaves from "@/components/GreenWaves";
 import { signIn } from "next-auth/react";
+import { useRouter } from 'next/router'
 import Link from "next/link";
 /**
  * Log in page
@@ -10,18 +11,21 @@ import Link from "next/link";
  * @returns {React.ReactElement} The log in page
  */
 export default function Login({ dogs }) {
+  const router = useRouter()
   const onSubmitForm = async (event) => {
     event.preventDefault(true);
 
     const response = await signIn('credentials', {
       email: event.target.email.value,
       password: event.target.password.value,
-      callbackUrl: '/dogs'
+      redirect: false
     });
 
-    if (!response || response.error) {
-      console.log("Error occurred");
-    }
+    if (response && response.status === 200) {
+      router.push('/dogs')
+    } /* else {
+      console.log(response)
+    } */
   }
 
   return (

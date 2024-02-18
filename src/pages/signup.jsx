@@ -3,7 +3,7 @@ import CALogo from "public/ca-logo.svg";
 import GreenWaves from "@/components/GreenWaves";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-
+import { useRouter } from 'next/router'
 
 /**
  * Sign up page
@@ -11,6 +11,7 @@ import { signIn } from "next-auth/react";
  * @returns {React.ReactElement} The sign up page
  */
 export default function Signup({ dogs }) {
+  const router = useRouter()
   const onSubmitForm = async (event) => {
     event.preventDefault(true);
 
@@ -18,12 +19,14 @@ export default function Signup({ dogs }) {
       email: event.target.email.value,
       password: event.target.password.value,
       name: event.target.firstName.value + " " + event.target.lastName.value,
-      callbackUrl: '/dogs'
+      redirect: false
     });
 
-    if (!response || response.error) {
-      console.log("Error occurred");
-    }
+    if (response && response.status === 200) {
+      router.push('/dogs')
+    } /* else {
+      console.log(response)
+    } */
   };
 
   return (
