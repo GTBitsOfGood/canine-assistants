@@ -1,3 +1,4 @@
+import { consts } from "@/utils/consts";
 import dbConnect from "../dbConnect";
 import Dog from "../models/Dog";
 import Log from "../models/Log";
@@ -82,17 +83,19 @@ export async function getDogs(filter = {}, fields = null) {
 }
 
 export async function getAssociatedDogs(user, filter = {}, fields = null) {
-  const associatedFilter =
-    user.role === "Admin"
-      ? {}
-      : {
-          $or: [
-            { "partner.user": user._id },
-            { instructors: user._id },
-            { caregivers: user._id },
-            { volunteer: user._id },
-          ],
-        };
+  const associatedFilter = [
+    consts.userAccess.Admin,
+    consts.userAccess.Manager,
+  ].includes(user.role)
+    ? {}
+    : {
+        $or: [
+          { "partner.user": user._id },
+          { instructors: user._id },
+          { caregivers: user._id },
+          { volunteer: user._id },
+        ],
+      };
   return await getDogs({ ...filter, ...associatedFilter }, fields);
 }
 

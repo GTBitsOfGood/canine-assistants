@@ -5,9 +5,10 @@ import {
   getDogById,
   createDog,
 } from "../../../../server/db/actions/Dog";
-import { dogSchema, limitedDogSchema } from "@/utils/consts";
-import { getToken } from "next-auth/jwt";
+import { consts, dogSchema, limitedDogSchema } from "@/utils/consts";
 import { getUserById } from "../../../../server/db/actions/User";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
@@ -53,12 +54,14 @@ export default async function handler(req, res) {
         return;
       }
 
-      const token = await getToken({ req });
-      const user = await getUserById(token.sub);
+      const session = await getServerSession(req, res, authOptions);
+      const user = await getUserById(session.user._id);
       // Only filter keys if association is partner/volunteer and nothing else
       // Throw an error if there is no association
       if (
-        user.role !== "Admin" &&
+        ![consts.userAccess.Admin, consts.userAccess.Manager].includes(
+          user.role,
+        ) &&
         !data.instructors?.some((o) => o._id.equals(user._id)) &&
         !data.caregivers?.some((o) => o._id.equals(user._id))
       ) {
