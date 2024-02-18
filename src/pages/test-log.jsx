@@ -7,7 +7,7 @@
 export default function TestLog() {
     async function updateLogResolution(resolved) {
         try {
-            const LOG_ID = "65cfbf0ededa87bd153961f6"  //must hardcode in specific log (C/P from database)
+            const LOG_ID = "65d2926a2b36e2555782a1f9"  //must hardcode in specific log (C/P from database)
             const response = await fetch(`/api/logs/` + LOG_ID, {
               method: 'PATCH',
               headers: {

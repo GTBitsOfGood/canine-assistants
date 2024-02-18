@@ -4,7 +4,6 @@ import {
   deleteLog,
   getLogById,
 } from "../../../../server/db/actions/Log";
-import { getUserById } from "../../../../server/db/actions/User";
 import { z } from "zod";
 import { consts } from "@/utils/consts";
 import { getServerSession } from "next-auth/next";
@@ -130,18 +129,12 @@ export default async function handler(req, res) {
     }
     const session = await getServerSession(req, res, authOptions);
     if (!session || session.user.role !== "User") {
-      //TODO: Change this after testing to Manager, it's just easier to test the session as role === user
       return res.status(403).send({
         success: false,
         message: "Only Managers are allowed to resolve logs",
       });
     }
 
-    console.log(
-      "Someone with a " +
-        session.user.role +
-        " role is updating log resolution",
-    );
     if (data.resolved) {
       // only if request contains resolved: true
       data.resolver = session.user._id;
@@ -165,7 +158,6 @@ export default async function handler(req, res) {
           return res.status(500).send({
             success: false,
             message: "An error occurred while updating the log.",
-            error: error.message,
           });
         });
     } else {

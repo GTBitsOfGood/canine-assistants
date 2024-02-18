@@ -94,7 +94,6 @@ const logs = [
     dog: "",
     resolver: null,
     resolved: false,
-    resolution: "This is a resolution",
   },
   {
     title: "This is a log",
@@ -106,7 +105,6 @@ const logs = [
     dog: "",
     resolver: null,
     resolved: false,
-    resolution: "This is a resolution",
   },
   {
     title: "This is a log",
@@ -118,7 +116,6 @@ const logs = [
     dog: "",
     resolver: null,
     resolved: false,
-    resolution: "This is a resolution",
   },
   {
     title: "This is a log",
@@ -130,7 +127,6 @@ const logs = [
     dog: "",
     resolver: null,
     resolved: false,
-    resolution: "This is a resolution",
   },
   {
     title: "This is a log",
@@ -142,7 +138,6 @@ const logs = [
     dog: "",
     resolver: null,
     resolved: false,
-    resolution: "This is a resolution",
   },
   {
     title: "This is a log",
@@ -154,7 +149,6 @@ const logs = [
     dog: "",
     resolver: null,
     resolved: false,
-    resolution: "This is a resolution",
   },
   {
     title: "This is a log",
@@ -166,7 +160,6 @@ const logs = [
     dog: "",
     resolver: null,
     resolved: false,
-    resolution: "This is a resolution",
   },
   {
     title: "This is a log",
@@ -178,7 +171,6 @@ const logs = [
     dog: "",
     resolver: null,
     resolved: false,
-    resolution: "This is a resolution",
   },
   {
     title: "This is a log",
@@ -190,7 +182,6 @@ const logs = [
     dog: "",
     resolver: null,
     resolved: false,
-    resolution: "This is a resolution",
   },
   {
     title: "This is a log",
@@ -202,7 +193,6 @@ const logs = [
     dog: "",
     resolver: null,
     resolved: false,
-    resolution: "This is a resolution",
   },
   {
     title: "This is a log",
@@ -214,7 +204,6 @@ const logs = [
     dog: "",
     resolver: null,
     resolved: false,
-    resolution: "This is a resolution",
   },
   {
     title: "This is a log",
@@ -226,7 +215,6 @@ const logs = [
     dog: "",
     resolver: null,
     resolved: false,
-    resolution: "This is a resolution",
   },
 ];
 const dogNames = [
