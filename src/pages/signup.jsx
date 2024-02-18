@@ -35,10 +35,18 @@ export default function Signup({ dogs }) {
     try {
       signIn("credentials", {email: data.email, password: data.password, redirect: false, callbackUrl: "/dogs" })
       if (onSubmit.error !== null) {
-        toast.error("User is not verified");
+        toast.custom(() => (
+          <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
+            You do not have access to the application. Please contact your manager to proceed.
+          </div>
+        ));
       } 
     } catch(error) {
-      toast.error(error);
+      toast.custom(() => (
+        <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
+          {error}
+        </div>
+      ));
     }
   };
   
@@ -77,7 +85,7 @@ export default function Signup({ dogs }) {
             id="email"
             placeholder="Email Address"
             {...register("email")}
-            type="email"
+            type="text"
             className={errors.email ? "py-1 pr-1 pl-3 mb-1 mt-1 rounded w-full border border-solid border-red-500 border-2 font-maven-pro": 
             "py-2 pr-1 pl-3 mb-4 rounded w-full border border-solid border-primary-gray border-1 font-maven-pro"}
           ></input>
@@ -123,7 +131,11 @@ export default function Signup({ dogs }) {
                 try {
                   signIn("google", { callbackUrl: "/dogs" })
                 } catch (error) {
-                  toast.error(error);
+                  toast.custom(() => (
+                    <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
+                      {error}
+                    </div>
+                  ));
                 }
               }}
               type="button"
