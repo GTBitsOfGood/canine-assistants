@@ -127,32 +127,48 @@ export default async function handler(req, res) {
         });
       }
     }
+
     const session = await getServerSession(req, res, authOptions);
-    if (!session || session.user.role !== "User") {
-      return res.status(403).send({
+    const logData = await getLogById(req.query.id);
+
+    if (!session) {
+      return res.status(405).send({
         success: false,
-        message: "Only Managers are allowed to resolve logs",
+        message: "Invalid session",
       });
     }
 
-    if (data.resolved) {
-      // only if request contains resolved: true
-      data.resolver = session.user._id;
+    const reqSize = Object.keys(req.body).length
+    logData.author = session.user._id
 
+    if (session.user.role === "Manager") {
+      if (session.user._id !== logData.author.toString()) {
+        if (reqSize > 2) {
+          return res.status(403).send({
+            success: false,
+            message: "Managers can't edit log information unless they are the author",
+          });
+        }
+        if (reqSize === 1 && req.body.resolved === undefined && req.body.resolution === undefined) {
+          return res.status(403).send({
+            success: false,
+            message: "Managers can't edit log information unless they are the author",
+          });
+        }
+        if (reqSize === 2 && (req.body.resolved === undefined || req.body.resolution === undefined)) {
+          return res.status(403).send({
+            success: false,
+            message: "Managers can't edit log information unless they are the author",
+          });
+        }
+      }
       return updateLog(req.query.id, data)
         .then((updatedLogObject) => {
-          if (!updatedLogObject) {
-            return res.status(404).send({
-              success: false,
-              message: "Cannot update log because log does not exist!",
-            });
-          } else {
             return res.status(200).send({
               success: true,
               message: "Successfully updated log",
               data: updatedLogObject,
             });
-          }
         })
         .catch((error) => {
           return res.status(500).send({
@@ -160,32 +176,38 @@ export default async function handler(req, res) {
             message: "An error occurred while updating the log.",
           });
         });
-    } else {
-      // is request contains resolved = false
-      data.resolution = "";
-      data.resolver = null;
+    } else { // role is user or admin
+      // check if session.id === req.body author.id
+      if (session.user._id !== logData.author.toString() ) {
+        return res.status(403).send({
+          success: false,
+          message: "Can not edit log that you do not own",
+        });
+      }
+      // check if user/admin is trying to dit resolution status
+      if (req.body.resolved !== logData.resolved || logData.resolution !== req.body.resolution) {
+        return res.status(403).send({
+          success: false,
+          message: "Only Managers can update resolution properties",
+        });
+      }
+      // succcess for user/admin
+      req.body.resolved = logData.resolved;
       return updateLog(req.query.id, data)
         .then((updatedLogObject) => {
-          if (!updatedLogObject) {
-            return res.status(404).send({
-              success: false,
-              message: "Cannot update log because log does not exist!",
-            });
-          } else {
             return res.status(200).send({
               success: true,
               message: "Successfully updated log",
               data: updatedLogObject,
             });
-          }
         })
         .catch((error) => {
           return res.status(500).send({
             success: false,
             message: "An error occurred while updating the log.",
-            error: error.message,
           });
         });
+
     }
   }
 
