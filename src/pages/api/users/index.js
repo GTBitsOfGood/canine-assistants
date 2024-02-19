@@ -1,6 +1,8 @@
 import { userInviteSchema } from "@/utils/consts";
 import { getUsers } from "../../../../server/db/actions/User";
 import { createUser } from "../../../../server/db/actions/User";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(req, res) {
   if (req.method == "GET") {
@@ -29,6 +31,15 @@ export default async function handler(req, res) {
     }
 
     try {
+      const session = await getServerSession(req, res, authOptions);
+
+      if (session.user.role !== "Admin" && session.user.role !== "Manager") {
+        return res.status(403).json({
+          success: false,
+          message: "You are not authorized to invite users",
+        });
+      }
+
       const { name, email, role, acceptedInvite, isActive } = data;
 
       const existingUser = await getUsers({ email: email });

@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
-import { consts, logSchema, userInviteSchema } from "@/utils/consts";
+import { consts, userInviteSchema } from "@/utils/consts";
 import DropdownMenu, { DropdownMenuOption } from "../Form/DropdownMenu";
-import { Chip, ChipTypeStyles } from "../Chip";
 
 /**
  * Modal for inviting a user
@@ -15,6 +14,7 @@ export default function UserInviteModal({ userId, onClose, onSubmit }) {
 
 
   const [saving, setSaving] = useState(false);
+  const [label, setLabel] = useState("Select Role");
   const modalRef = useRef(null);
 
   const [inviteData, setInviteData] = useState({
@@ -26,6 +26,14 @@ export default function UserInviteModal({ userId, onClose, onSubmit }) {
     email: false,
     role: false,
   });
+
+  useEffect(() => {
+    setLabel(Object.values(inviteData.roleSet)[0]);
+  }, [inviteData.roleSet])
+
+  useEffect(() => { 
+    setLabel("Select Role");
+  }, [])
 
   const handleSubmit = (invData) => {
 
@@ -128,12 +136,12 @@ export default function UserInviteModal({ userId, onClose, onSubmit }) {
             } sm:flex-col justify-between sm:justify-normal`}
           >
             <DropdownMenu
-              label={"Select Role"}
+              label={label}
               props={{
                 hideFilterButton: false,
                 filterText: "Apply Role",
                 singleSelect: true,
-                requiredField: true,
+                requiredField: false,
                 error: errors.role,
               }}
               submitFilters={(data) => {
@@ -164,14 +172,6 @@ export default function UserInviteModal({ userId, onClose, onSubmit }) {
                   <ExclamationCircleIcon />
                 </div>
                 Please select a role
-              </div>
-            ) : null}
-            {Object.keys(inviteData.roleSet).length ? (
-              <div className="self-center sm:self-start sm:mt-[1vh]">
-                <Chip
-                  label={Object.values(inviteData.roleSet)[0]}
-                  type={ChipTypeStyles[Object.values(inviteData.roleSet)[0]]}
-                />
               </div>
             ) : null}
           </div>

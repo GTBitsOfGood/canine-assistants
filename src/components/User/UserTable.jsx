@@ -15,7 +15,6 @@ import toast from "react-hot-toast";
 import { consts } from "@/utils/consts";
 import ToggleSwitch from "./ToggleSwitch"
 import ConfirmCancelModal from "../ConfirmCancelModal";
-import { set } from "mongoose";
 
 /**
  * @returns { React.ReactElement } The UserTable component
@@ -246,20 +245,25 @@ export default function UserTable() {
 
       <LoadingAnimation animated={false} loadText={false} />
       <div className="flex-grow flex-col space-y-6 mb-8">
-      <div className="space-x-10 md:space-x-20 flex flex-row items-center">
-            <div className="flex-grow" style={{ flexBasis: '70%' }}>
-                <UserSearchBar setSearch={setSearchFilter} />
-            </div>
-            <div className="flex-grow" style={{ flexBasis: '20%' }}>
-                <button
-                    className="flex w-full px-4 py-1.5 height: 'fit-content justify-center items-center button-base primary-button flex gap-2"
-                    onClick={() => setShowInviteModal(true)}
-                >
-                    <div className="primary-button-plus-icon">{<PlusIcon />}</div>
-                    <div className="primary-button-text">Invite a User</div>
-                </button>
-            </div>
-        </div>
+      <div className="flex justify-between items-center">
+    <div className="flex-grow mr-10 md:mr-20 lg:mr-40" style={{ flexBasis: '75%' }}> {/* Adjust the margin-right (mr-4) as needed */}
+        <UserSearchBar setSearch={setSearchFilter} />
+    </div>
+    <div className="flex-none">
+        <button
+            className="flex px-4 py-1.5 justify-center items-center button-base primary-button gap-2"
+            style={{ width: 'fit-content' }}
+            onClick={() => setShowInviteModal(true)}
+        >
+            <div className="primary-button-plus-icon">{<PlusIcon />}</div>
+            <div className="primary-button-text">Invite a User</div>
+        </button>
+    </div>
+</div>
+
+
+
+
 
 
         
