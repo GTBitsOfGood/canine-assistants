@@ -16,6 +16,7 @@ const logParams = z.object({
       topic: z.array(z.enum(consts.topicArray)).optional(),
       severity: z.array(z.enum(consts.concernArray)).optional(),
       tags: z.array(z.enum(consts.tagsArray)).optional(),
+      resolved: z.boolean(z).optional(),
     })
     .optional(),
 });
@@ -42,6 +43,7 @@ export default async function handler(req, res) {
     const topic = search.filters?.topic || [];
     const severity = search.filters?.severity || [];
     const tags = search.filters?.tags || [];
+    const resolved = search.filters?.resolved || false;
 
     /* 
     note: a log can have multiple tags, so we check if ANY of the 
@@ -55,6 +57,9 @@ export default async function handler(req, res) {
         { description: { $regex: query, $options: "i" } },
       ],
     };
+    if (resolved !== undefined) {
+      filter.resolved = resolved;
+    }
     if (topic.length > 0) {
       filter.topic = { $in: topic };
     }

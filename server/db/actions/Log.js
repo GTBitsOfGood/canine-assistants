@@ -32,7 +32,8 @@ export async function createLog(logData) {
   try {
     await log.save();
   } catch (e) {
-    throw new Error("Unable to create log");
+    throw new Error(e);
+    //throw new Error("Unable to create log");
   }
 
   const dog = await Dog.findById(logData.dog);
