@@ -5,7 +5,10 @@ import {
   getDogById,
   createDog,
 } from "../../../../server/db/actions/Dog";
-import { dogSchema } from "@/utils/consts";
+import { consts, dogSchema, limitedDogSchema } from "@/utils/consts";
+import { getUserById } from "../../../../server/db/actions/User";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
@@ -41,7 +44,7 @@ export default async function handler(req, res) {
   } else if (req.method == "GET") {
     try {
       const { id } = req.query;
-      const data = await getDogById(id);
+      let data = await getDogById(id);
 
       if (data.length === 0) {
         res.status(404).json({
@@ -49,6 +52,29 @@ export default async function handler(req, res) {
           error: "Unable to retrieve dog because it doesn't exist",
         });
         return;
+      }
+
+      const session = await getServerSession(req, res, authOptions);
+      const user = await getUserById(session.user._id);
+      // Only filter keys if association is partner/volunteer and nothing else
+      // Throw an error if there is no association
+      if (
+        ![consts.userAccess.Admin, consts.userAccess.Manager].includes(
+          user.role,
+        ) &&
+        !data.instructors?.some((o) => o._id.equals(user._id)) &&
+        !data.caregivers?.some((o) => o._id.equals(user._id))
+      ) {
+        if (
+          data.partner?.user?.equals(user._id) ||
+          data.volunteer?.equals(user._id)
+        ) {
+          data = limitedDogSchema.safeParse(data.toJSON());
+        } else {
+          return res
+            .status(405)
+            .json({ success: false, error: "Not associated with this dog" });
+        }
       }
 
       return res.status(200).json({
