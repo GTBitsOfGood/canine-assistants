@@ -10,6 +10,7 @@ const nextConfig = {
         pathname: "/**",
       },
     ],
+    domains: ["f004.backblazeb2.com"],
   },
 };
 

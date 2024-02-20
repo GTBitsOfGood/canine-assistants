@@ -1,7 +1,9 @@
+import { consts } from "@/utils/consts";
 import dbConnect from "../dbConnect";
 import Dog from "../models/Dog";
 import Log from "../models/Log";
 import User from "../models/User";
+import { deleteImage } from "./Image";
 
 export async function getDogs(filter = {}, fields = null) {
   try {
@@ -81,6 +83,23 @@ export async function getDogs(filter = {}, fields = null) {
   }
 }
 
+export async function getAssociatedDogs(user, filter = {}, fields = null) {
+  const associatedFilter = [
+    consts.userAccess.Admin,
+    consts.userAccess.Manager,
+  ].includes(user.role)
+    ? {}
+    : {
+        $or: [
+          { "partner.user": user._id },
+          { instructors: user._id },
+          { caregivers: user._id },
+          { volunteer: user._id },
+        ],
+      };
+  return await getDogs({ ...filter, ...associatedFilter }, fields);
+}
+
 export async function getDogById(id) {
   try {
     await dbConnect();
@@ -127,8 +146,22 @@ export async function updateDog(dogId, dogData) {
 export async function deleteDog(id) {
   try {
     await dbConnect();
+
     await Log.deleteMany({ dog: id });
-    return await Dog.findByIdAndDelete({ _id: id });
+
+    const dog = await Dog.findByIdAndDelete({ _id: id });
+
+    if (dog.image && dog.image != "") {
+      const imageRes = await (await deleteImage(id, dog.image)).json();
+
+      if (!imageRes.success) {
+        throw new Error(
+          "There was a problem deleting the dog's image, please delete manually",
+        );
+      }
+    }
+
+    return dog;
   } catch (e) {
     throw new Error("Unable to delete dog");
   }
@@ -147,6 +180,9 @@ export async function createDog(dogData) {
   }
 
   await validateDogData(dogData);
+
+  // Set image to empty string to be populated by uploadImage endpoint
+  dogData["image"] = "";
 
   const dog = new Dog(dogData);
 

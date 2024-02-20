@@ -2,9 +2,7 @@ import {
   CheckCircleIcon,
   CheckIcon,
   ChevronDownIcon,
-  StopIcon as StopIconSolid,
 } from "@heroicons/react/24/solid";
-import { StopIcon as StopIconOutline } from "@heroicons/react/24/outline";
 import { useState, useRef, useEffect } from "react";
 import useClickOff from "@/hooks/useClickOff";
 import CircleIcon from "@/components/icons/CircleIcon"
@@ -169,13 +167,7 @@ export default function DropdownMenu({
                         <CheckCircleIcon className="text-ca-pink h-[1.5385rem] -ml-[0.15rem] " />
                       </div>
                     ) : (
-                      // <CircleIcon
-                      //   className={"border-2 border-neutral-300"}
-                      //   size={"1.25rem"}
-                      //   color={""}
-                      // />
                       <div className="flex items-center justify-between mx-1.5 ">
-                        {/* <StopIconOutline className=" h-8 text-primary-gray" /> */}
                         <CheckIcon className="pl-[0.14rem] absolute h-4 text-foreground"/>
                         <div className="w-5 h-5 px-2 py-1.5 bg-ca-pink rounded " />
                       </div>

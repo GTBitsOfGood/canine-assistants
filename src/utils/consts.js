@@ -336,6 +336,14 @@ const userRegistrationSchema = z.object({
   password: z.string().min(1), // change min to 8 later
 });
 
+const userInviteSchema = z.object({
+  name: z.string().min(1),
+  email: z.string().email(),
+  role: z.enum(consts.userRoleArray),
+  isActive: z.boolean(),
+  acceptedInvite: z.boolean(),
+});
+
 /**
  * Zod object for validating request bodies for logs
  */
@@ -409,6 +417,20 @@ const signUpSchema = z
   );
 
 /**
+ * Zod object for information returned when user with limited association views dog
+ * Used to strip all but the basic details from the dog data
+ */
+const limitedDogSchema = z.object({
+  name: z.string().min(1),
+  gender: z.enum(consts.genderPetArray).default("Male"),
+  breed: z.string().min(1),
+  weight: z.coerce.number(),
+  dateOfBirth: z.coerce.date(),
+  location: z.enum(consts.locationArray),
+  coatColor: z.string().optional(),
+});
+
+/**
  * New Dog
  */
 const newDog = {
@@ -429,10 +451,12 @@ export {
   logSchema,
   userUpdateSchema,
   userRegistrationSchema,
+  userInviteSchema,
   formSchema,
   formUpdateSchema,
   signUpSchema,
   dogInformationSchema,
   computeDefaultValues,
   newDog,
+  limitedDogSchema,
 };
