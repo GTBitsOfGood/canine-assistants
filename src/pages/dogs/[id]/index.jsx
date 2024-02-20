@@ -141,6 +141,7 @@ export default function IndividualDogPage() {
             return;
           }
           setData(data);
+          setFileParam(data.data.image);
           reset(computeDefaultValues(data.data));
         });
       
@@ -245,6 +246,34 @@ export default function IndividualDogPage() {
         throw new Error(res.message);
       }
 
+      if (fileParam && fileParam != "") {
+        const imageRes = await fetch("/api/images", {
+          method: "POST",
+          headers: {
+            "Dog-Id": res.data._id
+          },
+          body: fileParam,
+        }).then((res) => { return res.json() });
+
+        if (!imageRes.success) {
+          throw new Error(imageRes.data);
+        } else {
+          setFileParam(() => { return imageRes.data.imageUrl });
+        }
+      } else {
+        if (router.route != "/dogs/new" && dog.image != "") {
+          const deleteRes = await fetch(`/api/images/${res.data._id}`, {
+            method: "DELETE",
+          }).then((res) => { return res.json() });
+
+          if (!deleteRes.success) {
+            throw new Error(imageRes.data);
+          } else {
+            setFileParam(() => { return "" });
+          }
+        }
+      }
+
       if (router.route === "/dogs/new") {
         router.push(`/dogs/${res.data._id}`);
       }
@@ -287,30 +316,6 @@ export default function IndividualDogPage() {
     setAppliedFilters(newFilters);
   };
 
-  /**
-   * uploads image file to backblaze via api/media/image
-   * fileParam is set in image upload component
-   */
-  const upload = async () => {
-    const { fileparam } = fileParam;
-    
-    const formData = new FormData();
-    formData.append("samplefile", fileparam);
-    try {
-      
-      const { data } = await fetch(`/api/media/upload`, {
-        method: "POST",
-        body: formData,
-      });
-      console.log(data);
-      
-    } catch (err) {
-      console.error(err);
-    }
-
-    
-  };
-  
   // TODO add listener for if user clicks out of dropdown menu to turn back into button
 
   return (
@@ -358,39 +363,27 @@ export default function IndividualDogPage() {
       </div>
 
       <form onSubmit={handleSubmit(onEditSubmit)}>
-        <div className="flex gap-8">
-          {dog.image ? 
-            <div className="relative">
-              <Image alt="Dog" width={350} height={350} src={dog.image} />
-              {isEdit && 
-              <div>
-                <ImageUpload preview={true} setFileParam={setFileParam}/>
-              </div>}
-            </div>
-            
-           : 
-            <>
-              <div
-                className={
-                  "w-[350px] h-[350px] bg-primary-gray flex items-center justify-center rounded-lg relative"
-                }
-              >
+        <div className="flex gap-8 ">
+          <div className="flex w-[350px] h-[350px] items-center justify-center rounded-lg relative bg-primary-gray">
+            {fileParam && fileParam != "" ? (
+              isEdit ? (
+                <ImageUpload preview={true} setFileParam={setFileParam} previewImage={fileParam} />
+              ) : (
+                <Image alt="Dog" width={350} height={350} src={fileParam} />
+              )
+            ) : (
+              isEdit ? (
+                <ImageUpload preview={false} setFileParam={setFileParam} />
+              ) : (
                 <Image
                   priority
                   src={dogplaceholdericon}
                   alt="Dog Placeholder"
-                  
                 />
-                {isEdit && (
-                  <div className="z-10 absolute bottom-10">
-                    <ImageUpload preview={false} setFileParam={setFileParam}/>
-                  </div>
-                )}
-              </div>
-            </>
-            }
+              )
+            )}
+          </div>
             <> 
-
               <div className="flex-col gap-4 inline-flex">
                 {/* Logic for showing information at top when not editing it */}
                 {!isEdit && (
