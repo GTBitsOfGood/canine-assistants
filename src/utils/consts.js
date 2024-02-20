@@ -336,6 +336,14 @@ const userRegistrationSchema = z.object({
   password: z.string().min(1), // change min to 8 later
 });
 
+const userInviteSchema = z.object({
+  name: z.string().min(1),
+  email: z.string().email(),
+  role: z.enum(consts.userRoleArray),
+  isActive: z.boolean(),
+  acceptedInvite: z.boolean(),
+});
+
 /**
  * Zod object for validating request bodies for logs
  */
@@ -405,6 +413,7 @@ export {
   logSchema,
   userUpdateSchema,
   userRegistrationSchema,
+  userInviteSchema,
   formSchema,
   formUpdateSchema,
   dogInformationSchema,

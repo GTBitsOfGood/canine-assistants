@@ -16,7 +16,7 @@ const UserSchema = new Schema({
   },
   emailVerified: {
     type: Boolean,
-    default: null,
+    default: false,
   },
   role: {
     type: String,
