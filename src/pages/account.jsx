@@ -1,20 +1,18 @@
-import Card from "@/components/Card";
-import ConfirmCancelModal from "@/components/ConfirmCancelModal";
-import userpfpplaceholder from "../../public/userpfpplaceholder.svg";
-
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import {
   ExclamationTriangleIcon,
   ExclamationCircleIcon,
 } from "@heroicons/react/24/solid";
-import { consts } from "@/utils/consts";
-import { useSession } from "next-auth/react";
+
+import Card from "@/components/Card";
+import ConfirmCancelModal from "@/components/ConfirmCancelModal";
+import userpfpplaceholder from "../../public/userpfpplaceholder.svg";
+import { Toast } from "@/components/Toast";
 
 /**
  * User account management page
@@ -108,30 +106,10 @@ export default function Account() {
                               .then((data) => setData(data));
 
                             if (res.ok) {
-                              toast.custom((t) => (
-                                <div
-                                  className={`h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-ca-green text-white text-lg font-normal
-                                  ${
-                                    t.visible
-                                      ? "animate-enter"
-                                      : "animate-leave"
-                                  }`}
-                                >
-                                  <span className="font-bold">
-                                    Account Name
-                                  </span>
-                                  &nbsp;
-                                  <span> was successfully updated.</span>
-                                </div>
-                              ));
+                              Toast({ success: True, bold: name, message: "was successfully updated." });
                               setEditName(!editName);
                             } else {
-                              toast.custom(() => (
-                                <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
-                                  There was a problem updating the account name,
-                                  please try again.
-                                </div>
-                              ));
+                              Toast({ success: False, message: "There was a problem updating the account name, please try again." });
                             }
                           })
                           .catch((err) => {});

@@ -159,12 +159,10 @@ export default function DropdownMenu({
                   <>
                     {props?.singleSelect ? (
                       <div className="w-5">
-                        {/* <CircleIcon
-                          className={"border-2 border-neutral-300"}
+                        <CircleIcon
+                          className={"bg-ca-pink"}
                           size={"1.25rem"}
-                          color={""}
-                        /> */}
-                        <CheckCircleIcon className="text-ca-pink h-[1.5385rem] -ml-[0.15rem] " />
+                        />
                       </div>
                     ) : (
                       <div className="flex items-center justify-between mx-1.5 ">

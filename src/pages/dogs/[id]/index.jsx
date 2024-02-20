@@ -3,7 +3,6 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 
 import { useEffect, useState, useRef } from "react";
-import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
 
 import {
@@ -35,6 +34,7 @@ import {
 } from "@/utils/consts";
 import { formTitleMap } from "@/utils/formUtils";
 import ImageUpload from "@/components/ImageUpload";
+import { Toast } from "@/components/Toast";
 
 /**
  * Displays information about specific dog including Logs and Forms
@@ -191,21 +191,9 @@ export default function IndividualDogPage() {
 
   const notify = (message, newDogName) => {
     if (message === "success") {
-      toast(
-        <>
-          <span>
-            <strong>{newDogName}</strong> was successfully updated.
-          </span>
-        </>,
-        {
-          style: {
-            color: "white",
-            backgroundColor: "green",
-          },
-        }
-      );
+      Toast({ success: true, bold: newDogName, message: "was successfully updated." });
     } else if (message === "failure") {
-      toast.error("Unable to update!");
+      Toast({ success: false, message: "Unable to update dog, please try again." });
     }
   };
 
@@ -333,22 +321,9 @@ export default function IndividualDogPage() {
               if (success) {
                 // update logs to display
                 searchLogs();
-
-                toast.custom((t) => (
-                  <div
-                    className={`h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-ca-green text-white text-lg font-normal
-                    ${t.visible ? "animate-enter" : "animate-leave"}`}
-                  >
-                    <span className="font-bold">New log</span>&nbsp;
-                    <span>was successfully added.</span>
-                  </div>
-                ));
+                Toast({ success: true, bold: "New Log", message: "was successfully added." });
               } else {
-                toast.custom(() => (
-                  <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
-                    There was a problem saving the log, please try again.
-                  </div>
-                ));
+                Toast({ success: false, message: "There was a problem saving the log, please try again." });
               }
             }}
           />
@@ -384,7 +359,7 @@ export default function IndividualDogPage() {
             )}
           </div>
             <> 
-              <div className="flex-col gap-4 inline-flex">
+              <div className="flex-col gap-4 inline-flex w-7/12">
                 {/* Logic for showing information at top when not editing it */}
                 {!isEdit && (
                   <>
@@ -416,7 +391,7 @@ export default function IndividualDogPage() {
                 )}
 
                 <div className="flex space-x-16">
-                  <div className="flex-col pl-1 text-lg gap-4 inline-flex">
+                  <div className="flex-col pl-1 text-lg gap-4 inline-flex w-1/2">
                     {isEdit && (
                       <FormField
                         className="h-min pl-1 font-bold text-3xl"
@@ -433,7 +408,7 @@ export default function IndividualDogPage() {
                     <FormField label={"Weight (lbs)"} keyLabel={"weight"} />
                   </div>
 
-                  <div className="flex-col pl-1 text-lg space-y-2">
+                  <div className="flex-col pl-1 text-lg gap-4 inline-flex w-1/2">
                     {dog.location === "Placed" ? (
                       <>
                         <FormField label={"Placement"} keyLabel={"placement"} />

@@ -33,7 +33,7 @@ export default function TabSection({ defaultTab, isEdit, children }) {
   return (
     <div>
       <div>
-        <ul className="flex -mb-[0.1rem]">
+        <ul className="flex -mb-[0.1rem] drop-shadow h-10">
           {children.map((child) => {
             const { label } = child.props;
 
@@ -46,6 +46,7 @@ export default function TabSection({ defaultTab, isEdit, children }) {
               />
             );
           })}
+          <li className="w-full border-b-4 border-stone-50"></li>
         </ul>
 
         <div className="pt-4">

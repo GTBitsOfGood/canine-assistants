@@ -3,9 +3,8 @@ import { useState, useEffect} from "react";
 import { TrashIcon } from "@heroicons/react/20/solid";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import DeleteLogModal from "./DeleteLogModal";
-import toast from "react-hot-toast";
 import LogModal from "./LogModal";
-
+import { Toast } from "../Toast";
 
 export default function Log({ log, user, onEdit, onDelete }) {
   const [showMore, setShowMore] = useState(false);
@@ -16,13 +15,11 @@ export default function Log({ log, user, onEdit, onDelete }) {
   const [authorName, setAuthorName] = useState("N/A");
 
   useEffect(() => {
-  if (log.author) {
-    setIsAuthor(user._id == log.author._id);
-    setAuthorName(log.author.name);
-  }
-});
-
-  
+    if (log.author) {
+      setIsAuthor(user._id == log.author._id);
+      setAuthorName(log.author.name);
+    }
+  });
 
   const tags = [
     { group: "severity", label: log.severity },
@@ -41,12 +38,10 @@ export default function Log({ log, user, onEdit, onDelete }) {
 
   };
 
-  
-
   return (
     <div className="bg-primary-background p-4 my-4 w-full">
 
-{showEditModal ? (
+    {showEditModal ? (
         <>
           <LogModal
             userId={user._id}
@@ -58,21 +53,9 @@ export default function Log({ log, user, onEdit, onDelete }) {
             onSubmit={(success) => {
               onEdit(success)
               if (success) {
-                toast.custom((t) => (
-                  <div
-                    className={`h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-ca-green text-white text-lg font-normal
-                    ${t.visible ? "animate-enter" : "animate-leave"}`}
-                  >
-                    <span className="font-bold">{log.title}</span>&nbsp;
-                    <span>was successfully edited.</span>
-                  </div>
-                ));
+                Toast({ success: true, bold: log.title, message: "was successfully edited." });
               } else {
-                toast.custom(() => (
-                  <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
-                    There was a problem saving the log, please try again.
-                  </div>
-                ));
+                Toast({ success: false, message: "There was a problem saving the log, please try again." });
               }
             }}
           />
@@ -88,21 +71,9 @@ export default function Log({ log, user, onEdit, onDelete }) {
               setShowDeleteModal(false);
               onDelete(true);
               if (success) {
-                toast.custom((t) => (
-                  <div
-                    className={`h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-ca-green text-white text-lg font-normal
-                    ${t.visible ? "animate-enter" : "animate-leave"}`}
-                  >
-                    <span className="font-bold">{log.title}</span>&nbsp;
-                    <span>was successfully deleted.</span>
-                  </div>
-                ));
+                Toast({ success: true, bold: log.title, message: "was successfully deleted." });
               } else {
-                toast.custom(() => (
-                  <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
-                    There was a problem deleted the log, please try again.
-                  </div>
-                ));
+                Toast({ success: false, message: "There was a problem deleting the log, please try again." });
               }
             }}
               

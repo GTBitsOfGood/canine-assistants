@@ -11,10 +11,10 @@ import {
   PlusIcon,
 } from "@heroicons/react/24/solid";
 import LoadingAnimation from "../LoadingAnimation";
-import toast from "react-hot-toast";
 import { consts } from "@/utils/consts";
 import ToggleSwitch from "./ToggleSwitch"
 import ConfirmCancelModal from "../ConfirmCancelModal";
+import { Toast } from "../Toast";
 
 /**
  * @returns { React.ReactElement } The UserTable component
@@ -36,7 +36,7 @@ export default function UserTable() {
     fetch("/api/users")
     .catch(() => {
       setLoading(false);
-      toast.error("Unable to pull user data.");
+      Toast({ success: false, message: "Unable to pull user data." });
       setData([]);
     })
       .then((res) => res.json())
@@ -85,7 +85,7 @@ export default function UserTable() {
       );
       setUsers(updatedUsers);
     } catch (error) {
-      toast.error(`Error updating user role: ${error.message}`);
+      Toast({ success: false, message: `Error updating user role: ${error.message}` });
     } finally {
       setShowModal(false)
       setUserToDeactivate(null);
@@ -95,7 +95,7 @@ export default function UserTable() {
   const applyRole = async (role) => {  // PATCH sent when role is changed through dropdown menu
     console.log(role, consts.userAccess)
     if (!consts.userAccess.hasOwnProperty(Object.values(role)[0])) {
-      toast.error("Invalid user ID or role");
+      Toast({ success: false, message: "Invalid user ID or role" });
       return;
     }
     const roleValue = Object.values(role)[0]
@@ -112,10 +112,10 @@ export default function UserTable() {
         throw new Error(errorData.message || "Failed to update the user role");
       }
       
-      toast.success('User role updated successfully');
+      Toast({ success: true, message: 'User role updated successfully' });
     } catch (error) {
       console.error(error);
-      toast.error(`Error updating user role: ${error.message}`);
+      Toast({ success: false, message: `Error updating user role: ${error.message}` });
     }
   };
 
