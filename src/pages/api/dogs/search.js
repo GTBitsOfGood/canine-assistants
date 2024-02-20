@@ -59,6 +59,10 @@ export default async function handler(req, res) {
 
     try {
       const session = await getServerSession(req, res, authOptions);
+      if (!session) {
+        res.status(401).redirect("/login");
+        return;
+      }
       const user = await getUserById(session.user._id);
       const data = await getAssociatedDogs(user, filter);
 
