@@ -1,4 +1,4 @@
-import mongoose, { Types } from "mongoose";
+import { Types } from "mongoose";
 import {
   updateLog,
   deleteLog,
@@ -8,6 +8,7 @@ import { z } from "zod";
 import { consts } from "@/utils/consts";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth].js";
+import { getUserById } from "../../../../server/db/actions/User";
 
 const logSchema = z.object({
   title: z.string(),
@@ -95,7 +96,7 @@ export default async function handler(req, res) {
       });
     }
 
-    const { success, error, data } = logSchema.safeParse(req.body);
+    const { success, error, data } = logSchema.partial().safeParse(req.body);
     if (!success) {
       const code = error.errors[0].code;
       if (code == "invalid_type") {
@@ -130,45 +131,59 @@ export default async function handler(req, res) {
 
     const session = await getServerSession(req, res, authOptions);
     const logData = await getLogById(req.query.id);
+    const user = await getUserById(session.user._id);
 
-    if (!session) {
+    if (!session || !user) {
       return res.status(405).send({
         success: false,
         message: "Invalid session",
       });
     }
 
-    const reqSize = Object.keys(req.body).length
-    logData.author = session.user._id
+    const reqSize = Object.keys(req.body).length;
 
-    if (session.user.role === "Manager") {
+    if (user.role === "Manager") {
       if (session.user._id !== logData.author.toString()) {
-        if (reqSize > 2) {
+        if (
+          req.body.resolved === undefined ||
+          req.body.resolution === undefined ||
+          reqSize > 2
+        ) {
           return res.status(403).send({
             success: false,
-            message: "Managers can't edit log information unless they are the author",
+            message:
+              "Managers can't edit log information unless they are the author",
           });
         }
-        if (reqSize === 1 && req.body.resolved === undefined && req.body.resolution === undefined) {
+        if (
+          reqSize === 1 &&
+          req.body.resolved === undefined &&
+          req.body.resolution === undefined
+        ) {
           return res.status(403).send({
             success: false,
-            message: "Managers can't edit log information unless they are the author",
+            message:
+              "Managers can't edit log information unless they are the author",
           });
         }
-        if (reqSize === 2 && (req.body.resolved === undefined || req.body.resolution === undefined)) {
+        if (
+          reqSize === 2 &&
+          (req.body.resolved === undefined || req.body.resolution === undefined)
+        ) {
           return res.status(403).send({
             success: false,
-            message: "Managers can't edit log information unless they are the author",
+            message:
+              "Managers can't edit log information unless they are the author",
           });
         }
       }
       return updateLog(req.query.id, data)
         .then((updatedLogObject) => {
-            return res.status(200).send({
-              success: true,
-              message: "Successfully updated log",
-              data: updatedLogObject,
-            });
+          return res.status(200).send({
+            success: true,
+            message: "Successfully updated log",
+            data: updatedLogObject,
+          });
         })
         .catch((error) => {
           return res.status(500).send({
@@ -176,16 +191,20 @@ export default async function handler(req, res) {
             message: "An error occurred while updating the log.",
           });
         });
-    } else { // role is user or admin
+    } else {
+      // role is user or admin
       // check if session.id === req.body author.id
-      if (session.user._id !== logData.author.toString() ) {
+      if (session.user._id !== logData.author.toString()) {
         return res.status(403).send({
           success: false,
           message: "Can not edit log that you do not own",
         });
       }
       // check if user/admin is trying to dit resolution status
-      if (req.body.resolved !== logData.resolved || logData.resolution !== req.body.resolution) {
+      if (
+        req.body.resolved !== logData.resolved ||
+        logData.resolution !== req.body.resolution
+      ) {
         return res.status(403).send({
           success: false,
           message: "Only Managers can update resolution properties",
@@ -195,11 +214,11 @@ export default async function handler(req, res) {
       req.body.resolved = logData.resolved;
       return updateLog(req.query.id, data)
         .then((updatedLogObject) => {
-            return res.status(200).send({
-              success: true,
-              message: "Successfully updated log",
-              data: updatedLogObject,
-            });
+          return res.status(200).send({
+            success: true,
+            message: "Successfully updated log",
+            data: updatedLogObject,
+          });
         })
         .catch((error) => {
           return res.status(500).send({
@@ -207,7 +226,6 @@ export default async function handler(req, res) {
             message: "An error occurred while updating the log.",
           });
         });
-
     }
   }
 

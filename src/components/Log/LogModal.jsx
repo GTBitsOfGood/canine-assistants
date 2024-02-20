@@ -19,6 +19,9 @@ export default function LogModal({ dogId, userId, log, onClose, onSubmit }) {
     severitySet: {},
     tagsSet: {},
     description: "",
+    resolved: log?.resolved,
+    resolver: log?.resolver,
+    resolution: log?.resolution,
   });
 
   const [errors, setErrors] = useState({
@@ -113,6 +116,7 @@ export default function LogModal({ dogId, userId, log, onClose, onSubmit }) {
       description: logData.description,
       dog: dogId,
       author: userId,
+      resolved: false,
     };
 
     const { success, error, data } = logSchema.safeParse(formattedData);
@@ -158,6 +162,9 @@ export default function LogModal({ dogId, userId, log, onClose, onSubmit }) {
       description: logData.description,
       dog: fetchedDogId,
       author: userId,
+      resolved: logData.resolved,
+      resolver: logData.resolver,
+      resolution: logData?.resolution,
     };
 
 
