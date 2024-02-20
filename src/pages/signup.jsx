@@ -1,8 +1,14 @@
 import Image from "next/image";
 import CALogo from "public/ca-logo.svg";
 import GreenWaves from "@/components/GreenWaves";
+import GoogleLogo from "public/google-logo.svg";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { signUpSchema } from "@/utils/consts";
+import { ExclamationCircleIcon } from '@heroicons/react/24/solid';
+import toast from "react-hot-toast";
 
 /**
  * Sign up page
@@ -10,105 +16,143 @@ import { signIn } from "next-auth/react";
  * @returns {React.ReactElement} The sign up page
  */
 export default function Signup({ dogs }) {
-  const onSubmitForm = async (event) => {
-    event.preventDefault(true);
 
-    let res = await fetch("/api/users/register", {
-      body: JSON.stringify({
-        firstName: event.target.firstName.value,
-        lastName: event.target.lastName.value,
-        email: event.target.email.value,
-        password: event.target.password.value,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      method: "POST",
-    });
-    res = await res.json();
-    if (!res.success) {
-      return;
+  /**
+   * Displays errors if sign-up form fields do not match Zod schema
+   */
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({ resolver: zodResolver(signUpSchema) });
+
+  /**
+   * 
+   * Performs credential sign-up on sign-up form submit
+   * Param data is the form field values
+   */
+  const onSubmit = (data) => {
+    try {
+      signIn("credentials", {email: data.email, password: data.password, redirect: false, callbackUrl: "/dogs" })
+      if (onSubmit.error !== null) {
+        toast.custom(() => (
+          <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
+            You do not have access to the application. Please contact your manager to proceed.
+          </div>
+        ));
+      } 
+    } catch(error) {
+      toast.custom(() => (
+        <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
+          {error}
+        </div>
+      ));
     }
-    await signIn('credentials', {
-      email: event.target.email.value,
-      password: event.target.password.value,
-      callbackUrl: '/dogs'
-    });
   };
+  
 
   return (
     <div className="h-screen flex flex-col items-center justify-between">
       <div className="h-4/5 w-screen flex flex-col items-center justify-evenly m-1">
         <div className="flex items-center flex-col">
-          <div className="h-[120px] aspect-[5/2] relative">
+          <div className="h-[120px] aspect-[5/2] relative mt-3">
             <Image
               src={CALogo}
               alt="Canine Assistants logo: cartoon dog on rightside of cartoon human"
               layout="fill"
             />
           </div>
-          <h1 className="font-maven-pro font-medium pt-4 text-neutral-700 text-center">
+          <h1 className="font-maven-pro font-medium pt-5 text-neutral-700 text-center">
             Educating the dogs who change the world
           </h1>
+          <h1 className="font-maven-pro font-bold pt-5 text-black text-center">
+            Sign Up
+          </h1>
         </div>
-        <form onSubmit={onSubmitForm} className="w-[25rem] pt-8 flex-col items-center justify-center">
-           <label className="text-sm text-neutral-500" htmlFor="firstName">
-            First Name
-          </label>
+        <form onSubmit={handleSubmit(onSubmit)} className="w-[25rem] pt-8 flex-col items-center justify-center">
+           
           <input
-            id="firstName"
-            placeholder="First Name"
+            id="name"
+            placeholder="Name"
+            {...register("name")}
             type="text"
-            className="p-1 bg-secondary-background mb-4 w-full border-b-[2px]"
+            className= {errors.name ? "py-1 pr-1 pl-3 mb-1 rounded w-full border border-solid border-red-500 border-2 font-maven-pro": 
+            "py-2 pr-1 pl-3 mb-4 rounded w-full border border-solid border-primary-gray border-1 font-maven-pro"}
           ></input>
-           <label className="text-sm text-neutral-500" htmlFor="lastName">
-            Last Name
-          </label>
-          <input
-            id="lastName"
-            placeholder="Last Name"
-            type="text"
-            className="p-1 bg-secondary-background mb-4 w-full border-b-[2px]"
-          ></input>
-          <label className="text-sm text-neutral-500" htmlFor="email">
-            Email address
-          </label>
+          {errors.name && <div className="font-maven-pro text-black font-medium flex items-center"><ExclamationCircleIcon className="h-8 w-8 pr-2"/>{errors.name.message}</div>}
+          
           <input
             id="email"
-            placeholder="Email"
-            type="email"
-            className="p-1 bg-secondary-background mb-4 w-full border-b-[2px]"
+            placeholder="Email Address"
+            {...register("email")}
+            type="text"
+            className={errors.email ? "py-1 pr-1 pl-3 mb-1 mt-1 rounded w-full border border-solid border-red-500 border-2 font-maven-pro": 
+            "py-2 pr-1 pl-3 mb-4 rounded w-full border border-solid border-primary-gray border-1 font-maven-pro"}
           ></input>
+          {errors.email && <div className="font-maven-pro text-black font-medium flex items-center"><ExclamationCircleIcon className="h-8 w-8 pr-2"/>{errors.email.message}</div>}
 
-          <label className="text-sm text-neutral-500" htmlFor="email">
-            Password
-          </label>
           <input
             id="password"
             placeholder="Password"
+            {...register("password")}
             type="password"
-            className="p-1 bg-secondary-background w-full border-b-[2px]"
+            className={errors.password ? "py-1 pr-1 pl-3 mb-1 mt-1 rounded w-full border border-solid border-red-500 border-2 font-maven-pro": 
+            "py-2 pr-1 pl-3 mb-4 rounded w-full border border-solid border-primary-gray border-1 font-maven-pro"}
           ></input>
+          {errors.password && <div className="font-maven-pro text-black font-medium flex items-center"><ExclamationCircleIcon className="h-8 w-8 pr-2"/>{errors.password.message}</div>}
 
-          <div className="flex pt-8 w-full justify-center">
-            <button className="bg-[#00886d] text-white shadow-sm rounded-full items-center mt-2 py-3 w-3/4">
+          <input
+            id="confirmPassword"
+            placeholder="Confirm Password"
+            {...register("confirmPassword")}
+            type="password"
+            className={errors.confirmPassword ? "py-1 pr-1 pl-3 mb-1 mt-1 rounded w-full border border-solid border-red-500 border-2 font-maven-pro": 
+            "py-2 pr-1 pl-3 mb-4 rounded w-full border border-solid border-primary-gray border-1 font-maven-pro"}
+          ></input>
+          {errors.confirmPassword && <div className="font-maven-pro text-black font-medium flex items-center"><ExclamationCircleIcon className="h-8 w-8 pr-2"/>{errors.confirmPassword.message}</div>}
+
+          <div className="flex  w-full justify-center">
+            <button 
+              className="bg-[#a70c53] text-white shadow-sm rounded w-full items-center mt-2 py-2 text-sm"
+              type="submit"
+            >
               Sign Up
             </button>
           </div>
 
-          <div className="pt-6 mx-10 border-b-2 leading-[0.1rem] text-center">
-            <span className="bg-secondary-background px-7 text-neutral-500">
+          <div className="pt-10 mx-2 border-b-solid border-b-2 border-[#1e1e1e]/30 leading-[0.1rem] text-center">
+            <span className="bg-secondary-background px-2 text-neutral-500 font-medium">
               or
             </span>
           </div>
           <div className="w-full flex justify-center">
+          <button
+              onClick={() => {
+                try {
+                  signIn("google", { callbackUrl: "/dogs" })
+                } catch (error) {
+                  toast.custom(() => (
+                    <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
+                      {error}
+                    </div>
+                  ));
+                }
+              }}
+              type="button"
+              className="w-full bg-white rounded-sm shadow-sm text-black mt-6 py-2 flex flex-row items-center justify-center text-sm font-medium border border-black border-2 border-solid"
+            >
+              <div className="aspect-square h-4 relative mx-4">
+                <Image src={GoogleLogo} alt="Google G logo" fill/>
+              </div>
+              Sign Up with Google
+            </button>
           </div>
         </form>
         <div>
-          <p className="mt-6 text-neutral-500 text-md text-center">
-            Already have an account?{" "}
-            <Link className="underline" href="login">
-              Sign in
+          <p className="mt-6 text-neutral-500 font-medium text-md text-center">
+            Have an account?{" "}
+            <Link className="font-bold text-[#1e1e1e]/70 cursor-pointer underline" href="login">
+              Log in
             </Link>
           </p>
         </div>

@@ -393,6 +393,30 @@ const formSchema = z.object({
 });
 
 /**
+ * Zod object for validating request bodies for signup
+ */
+const signUpSchema = z
+  .object({
+    name: z.string().min(1, { message: "Please enter a valid name" }).trim(),
+    email: z.string().email({ message: "Please enter a valid email address" }),
+    password: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters" }),
+    confirmPassword: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters" }),
+  })
+  .refine(
+    (values) => {
+      return values.password === values.confirmPassword;
+    },
+    {
+      message: "Passwords must match!",
+      path: ["confirmPassword"],
+    },
+  );
+
+/**
  * Zod object for information returned when user with limited association views dog
  * Used to strip all but the basic details from the dog data
  */
@@ -430,6 +454,7 @@ export {
   userInviteSchema,
   formSchema,
   formUpdateSchema,
+  signUpSchema,
   dogInformationSchema,
   computeDefaultValues,
   newDog,
