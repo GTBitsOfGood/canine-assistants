@@ -1,7 +1,7 @@
 import Select from "react-select";
 import { Controller, useController } from "react-hook-form";
 
-const CA_PINK = "#A70C53";
+const BORDER_FOCUS_GRAY = "#404040";
 
 export default function ReactSelectDropdown({
   control,
@@ -50,11 +50,11 @@ export default function ReactSelectDropdown({
       styles={{
         control: (provided, state) => ({
           ...provided,
-          borderColor: isError ? "red" : (state.isFocused ? CA_PINK : provided.borderColor),
+          borderColor: isError ? "red" : (state.isFocused ? BORDER_FOCUS_GRAY : provided.borderColor),
           boxShadow: (isError || state.isFocused) ? "none" : provided.boxShadow,
           "&:hover": {
             ...provided["&:hover"],
-            borderColor: isError ? "red" : (state.isFocused ? CA_PINK : provided.borderColor),
+            borderColor: isError ? "red" : (state.isFocused ? BORDER_FOCUS_GRAY : provided.borderColor),
             boxShadow: (isError || state.isFocused) ? "none" : provided.boxShadow,
           },
         }),

@@ -17,7 +17,7 @@ export default function FormField({
     "outline-none p-0 border-none bg-transparent shadow-none appearance-none";
   const editingStyles = `w-full p-1 pt-[6px] pl-3 ${
     errors && errors[keyLabel] && "!border-error-red"
-  } focus:outline-0 focus:ring-0 focus:border-ca-pink`;
+  } focus:outline-0 focus:ring-0 focus:border-border-focus-gray`;
 
   const checkErrors = () => {
     const formattedKey = keyLabel.split(".")[0];
