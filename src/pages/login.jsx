@@ -49,7 +49,7 @@ export default function Login({ dogs }) {
 
   return (
     <div className="font-maven-pro h-screen flex flex-col items-center justify-between">
-      <div className="h-4/5 w-screen flex flex-col items-center justify-evenly m-1">
+      <div className="w-screen flex flex-col items-center justify-evenly m-1 mt-4">
         <div className="flex items-center flex-col">
           <div className="h-[120px] aspect-[5/2] relative">
             <Image
@@ -62,45 +62,46 @@ export default function Login({ dogs }) {
           <h1 className="font-maven-pro font-medium pt-4 text-neutral-700 text-center">
             Educating the dogs who change the world
           </h1>
+          <h1 className="text-black font-bold mt-8">Log In</h1>
         </div>
 
         <form onSubmit={onSubmitForm} className="w-[25rem] pt-8 flex-col items-center justify-center">
-          <label className="text-sm text-neutral-500" htmlFor="email">
-            Email address
-          </label>
           <input
             id="email"
             placeholder="Email"
             type="email"
-            className="p-1 bg-secondary-background mb-4 w-full border-b-[2px]"
+            className="textbox-base textbox-border text-input w-full mb-4"
           ></input>
 
-          <label className="text-sm text-neutral-500" htmlFor="email">
-            Password
-          </label>
           <input
             id="password"
             placeholder="Password"
             type="password"
-            className="p-1 bg-secondary-background w-full border-b-[2px]"
+            className="textbox-base textbox-border text-input w-full"
           ></input>
 
+          <Link
+            href=""
+            className="text-tertiary-text text-opacity-70 text-xs font-bold underline pl-4"
+          >Forgot Password?</Link>
+
           <div className="flex pt-8 w-full justify-center">
-            <button className="bg-[#00886d] text-white shadow-sm rounded-full items-center mt-2 py-3 w-3/4">
-              Sign In
+            <button className="button-base primary-button primary-button-text w-full h-10">
+              Log In
             </button>
           </div>
 
-          <div className="pt-6 mx-10 border-b-2 leading-[0.1rem] text-center">
-            <span className="bg-secondary-background px-7 text-neutral-500">
+          <div className="h-[0px] pt-6 mx-10 border-b-2 leading-[0.1rem] text-center border-opacity-30 border-tertiary-text">
+            <span className="bg-secondary-background px-7 text-neutral-500 font-medium">
               or
             </span>
           </div>
+
           <div className="w-full flex justify-center">
             <button
               onClick={() => signIn("google", { callbackUrl: "/dogs" })}
               type="button"
-              className="w-3/4 bg-white rounded-full shadow-sm text-neutral-700 mt-6 py-3 flex flex-row items-center justify-center text-md"
+              className="button-base bg-foreground border-black secondary-button-text w-full h-10 mt-6 py-3"
             >
               <div className="aspect-square h-7 relative mx-4">
                 <Image src={GoogleLogo} alt="Google G logo" fill/>
@@ -112,16 +113,16 @@ export default function Login({ dogs }) {
         </form>
 
         <div>
-          <p className="mt-6 text-neutral-500 text-md text-center">
+          <p className="mt-6 text-tertiary-text opacity-70 font-medium text-lg text-center">
             Don&apos;t have an account?{" "}
-            <Link className="underline" href="signup">
+            <Link className="font-bold" href="signup">
               Sign Up
             </Link>
           </p>
         </div>
-      </div>
 
-      <GreenWaves />
+        <GreenWaves />
+      </div>
     </div>
   );
 }

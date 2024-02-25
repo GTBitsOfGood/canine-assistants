@@ -41,6 +41,7 @@ module.exports = {
         "border-focus-gray": "#404040",
         "primary-text": "#121212",
         "secondary-text": "#353535",
+        "tertiary-text": "#1E1E1E",
         "error-red": "#FF0000",
         "some-concern": "#FBC49D",
         "some-concern-shade": "#E87420",
