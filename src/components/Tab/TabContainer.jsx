@@ -264,50 +264,44 @@ export default function TabContainer({
           </DropdownMenu></div>
         )}
       {openTab === "Forms" && !isEdit && !showFormDropdown && (
+        <div className="w-[85%] sm:hidden fixed bottom-0 start-12 justify-center mr-8">
       <button
         type="button"
-        className="px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade w-3/4 z-10 fixed bottom-0 justify-center items-center sm:hidden flex"
+        className="px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade w-full z-10 justify-center items-center flex"
         onClick={() => {
           setShowFormDropdown(true); console.log(openTab);
         }}
       >
-        <div className="text-foreground h-4 w-4 relative sm:flex hidden">
-          {<PlusIcon />}
-        </div>
         <div className="text-foreground text-base font-medium">
           {"Add Form"}
         </div>
-      </button>)}
+      </button></div>)}
       {openTab === "Logs" && !isEdit && !showLogModal && (
+        <div className="w-[85%] sm:hidden fixed bottom-0 start-12 justify-center">
       <button
         type="button"
-        className="px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade w-3/4 z-10 fixed bottom-0 justify-center items-center sm:hidden flex"
+        className="px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade w-full z-10 justify-center items-center flex"
         onClick={() => {
           setShowLogModal(true);
         }}
       >
-        <div className="text-foreground h-4 w-4 relative sm:flex hidden">
-          {<PlusIcon />}
-        </div>
         <div className="text-foreground text-base font-medium">
           {"Add Log"}
         </div>
-      </button>)}
+      </button></div>)}
       {openTab === "Information" && !isEdit && (
+        <div className="w-[85%] sm:hidden fixed bottom-0 start-12 justify-center">
       <button
         type="button"
-        className="px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade w-3/4 z-10 fixed bottom-0 justify-center items-center sm:hidden flex"
+        className=" px-12 py-2.5 bg-ca-pink rounded border border-ca-pink-shade w-full z-10 justify-center items-center flex"
         onClick={() => {
           setIsEdit(true);
         }}
       >
-        <div className="text-foreground h-4 w-4 relative sm:flex hidden">
-          {<PlusIcon />}
-        </div>
         <div className="text-foreground text-base font-medium">
           {"Edit Information"}
         </div>
-      </button>)}
+      </button></div>)}
     </div> 
   );
 }

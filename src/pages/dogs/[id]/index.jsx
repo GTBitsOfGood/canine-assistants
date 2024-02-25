@@ -315,7 +315,7 @@ export default function IndividualDogPage() {
   // TODO add listener for if user clicks out of dropdown menu to turn back into button
 
   return (
-    <div className={`container sm:mx-auto ml-12 order-b border-gray-300`}>
+    <div className={`container mx-auto px-12 sm:px-auto justify-center order-b border-gray-300`}>
       {/* Logic for the Log modal */}
       {showLogModal ? (
         <>
@@ -346,7 +346,7 @@ export default function IndividualDogPage() {
       </div>
 
       <form onSubmit={handleSubmit(onEditSubmit)}>
-        <div className="flex gap-8 ">
+        <div className="flex gap-8 justify-center">
           <div className="sm:flex w-[350px] h-[350px] items-center justify-center rounded-lg relative bg-primary-gray hidden">
             {fileParam && fileParam != "" ? (
               isEdit ? (
@@ -367,7 +367,7 @@ export default function IndividualDogPage() {
             )}
           </div>
             <> 
-              <div className="flex-col gap-4 inline-flex w-full sm:w-7/12">
+              <div className="flex-col gap-4 inline-flex justify-center w-full sm:w-7/12">
                 {/* Logic for showing information at top when not editing it */}
                 {!isEdit && (
                   <>
@@ -403,11 +403,11 @@ export default function IndividualDogPage() {
                   </>
                 )}
                 
-                <div className={!isEdit ? "flex pl-1 justify-center w-full font-bold text-3xl pb-4 pt-2 sm:hidden":"flex pl-1 w-full font-bold text-3xl pb-4 pt-2 sm:hidden"}>
+                <div className={!isEdit ? "flex pl-1 justify-center w-full font-bold text-3xl pb-4 pt-2 sm:hidden":"flex pl-1 w-full font-bold text-4xl pb-4 pt-2 sm:hidden"}>
                       {!isEdit? dog.name: "Edit Dog"}
                 </div>
                 {!isEdit && (
-                <div className="flex items-center mx-9 sm:hidden">
+                <div className="flex items-center justify-center sm:hidden">
                   <div className=" flex  w-[350px] h-[350px] items-center justify-center rounded-lg relative bg-primary-gray sm:hidden">
                     {fileParam && fileParam != "" ? (
                       
@@ -441,9 +441,7 @@ export default function IndividualDogPage() {
                     <FormField label={"Sex"} keyLabel={"gender"} />
                     <FormField label={"Breed"} keyLabel={"breed"} />
                     <FormField label={"Coat Color"} keyLabel={"coatColor"} />
-                    <div className="hidden sm:flex">
-                      <FormField label={"Weight (lbs)"} keyLabel={"weight"} />
-                    </div>
+                    <FormField label={"Weight (lbs)"} keyLabel={"weight"} />
                     <div className="flex-col inline-flex gap-2 sm:hidden">
                       {dog.location === "Placed" ? (
                         <>
@@ -460,7 +458,6 @@ export default function IndividualDogPage() {
                       ) : (
                         <>
                           <FormField label={"Location"} keyLabel={"location"} />
-                          <FormField label={"Instructor"} keyLabel={"instructors"} />
                         </>
                       )}
                     </div>
@@ -496,11 +493,11 @@ export default function IndividualDogPage() {
                             <FormField label={"Name"} keyLabel={"name"} showLabel={false}/>
                           </div>
                           <div>
-                            <div>Date of Birth</div>
+                            <div>Birth Date</div>
                             <FormField label={"Birth Date"} keyLabel={"dateOfBirth"} showLabel={false}/>
                           </div>
                           <div>
-                            <div>Time of Birth</div>
+                            <div>Birth Time</div>
                             <FormField label={"Birth Time"} keyLabel={"dateOfBirth"} showLabel={false}/>
                           </div>
                           <div>
@@ -511,15 +508,17 @@ export default function IndividualDogPage() {
                             <div>Photo</div>
                             <ImageUpload preview={false} setFileParam={setFileParam} />
                           </div>
-                          <div>
-                            <div>Sex</div>
-                            <FormField label={"Sex"} keyLabel={"gender"} showLabel={false}/>
+                          <div className="flex w-full flex-row gap-4">
+                            <div className="w-1/2">
+                              <div>Sex</div>
+                              <FormField label={"Sex"} keyLabel={"gender"} showLabel={false}/>
+                            </div>
+                            <div className="w-1/2">
+                              <div>Current Location</div>
+                              <FormField label={"Location"} keyLabel={"location"} showLabel={false}/>
+                            </div>
                           </div>
-                          <div>
-                            <div>Current Location</div>
-                            <FormField label={"Location"} keyLabel={"location"} showLabel={false}/>
-                          </div>
-                          <div className="h-min font-bold text-xl">Birth Information</div>
+                          <div className="h-min font-bold text-2xl">Birth Information</div>
                           <div>
                             <div>Coat Color</div>
                             <FormField label={"Coat Color"} keyLabel={"coatColor"} showLabel={false}/>
@@ -537,15 +536,7 @@ export default function IndividualDogPage() {
                           <FormField label={"Mother"} keyLabel={"parents.1"} showLabel={false}/>
                           </div>
                           <div>
-                          <div>Breed of Mother</div>
-                          <FormField label={"Mother"} keyLabel={"parents.1"} showLabel={false}/>
-                          </div>
-                          <div>
                           <div>Name of Father</div>
-                          <FormField label={"Father"} keyLabel={"parents.0"} showLabel={false}/>
-                          </div>
-                          <div>
-                          <div>Breed of Father</div>
                           <FormField label={"Father"} keyLabel={"parents.0"} showLabel={false}/>
                           </div>
                           <div>
@@ -577,7 +568,7 @@ export default function IndividualDogPage() {
                           <FormField label={"Subqequent to Whelping"} keyLabel={"maternalDemeanor.2"} showLabel={false}/>
                           </div>
                           
-                          <div className="h-min font-bold text-xl">Care Information</div>
+                          <div className="h-min font-bold text-2xl">Care Information</div>
                           <div>
                           <div>Housing</div>
                           <FormField label={"Placement"} keyLabel={"housing.place"} showLabel={false}/>
@@ -609,6 +600,10 @@ export default function IndividualDogPage() {
                           <div>
                           <div>Third Meal</div>
                           <FormField label={"Third Meal"} keyLabel={"feeding.thirdmeal"} showLabel={false}/>
+                          </div>
+                          <div>
+                          <div>Last Bath</div>
+                          <FormField label={"Last bath"} keyLabel={"grooming.lastBath"} showLabel={false}/>
                           </div>
                           <div className="invisible pb-8"></div>
                         
@@ -642,10 +637,10 @@ export default function IndividualDogPage() {
                     Save
                   </button>
                 </div>
-                <div className="fixed w-full justify-center flex bottom-0 z-10 gap-4 sm:hidden">
+                <div className="fixed w-full px-12 justify-center flex bottom-0 z-10 gap-4 sm:hidden">
                   <button
                     type="button"
-                    className=" py-1 px-8 border-2 bg-white border-gray-200 rounded"
+                    className=" py-2 px-8 w-1/2 border-2 bg-white border-gray-200 rounded"
                     onClick={() => {
                       reset();
                       if (router.route === "/dogs/new") {
@@ -658,10 +653,10 @@ export default function IndividualDogPage() {
                     Discard Changes
                   </button>
                   <button
-                    className="flex justify-center bg-pink-800 text-white py-1 px-9 border-2 rounded"
+                    className="flex w-1/2 justify-center bg-pink-800 text-white py-2 px-9 border-2 rounded"
                     type="submit"
                   >
-                    Save
+                    Save Changes
                   </button>
                 </div>
                 </>
@@ -690,7 +685,7 @@ export default function IndividualDogPage() {
             </>
           
         </div>
-        <div className={!isEdit ?"flex": "sm:flex hidden"}>
+        <div className={!isEdit ?"flex w-full justify-center": "sm:flex hidden"}>
         <TabContainer
           logRef={logRef}
           showInfoTab={showInfoTab}
