@@ -2,6 +2,11 @@ import { getLogs } from "../../../../server/db/actions/Log";
 import { z } from "zod";
 import { Types } from "mongoose";
 import { consts } from "@/utils/consts";
+import { getUserById } from "../../../../server/db/actions/User";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]";
+import { getDogById } from "../../../../server/db/actions/Dog";
+import { logSchema } from "@/utils/consts";
 
 const logParams = z.object({
   author: z.string().refine((id) => {
@@ -29,6 +34,11 @@ export default async function handler(req, res) {
     error,
     data: search,
   } = logSearch.safeParse(req.body ? req.body : {});
+
+  // console.log(req.body)
+  // console.log("log")
+  // console.log(req.body)
+  // console.log(logSearch.safeParse(req.body ? req.body : {}))
 
   if (req.method == "POST") {
     if (!success) {
@@ -77,10 +87,28 @@ export default async function handler(req, res) {
     try {
       const data = await getLogs(filter);
 
+      const session = await getServerSession(req, res, authOptions);
+      const user = await getUserById(session.user._id);
+
+      let userAccessData = data;
+
+      if (user.role === "User") {
+        let dogData = await getDogById(filter.dog);
+        if (
+          dogData &&
+          !dogData.instructors?.some((o) => o._id.equals(user._id)) &&
+          !dogData.caregivers?.some((o) => o._id.equals(user._id))
+        ) {
+          userAccessData = data.filter((log) =>
+            log.author._id.equals(user._id),
+          );
+        }
+      }
+
       res.status(200).json({
         success: true,
         message: "Successfully retrieved logs",
-        data: data,
+        data: userAccessData,
       });
       return;
     } catch (error) {

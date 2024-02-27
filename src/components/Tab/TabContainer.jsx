@@ -19,6 +19,7 @@ import { useSession } from "next-auth/react";
  */
 export default function TabContainer({
   logRef,
+  showInfoTab,
   setShowLogModal,
   showFormTab,
   showFormDropdown,
@@ -75,7 +76,7 @@ export default function TabContainer({
           </div>
         </TabSection> :
       <TabSection defaultTab={ showLogTab ? "logs" : (showFormTab ? "forms" : "information") }>
-        <div label="information">
+        {showInfoTab ? <div label="information">
           <div className="w-full grid grid-cols-3 gap-16">
             {Object.keys(dogInformationSchema).map((category) => (
               <div className="col" key={category}>
@@ -96,7 +97,7 @@ export default function TabContainer({
               </div>
             ))}
           </div>
-        </div>
+        </div> : undefined }
 
         <div label="logs">
           <div className="flex-grow flex-col space-y-4">
