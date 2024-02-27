@@ -1,4 +1,5 @@
 import DogTable from "@/components/Dog/DogTable";
+import CardDogTable from "@/components/Dog/CardDogTable";
 
 /**
  * The main page for displaying Dogs
