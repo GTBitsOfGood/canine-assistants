@@ -6,6 +6,7 @@ import dateUtils from "@/utils/dateutils";
 import { useRouter } from "next/router";
 import LoadingAnimation from "../LoadingAnimation";
 import { Toast } from "../Toast";
+import Image from "next/image";
 
 function DogCard({ className, dog, onClick }) {
   return (
@@ -13,7 +14,9 @@ function DogCard({ className, dog, onClick }) {
       className={"bg-white shadow p-4 flex rounded-lg z-10 text-start " + (className || "")}
       onClick={onClick || (() => {})}
     >
-      <div className="w-60 h-60 bg-gray-400 rounded-lg"></div>
+      <div className="flex w-[225px] h-[225px] items-center justify-center rounded-lg bg-primary-gray overflow-hidden">
+        {dog.image && <Image alt={dog.name} width={350} height={350} src={dog.image} />}
+      </div>
       <div className="pl-8 pr-4 py-4 flex-1 flex justify-between">
         <div className="flex flex-col">
           <div className="font-bold text-3xl pb-4">{dog.name}</div>
@@ -25,7 +28,7 @@ function DogCard({ className, dog, onClick }) {
           ].map(([label, value], i) => (
             <div key={i} className="py-1">
               <label className="pr-2">{`${label}:`}</label>
-              {value}
+              {value ?? "N/A"}
             </div>
           ))}
         </div>
