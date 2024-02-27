@@ -35,11 +35,6 @@ export default async function handler(req, res) {
     data: search,
   } = logSearch.safeParse(req.body ? req.body : {});
 
-  // console.log(req.body)
-  // console.log("log")
-  // console.log(req.body)
-  // console.log(logSearch.safeParse(req.body ? req.body : {}))
-
   if (req.method == "POST") {
     if (!success) {
       res.status(422).json({
