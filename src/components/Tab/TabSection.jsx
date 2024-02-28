@@ -18,7 +18,8 @@ export default function TabSection({ defaultTab, isEdit, children }) {
    * @param {React.MouseEvent<HTMLButtonElement>} e The event fired
    */
   const onTabClick = (e) => {
-    setActiveTab(e.target.innerText);
+    const tabLabel = e.target.textContent
+    setActiveTab(tabLabel.includes("●") ? tabLabel.replace('●', '') : tabLabel)  //excludes "●" if it exists
   };
 
   useEffect(() => {
@@ -36,7 +37,7 @@ export default function TabSection({ defaultTab, isEdit, children }) {
       <div>
         <ul className="flex -mb-[0.1rem] h-10">
           {children.map((child) => {
-            const { label } = child.props;
+            const { label, alertIcon } = child.props;
 
             return (
               <Tab
@@ -44,6 +45,7 @@ export default function TabSection({ defaultTab, isEdit, children }) {
                 onTabClick={onTabClick}
                 activeTab={isEdit ? "information" : activeTab}
                 label={label}
+                alertIcon={alertIcon}
               />
             );
           })}
