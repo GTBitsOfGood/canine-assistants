@@ -50,6 +50,7 @@ export default function IndividualDogPage() {
   const [logs, setLogs] = useState([]);
   const [filteredLogs, setFilteredLogs] = useState([]);
   const [appliedFilters, setAppliedFilters] = useState({});
+  const [hasUnresolvedLogs, setHasUnresolvedLogs] = useState(false);
 
   const [showFormTab, setShowFormTab] = useState(false);
   const [forms, setForms] = useState([]);
@@ -182,6 +183,17 @@ export default function IndividualDogPage() {
         });
     }
   }, [data]);
+
+  useEffect(() => {
+    setHasUnresolvedLogs(false);
+    if (logs) {
+      logs?.forEach((log) => {
+        if (!log.resolved) {
+          setHasUnresolvedLogs(true);   
+        }
+      }
+    );}
+  }, [logs])
 
   if (!data || !data.success) {
     return <LoadingAnimation />;
@@ -485,6 +497,7 @@ export default function IndividualDogPage() {
           appliedFilters={appliedFilters}
           setAppliedFilters={setAppliedFilters}
           setSearchQuery={setSearchQuery}
+          hasUnresolvedLogs={hasUnresolvedLogs}
           showFormTab={showFormTab}
           showFormDropdown={showFormDropdown}
           setShowFormDropdown={setShowFormDropdown}

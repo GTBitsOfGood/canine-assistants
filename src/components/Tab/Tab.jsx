@@ -13,11 +13,14 @@ export default function Tab({ activeTab, label, alertIcon, onTabClick }) {
         activeTab.toLowerCase() === label.toLowerCase()
           ? "border-ca-green"
           : "border-stone-50 hover:border-secondary-gray"
-      } text-xl font-bold px-7 sm:px-10 border-b-4 text-primary-text hover:bg-gray-100 pt-1 flex flex-row`}
+      } text-xl font-bold px-7 sm:px-10 border-b-4 text-primary-text hover:bg-gray-100 pt-1 `}
       onClick={onTabClick}
     >
-      <div className="mx-1 text-red-600">{!alertIcon ? "•" : ""}</div>
-      <div>{stringUtils.upperFirstLetter(label)}</div>
+      <div className="flex flex-row">
+        <div className="mx-1 text-red-600 text-xl">{alertIcon ? "●" : ""}</div>
+        <div>{stringUtils.upperFirstLetter(label)}</div>
+      </div>
+      
     </li>
   );
 }

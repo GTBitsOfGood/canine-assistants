@@ -32,6 +32,7 @@ export default function TabContainer({
   appliedFilters,
   setAppliedFilters,
   setSearchQuery,
+  hasUnresolvedLogs,
   tags,
   removeTag,
   filteredLogs,
@@ -98,7 +99,7 @@ export default function TabContainer({
           </div>
         </div>
 
-        <div label="logs">
+        <div label="logs" alertIcon={hasUnresolvedLogs}>  {/* make true a dynamic variable */}
           <div className="flex-grow flex-col space-y-4">
             <LogSearchFilterBar
               filters={appliedFilters}
