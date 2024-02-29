@@ -92,6 +92,8 @@ const logs = [
     description: "This is a log description",
     author: "",
     dog: "",
+    resolver: null,
+    resolved: false,
   },
   {
     title: "This is a log",
@@ -101,6 +103,8 @@ const logs = [
     description: "This is a log description",
     author: "",
     dog: "",
+    resolver: null,
+    resolved: false,
   },
   {
     title: "This is a log",
@@ -110,6 +114,8 @@ const logs = [
     description: "This is a log description",
     author: "",
     dog: "",
+    resolver: null,
+    resolved: false,
   },
   {
     title: "This is a log",
@@ -119,6 +125,8 @@ const logs = [
     description: "This is a log description",
     author: "",
     dog: "",
+    resolver: null,
+    resolved: false,
   },
   {
     title: "This is a log",
@@ -128,6 +136,8 @@ const logs = [
     description: "This is a log description",
     author: "",
     dog: "",
+    resolver: null,
+    resolved: false,
   },
   {
     title: "This is a log",
@@ -137,6 +147,8 @@ const logs = [
     description: "This is a log description",
     author: "",
     dog: "",
+    resolver: null,
+    resolved: false,
   },
   {
     title: "This is a log",
@@ -146,6 +158,8 @@ const logs = [
     description: "This is a log description",
     author: "",
     dog: "",
+    resolver: null,
+    resolved: false,
   },
   {
     title: "This is a log",
@@ -155,6 +169,8 @@ const logs = [
     description: "This is a log description",
     author: "",
     dog: "",
+    resolver: null,
+    resolved: false,
   },
   {
     title: "This is a log",
@@ -164,6 +180,8 @@ const logs = [
     description: "This is a log description",
     author: "",
     dog: "",
+    resolver: null,
+    resolved: false,
   },
   {
     title: "This is a log",
@@ -173,6 +191,8 @@ const logs = [
     description: "This is a log description",
     author: "",
     dog: "",
+    resolver: null,
+    resolved: false,
   },
   {
     title: "This is a log",
@@ -182,6 +202,8 @@ const logs = [
     description: "This is a log description",
     author: "",
     dog: "",
+    resolver: null,
+    resolved: false,
   },
   {
     title: "This is a log",
@@ -191,6 +213,8 @@ const logs = [
     description: "This is a log description",
     author: "",
     dog: "",
+    resolver: null,
+    resolved: false,
   },
 ];
 const dogNames = [
@@ -335,7 +359,7 @@ const forms = [
 export default async function handler(req, res) {
   if (req.method === "GET") {
     await dbConnect();
-    // delete everythin
+    // delete everything
     await User.deleteMany({});
     await Log.deleteMany({});
     await Dog.deleteMany({});
@@ -408,6 +432,7 @@ export default async function handler(req, res) {
           name: dogNames[getRandomInt(0, dogNames.length - 1)],
           disability: disabilities[getRandomInt(0, disabilities.length - 1)],
         },
+        image: "",
       };
 
       dogs[i].instructors = [userIds[0]];
@@ -422,6 +447,7 @@ export default async function handler(req, res) {
     for (let i = 0; i < logs.length; i++) {
       logs[i].dog = dogIds[getRandomInt(0, dogIds.length - 1)];
       logs[i].author = userIds[getRandomInt(0, userIds.length - 1)];
+      // logs[i].resolver = userIds[getRandomInt(0, userIds.length - 1)];
       await createLog(logs[i]);
     }
 

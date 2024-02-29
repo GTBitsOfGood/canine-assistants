@@ -13,8 +13,7 @@ export default function DatePicker({
 }) {
   const CustomInput = React.forwardRef(({ value, onClick }, ref) => (
     <button
-      className="rounded bg-foreground border border-neutral-300 text-neutral-700 text-lg p-1 px-3 font-normal"
-      onClick={onClick}
+      className="rounded bg-foreground border border-neutral-300 text-neutral-700 text-lg p-1 px-3 font-normal w-full h-full text-left pt-[6px]" onClick={onClick}
       type="button"
       ref={ref}
     >
@@ -61,5 +60,5 @@ export default function DatePicker({
     return commonProps;
   };
 
-  return <ReactDatePicker {...getProps()} />;
+  return <ReactDatePicker wrapperClassName="w-full h-full" {...getProps()} />;
 }

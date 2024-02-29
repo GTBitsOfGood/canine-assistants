@@ -37,9 +37,51 @@ input[type="text"]:focus {
     @apply text-black;
     @apply font-semibold;
   }
+
+  input[type="radio"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    @apply border-2 border-primary-gray;
+    position: relative;
+    outline: none;
+  }
+
+  input[type="radio"]:focus {
+    @apply ring-ca-pink;
+  }
+
+  input[type="radio"]::before {
+    content: "";
+    position: absolute;
+    top: -1.5px;
+    left: -1.5px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+  }
+
+  input[type="radio"]:checked {
+    background-color: transparent;
+  }
+
+  input[type="radio"]:checked::before {
+    @apply bg-ca-pink;
+  }
+
+  input[type="radio"]:disabled:checked::before {
+    @apply bg-secondary-text;
+  }
 }
 
 @layer components {
+  .drop-shadow {
+    box-shadow: 0 4px 16px 0 rgba(71, 80, 123, 0.12);
+  }
+
   .modal-shadow {
     box-shadow: 0 0 16px 0 rgba(40, 48, 45, 0.16);
   }
@@ -86,7 +128,7 @@ input[type="text"]:focus {
   }
 
   .textbox-base {
-    @apply px-4 py-2.5 bg-foreground rounded border text-secondary-text text-lg font-normal focus:border-primary-text focus:ring-0;
+    @apply px-4 py-2.5 bg-foreground rounded border text-secondary-text text-lg font-normal focus:border-border-focus-gray focus:ring-0 focus:outline-0;
   }
 
   .textbox-border {

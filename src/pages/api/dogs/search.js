@@ -1,7 +1,10 @@
-import { getDogs } from "../../../../server/db/actions/Dog";
+import { getAssociatedDogs } from "../../../../server/db/actions/Dog";
 import { z } from "zod";
 import { Types } from "mongoose";
 import { consts } from "@/utils/consts";
+import { getUserById } from "../../../../server/db/actions/User";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]";
 
 const dogSchema = z.object({
   name: z.string().optional(),
@@ -55,11 +58,19 @@ export default async function handler(req, res) {
     }
 
     try {
-      const data = await getDogs(filter);
+      const session = await getServerSession(req, res, authOptions);
+      if (!session) {
+        res.status(401).redirect("/login");
+        return;
+      }
+      const user = await getUserById(session.user._id);
+      const data = await getAssociatedDogs(user, filter);
 
       res.status(200).json({ success: true, data: data });
     } catch (error) {
-      res.status(500).json({ success: false, message: error.message });
+      res
+        .status(500)
+        .json({ success: false, message: error.message, data: [] });
       return;
     }
   }

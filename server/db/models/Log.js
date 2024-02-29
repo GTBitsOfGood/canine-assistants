@@ -25,10 +25,21 @@ const LogSchema = new Schema({
   description: {
     type: String,
   },
+  resolved: {
+    type: Boolean,
+    required: true,
+  },
+  resolution: {
+    type: String,
+  },
   author: {
     type: SchemaTypes.ObjectId,
     ref: "User",
     required: true,
+  },
+  resolver: {
+    type: SchemaTypes.ObjectId,
+    ref: "User",
   },
   dog: {
     type: SchemaTypes.ObjectId,

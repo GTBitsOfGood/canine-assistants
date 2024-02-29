@@ -5,7 +5,7 @@ import Image from "next/image";
 
 export default function GreenWaves() {
   return (
-    <>
+    <span className="-z-10">
       <div className="h-1/5 m-0 relative overflow-hidden">
         <Image
           src={lightWave}
@@ -29,6 +29,6 @@ export default function GreenWaves() {
           alt="decorative green waves"
         />
       </div>
-    </>
+    </span>
   );
 }

@@ -336,6 +336,14 @@ const userRegistrationSchema = z.object({
   password: z.string().min(1), // change min to 8 later
 });
 
+const userInviteSchema = z.object({
+  name: z.string().min(1),
+  email: z.string().email(),
+  role: z.enum(consts.userRoleArray),
+  isActive: z.boolean(),
+  acceptedInvite: z.boolean(),
+});
+
 /**
  * Zod object for validating request bodies for logs
  */
@@ -345,6 +353,8 @@ const logSchema = z.object({
   tags: z.array(z.enum(consts.tagsArray)).optional(),
   severity: z.enum(consts.concernArray),
   description: z.string().min(1).optional(),
+  resolved: z.boolean(),
+  resolution: z.string().min(1).optional(),
   author: z.string().refine((id) => {
     return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
   }),
@@ -385,6 +395,44 @@ const formSchema = z.object({
 });
 
 /**
+ * Zod object for validating request bodies for signup
+ */
+const signUpSchema = z
+  .object({
+    name: z.string().min(1, { message: "Please enter a valid name" }).trim(),
+    email: z.string().email({ message: "Please enter a valid email address" }),
+    password: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters" }),
+    confirmPassword: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters" }),
+  })
+  .refine(
+    (values) => {
+      return values.password === values.confirmPassword;
+    },
+    {
+      message: "Passwords must match!",
+      path: ["confirmPassword"],
+    },
+  );
+
+/**
+ * Zod object for information returned when user with limited association views dog
+ * Used to strip all but the basic details from the dog data
+ */
+const limitedDogSchema = z.object({
+  name: z.string().min(1),
+  gender: z.enum(consts.genderPetArray).default("Male"),
+  breed: z.string().min(1),
+  weight: z.coerce.number(),
+  dateOfBirth: z.coerce.date(),
+  location: z.enum(consts.locationArray),
+  coatColor: z.string().optional(),
+});
+
+/**
  * New Dog
  */
 const newDog = {
@@ -405,9 +453,12 @@ export {
   logSchema,
   userUpdateSchema,
   userRegistrationSchema,
+  userInviteSchema,
   formSchema,
   formUpdateSchema,
+  signUpSchema,
   dogInformationSchema,
   computeDefaultValues,
   newDog,
+  limitedDogSchema,
 };

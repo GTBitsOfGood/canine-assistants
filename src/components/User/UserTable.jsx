@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
 import Table from "../Table/Table";
 import UserSearchBar from "./UserSearchBar";
+import UserInviteModal from "./UserInviteModal";
 import DropdownMenu, { DropdownMenuOption } from "../Form/DropdownMenu";
 import {
   Bars3BottomLeftIcon,
   IdentificationIcon,
   AtSymbolIcon,
   ClipboardIcon,
+  PlusIcon,
 } from "@heroicons/react/24/solid";
 import LoadingAnimation from "../LoadingAnimation";
-import toast from "react-hot-toast";
 import { consts } from "@/utils/consts";
 import ToggleSwitch from "./ToggleSwitch"
 import ConfirmCancelModal from "../ConfirmCancelModal";
+import { Toast } from "../Toast";
 
 /**
  * @returns { React.ReactElement } The UserTable component
@@ -26,21 +28,40 @@ export default function UserTable() {
   const [selectedUserName, setSelectedUserName] = useState("");
   const [userToDeactivate, setUserToDeactivate] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [showChange, setShowChange] = useState(false);
 
   useEffect(() => {  // Pull all user data
+    setShowChange(false)
     fetch("/api/users")
     .catch(() => {
       setLoading(false);
-      toast.error("Unable to pull user data.");
+      Toast({ success: false, message: "Unable to pull user data." });
       setData([]);
     })
       .then((res) => res.json())
       .then((data) => {
-        setUsers(data?.data);
+        const sortedData = data?.data.sort((a, b) => {
+          
+          const getPriority = (entry) => {
+              if (entry.acceptedInvite && entry.isActive) return 1;
+              if (!entry.acceptedInvite) return 2;
+              if (entry.acceptedInvite && !entry.isActive) return 3;
+              return 4; // Fallback
+          };
+      
+          const priorityA = getPriority(a);
+          const priorityB = getPriority(b);
+      
+          return priorityA - priorityB;
+      });
+      
+  
+        setUsers(sortedData);
         setLoading(false);
       });
     
-  }, []);
+  }, [showChange]);
 
   const handleToggle = (userId, currentStatus) => {  // Active/Inactive toggle handling, opens confirmation modal
     if (currentStatus === "Active") {
@@ -64,7 +85,7 @@ export default function UserTable() {
       );
       setUsers(updatedUsers);
     } catch (error) {
-      toast.error(`Error updating user role: ${error.message}`);
+      Toast({ success: false, message: `Error updating user role: ${error.message}` });
     } finally {
       setShowModal(false)
       setUserToDeactivate(null);
@@ -74,7 +95,7 @@ export default function UserTable() {
   const applyRole = async (role) => {  // PATCH sent when role is changed through dropdown menu
     console.log(role, consts.userAccess)
     if (!consts.userAccess.hasOwnProperty(Object.values(role)[0])) {
-      toast.error("Invalid user ID or role");
+      Toast({ success: false, message: "Invalid user ID or role" });
       return;
     }
     const roleValue = Object.values(role)[0]
@@ -91,10 +112,10 @@ export default function UserTable() {
         throw new Error(errorData.message || "Failed to update the user role");
       }
       
-      toast.success('User role updated successfully');
+      Toast({ success: true, message: 'User role updated successfully' });
     } catch (error) {
       console.error(error);
-      toast.error(`Error updating user role: ${error.message}`);
+      Toast({ success: false, message: `Error updating user role: ${error.message}` });
     }
   };
 
@@ -138,7 +159,7 @@ export default function UserTable() {
               submitFilters={(selectedRole) => {
                 applyRole(selectedRole)
                 rowData.role=consts.userAccess[selectedRole[0]]
-                window.location.reload();  // temporary fix: reload page whenever a role is assigned, to update role in UI
+                setShowChange(true)
               }}
               label={rowData.role}
               props={{
@@ -163,24 +184,89 @@ export default function UserTable() {
       id: "status",
       label: "Status",
       icon: <ClipboardIcon />,
-     customRender: (rowData) => {
-        return (
+      customRender: (rowData) => {
+        return rowData.acceptedInvite ? (
           <>
             <ToggleSwitch isActive={rowData.isActive} onToggle={() => handleToggle(rowData._id, rowData.isActive ? "Active" : "Inactive")} />
             <div className="mx-3">
-              {rowData.isActive ? "Active": "Inactive"}
+              {rowData.isActive ? "Active" : "Inactive"}
             </div>
+          </>
+        ) : (
+          <>
+            <div className="w-32 break-words">
+            Invite Pending
+          </div>
           </>
         );
       },
+      
     },
   ];
   
   return(
     <>
+      {showInviteModal ? (
+        <>
+          <UserInviteModal
+          onClose={() => {
+            setShowInviteModal(false);
+          }}
+          onSubmit={(success, statusCode) => {
+            if (success) {
+              setShowChange(true)
+              toast.custom((t) => (
+                <div
+                  className={`h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-ca-green text-white text-lg font-normal
+                  ${t.visible ? "animate-enter" : "animate-leave"}`}
+                >
+                  <span>User was successfully invited.</span>
+                </div>
+              ));
+            } else {
+              if (statusCode === 409) {
+                toast.custom(() => (
+                    <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
+                        A user with that email already exists.
+                    </div>
+                ));
+            } else {
+              toast.custom(() => (
+                <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
+                  There was a problem inviting the user, please try again.
+                </div>
+              ));
+            }
+            }
+          }}
+          />
+        </>
+      ) : null}
+
       <LoadingAnimation animated={false} loadText={false} />
       <div className="flex-grow flex-col space-y-6 mb-8">
+      <div className="flex justify-between items-center">
+    <div className="flex-grow mr-10 md:mr-20 lg:mr-40" style={{ flexBasis: '75%' }}> {/* Adjust the margin-right (mr-4) as needed */}
         <UserSearchBar setSearch={setSearchFilter} />
+    </div>
+    <div className="flex-none">
+        <button
+            className="flex px-4 py-1.5 justify-center items-center button-base primary-button gap-2"
+            style={{ width: 'fit-content' }}
+            onClick={() => setShowInviteModal(true)}
+        >
+            <div className="primary-button-plus-icon">{<PlusIcon />}</div>
+            <div className="primary-button-text">Invite a User</div>
+        </button>
+    </div>
+</div>
+
+
+
+
+
+
+        
 
         <Table  // Data comes in as "users" state
           loading={loading}
