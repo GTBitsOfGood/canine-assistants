@@ -5,8 +5,7 @@ import DropdownMenu, { DropdownMenuOption } from "../Form/DropdownMenu";
 import { Chip, ChipTypeStyles } from "../Chip";
 
 /**
- * Modal for creating a new log
- * @param {*} dogId string id of dog associated with the log
+ * Modal for resolving a log
  * @param {*} userId string id of user creating the log
  * @param {*} onClose function that is called when the log needs to be closed
  * @param {*} onSubmit function that is called when the user tries to save the log
@@ -19,9 +18,9 @@ export default function ResolveLogModal({ dogId, userId, log, onClose, onSubmit 
     severitySet: {},
     tagsSet: {},
     description: "",
-    resolved: log?.resolved,
-    resolver: log?.resolver,
-    resolution: log?.resolution,
+    resolved: log.resolved,
+    resolver: log.resolver,
+    resolution: log.resolution,
   });
 
   const [errors, setErrors] = useState({
@@ -34,31 +33,12 @@ export default function ResolveLogModal({ dogId, userId, log, onClose, onSubmit 
   const [saving, setSaving] = useState(false);
   const modalRef = useRef(null);
   const [retrievedLog, setRetrievedLog] = useState(false);
-  const [fetchedDogId, setFetchedDogId] = useState(null);
-
-  const [showCancelConfirmModal, setShowCancelConfirmModal] = useState(false);
   
   // Updates the logData state with the log data from the database when editing
   useEffect(() => {
-
-    if (log && !retrievedLog) {
-      
-          const topicIndex = topicMapping[log.topic];
-          const concernIndex = concernMapping[log.severity];
-          const tagsObject = convertTagsArrayToObject(log.tags); 
-
-          setLogData({
-            ...logData,
-            title: log.title,
-            topicSet: { [topicIndex]: log.topic },
-            severitySet:{ [concernIndex]: log.severity },
-            tagsSet: tagsObject,
-            description: log.description,
-            resolutio
-          });
-          setFetchedDogId(log.dog);
+    if (log.resolved && !retrievedLog) {
+          setLogData({log});
           setRetrievedLog(true);
-        
     }
 
     const scrollToBottom = () => {
@@ -75,31 +55,25 @@ export default function ResolveLogModal({ dogId, userId, log, onClose, onSubmit 
   });
 
   const handleSubmit = (logData) => {
-    if (log) {
-      editLog(logData);
+    if (log.resolved) {
+      editResolution(logData);
     } else {
-      saveLog(logData);
+      resolveLog(logData);
     }
   };
 
-  const saveLog = (logData) => {
+  const resolveLog = (logData) => {
     const formattedData = {
-      title: logData.title,
-      topic: Object.values(logData.topicSet)[0],
-      severity: Object.values(logData.severitySet)[0],
-      tags: Object.values(logData.tagsSet),
-      description: logData.resolution,
-      dog: dogId,
-      author: userId,
-      resolved: false,
+      resolved: true,
+      resolution: logData.resolution ? logData.resolution : "hi",
     };
 
-    const { success, error, data } = logSchema.safeParse(formattedData);
+    console.log(formattedData)
 
-    if (success) {
+    if (true) {
       setSaving(true);
-      fetch("/api/logs", {
-        method: "POST",
+      fetch("/api/logs/" + log._id, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
@@ -115,6 +89,7 @@ export default function ResolveLogModal({ dogId, userId, log, onClose, onSubmit 
           onSubmit(false);
         });
     } else {
+      
       const errorsArray = error.format();
       const errorsObject = {};
 
@@ -123,23 +98,18 @@ export default function ResolveLogModal({ dogId, userId, log, onClose, onSubmit 
           errorsObject[err] = true;
         }
       }
-
+      console.log("error dummy!!!")
       setErrors({ ...errors, ...errorsObject });
     }
+    
   };
 
-  const editLog = (logData) => {
+  const editResolution = (logData) => {
     const formattedData = {
-      title: logData.title,
-      topic: Object.values(logData.topicSet)[0],
-      severity: Object.values(logData.severitySet)[0],
-      tags: Object.values(logData.tagsSet),
-      description: logData.resolution,
-      dog: fetchedDogId,
-      author: userId,
+      ...logData,
       resolved: logData.resolved,
       resolver: logData.resolver,
-      resolution: logData?.resolution,
+      resolution: logData.resolution,
     };
 
 
@@ -182,9 +152,7 @@ export default function ResolveLogModal({ dogId, userId, log, onClose, onSubmit 
 
   return (
     <>
-    
     <div className="fixed inset-0 flex items-end sm:items-center justify-center z-10">
-
       <div
         onClick={() => onClose()}
         className="fixed inset-0 bg-modal-background-gray opacity-60"
@@ -194,7 +162,7 @@ export default function ResolveLogModal({ dogId, userId, log, onClose, onSubmit 
         className="modal-shadow-mobile sm:modal-shadow bg-white sm:bg-secondary-background px-5 sm:px-12 py-4 sm:py-9 w-full sm:w-auto h-[90%] sm:h-auto sm:min-h-[70vh] sm:max-h-[95vh] z-10 overflow-auto rounded-t-[50px] sm:rounded-t-none"
       >
         <div className="sm:hidden w-8 h-1 opacity-40 bg-zinc-500 rounded-[100px] mx-auto mb-[12px]" />
-        {log ? (<h1 className="mb-6"> Resolve Log</h1>) : (<h1 className="mb-6"> Add a log</h1>)}
+        {log.resolved ? (<h1 className="mb-6"> Edit Resolved Log</h1>) : (<h1 className="mb-6"> Resolve Log</h1>)}
         
 
         <h2 className="h-10 align-middle">
@@ -209,13 +177,6 @@ export default function ResolveLogModal({ dogId, userId, log, onClose, onSubmit 
             }}
             className={`text-area textbox-base ${ errors.description ? "textbox-error" : "textbox-border" } w-full`}
           ></textarea>
-          {/* {errors.description ? (
-            <div className="flex items-center gap-[5px] text-black text-lg font-normal">
-              <div className="h-4 w-4 fill-slate-900">
-                <ExclamationCircleIcon />
-              </div>
-            </div>
-          ) : null} */}
         </div>
 
         <div className="flex flex-col-reverse sm:flex-row justify-end gap-[2vw]">

@@ -62,9 +62,9 @@ export default async function handler(req, res) {
         { description: { $regex: query, $options: "i" } },
       ],
     };
-    if (resolved !== undefined) {
-      filter.resolved = resolved;
-    }
+    // if (resolved !== undefined) {  I wrote this code in sprint 2 but it prevents resolved logs from getting through each individual dog page
+    //   filter.resolved = resolved;
+    // }
     if (topic.length > 0) {
       filter.topic = { $in: topic };
     }
