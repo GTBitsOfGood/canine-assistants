@@ -114,16 +114,14 @@ export default function Log({ log, user, onEdit, onDelete }) {
         </>
       ) : null}
       
-      {true && (  //Change back to isAuthor (or something idk check dev)
+      {true && (  //Change back to isAuthor (or something idk check dev) TESTING
         <div className="flex space-between">
           <div className="flex">
           
           <div className="mx-1 text-red-600 text-xl">{user.role === "User" && !log.resolved ? "●" : "⠀"}</div>  
             <Chip
               key={"ResolvedChip"}
-              label={
-                <div className="flex gap-2 items-center"> {log.resolved ? "Resolved" : "Unresolved"}</div>
-              }
+              label={log.resolved ? "Resolved" : "Unresolved"}
               type={`border-neutral-chip-shade bg-neutral-chip h-7 ${log.resolved ? 'bg-green-200 border-green-600' : 'bg-red-300 border-red-600'} mb-1`}
             />
           </div>
@@ -136,7 +134,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
               onClick={handleResolveClick}
             >
               <ClipboardIcon className="h-5 mr-1" />
-              Resolve {log.resolved ? "d" : ""}
+              {log.resolved ? "Resolved" : "Resolve"}
             </button>
             <button
               type="button"

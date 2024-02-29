@@ -78,7 +78,7 @@ export default function IndividualDogPage() {
         filters[key] = Object.values(filters[key]);
       }
     }
-
+    console.log(logs)
     fetch("/api/logs/search", {
       method: "POST",
       headers: {

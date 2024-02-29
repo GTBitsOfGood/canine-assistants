@@ -8,7 +8,8 @@ export async function getLogs(filter = {}) {
   } catch (e) {
     throw new Error("Unable to get logs at this time, please try again");
   }
-
+  console.log("~~~~~~~~~~~~~~~~~~~~~~~");
+  console.log(Log.find(filter).populate("author"));
   return Log.find(filter).populate("author");
 }
 
