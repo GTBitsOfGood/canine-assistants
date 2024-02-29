@@ -359,6 +359,12 @@ const logSchema = z.object({
   description: z.string().min(1).optional(),
   resolved: z.boolean(),
   resolution: z.string().min(1).optional(),
+  resolver: z
+    .string()
+    .refine((id) => {
+      return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
+    })
+    .optional(),
   author: z.string().refine((id) => {
     return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
   }),

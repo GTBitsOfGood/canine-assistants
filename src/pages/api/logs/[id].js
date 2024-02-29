@@ -95,7 +95,6 @@ export default async function handler(req, res) {
         message: "Unable to update because log ID is not in valid format.",
       });
     }
-
     const { success, error, data } = logSchema.partial().safeParse(req.body);
     if (!success) {
       const code = error.errors[0].code;
@@ -132,7 +131,6 @@ export default async function handler(req, res) {
     const session = await getServerSession(req, res, authOptions);
     const logData = await getLogById(req.query.id);
     const user = await getUserById(session.user._id);
-
     if (!session || !user) {
       return res.status(405).send({
         success: false,
@@ -177,6 +175,7 @@ export default async function handler(req, res) {
           });
         }
       }
+      data.resolver = session.user._id;
       return updateLog(req.query.id, data)
         .then((updatedLogObject) => {
           return res.status(200).send({
@@ -211,7 +210,8 @@ export default async function handler(req, res) {
         });
       }
       // succcess for user/admin
-      req.body.resolved = logData.resolved;
+      data.resolver = session.user._id;
+      data.resolved = logData.resolved;
       return updateLog(req.query.id, data)
         .then((updatedLogObject) => {
           return res.status(200).send({
