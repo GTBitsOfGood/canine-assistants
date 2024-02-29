@@ -7,6 +7,9 @@ import DeleteLogModal from "./DeleteLogModal";
 import LogModal from "./ResolveLogModal";
 import ResolveLogModal from "./ResolveLogModal";
 import { Toast } from "../Toast";
+import { XMarkIcon } from "@heroicons/react/24/solid";
+import { Chip, ChipTypeStyles } from "../Chip";
+import stringUtils from "@/utils/stringutils";
 
 export default function Log({ log, user, onEdit, onDelete }) {
   const [showMore, setShowMore] = useState(false);
@@ -45,7 +48,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
   };
 
   return (
-    <div className="bg-primary-background p-4 my-4 w-full">
+    <div className="bg-primary-background p-4 my-4 w-full pb-6">
 
     {showEditModal ? (
         <>
@@ -111,36 +114,52 @@ export default function Log({ log, user, onEdit, onDelete }) {
         </>
       ) : null}
       
-      {true &&(
-        <div className="grow flex gap-4 justify-end">
-          <button
-            type="button"
-            className="flex justify-center items-center"
-            onClick={handleResolveClick}
-          >
-            <ClipboardIcon className="h-5 mr-1" />
-            Resolve {log.resolved ? "d" : ""}
-          </button>
-          <button
-            type="button"
-            className="flex justify-center items-center"
-            onClick={handleEditClick}
-          >
-            <PencilSquareIcon className="h-5 mr-1" />
-            Edit
-          </button>
-          <button
-            type="button"
-            className="flex justify-center items-center"
-            onClick={handleDeleteClick}
-          >
-            <TrashIcon className="h-5 mr-1" />
-            Delete
-          </button>
+      {true && (  //Change back to isAuthor (or something idk check dev)
+        <div className="flex space-between">
+          <div className="flex">
+          
+          <div className="mx-1 text-red-600 text-xl">{user.role === "User" && !log.resolved ? "●" : "⠀"}</div>  
+            <Chip
+              key={"ResolvedChip"}
+              label={
+                <div className="flex gap-2 items-center"> {log.resolved ? "Resolved" : "Unresolved"}</div>
+              }
+              type={`border-neutral-chip-shade bg-neutral-chip h-7 ${log.resolved ? 'bg-green-200 border-green-600' : 'bg-red-300 border-red-600'} mb-1`}
+            />
+          </div>
+          
+
+          <div className="grow flex gap-4 justify-end">
+            <button
+              type="button"
+              className="flex justify-center items-center"
+              onClick={handleResolveClick}
+            >
+              <ClipboardIcon className="h-5 mr-1" />
+              Resolve {log.resolved ? "d" : ""}
+            </button>
+            <button
+              type="button"
+              className="flex justify-center items-center"
+              onClick={handleEditClick}
+            >
+              <PencilSquareIcon className="h-5 mr-1" />
+              Edit
+            </button>
+            <button
+              type="button"
+              className="flex justify-center items-center"
+              onClick={handleDeleteClick}
+            >
+              <TrashIcon className="h-5 mr-1" />
+              Delete
+            </button>
+          </div>
         </div>
+        
       )}
       <div className="flex justify-between">
-        <div className="flex flex-col">
+        <div className="flex flex-col ml-5">
           <h2>{log.title}</h2>
           <div className="flex flex-row">
             <p className="text-secondary-text font-regular w-fit">
@@ -173,7 +192,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
           </div>
         </div>
       ) : (
-        <p className="min-w-fit pt-4 break-words">{log.description}</p>
+        <p className="min-w-fit pt-4 break-words ml-5">{log.description}</p>
       )}
     </div>
   );
