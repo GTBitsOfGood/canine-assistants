@@ -49,7 +49,7 @@ export default function TabContainer({
   return (
     <div
       ref={logRef}
-      className="mt-8 mb-8 shadow-xl rounded-lg text-md w-full text-left relative overflow-hidden bg-foreground p-8"
+      className="mt-8 mb-8 shadow-xl rounded-lg text-md w-full text-left relative bg-foreground p-8"
     >
       {isEdit ? 
       <TabSection defaultTab={"information"} isEdit={isEdit}>
