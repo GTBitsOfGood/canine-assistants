@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { consts, logSchema } from "@/utils/consts";
 
 /**
  * Modal for resolving a log

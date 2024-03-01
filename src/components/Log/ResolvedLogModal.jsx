@@ -3,14 +3,13 @@ import { PencilSquareIcon } from "@heroicons/react/24/solid";
 
 /**
  * Modal for displaying a resolved log.
- * @param {string} user - ID of the user creating the log.
  * @param {function} setShowResolvedModal - Function to control the visibility of the resolved log modal.
  * @param {function} setShowResolveModal - Function to control the visibility of the resolve modal.
  * @param {object} log - The log object containing information about the resolved log.
  * @param {function} onClose - Function called when the modal needs to be closed.
  * @returns {JSX.Element} - The modal component for displaying a resolved log.
  */
-export default function ResolvedLogModal({ user, setShowResolvedModal, setShowResolveModal, log, onClose }) {
+export default function ResolvedLogModal({  setShowResolvedModal, setShowResolveModal, log, onClose, role }) {
 
   const modalRef = useRef(null);
   const [resolver, setResolver] = useState(null);
@@ -44,7 +43,6 @@ export default function ResolvedLogModal({ user, setShowResolvedModal, setShowRe
   };
 
   return (
-    <>
     <div className="fixed inset-0 flex items-end sm:items-center justify-center z-10">
       <div
         onClick={() => onClose()}
@@ -64,7 +62,7 @@ export default function ResolvedLogModal({ user, setShowResolvedModal, setShowRe
               <h1>Resolved Log</h1>
               <button
                   type="button"
-                  className="flex justify-center items-center"
+                  className={`flex justify-center items-center ${role === "Manager" ? "" : "hidden"}`}
                   onClick={handleEditResolveClick}
                 >
                   <PencilSquareIcon className="h-5 mr-1" />
@@ -74,7 +72,7 @@ export default function ResolvedLogModal({ user, setShowResolvedModal, setShowRe
             <div className="text-neutral-800 flex flex-row mt-2">
               <p>Resolved By: {resolver ? resolver.name : "N/A"}</p>
               <p className="ml-4">Date: {updatedAt.toLocaleDateString()}</p>
-              <p className="ml-4">Time: {updatedAt.toLocaleTimeString("en-US").split(':').slice(0, 2).join(':')}{updatedAt.toLocaleTimeString("en-US").split(' ')[1]}</p>
+              <p className="ml-4">Time: {updatedAt.toLocaleTimeString("en-US").split(':').slice(0, 2).join(':')} {updatedAt.toLocaleTimeString("en-US").split(' ')[1]}</p>
             </div>
           </div>
           
@@ -107,13 +105,8 @@ export default function ResolvedLogModal({ user, setShowResolvedModal, setShowRe
             </button>
           </div>
         </div>
-        
-
-
       </div>
     </div>
-
-    </>
   );
   
 }

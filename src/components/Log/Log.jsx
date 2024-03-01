@@ -8,11 +8,17 @@ import LogModal from "./LogModal";
 import ResolveLogModal from "./ResolveLogModal";
 import ResolvedLogModal from "./ResolvedLogModal";
 import { Toast } from "../Toast";
-import { XMarkIcon } from "@heroicons/react/24/solid";
-import { Chip, ChipTypeStyles } from "../Chip";
-import stringUtils from "@/utils/stringutils";
+import { Chip } from "../Chip";
 import { useSession } from "next-auth/react";
 
+/**
+ * Log component for dogs
+ * @param {*} log log object
+ * @param {*} user log object
+ * @param {*} onEdit function that is called when the log needs to be closed
+ * @param {*} onDelete function that is called when the user tries to save the log
+ * @returns the modal component
+ */
 export default function Log({ log, user, onEdit, onDelete }) {
   const [showMore, setShowMore] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -123,9 +129,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
     {showResolveModal ? (
         <>
           <ResolveLogModal
-            userId={user._id}
             log = {log}
-            dogId = {log.dog}
             onClose={() => {
               setShowResolveModal(false);
             }}
@@ -144,22 +148,12 @@ export default function Log({ log, user, onEdit, onDelete }) {
     {showResolvedModal ? (
         <>
           <ResolvedLogModal
-            role={userRole}  // using session workaround
-            userId={user._id}
             log = {log}
-            dogId = {log.dog}
+            role= {userRole}
             setShowResolveModal = {setShowResolveModal}
             setShowResolvedModal = {setShowResolvedModal}
             onClose={() => {
               setShowResolvedModal(false);
-            }}
-            onSubmit={(success) => {
-              onEdit(success)
-              if (success) {
-                Toast({ success: true, bold: log.title, message: "was successfully edited." });
-              } else {
-                Toast({ success: false, message: "There was a problem saving the log, please try again." });
-              }
             }}
           />
         </>
@@ -234,7 +228,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
               {"Date: " + createdAt.toLocaleDateString()}
             </p>
             <p className="text-secondary-text font-regular w-fit">
-              {"Time: " + createdAt.toLocaleTimeString("en-US").split(':').slice(0, 2).join(':')}{createdAt.toLocaleTimeString("en-US").split(' ')[1]}
+              {"Time: " + createdAt.toLocaleTimeString("en-US").split(':').slice(0, 2).join(':')} {createdAt.toLocaleTimeString("en-US").split(' ')[1]}
             </p>
           </div>
         </div>
