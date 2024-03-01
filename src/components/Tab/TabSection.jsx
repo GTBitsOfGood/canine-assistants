@@ -9,7 +9,7 @@ import Tab from "./Tab";
  * @param {{ defaultTab: string, children: ReactNode }}
  * @returns
  */
-export default function TabSection({ defaultTab, isEdit, children }) {
+export default function TabSection({ role, defaultTab, isEdit, children }) {
   const [activeTab, setActiveTab] = useState(defaultTab);
 
   /**
@@ -19,7 +19,7 @@ export default function TabSection({ defaultTab, isEdit, children }) {
    */
   const onTabClick = (e) => {
     const tabLabel = e.target.textContent
-    setActiveTab(tabLabel.includes("●") ? tabLabel.replace('●', '') : tabLabel)  //excludes "●" if it exists
+    setActiveTab(tabLabel.includes("●") ? "Logs" : tabLabel)  //excludes "●" if it exists
   };
 
   useEffect(() => {
@@ -35,12 +35,13 @@ export default function TabSection({ defaultTab, isEdit, children }) {
   return (
     <div>
       <div>
-        <ul className="flex -mb-[0.1rem] h-10">
+        <ul className="flex -mb-[0.1rem] h-10 drop-shadow-md	">
           {children.map((child) => {
             const { label, alertIcon } = child.props;
 
             return (
               <Tab
+                role={role}
                 key={label}
                 onTabClick={onTabClick}
                 activeTab={isEdit ? "information" : activeTab}

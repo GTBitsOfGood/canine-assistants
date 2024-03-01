@@ -6,7 +6,7 @@ import stringUtils from "@/utils/stringutils";
  * @param {{ activeTab: string, label: string, onTabClick: (e: React.MouseEvent<HTMLButtonElement>) => void}}
  * @returns
  */
-export default function Tab({ activeTab, label, alertIcon, onTabClick }) {
+export default function Tab({ role, activeTab, label, alertIcon, onTabClick }) {
   return (
     <li
       className={`cursor-pointer ${
@@ -17,7 +17,7 @@ export default function Tab({ activeTab, label, alertIcon, onTabClick }) {
       onClick={onTabClick}
     >
       <div className="flex flex-row">
-        <div className="mx-1 text-red-600 text-xl">{alertIcon ? "●" : ""}</div>
+        <div className="mx-1 text-red-600 text-xl">{alertIcon && role === "Manager" ? "●" : ""}</div>
         <div>{stringUtils.upperFirstLetter(label)}</div>
       </div>
       

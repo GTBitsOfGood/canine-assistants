@@ -26,6 +26,7 @@ export default function TabContainer({
   setShowFormDropdown,
   forms,
   formTitleMap,
+  role,
   dog,
   logs,
   dogInformationSchema,
