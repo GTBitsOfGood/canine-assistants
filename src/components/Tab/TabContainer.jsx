@@ -25,6 +25,7 @@ export default function TabContainer({
   setShowFormDropdown,
   forms,
   formTitleMap,
+  role,
   dog,
   logs,
   dogInformationSchema,
@@ -75,7 +76,7 @@ export default function TabContainer({
             </div>
           </div>
         </TabSection> :
-      <TabSection defaultTab={ showLogTab ? "logs" : (showFormTab ? "forms" : "information") }>
+      <TabSection defaultTab={ showLogTab ? "logs" : (showFormTab ? "forms" : "information") } role={role}>
         <div label="information">
           <div className="w-full grid grid-cols-3 gap-16">
             {Object.keys(dogInformationSchema).map((category) => (

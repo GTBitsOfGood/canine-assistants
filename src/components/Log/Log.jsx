@@ -4,8 +4,9 @@ import { TrashIcon } from "@heroicons/react/20/solid";
 import { ClipboardIcon } from "@heroicons/react/20/solid";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import DeleteLogModal from "./DeleteLogModal";
-import LogModal from "./ResolveLogModal";
+import LogModal from "./LogModal";
 import ResolveLogModal from "./ResolveLogModal";
+import ResolvedLogModal from "./ResolvedLogModal";
 import { Toast } from "../Toast";
 import { XMarkIcon } from "@heroicons/react/24/solid";
 import { Chip, ChipTypeStyles } from "../Chip";
@@ -16,6 +17,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showResolveModal, setShowResolveModal] = useState(false);
+  const [showResolvedModal, setShowResolvedModal] = useState(false);
   const createdAt = new Date(log.createdAt);
   const [isAuthor, setIsAuthor] = useState(false);
   const [authorName, setAuthorName] = useState("N/A");
@@ -46,6 +48,10 @@ export default function Log({ log, user, onEdit, onDelete }) {
   const handleResolveClick = () => {
     setShowResolveModal(true);
   };
+  const handleResolvedClick = () => {
+    setShowResolvedModal(true);
+  };
+
 
   return (
     <div className="bg-primary-background p-4 my-4 w-full pb-6">
@@ -113,16 +119,40 @@ export default function Log({ log, user, onEdit, onDelete }) {
           />
         </>
       ) : null}
+
+    {showResolvedModal ? (
+        <>
+          <ResolvedLogModal
+            role={user.role}
+            userId={user._id}
+            log = {log}
+            dogId = {log.dog}
+            setShowResolveModal = {setShowResolveModal}
+            setShowResolvedModal = {setShowResolvedModal}
+            onClose={() => {
+              setShowResolvedModal(false);
+            }}
+            onSubmit={(success) => {
+              onEdit(success)
+              if (success) {
+                Toast({ success: true, bold: log.title, message: "was successfully edited." });
+              } else {
+                Toast({ success: false, message: "There was a problem saving the log, please try again." });
+              }
+            }}
+          />
+        </>
+      ) : null}
       
-      {true && (  //Change back to isAuthor (or something idk check dev) TESTING
+      {isAuthor && (  //Change back to isAuthor (or something idk check dev) TESTING
         <div className="flex space-between">
           <div className="flex">
           
-          <div className="mx-1 text-red-600 text-xl">{user.role === "User" && !log.resolved ? "●" : "⠀"}</div>  
+          <div className="mx-1 text-red-600 text-xl">{user.role === "Manager" && !log.resolved ? "●" : "⠀"}</div>  
             <Chip
               key={"ResolvedChip"}
               label={log.resolved ? "Resolved" : "Unresolved"}
-              type={`border-neutral-chip-shade bg-neutral-chip h-7 ${log.resolved ? 'bg-green-200 border-green-600' : 'bg-red-300 border-red-600'} mb-1`}
+              type={`h-7 ${log.resolved ? "border-no-concern-shade bg-no-concern" : 'bg-red-300 border-red-600'} mb-1`}
             />
           </div>
           
@@ -131,19 +161,23 @@ export default function Log({ log, user, onEdit, onDelete }) {
             <button
               type="button"
               className="flex justify-center items-center"
-              onClick={handleResolveClick}
+              onClick={log.resolved ? handleResolvedClick : handleResolveClick}
             >
               <ClipboardIcon className="h-5 mr-1" />
               {log.resolved ? "Resolved" : "Resolve"}
             </button>
-            <button
-              type="button"
-              className="flex justify-center items-center"
-              onClick={handleEditClick}
-            >
-              <PencilSquareIcon className="h-5 mr-1" />
-              Edit
-            </button>
+
+            {log.resolved ? <></> : 
+              <button
+                type="button"
+                className="flex justify-center items-center"
+                onClick={handleEditClick}
+              >
+                <PencilSquareIcon className="h-5 mr-1" />
+                Edit
+              </button>
+            }
+            
             <button
               type="button"
               className="flex justify-center items-center"
@@ -174,7 +208,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
          <TagDisplay tags={tags} removeTag={null} />
       </div>
       {log.description.length > 250 ? (
-        <div className="max-w-fit">
+        <div className="max-w-fit ml-5">
           <p className="pt-4 break-words">
             {showMore
               ? log.description
