@@ -10,6 +10,7 @@ import ResolvedLogModal from "./ResolvedLogModal";
 import { Toast } from "../Toast";
 import RecentTags from "../RecentTags";
 import { Chip } from "../Chip";
+import { useSession } from "next-auth/react";
 
 export default function Log({ log, user, onEdit, onDelete }) {
   const [showMore, setShowMore] = useState(false);
@@ -20,12 +21,32 @@ export default function Log({ log, user, onEdit, onDelete }) {
   const createdAt = new Date(log.createdAt);
   const [isAuthor, setIsAuthor] = useState(false);
   const [authorName, setAuthorName] = useState("N/A");
+  const [userRole, setUserRole] = useState("")
+
+  const { data: session } = useSession();
+
+  const fetchUserInfo = async () => {  // to get around finnicky session roles
+    try {
+      const response = await fetch(`/api/users/${user?._id}`);
+      if (response.ok) {
+        const resolverData = await response.json();
+        setUserRole(resolverData.data.role);
+        console.log(resolverData)
+      } else {
+        console.error("Failed to fetch resolver information");
+      }
+    } catch (error) {
+      console.error("Error fetching resolver information:", error);
+    }
+  }
 
   useEffect(() => {
     if (log.author) {
       setIsAuthor(user._id == log.author._id);
       setAuthorName(log.author.name);
     }
+    fetchUserInfo()
+
   });
 
   const tags = [
@@ -122,7 +143,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
     {showResolvedModal ? (
         <>
           <ResolvedLogModal
-            role={user.role}
+            role={userRole}  // using session workaround
             userId={user._id}
             log = {log}
             dogId = {log.dog}
@@ -143,11 +164,11 @@ export default function Log({ log, user, onEdit, onDelete }) {
         </>
       ) : null}
       
-      {isAuthor && (  //Change back to isAuthor (or something idk check dev) TESTING
+
         <div className="flex space-between">
           <div className="flex">
           
-          <div className="mx-1 text-red-600 text-xl">{user.role === "Manager" && !log.resolved ? "●" : "⠀"}</div>  
+          <div className="mx-1 text-red-600 text-xl">{userRole === "Manager" && !log.resolved ? "●" : "⠀"}</div>    {/*using session workaround*/}
             <Chip
               key={"ResolvedChip"}
               label={log.resolved ? "Resolved" : "Unresolved"}
@@ -157,19 +178,31 @@ export default function Log({ log, user, onEdit, onDelete }) {
           
 
           <div className="grow flex gap-4 justify-end">
-            <button
-              type="button"
-              className="flex justify-center items-center"
-              onClick={log.resolved ? handleResolvedClick : handleResolveClick}
-            >
-              <ClipboardIcon className="h-5 mr-1" />
-              {log.resolved ? "Resolved" : "Resolve"}
-            </button>
+            {/*using session workaround*/}
+            {userRole === "Manager"  
+              ? <button
+                  type="button"
+                  className="flex justify-center items-center"
+                  onClick={log.resolved ? handleResolvedClick : handleResolveClick}
+                >
+                  <ClipboardIcon className="h-5 mr-1" />
+                  {log.resolved ? "Resolved" : "Resolve"}
+                </button>
+              : <button
+                  type="button"
+                  className="flex justify-center items-center"
+                  onClick={log.resolved ? handleResolvedClick : handleResolveClick}
+                >
+                  {log.resolved ? <><ClipboardIcon className="h-5 mr-1" />
+                  {log.resolved ? "Resolved" : ""}</> : <></>}
+                  
+                </button>
+            }
 
             {log.resolved ? <></> : 
               <button
                 type="button"
-                className="flex justify-center items-center"
+                className={`flex justify-center items-center ${isAuthor ? '' : 'hidden'}`}
                 onClick={handleEditClick}
               >
                 <PencilSquareIcon className="h-5 mr-1" />
@@ -179,7 +212,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
             
             <button
               type="button"
-              className="flex justify-center items-center"
+              className={`flex justify-center items-center ${isAuthor ? '' : 'hidden'}`}
               onClick={handleDeleteClick}
             >
               <TrashIcon className="h-5 mr-1" />
@@ -188,7 +221,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
           </div>
         </div>
         
-      )}
+
       <div className="flex justify-between">
         <div className="flex flex-col ml-5">
           <h2>{log.title}</h2>
@@ -200,7 +233,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
               {"Date: " + createdAt.toLocaleDateString()}
             </p>
             <p className="text-secondary-text font-regular w-fit">
-              {"Time: " + createdAt.toLocaleTimeString("en-US")}
+              {"Time: " + createdAt.toLocaleTimeString("en-US").split(':').slice(0, 2).join(':')}{createdAt.toLocaleTimeString("en-US").split(' ')[1]}
             </p>
           </div>
         </div>

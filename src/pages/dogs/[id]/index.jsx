@@ -44,6 +44,7 @@ export default function IndividualDogPage() {
   const router = useRouter();
   const [data, setData] = useState();
   const [searchQuery, setSearchQuery] = useState("");
+  const [userRole, setUserRole] = useState("");
 
   const [showInfoTab, setShowInfoTab] = useState(true);
   const [showLogModal, setShowLogModal] = useState(false);
@@ -79,7 +80,6 @@ export default function IndividualDogPage() {
         filters[key] = Object.values(filters[key]);
       }
     }
-    console.log(logs)
     fetch("/api/logs/search", {
       method: "POST",
       headers: {
@@ -109,6 +109,24 @@ export default function IndividualDogPage() {
       }
     );
   }
+  const fetchUserInfo = async () => {  // to get around finnicky session roles
+    try {
+      const response = await fetch(`/api/users/${user?._id}`);
+      if (response.ok) {
+        const resolverData = await response.json();
+        setUserRole(resolverData.data.role);
+        console.log(resolverData)
+      } else {
+        console.error("Failed to fetch resolver information");
+      }
+    } catch (error) {
+      console.error("Error fetching resolver information:", error);
+    }
+  }
+
+  useEffect(() => {
+    fetchUserInfo();
+  }, [])
   const { data: session } = useSession();
   const user = session?.user;
 
@@ -504,7 +522,7 @@ export default function IndividualDogPage() {
           setShowLogModal={setShowLogModal}
           logs={logs}
           dog={dog}
-          role={user.role}
+          role={userRole}
           appliedFilters={appliedFilters}
           setAppliedFilters={setAppliedFilters}
           setSearchQuery={setSearchQuery}
