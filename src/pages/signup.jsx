@@ -158,11 +158,7 @@ export default function Signup({ dogs }) {
                 try {
                   signIn("google", { callbackUrl: "/dogs" })
                 } catch (error) {
-                  toast.custom(() => (
-                    <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
-                      {error}
-                    </div>
-                  ));
+                  Toast({ success: false, message: error });
                 }
               }}
               type="button"

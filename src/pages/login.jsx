@@ -1,10 +1,14 @@
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { signIn } from "next-auth/react";
+import { useState } from "react";
+import { ExclamationCircleIcon } from '@heroicons/react/24/solid';
+
 import CALogo from "public/ca-logo.svg";
 import GoogleLogo from "public/google-logo.svg";
+
 import GreenWaves from "@/components/GreenWaves";
-import { signIn } from "next-auth/react";
-import { useRouter } from 'next/router'
-import Link from "next/link";
 import { Toast } from "@/components/Toast";
 /**
  * Log in page
@@ -12,9 +16,20 @@ import { Toast } from "@/components/Toast";
  * @returns {React.ReactElement} The log in page
  */
 export default function Login({ dogs }) {
-  const router = useRouter()
+  const [ errors, setErrors ] = useState({ email: false, password: false });
+  const router = useRouter();
+
   const onSubmitForm = async (event) => {
     event.preventDefault(true);
+
+    if (event.target.email.value == "" || event.target.password.value == "") {
+      return setErrors(() => {
+        return {
+          email: event.target.email.value == "",
+          password: event.target.password.value == "",
+        }
+      });
+    }
 
     const response = await signIn('credentials', {
       email: event.target.email.value,
@@ -69,16 +84,24 @@ export default function Login({ dogs }) {
           <input
             id="email"
             placeholder="Email"
-            type="email"
-            className="textbox-base textbox-border text-input w-full mb-4"
+            type="text"
+            className={`textbox-base text-input ${errors.email ? "textbox-error mb-1" : "textbox-border mb-4"} w-full`}
+            onChange={() => {
+              return setErrors(() => { return { ...errors, email: false }});
+            }}
           ></input>
+          {errors.email && <div className="font-maven-pro text-primary-text font-normal text-lg flex items-center mb-1"><ExclamationCircleIcon className="h-8 w-8 pr-2"/>Please enter a valid email address</div>}
 
           <input
             id="password"
             placeholder="Password"
             type="password"
-            className="textbox-base textbox-border text-input w-full"
+            className={`textbox-base text-input ${errors.password ? "textbox-error mb-1" : "textbox-border mb-4"} w-full`}
+            onChange={() => {
+              return setErrors(() => { return { ...errors, password: false }});
+            }}
           ></input>
+          {errors.password && <div className="font-maven-pro text-primary-text text-lg font-normal flex items-center mb-1"><ExclamationCircleIcon className="h-8 w-8 pr-2"/>Please enter a valid password</div>}
 
           <Link
             href=""
@@ -86,7 +109,7 @@ export default function Login({ dogs }) {
           >Forgot Password?</Link>
 
           <div className="flex pt-8 w-full justify-center">
-            <button className="button-base primary-button primary-button-text w-full h-10">
+            <button type="submit" className="button-base primary-button primary-button-text w-full h-10">
               Log In
             </button>
           </div>
