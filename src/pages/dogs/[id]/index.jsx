@@ -504,6 +504,7 @@ export default function IndividualDogPage() {
           setShowLogModal={setShowLogModal}
           logs={logs}
           dog={dog}
+          role={user.role}
           appliedFilters={appliedFilters}
           setAppliedFilters={setAppliedFilters}
           setSearchQuery={setSearchQuery}
