@@ -1,40 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ExclamationCircleIcon } from "@heroicons/react/20/solid";
-import { consts, logSchema } from "@/utils/consts";
-import DropdownMenu, { DropdownMenuOption } from "../Form/DropdownMenu";
-import { Chip, ChipTypeStyles } from "../Chip";
 import { PencilSquareIcon } from "@heroicons/react/24/solid";
 
 /**
- * Modal for resolving a log
- * @param {*} userId string id of user creating the log
- * @param {*} onClose function that is called when the log needs to be closed
- * @param {*} onSubmit function that is called when the user tries to save the log
- * @returns the modal component
+ * Modal for displaying a resolved log.
+ * @param {string} user - ID of the user creating the log.
+ * @param {function} setShowResolvedModal - Function to control the visibility of the resolved log modal.
+ * @param {function} setShowResolveModal - Function to control the visibility of the resolve modal.
+ * @param {object} log - The log object containing information about the resolved log.
+ * @param {function} onClose - Function called when the modal needs to be closed.
+ * @returns {JSX.Element} - The modal component for displaying a resolved log.
  */
-export default function ResolvedLogModal({ user, setShowResolvedModal, setShowResolveModal, log, onClose, onSubmit }) {
-  const [logData, setLogData] = useState({
-    title: "",
-    topicSet: {},
-    severitySet: {},
-    tagsSet: {},
-    description: "",
-    resolved: log.resolved,
-    resolver: log.resolver,
-    resolution: log.resolution,
-  });
+export default function ResolvedLogModal({ user, setShowResolvedModal, setShowResolveModal, log, onClose }) {
 
-  const [errors, setErrors] = useState({
-    title: false,
-    topic: false,
-    severity: false,
-    description: false,
-  });
-
-  const [saving, setSaving] = useState(false);
   const modalRef = useRef(null);
-  const [retrievedLog, setRetrievedLog] = useState(false);
   const [resolver, setResolver] = useState(null);
+  const updatedAt = new Date(log.updatedAt);
   
   // Updates the logData state with the log data from the database when editing
   useEffect(() => {
@@ -84,17 +64,17 @@ export default function ResolvedLogModal({ user, setShowResolvedModal, setShowRe
               <h1>Resolved Log</h1>
               <button
                   type="button"
-                  className="flex justify-center items-center ${}"
+                  className="flex justify-center items-center"
                   onClick={handleEditResolveClick}
                 >
                   <PencilSquareIcon className="h-5 mr-1" />
                   Edit
                 </button>
             </div>
-            <div>
-              <p>Resolved By: {resolver?.name}</p>
-              <p></p>
-              <p></p>
+            <div className="text-neutral-800 flex flex-row mt-2">
+              <p>Resolved By: {resolver ? resolver.name : "N/A"}</p>
+              <p className="ml-4">Date: {updatedAt.toLocaleDateString()}</p>
+              <p className="ml-4">Time: {updatedAt.toLocaleTimeString("en-US").split(':').slice(0, 2).join(':')}{updatedAt.toLocaleTimeString("en-US").split(' ')[1]}</p>
             </div>
           </div>
           
@@ -120,7 +100,7 @@ export default function ResolvedLogModal({ user, setShowResolvedModal, setShowRe
               className={`flex w-full sm:w-32 h-10 button-base primary-button`}
             >
               <div
-                className={`${ saving ? "disabled-button-text" : "primary-button-text" }`}
+                className="primary-button-text"
               >
                 Close
               </div>
