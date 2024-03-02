@@ -130,7 +130,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
             onSubmit={(success) => {
               onEdit(success)
               if (success) {
-                Toast({ success: true, bold: log.title, message: "was successfully edited." });
+                Toast({ success: true, bold: log.title, message: "was successfully resolved." });
               } else {
                 Toast({ success: false, message: "There was a problem saving the log, please try again." });
               }
