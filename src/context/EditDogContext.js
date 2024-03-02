@@ -27,7 +27,7 @@ export function EditDogProvider({ children }) {
     control,
     getValues,
   } = useForm({
-    resolver: zodResolver(dogSchema.partial()),
+    resolver: zodResolver(dogSchema),
   });
 
   useEffect(() => {
