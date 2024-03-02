@@ -84,6 +84,7 @@ export default async function handler(req, res) {
             log.author._id.equals(user._id),
           ),
           association: "Volunteer/Partner",
+          _id: dog._id,
         }));
       } else {
         data.forEach(

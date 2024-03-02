@@ -1,12 +1,22 @@
-import React, { useEffect, useState } from "react";
-import DogSearchFilterBar from "./DogSearchFilterBar";
+import React from "react";
 import { Chip, ChipTypeStyles } from "../Chip";
-import TagDisplay from "../TagDisplay";
 import dateUtils from "@/utils/dateutils";
 import { useRouter } from "next/router";
-import LoadingAnimation from "../LoadingAnimation";
-import { Toast } from "../Toast";
 import Image from "next/image";
+
+/**
+ * @returns the CardDogTable component
+ */
+export default function CardDogTable({ loading, dogs }) {
+  const router = useRouter();
+  console.log(dogs);
+
+  return (
+    <div className="grid grid-cols-2 gap-4">
+      {dogs.map((dog) => <DogCard key={dog._id} dog={dog} onClick={() => router.push(`/dogs/${dog._id}`)} />)}
+    </div>
+  );
+}
 
 function DogCard({ className, dog, onClick }) {
   return (
@@ -42,94 +52,5 @@ function DogCard({ className, dog, onClick }) {
         </div>
       </div>
     </button>
-  );
-}
-
-/**
- * @returns { React.ReactElement } The DogTable component
- */
-export default function CardDogTable() {
-  const [searchFilter, setSearchFilter] = useState("");
-  const [data, setData] = useState();
-
-  const [filters, setFilters] = useState({});
-
-  const [loading, setLoading] = useState(true);
-
-  const router = useRouter();
-
-  useEffect(() => {
-    let search = {};
-    if (filters) {
-      Object.keys(filters)
-        .filter(
-          (category) => category && Object.values(filters[category]).length > 0
-        )
-        .forEach((category) => {
-          search[category] = Object.values(filters[category]);
-        });
-    }
-
-    search.name = searchFilter;
-
-    fetch("/api/dogs/search", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(search),
-    })
-      .catch(() => {
-        setLoading(false);
-        Toast({ success: false, message: "Unable to pull dog data." });
-        setData([]);
-      })
-      .then((res) => res.json())
-      .then((data) => { setData(data); setLoading(false); } );
-  }, [searchFilter, filters]);
-
-  const dogs = data ? data.data : [];
-
-  const tags = Object.keys(filters)
-    .map((filterGroup) =>
-      Object.keys(filters[filterGroup]).map((element) =>
-        filterGroup[element] == null ? (
-          <></>
-        ) : (
-          {
-            group: filterGroup,
-            label: filters[filterGroup][element],
-            index: element,
-            type: ChipTypeStyles.Tag,
-          }
-        )
-      )
-    )
-    .flat(1);
-
-  const removeTag = (group, index) => {
-    const newFilters = { ...filters };
-
-    delete newFilters[group][index];
-    setFilters(newFilters);
-  };
-  return (
-    <>
-      {<LoadingAnimation animated={false} loadText={false} />}
-      <div className="flex-grow flex-col space-y-6 mb-8">
-        <DogSearchFilterBar
-          filters={filters}
-          setFilters={setFilters}
-          setSearch={setSearchFilter}
-          simplified={true}
-        />
-
-        <TagDisplay tags={tags} removeTag={removeTag} />
-
-        <div className="grid grid-cols-2 gap-4">
-          {dogs.map((dog) => <DogCard key={dog._id} dog={dog} onClick={() => router.push(`/dogs/${dog._id}`)} />)}
-        </div>
-      </div>
-    </>
   );
 }
