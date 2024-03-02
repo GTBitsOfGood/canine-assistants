@@ -5,6 +5,7 @@ import GreenWaves from "@/components/GreenWaves";
 import { signIn } from "next-auth/react";
 import { useRouter } from 'next/router'
 import Link from "next/link";
+import { Toast } from "@/components/Toast";
 /**
  * Log in page
  *
@@ -23,9 +24,14 @@ export default function Login({ dogs }) {
 
     if (response && response.status === 200) {
       router.push('/dogs')
-    } /* else {
+      return
+    } else {
       console.log(response)
-    } */
+      Toast({
+        success: false,
+        message: response.error
+      })
+    }
   }
 
   return (

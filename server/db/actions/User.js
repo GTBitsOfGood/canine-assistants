@@ -66,7 +66,7 @@ export async function signup(email, password, name) {
   if (!user) {
     return {
       status: 404,
-      message: "Unable to find user with specified email address.",
+      message: "User must be invited to sign up. Please contact an admin.",
     };
   }
 
@@ -97,7 +97,10 @@ export async function signup(email, password, name) {
       }
     }
   });
-  return user;
+  return {
+    status: 200,
+    message: "User has been signed up.",
+  };
 }
 
 export async function verifyUser(email, password) {

@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signUpSchema } from "@/utils/consts";
 import { ExclamationCircleIcon } from '@heroicons/react/24/solid';
-import toast from "react-hot-toast";
+import { Toast } from "@/components/Toast";
 
 /**
  * Sign up page
@@ -18,22 +18,22 @@ import toast from "react-hot-toast";
  */
 export default function Signup({ dogs }) {
   const router = useRouter()
-  const onSubmitForm = async (event) => {
-    event.preventDefault(true);
+  // const onSubmitForm = async (event) => {
+  //   event.preventDefault(true);
 
-    const response = await signIn('signup', {
-      email: event.target.email.value,
-      password: event.target.password.value,
-      name: event.target.firstName.value + " " + event.target.lastName.value,
-      redirect: false
-    });
+  //   const response = await signIn('signup', {
+  //     email: event.target.email.value,
+  //     password: event.target.password.value,
+  //     name: event.target.firstName.value + " " + event.target.lastName.value,
+  //     redirect: false
+  //   });
 
-    if (response && response.status === 200) {
-      router.push('/dogs')
-    } /* else {
-      console.log(response)
-    } */
-  }
+  //   if (response && response.status === 200) {
+  //     router.push('/dogs')
+  //   } /* else {
+  //     console.log(response)
+  //   } */
+  // }
 
   /**
    * Displays errors if sign-up form fields do not match Zod schema
@@ -49,23 +49,36 @@ export default function Signup({ dogs }) {
    * Performs credential sign-up on sign-up form submit
    * Param data is the form field values
    */
-  const onSubmit = (data) => {
+  const onSubmit = async (data, e) => {
+    console.log(data)
+    e.preventDefault(true);
     try {
-      signIn("credentials", {email: data.email, password: data.password, redirect: false, callbackUrl: "/dogs" })
-      if (onSubmit.error !== null) {
-        toast.custom(() => (
-          <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
-            You do not have access to the application. Please contact your manager to proceed.
-          </div>
-        ));
-      } 
-    } catch(error) {
-      toast.custom(() => (
-        <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
-          {error}
-        </div>
-      ));
+      const response = await signIn('signup', {
+        email: data.email,
+        password: data.password,
+        name: data.name,
+        redirect: false
+      });
+      if (response && response.status === 200) {
+        router.push('/dogs')
+        return
+      } else {
+        Toast({ success: false, message: response.error })
+      }
     }
+    catch (error) {
+      Toast({ success: false, message: error.message })
+    }
+    // if (response && response.status === 200) {
+    //   router.push('/dogs')
+    //   return
+    // } else {
+    //   toast.custom(() => (
+    //       <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
+    //         {response.message}
+    //       </div>
+    //     ));
+    // }
   };
   
 
