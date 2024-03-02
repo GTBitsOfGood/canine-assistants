@@ -9,6 +9,7 @@ import { createDog } from "../../../server/db/actions/Dog";
 import Form from "../../../server/db/models/Form";
 import { formMap } from "@/utils/formUtils";
 import { createForm } from "../../../server/db/actions/Form";
+import Account from "../../../server/db/models/Account";
 
 const dogs = [];
 const users = [
@@ -360,10 +361,15 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     await dbConnect();
     // delete everything
-    await User.deleteMany({});
+    await User.deleteMany({ email: { $not: { $eq: "test@gmail.com" } } });
+    await User.findOneAndUpdate(
+      { email: "test@gmail.com" },
+      { role: "Manager" },
+    );
     await Log.deleteMany({});
     await Dog.deleteMany({});
     await Form.deleteMany({});
+    await Account.deleteMany({});
 
     // create users
     const userIds = [];
