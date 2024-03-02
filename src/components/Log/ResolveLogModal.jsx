@@ -51,6 +51,7 @@ export default function ResolveLogModal({ log, onClose, onSubmit }) {
   });
 
   const handleSubmit = (logData) => {
+    logData.resolution = logData.resolution === undefined ? "N/A" : logData.resolution
     resolveLog(logData)
   };
 
