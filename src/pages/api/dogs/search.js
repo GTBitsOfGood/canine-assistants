@@ -85,6 +85,7 @@ export default async function handler(req, res) {
           ),
           association: "Volunteer/Partner",
           _id: dog._id,
+          image: dog.image,
         }));
       } else {
         data.forEach(
