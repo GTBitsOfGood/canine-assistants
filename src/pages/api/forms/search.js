@@ -1,5 +1,9 @@
 import { formSchema } from "@/utils/consts";
 import { getForms } from "../../../../server/db/actions/Form";
+import { getUserById } from "../../../../server/db/actions/User";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]";
+import { getDogById } from "../../../../server/db/actions/Dog";
 
 export default async function handler(req, res) {
   if (req.method == "POST") {
@@ -16,6 +20,20 @@ export default async function handler(req, res) {
           message:
             "The field " + Object.keys(error.format())[1] + " is invalid",
         });
+      }
+
+      const session = await getServerSession(req, res, authOptions);
+      const user = await getUserById(session.user._id);
+
+      if (user.role === "User") {
+        let dogData = await getDogById(filter.dog);
+        if (
+          dogData &&
+          !dogData.instructors?.some((o) => o._id.equals(user._id)) &&
+          !dogData.caregivers?.some((o) => o._id.equals(user._id))
+        ) {
+          filter.user = user._id;
+        }
       }
 
       const data = await getForms(filter);
