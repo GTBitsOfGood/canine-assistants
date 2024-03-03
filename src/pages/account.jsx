@@ -24,30 +24,21 @@ export default function Account() {
   const [editName, setEditName] = useState(false);
   const [name, setName] = useState("");
   const [showDeactivateModal, setShowDeactivateModal] = useState(false);
-  const { data: session, status } = useSession();
+  const { data: session, update } = useSession();
 
   const router = useRouter();
 
-  useEffect(() => {
-    fetch(`/api/users/${session?.user._id}`)
-      .then((res) => res.json())
-      .then((data) => setData(data));
-  }, [session?.user]);
-
-  if (!data || data === undefined || !data.success) {
+  if (!session || !session.user) {
     return <div>loading</div>;
   }
-
-  const user = data.data;
-  const userId = user._id;
 
   return (
     <Card cardStyle="mt-16 min-w-fit">
       {showDeactivateModal
         ? ConfirmCancelModal(
-            "Deactivate " + user.name + "?",
+            "Deactivate " + session.user.name + "?",
             `Select “Confirm” to deactivate ` +
-              user.name +
+              session.user.name +
               ` and remove all access to
             the Canine Assistants database. This action can only be undone by an
             administrator.`,
@@ -61,7 +52,7 @@ export default function Account() {
           <Image
             height={180}
             width={180}
-            src={user.image || userpfpplaceholder}
+            src={session.user.image || userpfpplaceholder}
             alt="User Placeholder"
           />
         </div>
@@ -93,23 +84,22 @@ export default function Account() {
                         let body = {};
                         body.name = name;
 
-                        fetch("/api/users/" + userId, {
+                        fetch("/api/users/" + session.user._id, {
                           method: "PATCH",
                           headers: {
                             "Content-Type": "application/json",
                           },
                           body: JSON.stringify(body),
                         })
-                          .then((res) => {
-                            fetch(`/api/users/${userId}`)
-                              .then((res) => res.json())
-                              .then((data) => setData(data));
+                          .then(async (res) => {
+                            res = await res.json();
+                            update()
 
-                            if (res.ok) {
-                              Toast({ success: True, bold: name, message: "was successfully updated." });
+                            if (res.success) {
+                              Toast({ success: true, bold: name, message: "was successfully updated." });
                               setEditName(!editName);
                             } else {
-                              Toast({ success: False, message: "There was a problem updating the account name, please try again." });
+                              Toast({ success: false, message: "There was a problem updating the account name, please try again." });
                             }
                           })
                           .catch((err) => {});
@@ -129,12 +119,12 @@ export default function Account() {
                 </div>
               ) : (
                 <div className="flex flex-row items-center">
-                  <h1>{user.name}</h1>
+                  <h1>{session.user.name}</h1>
                   <button
                     className="flex flex-row items-center"
                     onClick={() => {
                       setEditName(!editName);
-                      setName(user.name);
+                      setName(session.user.name);
                     }}
                   >
                     <PencilSquareIcon className="ml-4 mr-2 h-4 text-primary-text" />
@@ -150,12 +140,12 @@ export default function Account() {
                 Deactivate
               </button>
             </div>
-            <p className="text-secondary-text">{user.email}</p>
+            <p className="text-secondary-text">{session.user.email}</p>
           </div>
 
           <div>
             <h2>Role</h2>
-            <p className="text-secondary-text">{user.role}</p>
+            <p className="text-secondary-text">{session.user.role}</p>
           </div>
         </div>
       </div>
