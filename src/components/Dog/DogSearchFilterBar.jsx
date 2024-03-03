@@ -92,7 +92,7 @@ export default function DogSearchFilterBar({ filters, setFilters, setSearch, sim
         ))}
       </DropdownMenu>
 
-      <div className="relative">
+      {!simplified && <div className="relative">
         <button
           type="button"
           onClick={() => router.push("/dogs/new")}
@@ -103,7 +103,7 @@ export default function DogSearchFilterBar({ filters, setFilters, setSearch, sim
             Add Dog
           </div>
         </button>
-      </div>
+      </div>}
     </div>
   );
 }

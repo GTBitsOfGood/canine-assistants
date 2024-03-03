@@ -3,6 +3,7 @@ import { Chip, ChipTypeStyles } from "../Chip";
 import dateUtils from "@/utils/dateutils";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import { Tooltip } from "react-tooltip";
 
 /**
  * @returns the CardDogTable component
@@ -12,7 +13,7 @@ export default function CardDogTable({ loading, dogs }) {
   console.log(dogs);
 
   return dogs.length > 0 ? (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 gap-4 relative">
       {dogs.map((dog) => <DogCard key={dog._id} dog={dog} onClick={() => router.push(`/dogs/${dog._id}`)} />)}
     </div>
   ) : (
@@ -24,10 +25,11 @@ export default function CardDogTable({ loading, dogs }) {
 
 function DogCard({ className, dog, onClick }) {
   const tags = dog.recentLogs.map(log => log.tags).flat()
+  const maxTags = 4;
 
   return (
     <button
-      className={"bg-white shadow p-4 flex rounded-lg z-10 text-start " + (className || "")}
+      className={"bg-white shadow p-4 flex rounded-lg text-start " + (className || "")}
       onClick={onClick || (() => {})}
     >
       <div className="flex w-[240px] h-[240px] items-center justify-center rounded-lg bg-primary-gray overflow-hidden">
@@ -54,7 +56,16 @@ function DogCard({ className, dog, onClick }) {
               <Chip key={tag} label={tag} type={ChipTypeStyles.Tag} />
             </div>
           ))}
-          {tags.length > 4 && "+1"}
+          {tags.length > maxTags && <>
+            <Tooltip
+              place="bottom"
+              content={tags.slice(4).join(", ")}
+              id={dog._id}
+              style={{ borderRadius: "1", color: "#121212", fontFamily: "Maven Pro", padding: "4px 7px", backgroundColor: "#FFF" }}
+              border="1px solid #D4D4D4"
+            />
+            <div className="self-start" data-tooltip-id={dog._id}>{`+${tags.length - maxTags}`}</div>
+          </>}
         </div>
       </div>
     </button>
