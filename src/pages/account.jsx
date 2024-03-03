@@ -34,8 +34,13 @@ export default function Account() {
       .then((data) => setData(data));
   }, [session?.user]);
 
-  if (!data || data === undefined || !data.success) {
+  if (!data || data === undefined) {
     return <div>loading</div>;
+  }
+
+  if (data && !data.success) {
+    router.push("/login");
+    return null;
   }
 
   const user = data.data;
