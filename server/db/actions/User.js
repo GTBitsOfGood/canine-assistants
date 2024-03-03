@@ -100,6 +100,7 @@ export async function signup(email, password, name) {
   return {
     status: 200,
     message: "User has been signed up.",
+    data: user,
   };
 }
 
@@ -115,7 +116,7 @@ export async function verifyUser(email, password) {
   if (!user) {
     return {
       status: 404,
-      message: "Unable to find user with specified email address.",
+      message: "Please contact an Adminstrator to be invited.",
     };
   }
 
@@ -150,7 +151,8 @@ export async function verifyUser(email, password) {
   if (matchedUser) {
     return {
       status: 200,
-      message: user,
+      message: "User has been verified.",
+      data: user,
     };
   } else {
     return {

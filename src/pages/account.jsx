@@ -13,6 +13,7 @@ import Card from "@/components/Card";
 import ConfirmCancelModal from "@/components/ConfirmCancelModal";
 import userpfpplaceholder from "../../public/userpfpplaceholder.svg";
 import { Toast } from "@/components/Toast";
+import { set } from "mongoose";
 
 /**
  * User account management page
@@ -20,7 +21,6 @@ import { Toast } from "@/components/Toast";
  * @returns {React.ReactElement} The user account management page
  */
 export default function Account() {
-  const [data, setData] = useState();
   const [editName, setEditName] = useState(false);
   const [name, setName] = useState("");
   const [showDeactivateModal, setShowDeactivateModal] = useState(false);
@@ -28,6 +28,11 @@ export default function Account() {
 
   const router = useRouter();
 
+  useEffect(() => {
+    if (session) {
+      setName(session.user.name);
+    }
+  }, [session])
   if (!session || !session.user) {
     return <div>loading</div>;
   }
@@ -93,9 +98,11 @@ export default function Account() {
                         })
                           .then(async (res) => {
                             res = await res.json();
-                            update()
+                            
 
                             if (res.success) {
+                              console.log("HEREEE")
+                              update({name: name})
                               Toast({ success: true, bold: name, message: "was successfully updated." });
                               setEditName(!editName);
                             } else {
