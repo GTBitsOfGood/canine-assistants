@@ -45,6 +45,7 @@ export default function IndividualDogPage() {
   const [data, setData] = useState();
   const [searchQuery, setSearchQuery] = useState("");
 
+  const [showInfoTab, setShowInfoTab] = useState(true);
   const [showLogModal, setShowLogModal] = useState(false);
   const [showLogTab, setShowLogTab] = useState(false);
   const [logs, setLogs] = useState([]);
@@ -109,6 +110,13 @@ export default function IndividualDogPage() {
   }
   const { data: session } = useSession();
   const user = session?.user;
+
+  useEffect(() => {
+    if (data?.association === "Volunteer/Partner") {
+      setShowInfoTab(false);
+      setShowLogTab(true);
+    } 
+  }, [data])
 
   const { setIsEdit, isEdit, handleSubmit, reset, getValues, errors } =
     useEditDog();
@@ -178,7 +186,7 @@ export default function IndividualDogPage() {
         .catch((err) => setForms([]))
         .then((res) => res.json())
         .then((forms) => {
-          setForms(forms.data);
+          setForms(forms.data)
         });
     }
   }, [data]);
@@ -478,6 +486,7 @@ export default function IndividualDogPage() {
 
         <TabContainer
           logRef={logRef}
+          showInfoTab={showInfoTab}
           showLogTab={showLogTab}
           setShowLogModal={setShowLogModal}
           logs={logs}

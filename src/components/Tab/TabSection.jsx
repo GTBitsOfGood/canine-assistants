@@ -29,6 +29,7 @@ export default function TabSection({ defaultTab, isEdit, children }) {
   if (!Array.isArray(children)) {
     children = [children];
   }
+  children = children.filter((x) => x !== undefined)
 
   return (
     <div>
