@@ -77,8 +77,10 @@ export default async function handler(req, res) {
           data.volunteer?.equals(user._id)
         ) {
           association = "Volunteer/Partner";
+          const image = data.image;
           data = limitedDogSchema.safeParse(data.toJSON()).data;
           data._id = id;
+          data.image = image;
         } else {
           return res
             .status(405)
