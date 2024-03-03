@@ -23,12 +23,14 @@ export default function CardDogTable({ loading, dogs }) {
 }
 
 function DogCard({ className, dog, onClick }) {
+  const tags = dog.recentLogs.map(log => log.tags).flat()
+
   return (
     <button
       className={"bg-white shadow p-4 flex rounded-lg z-10 text-start " + (className || "")}
       onClick={onClick || (() => {})}
     >
-      <div className="flex w-[225px] h-[225px] items-center justify-center rounded-lg bg-primary-gray overflow-hidden">
+      <div className="flex w-[240px] h-[240px] items-center justify-center rounded-lg bg-primary-gray overflow-hidden">
         {dog.image && <Image alt={dog.name} width={350} height={350} src={dog.image} />}
       </div>
       <div className="pl-8 pr-4 py-4 flex-1 flex justify-between">
@@ -47,12 +49,12 @@ function DogCard({ className, dog, onClick }) {
           ))}
         </div>
         <div className="flex flex-col">
-          {/* dog.recentLogs.map(log => log.tags).flat() */}
-          {dog.recentLogs.map(log => log.tags).flat().map((tag, i) => (
+          {tags.slice(0, 4).map((tag, i) => (
             <div key={i} className="mb-2">
               <Chip key={tag} label={tag} type={ChipTypeStyles.Tag} />
             </div>
           ))}
+          {tags.length > 4 && "+1"}
         </div>
       </div>
     </button>
