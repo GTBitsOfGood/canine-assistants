@@ -13,6 +13,7 @@ const dogSchema = z.object({
   medical: z.array(z.enum(consts.concernArray)).optional(),
   other: z.array(z.enum(consts.concernArray)).optional(),
   recentLogTags: z.array(z.enum(consts.tagsArray)).optional(),
+  hasUnresolved: z.number().optional(),
   instructors: z
     .string()
     .refine((id) => {

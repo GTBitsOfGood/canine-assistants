@@ -66,6 +66,9 @@ export default function IndividualDogPage() {
   let search = {};
   search.dog = router.query.id;
 
+  const { data: session } = useSession();
+  const user = session?.user;
+
   /**
    * Searches logs using current search query and filters if filtering is requested.
    * Filtering logic is handled on the backend.
@@ -109,13 +112,16 @@ export default function IndividualDogPage() {
       }
     );
   }
+  
+
+  
+
   const fetchUserInfo = async () => {  // to get around finnicky session roles
     try {
       const response = await fetch(`/api/users/${user?._id}`);
       if (response.ok) {
         const resolverData = await response.json();
         setUserRole(resolverData.data.role);
-        console.log(resolverData)
       } else {
         console.error("Failed to fetch resolver information");
       }
@@ -127,8 +133,6 @@ export default function IndividualDogPage() {
   useEffect(() => {
     fetchUserInfo();
   }, [])
-  const { data: session } = useSession();
-  const user = session?.user;
 
   useEffect(() => {
     if (data?.association === "Volunteer/Partner") {
