@@ -15,8 +15,8 @@ export function Chip({ label, type, link = "", styles, innerStyles }) {
         href={link.length > 0 ? link : "#"}
         className={`${link.length > 0 ? "" : "cursor-default"} big-red-300 max-h-10 inline-flex ${styles}`}
       >
-        <div className={`${innerStyles} px-2.5 min-w-[5rem] justify-center border items-center rounded py-2 ${type} flex`}>
-          <div className="text-sm font-medium">{label}</div>
+        <div className={`${innerStyles} px-2.5 min-w-[3.5rem] justify-center border items-center rounded py-1.5 ${type} flex`}>
+          <div className="text-xs font-medium">{label}</div>
         </div>
       </a>
     </>
