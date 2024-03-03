@@ -168,7 +168,8 @@ export default function UserTable() {
               label={rowData.role}
               props={{
                 singleSelect: true,
-                filterText: "Apply Role"
+                filterText: "Apply Role",
+                disabled: session && (session.user._id === rowData._id)
               }}
             >
               {Object.values(consts.userAccess).map((role, index) => (

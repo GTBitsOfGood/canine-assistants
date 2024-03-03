@@ -29,7 +29,8 @@ export function DropdownMenuOption({ name, label }) {
  *                    selectedColor: String - either style from ChipTypeStyles or the word "concern"
  *                                            for the concern array ONLY when checkboxes are hidden
  *                    error: Boolean - shows error state when true,
- *                    requiredField: Boolean - when true adds red * after label }
+ *                    requiredField: Boolean - when true adds red * after label
+ *                    disabled: Boolean - if disabled }
  * @returns HTML dropdown menu component
  */
 export default function DropdownMenu({
@@ -108,7 +109,10 @@ export default function DropdownMenu({
         data-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="false"
-        className={`px-4 py-2.5 m-0 p-0 box-border whitespace-nowrap top-[-1px] bg-white ${
+        disabled={props?.disabled}
+        className={`px-4 py-2.5 m-0 p-0 box-border whitespace-nowrap top-[-1px]
+        ${props?.disabled ? "bg-secondary-gray" : "bg-white"}
+        ${
           extended
             ? "rounded-t border-b-transparent "
             : " rounded"
