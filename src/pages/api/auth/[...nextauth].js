@@ -47,7 +47,7 @@ export const authOptions = {
         );
 
         if (response.status === 200) {
-          return response.data;
+          return response.user;
         } else {
           throw new Error(response.message);
         }
@@ -69,7 +69,7 @@ export const authOptions = {
         );
 
         if (response.status === 200) {
-          return response.data;
+          return response.user;
         } else {
           throw new Error(response.message);
         }
@@ -107,28 +107,36 @@ export const authOptions = {
   },
   callbacks: {
     async signIn({ user, account }) {
-      console.log("Here2", user, account);
-      const email = user.email
-        ? user.email.toLowerCase()
-        : user._doc.email.toLowerCase();
-      const invitedUser = await User.findOne({ email });
-      // TODO: let any user sign in with google
-      if (
-        account.provider != "google" &&
-        (!invitedUser || !invitedUser.isActive)
-      ) {
-        return false;
-      }
+      // console.log("Here2", user, account);
+      // const email = user.email
+      //   ? user.email.toLowerCase()
+      //   : user._doc.email.toLowerCase();
+      // const invitedUser = await User.findOne({ email });
+      // // TODO: let any user sign in with google
+      // if (
+      //   account.provider != "google" &&
+      //   (!invitedUser || !invitedUser.isActive)
+      // ) {
+      //   return false;
+      // }
       return true;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
       if (user) {
         token.name = user.name;
         token.role = user.role;
-      } else {
+      }
+      // else {
+      //   const user = await User.findById(token.sub);
+      //   token.name = user.name;
+      //   token.role = user.role;
+      // }
+      if (trigger === "update") {
+        await dbConnect();
         const user = await User.findById(token.sub);
         token.name = user.name;
         token.role = user.role;
+        token.isActive = user.isActive;
       }
       return token;
     },

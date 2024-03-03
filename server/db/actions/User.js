@@ -53,7 +53,11 @@ export async function updateUser(userId, userData) {
     throw new Error("Unable to update user");
   }
 }
-
+/*
+@param {*} email String email of user to sign up
+@param {*} password String password of user to sign up
+@param {*} name String name of user to sign up
+*/
 export async function signup(email, password, name) {
   try {
     await dbConnect();
@@ -61,7 +65,7 @@ export async function signup(email, password, name) {
     throw new Error("Unable to update user, please try again.");
   }
 
-  const user = await User.findOne({ email });
+  let user = await User.findOne({ email });
 
   if (!user) {
     return {
@@ -85,7 +89,7 @@ export async function signup(email, password, name) {
       };
     } else {
       try {
-        await User.findByIdAndUpdate(
+        user = await User.findByIdAndUpdate(
           user.id,
           { name: name, passwordHash: hash, acceptedInvite: true },
           {
@@ -93,14 +97,17 @@ export async function signup(email, password, name) {
           },
         );
       } catch (e) {
-        throw new Error(e);
+        return {
+          status: 500,
+          message: "Unable to verify user, please try again.",
+        };
       }
     }
   });
   return {
     status: 200,
     message: "User has been signed up.",
-    data: user,
+    user: user,
   };
 }
 
@@ -108,7 +115,10 @@ export async function verifyUser(email, password) {
   try {
     await dbConnect();
   } catch (e) {
-    throw new Error("Unable to verify user, please try again.");
+    return {
+      status: 500,
+      message: "Unable to verify user, please try again.",
+    };
   }
 
   const user = await User.findOne({ email });
@@ -152,7 +162,7 @@ export async function verifyUser(email, password) {
     return {
       status: 200,
       message: "User has been verified.",
-      data: user,
+      user: user,
     };
   } else {
     return {
