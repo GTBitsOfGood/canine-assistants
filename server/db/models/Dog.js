@@ -181,6 +181,10 @@ const DogSchema = new Schema({
     startDate: Date,
     endDate: Date,
   },
+  hasUnresolved: {
+    type: Number,
+    required: true,
+  },
 });
 
 export default mongoose.models?.Dog ?? mongoose.model("Dog", DogSchema);
