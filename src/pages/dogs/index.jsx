@@ -26,6 +26,8 @@ export default function DogsPage() {
 
   const [loading, setLoading] = useState(true);
 
+  const [limitedAssociation, setLimitedAssociation] = useState(null);
+
   useEffect(() => {
     let search = {};
     if (filters) {
@@ -82,7 +84,9 @@ export default function DogsPage() {
     setFilters(newFilters);
   };
 
-  const limitedAssociation = dogs.length > 0 && dogs[0].association === "Volunteer/Partner";
+  if (limitedAssociation === null && dogs.length > 0) {
+    setLimitedAssociation(dogs[0].association === "Volunteer/Partner");
+  }
 
   return (
     <div className={`pt-4 container mx-auto`}>
@@ -99,17 +103,17 @@ export default function DogsPage() {
 
             <TagDisplay tags={tags} removeTag={removeTag}  />
 
-            {
-              limitedAssociation
-              ? <CardDogTable
+            {loading && <LoadingAnimation />}
+
+            {!loading && limitedAssociation && <CardDogTable
                 loading={loading}
                 dogs={dogs}
-              />
-              : <DogTable
+            />}
+
+            {!loading && !limitedAssociation && <DogTable
                 loading={loading}
                 dogs={dogs}
-              />
-            }
+            />}
           </div>
         </div>
       </div>

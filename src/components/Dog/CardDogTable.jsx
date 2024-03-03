@@ -11,9 +11,13 @@ export default function CardDogTable({ loading, dogs }) {
   const router = useRouter();
   console.log(dogs);
 
-  return (
+  return dogs.length > 0 ? (
     <div className="grid grid-cols-2 gap-4">
       {dogs.map((dog) => <DogCard key={dog._id} dog={dog} onClick={() => router.push(`/dogs/${dog._id}`)} />)}
+    </div>
+  ) : (
+    <div>
+      No dogs were found
     </div>
   );
 }
