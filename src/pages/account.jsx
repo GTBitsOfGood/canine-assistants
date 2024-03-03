@@ -34,13 +34,17 @@ export default function Account() {
       .then((data) => setData(data));
   }, [session?.user]);
 
-  if (!data || data === undefined) {
-    return <div>loading</div>;
-  }
-
-  if (data && !data.success) {
-    router.push("/login");
-    return null;
+  if (!data || data === undefined || !data.success) {
+    if (status === "unauthenticated") {
+      router.push("/login");
+      return null;
+    } else if (status === "authenticated" && data && !data.success) {
+      // This shouldn't happen, except for a very short period where user is undefined
+      // In that case, we ignore the error
+      return <div>{data.message === "Invalid User ID" ? "loading" : data.message}</div>
+    } else {
+      return <div>loading</div>
+    }
   }
 
   const user = data.data;
