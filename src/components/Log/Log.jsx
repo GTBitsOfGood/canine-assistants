@@ -38,7 +38,6 @@ export default function Log({ log, user, onEdit, onDelete }) {
       if (response.ok) {
         const resolverData = await response.json();
         setUserRole(resolverData.data.role);
-        console.log(resolverData)
       } else {
         console.error("Failed to fetch resolver information");
       }
