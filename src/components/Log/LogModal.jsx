@@ -369,7 +369,7 @@ export default function LogModal({ dogId, userId, log, onClose, onSubmit }) {
                 />
               ))}
             </DropdownMenu>
-            <div className="flex flex-wrap justify-end sm:justify-start w-48 mt-[1vh] gap-[1vh] min-h-[8vh]">
+            <div className="flex flex-wrap justify-end sm:justify-start items-start w-48 mt-[1vh] gap-[1vh] min-h-[8vh]">
               {Object.keys(logData.tagsSet).length
                 ? Object.values(logData.tagsSet).map((value, index) => {
                     return (
