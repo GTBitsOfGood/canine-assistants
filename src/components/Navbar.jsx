@@ -136,7 +136,7 @@ export default function Navbar() {
         {isDropdownVisible && (
           <div className="absolute right-0 mt-3 w-40 p-3 bg-white rounded-md shadow-lg z-20 text-center">
             <div className="flex justify-center pt-1 pb-1">
-              <div className="w-16 h-16 overflow-hidden rounded-full border-2 border-gray-300">
+              <div className="w-16 h-16 overflow-hidden rounded-full">
                 <Image
                   src={userImage || userpfpplaceholder}
                   alt="Profile"
