@@ -37,63 +37,23 @@ export default function FormField({
     }
   };
 
-  const FormInput = () => {
-    // splits for example (parents.0 = parents)
-
-    const formattedKey = keyLabel.includes(".")
-      ? keyLabel.split(".")[0]
-      : keyLabel;
-
-    const isSelect = enums.hasOwnProperty(formattedKey);
-    const isMultiSelect = multiselects.includes(formattedKey);
-    const isDateField = dateFields.includes(formattedKey);
-    const isTimeOnly = label === "Birth Time";
-    const isDateRange = label === "Placement Camp";
-
-
-
-    if (isSelect && isEdit) {
-      return (
-        <ReactSelectDropdown
-          name={keyLabel}
-          control={control}
-          options={enums[formattedKey]}
-          isMulti={isMultiSelect}
-          isSearchable={false}
-          isError={checkErrors()}
-        />
-      );
-    } else if (isDateField && isEdit) {
-      return (
-        <DatePicker
-          control={control}
-          name={keyLabel}
-          isTimeOnly={isTimeOnly}
-          selectsRange={isDateRange}
-        />
-      );
-    } else {
-      return (
-        <Input
-          disabled={!isEdit}
-          className={isEdit ? editingStyles : nonEditingStyles}
-          control={control}
-          name={keyLabel}
-          label={label}
-          formattedKey={formattedKey}
-          isSelect={isSelect}
-          isMultiSelect={isMultiSelect}
-        />
-      );
-    }
-  };
-
   return (
     <div>
       <div className="flex whitespace-nowrap items-center">
         {label && <label className="pr-2">{label + ": "}</label>}
         <div className="w-full">
-          <FormInput />
+          <FormInput
+            keyLabel={keyLabel}
+            enums={enums}
+            multiselects={multiselects}
+            dateFields={dateFields}
+            label={label}
+            isEdit={isEdit}
+            nonEditingStyles={nonEditingStyles}
+            control={control}
+            editingStyles={editingStyles}
+            checkErrors={checkErrors}
+          />
         </div>
       </div>
       <div className="w-full">
@@ -107,3 +67,54 @@ export default function FormField({
     </div>
   );
 }
+
+const FormInput = ({ keyLabel, enums, multiselects, dateFields, label, isEdit, nonEditingStyles, control, editingStyles, checkErrors }) => {
+  // splits for example (parents.0 = parents)
+
+  const formattedKey = keyLabel.includes(".")
+    ? keyLabel.split(".")[0]
+    : keyLabel;
+
+  const isSelect = enums.hasOwnProperty(formattedKey);
+  const isMultiSelect = multiselects.includes(formattedKey);
+  const isDateField = dateFields.includes(formattedKey);
+  const isTimeOnly = label === "Birth Time";
+  const isDateRange = label === "Placement Camp";
+
+
+
+  if (isSelect && isEdit) {
+    return (
+      <ReactSelectDropdown
+        name={keyLabel}
+        control={control}
+        options={enums[formattedKey]}
+        isMulti={isMultiSelect}
+        isSearchable={false}
+        isError={checkErrors()}
+      />
+    );
+  } else if (isDateField && isEdit) {
+    return (
+      <DatePicker
+        control={control}
+        name={keyLabel}
+        isTimeOnly={isTimeOnly}
+        selectsRange={isDateRange}
+      />
+    );
+  } else {
+    return (
+      <Input
+        disabled={!isEdit}
+        className={isEdit ? editingStyles : nonEditingStyles}
+        control={control}
+        name={keyLabel}
+        label={label}
+        formattedKey={formattedKey}
+        isSelect={isSelect}
+        isMultiSelect={isMultiSelect}
+      />
+    );
+  }
+};
