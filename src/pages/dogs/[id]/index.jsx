@@ -367,7 +367,7 @@ export default function IndividualDogPage() {
       <div className="py-6 flex items-center">
         <ChevronLeftIcon className="w-4 mr-2" />
         <Link href="/dogs" className="text-lg text-secondary-text">
-          Return to dashboard
+          Return to dashboard {dog.hasUnresolved}
         </Link>
       </div>
 

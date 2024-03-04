@@ -1,4 +1,8 @@
 import { createLog, getLogs } from "../../../../server/db/actions/Log";
+import {
+  getDogById,
+  updateHasUnresolved,
+} from "../../../../server/db/actions/Dog";
 import { logSchema } from "@/utils/consts";
 
 export default async function handler(req, res) {
@@ -15,6 +19,8 @@ export default async function handler(req, res) {
     let logId;
     try {
       logId = await createLog(data);
+      const dog = getDogById(req.query.dog);
+      await updateHasUnresolved(req.query.dog, 1);
     } catch (e) {
       res.status(500).json({
         success: false,
