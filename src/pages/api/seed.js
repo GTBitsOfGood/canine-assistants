@@ -5,7 +5,7 @@ import Log from "../../../server/db/models/Log";
 import Dog from "../../../server/db/models/Dog";
 import { createLog } from "../../../server/db/actions/Log";
 import { consts } from "@/utils/consts";
-import { createDog } from "../../../server/db/actions/Dog";
+import { createDog, updateHasUnresolved } from "../../../server/db/actions/Dog";
 import Form from "../../../server/db/models/Form";
 import { formMap } from "@/utils/formUtils";
 import { createForm } from "../../../server/db/actions/Form";
@@ -397,6 +397,7 @@ export default async function handler(req, res) {
         dateOfBirth: new Date("2019-03-15"),
         litterSize: 8,
         birthOrder: 2,
+        hasUnresolved: 0,
         parents: [],
         maternalDemeanor: [
           getRandomInt(1, 5),
@@ -453,7 +454,7 @@ export default async function handler(req, res) {
     for (let i = 0; i < logs.length; i++) {
       logs[i].dog = dogIds[getRandomInt(0, dogIds.length - 1)];
       logs[i].author = userIds[getRandomInt(0, userIds.length - 1)];
-      // logs[i].resolver = userIds[getRandomInt(0, userIds.length - 1)];
+      await updateHasUnresolved(logs[i].dog, 1);
       await createLog(logs[i]);
     }
 
