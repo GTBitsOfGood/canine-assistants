@@ -64,7 +64,6 @@ const ALTERNATING_ROW_COLOR_2 = "bg-neutral-50";
  * @returns {React.ReactElement} The Table component
  */
 export default function Table({
-  elementsPerPage,
   loading,
   cols,
   rows,

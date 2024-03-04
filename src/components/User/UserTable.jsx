@@ -258,7 +258,6 @@ export default function UserTable() {
           cols={userTableColumns}
           rows={users}
           filter={searchFilter}
-          elementsPerPage={10}
           onRowClick={(row, rowIndex) => {
             setSelectedUserId(row["_id"])
             setSelectedUserName(row["name"])

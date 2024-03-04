@@ -197,7 +197,6 @@ export default function DogTable() {
           cols={dogTableColumns}
           rows={dogs}
           filter={searchFilter}
-          elementsPerPage={10}
           onRowClick={(row, rowIndex) => {
             router.push(`/dogs/${row["_id"]}`);
           }}
