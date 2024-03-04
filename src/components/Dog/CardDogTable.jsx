@@ -36,7 +36,7 @@ function DogCard({ className, dog, onClick }) {
     >
       <div className="flex w-[240px] h-[240px] items-center justify-center rounded-lg bg-primary-gray overflow-hidden">
         {dog.image ? <Image alt={dog.name} width={350} height={350} src={dog.image} />
-          : <Image width={350} height={350} src={dogplaceholdericon} alt="Dog Placeholder" />
+          : <Image width={240} height={240} src={dogplaceholdericon} alt="Dog Placeholder" />
         }
       </div>
       <div className="pl-8 pr-4 py-4 flex-1 flex justify-between">
