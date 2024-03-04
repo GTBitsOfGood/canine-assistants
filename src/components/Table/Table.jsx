@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import TablePaginator from "./TablePagination";
 
 /**
@@ -73,10 +73,14 @@ export default function Table({
   onRowClick,
 }) {
   // CLamped between [1, maxPages]
+  const headerRef = useRef(null);
+  const footerRef = useRef(null);
   const [currentPage, setCurrentPage] = useState(0);
   const [currentElements, setCurrentElements] = useState([]);
-
-  const pageAmount = Math.ceil(( rows?.length || 0 )/ elementsPerPage);
+  const [windowHeight, setWindowHeight] = useState(typeof window !== 'undefined' ? window.innerHeight : 0)
+  const [elePerPage, setElePerPage] = useState(0);
+  const [elementsToShow, setElementsToShow] = useState([]);
+  const [pageAmount, setPageAmount] = useState(0);
 
   const incrementPage = () => {
     setCurrentPage(Math.min(pageAmount - 1, currentPage + 1));
@@ -124,17 +128,27 @@ export default function Table({
 
     return value;
   };
-  const elementsToShow = rows
-    ?.filter((row) => row.name.toUpperCase().includes(filter.toUpperCase()))
-    ?.slice(
-      currentPage * elementsPerPage,
-      currentPage * elementsPerPage + elementsPerPage
-    );
+
+  useEffect(() => {
+    const calc = Math.floor((windowHeight - headerRef?.current?.getBoundingClientRect().bottom - footerRef?.current?.getBoundingClientRect().height - (2*16)) / (3.85*16))
+    setElePerPage(calc)
+    setPageAmount(Math.ceil(( rows?.length || 0 ) / calc));
+  })
+
+  useEffect(() => {
+    setElementsToShow(rows
+      ?.filter((row) => row.name.toUpperCase().includes(filter.toUpperCase()))
+      ?.slice(
+        currentPage * elePerPage,
+        currentPage * elePerPage + elePerPage
+      ));
+  }, [elePerPage, rows, currentPage])
+  
 
   return (
     <div className="shadow-xl rounded-lg text-md w-full text-left relative">
       <table className="divide-y divide-gray-300 text-md w-full text-left relative">
-        <thead className="bg-foreground">
+        <thead className="bg-foreground" ref={headerRef}>
           <TableHeader>
             {cols.map((col) => (
               <TableColumn
@@ -149,7 +163,7 @@ export default function Table({
         </thead>
         <tbody>
           {loading
-            ? Array(elementsPerPage)
+            ? Array(elePerPage)
                 .fill(null)
                 .map((x, i) => (
                   <tr key={i} className={`border-b ${i % 2 === 0 ? ALTERNATING_ROW_COLOR_1 : ALTERNATING_ROW_COLOR_2}`}>
@@ -201,18 +215,20 @@ export default function Table({
         </tbody>
         <tfoot></tfoot>
       </table>
-      <TableFooter
-        elementsOnPage={elementsToShow ? elementsToShow.length : 0}
-        rows={rows}
-        paginationFunctions={{
-          currentPage: currentPage,
-          setPage: setCurrentPage,
-          incrementPage: incrementPage,
-          decrementPage: decrementPage,
-          gotoLastPage: gotoLastPage,
-          gotoFirstPage: gotoFirstPage,
-        }}
-      />
+      <div ref={footerRef}>
+        <TableFooter
+          elementsOnPage={elementsToShow ? elementsToShow.length : 0}
+          rows={rows}
+          paginationFunctions={{
+            currentPage: currentPage,
+            setPage: setCurrentPage,
+            incrementPage: incrementPage,
+            decrementPage: decrementPage,
+            gotoLastPage: gotoLastPage,
+            gotoFirstPage: gotoFirstPage,
+          }}
+        />
+      </div>
 
       {elementsToShow.length === 0 && !loading && noElements}
     </div>
