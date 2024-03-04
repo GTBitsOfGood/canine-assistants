@@ -36,6 +36,11 @@ const DogSchema = new Schema({
     enum: consts.concernArray,
     required: true,
   },
+  hasUnresolved: {
+    type: Number,
+    min: 0,
+    required: true,
+  },
   recentLogs: {
     // only the 2 most recent logs
     type: [
@@ -180,10 +185,6 @@ const DogSchema = new Schema({
   placementCamp: {
     startDate: Date,
     endDate: Date,
-  },
-  hasUnresolved: {
-    type: Number,
-    required: true,
   },
 });
 
