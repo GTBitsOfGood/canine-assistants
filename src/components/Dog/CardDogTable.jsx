@@ -4,7 +4,8 @@ import dateUtils from "@/utils/dateutils";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { Tooltip } from "react-tooltip";
-import dogplaceholdericon from "public/dog-placeholder-icon.svg";
+import dogplaceholdericon from "../../../public/dogplaceholdericon.svg";
+
 
 /**
  * @returns the CardDogTable component
