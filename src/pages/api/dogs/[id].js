@@ -56,6 +56,13 @@ export default async function handler(req, res) {
 
       const session = await getServerSession(req, res, authOptions);
       const user = await getUserById(session.user._id);
+      let association = [
+        consts.userAccess.Admin,
+        consts.userAccess.Manager,
+      ].includes(user.role)
+        ? user.role
+        : "Instructor/Caregiver";
+
       // Only filter keys if association is partner/volunteer and nothing else
       // Throw an error if there is no association
       if (
@@ -69,7 +76,11 @@ export default async function handler(req, res) {
           data.partner?.user?.equals(user._id) ||
           data.volunteer?.equals(user._id)
         ) {
-          data = limitedDogSchema.safeParse(data.toJSON());
+          association = "Volunteer/Partner";
+          const image = data.image;
+          data = limitedDogSchema.safeParse(data.toJSON()).data;
+          data._id = id;
+          data.image = image;
         } else {
           return res
             .status(405)
@@ -80,6 +91,7 @@ export default async function handler(req, res) {
       return res.status(200).json({
         success: true,
         data: data,
+        association: association,
       });
     } catch (error) {
       res.status(500).json({ success: false, error: error.message });

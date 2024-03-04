@@ -1,7 +1,7 @@
 import { getAssociatedDogs } from "../../../../server/db/actions/Dog";
 import { z } from "zod";
 import { Types } from "mongoose";
-import { consts } from "@/utils/consts";
+import { consts, limitedDogSchema } from "@/utils/consts";
 import { getUserById } from "../../../../server/db/actions/User";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
@@ -64,7 +64,40 @@ export default async function handler(req, res) {
         return;
       }
       const user = await getUserById(session.user._id);
-      const data = await getAssociatedDogs(user, filter);
+      let data = await getAssociatedDogs(user, filter);
+
+      // Current logic: if we have a privileged association with at least one dog, then return
+      // full information for all dogs, otherwise limited for all
+      if (
+        ![consts.userAccess.Admin, consts.userAccess.Manager].includes(
+          user.role,
+        ) &&
+        data.every(
+          (dog) =>
+            !dog.instructors?.some((o) => o._id.equals(user._id)) &&
+            !dog.caregivers?.some((o) => o._id.equals(user._id)),
+        )
+      ) {
+        data = data.map((dog) => ({
+          ...limitedDogSchema.safeParse(dog).data,
+          recentLogs: dog.recentLogs.filter((log) =>
+            log.author._id.equals(user._id),
+          ),
+          association: "Volunteer/Partner",
+          _id: dog._id,
+          image: dog.image,
+        }));
+      } else {
+        data.forEach(
+          (dog) =>
+            (dog.association = [
+              consts.userAccess.Admin,
+              consts.userAccess.Manager,
+            ].includes(user.role)
+              ? user.role
+              : "Instructor/Caregiver"),
+        );
+      }
 
       res.status(200).json({ success: true, data: data });
     } catch (error) {
