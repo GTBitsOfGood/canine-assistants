@@ -17,6 +17,8 @@ import { useRouter } from "next/router";
 import LoadingAnimation from "../LoadingAnimation";
 import RecentTags from "../RecentTags"
 import { Toast } from "../Toast";
+import { useSession } from "next-auth/react";
+import { Tooltip } from 'react-tooltip'
 
 
 /**
@@ -32,6 +34,37 @@ export default function DogTable() {
 
   const router = useRouter();
 
+  const [userRole, setUserRole] = useState("");
+  const { data: session } = useSession();
+  const user = session?.user;
+
+  const fetchUserInfo = async () => {  // to get around finnicky session roles
+    try {
+      const response = await fetch(`/api/users/${user?._id}`);
+      if (response.ok) {
+        const resolverData = await response.json();
+        setUserRole(resolverData.data.role);
+      } else {
+        console.error("Failed to fetch resolver information");
+      }
+    } catch (error) {
+      console.error("Error fetching resolver information:", error);
+    }
+  }
+
+  const sortResolution = (data) => {
+    if (!data || !data.data || !Array.isArray(data.data)) {
+      return data;
+    }
+    data.data.sort((a, b) => b.hasUnresolved - a.hasUnresolved);
+    return data;
+  }
+
+  useEffect(() => {
+    fetchUserInfo();
+  })
+
+  
   useEffect(() => {
     let search = {};
     if (filters) {
@@ -62,7 +95,7 @@ export default function DogTable() {
       .then((data) => { setData(data); setLoading(false); } );
   }, [searchFilter, filters]);
 
-  const dogs = data ? data.data : [];
+  const dogs = data ? (userRole === "Manager" ? sortResolution(data).data : data.data) : [];
 
   /**
    * The specified columns for the DogTable
@@ -72,8 +105,22 @@ export default function DogTable() {
       id: "name",
       label: "Name",
       icon: <Bars3BottomLeftIcon />,
-      customRender: (row, name) => {
-        return <span>{name}</span>;
+      customRender: (rowData) => {
+        return <span className="flex flex-row"> 
+                {rowData.hasUnresolved > 0 && userRole === "Manager" 
+                  ? <div className="flex items-center">
+                      <span data-tooltip-id={rowData._id + "R"} className="mr-2 text-red-600"> ● </span>
+                      <Tooltip  
+                        place = "bottom"
+                        content = {"Unresolved Log"}
+                        id={rowData._id + "R"}
+                        style={{ borderRadius: "1", color: "#121212", fontFamily: "Maven Pro", padding: "4px 7px", backgroundColor: "#FFF"}}
+                        border= "1px solid #D4D4D4"
+                      />
+                    </div>
+                  : <div className="mx-2"> </div>}
+                {rowData.name}
+               </span>;
       },
     },
     { id: "breed", label: "Breed", icon: <FingerPrintIcon /> },
@@ -185,6 +232,7 @@ export default function DogTable() {
       {<LoadingAnimation animated={false} loadText={false} />}
       <div className="flex-grow flex-col space-y-6 mb-8">
         <DogSearchFilterBar
+          userRole={userRole}
           filters={filters}
           setFilters={setFilters}
           setSearch={setSearchFilter}

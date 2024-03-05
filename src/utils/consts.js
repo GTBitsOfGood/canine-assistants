@@ -21,6 +21,7 @@ const consts = {
   genderPetArray: ["Female", "Male"],
   genderPersonArray: ["Female", "Male", "Other"],
   concernArray: ["None", "Moderate", "High"],
+  resolveArray: ["Resolved", "Unresolved"],
   locationArray: ["Facility 1", "Facility 2", "Placed"],
   roleArray: ["Service", "Companion"],
   userRoleArray: ["Manager", "Admin", "User"],
