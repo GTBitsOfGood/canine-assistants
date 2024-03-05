@@ -168,7 +168,8 @@ export default function UserTable() {
               label={rowData.role}
               props={{
                 singleSelect: true,
-                filterText: "Apply Role"
+                filterText: "Apply Role",
+                disabled: session && (session.user._id === rowData._id)
               }}
             >
               {Object.values(consts.userAccess).map((role, index) => (
@@ -219,12 +220,12 @@ export default function UserTable() {
           onSubmit={(success, statusCode) => {
             if (success) {
               setShowChange(true)
-              Toast({ success: true, message: "User was successfully invited." })
+              Toast({ success: true, message: "User was successfully invited." });
             } else {
               if (statusCode === 409) {
-                Toast({ success: false, message: " A user with that email already exists." });
+                Toast({ success: false, message: "A user with that email already exists." });
             } else {
-              Toast({ success: false, message: "There was a problem inviting the user, please try again." })
+                Toast({ success: false, message: "There was a problem inviting the user, please try again." });
             }
             }
           }}

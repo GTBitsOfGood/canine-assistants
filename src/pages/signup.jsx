@@ -83,8 +83,8 @@ export default function Signup({ dogs }) {
   
 
   return (
-    <div className="h-screen flex flex-col items-center justify-between">
-      <div className="h-4/5 w-screen flex flex-col items-center justify-evenly m-1">
+    <div className="h-screen flex flex-col items-center justify-between font-maven-pro">
+      <div className="w-screen flex flex-col items-center justify-evenly m-1 overflow-x-hidden">
         <div className="flex items-center flex-col">
           <div className="h-[120px] aspect-[5/2] relative mt-3">
             <Image
@@ -107,51 +107,47 @@ export default function Signup({ dogs }) {
             placeholder="Name"
             {...register("name")}
             type="text"
-            className= {errors.name ? "py-1 pr-1 pl-3 mb-1 rounded w-full border border-solid border-red-500 border-2 font-maven-pro": 
-            "py-2 pr-1 pl-3 mb-4 rounded w-full border border-solid border-primary-gray border-1 font-maven-pro"}
+            className={`textbox-base text-input ${errors.name ? "textbox-error mb-1" : "textbox-border mb-4"} w-full`}
           ></input>
-          {errors.name && <div className="font-maven-pro text-black font-medium flex items-center"><ExclamationCircleIcon className="h-8 w-8 pr-2"/>{errors.name.message}</div>}
+          {errors.name && <div className="font-maven-pro text-primary-text font-normal text-lg flex items-center mb-1"><ExclamationCircleIcon className="h-8 w-8 pr-2"/>{errors.name.message}</div>}
           
           <input
             id="email"
             placeholder="Email Address"
             {...register("email")}
             type="text"
-            className={errors.email ? "py-1 pr-1 pl-3 mb-1 mt-1 rounded w-full border border-solid border-red-500 border-2 font-maven-pro": 
-            "py-2 pr-1 pl-3 mb-4 rounded w-full border border-solid border-primary-gray border-1 font-maven-pro"}
+            className={`textbox-base text-input ${errors.email ? "textbox-error mb-1" : "textbox-border mb-4"} w-full`}
           ></input>
-          {errors.email && <div className="font-maven-pro text-black font-medium flex items-center"><ExclamationCircleIcon className="h-8 w-8 pr-2"/>{errors.email.message}</div>}
+          {errors.email && <div className="font-maven-pro text-primary-text font-normal text-lg flex items-center mb-1"><ExclamationCircleIcon className="h-8 w-8 pr-2"/>{errors.email.message}</div>}
 
           <input
             id="password"
             placeholder="Password"
             {...register("password")}
             type="password"
-            className={errors.password ? "py-1 pr-1 pl-3 mb-1 mt-1 rounded w-full border border-solid border-red-500 border-2 font-maven-pro": 
-            "py-2 pr-1 pl-3 mb-4 rounded w-full border border-solid border-primary-gray border-1 font-maven-pro"}
+            className={`textbox-base text-input ${errors.password ? "textbox-error mb-1" : "textbox-border mb-4"} w-full`}
           ></input>
-          {errors.password && <div className="font-maven-pro text-black font-medium flex items-center"><ExclamationCircleIcon className="h-8 w-8 pr-2"/>{errors.password.message}</div>}
+          {errors.password && <div className="font-maven-pro text-primary-text text-lg font-normal flex items-center mb-1"><ExclamationCircleIcon className="h-8 w-8 pr-2"/>{errors.password.message}</div>}
 
           <input
             id="confirmPassword"
             placeholder="Confirm Password"
             {...register("confirmPassword")}
             type="password"
-            className={errors.confirmPassword ? "py-1 pr-1 pl-3 mb-1 mt-1 rounded w-full border border-solid border-red-500 border-2 font-maven-pro": 
-            "py-2 pr-1 pl-3 mb-4 rounded w-full border border-solid border-primary-gray border-1 font-maven-pro"}
+            className={`textbox-base text-input ${errors.confirmPassword ? "textbox-error mb-1" : "textbox-border mb-4"} w-full`}
           ></input>
-          {errors.confirmPassword && <div className="font-maven-pro text-black font-medium flex items-center"><ExclamationCircleIcon className="h-8 w-8 pr-2"/>{errors.confirmPassword.message}</div>}
+          {errors.confirmPassword && <div className="font-maven-pro text-primary-text text-lg font-normal flex items-center mb-1"><ExclamationCircleIcon className="h-8 w-8 pr-2"/>{errors.confirmPassword.message}</div>}
 
           <div className="flex  w-full justify-center">
             <button 
-              className="bg-[#a70c53] text-white shadow-sm rounded w-full items-center mt-2 py-2 text-sm"
+              className="button-base primary-button primary-button-text w-full mt-2 py-2"
               type="submit"
             >
               Sign Up
             </button>
           </div>
 
-          <div className="pt-10 mx-2 border-b-solid border-b-2 border-[#1e1e1e]/30 leading-[0.1rem] text-center">
+          <div className="pt-6 mx-2 border-b-solid border-b-2 border-[#1e1e1e]/30 leading-[0.1rem] text-center">
             <span className="bg-secondary-background px-2 text-neutral-500 font-medium">
               or
             </span>
@@ -162,15 +158,11 @@ export default function Signup({ dogs }) {
                 try {
                   signIn("google", { callbackUrl: "/dogs" })
                 } catch (error) {
-                  toast.custom(() => (
-                    <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
-                      {error}
-                    </div>
-                  ));
+                  Toast({ success: false, message: error });
                 }
               }}
               type="button"
-              className="w-full bg-white rounded-sm shadow-sm text-black mt-6 py-2 flex flex-row items-center justify-center text-sm font-medium border border-black border-2 border-solid"
+              className="button-base bg-foreground border-black secondary-button-text w-full h-10 mt-6 py-3"
             >
               <div className="aspect-square h-4 relative mx-4">
                 <Image src={GoogleLogo} alt="Google G logo" fill/>
@@ -180,16 +172,16 @@ export default function Signup({ dogs }) {
           </div>
         </form>
         <div>
-          <p className="mt-6 text-neutral-500 font-medium text-md text-center">
+          <p className="mt-4 mb-1 text-tertiary-text opacity-70 font-medium text-lg text-center">
             Have an account?{" "}
-            <Link className="font-bold text-[#1e1e1e]/70 cursor-pointer underline" href="login">
+            <Link className="font-bold cursor-pointer" href="login">
               Log in
             </Link>
           </p>
         </div>
+        <GreenWaves />
       </div>
 
-      <GreenWaves />
     </div>
   );
 }

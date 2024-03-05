@@ -5,6 +5,7 @@ import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import DeleteLogModal from "./DeleteLogModal";
 import LogModal from "./LogModal";
 import { Toast } from "../Toast";
+import RecentTags from "../RecentTags";
 
 export default function Log({ log, user, onEdit, onDelete }) {
   const [showMore, setShowMore] = useState(false);
@@ -119,7 +120,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
             </p>
           </div>
         </div>
-        <TagDisplay tags={tags} removeTag={null} />
+        <RecentTags tags={tags} />
       </div>
       {log.description.length > 250 ? (
         <div className="max-w-fit">
