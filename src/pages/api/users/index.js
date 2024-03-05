@@ -3,6 +3,7 @@ import { getUsers } from "../../../../server/db/actions/User";
 import { createUser } from "../../../../server/db/actions/User";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
+import { getUserById } from "../../../../server/db/actions/User";
 
 export default async function handler(req, res) {
   if (req.method == "GET") {
@@ -32,8 +33,10 @@ export default async function handler(req, res) {
 
     try {
       const session = await getServerSession(req, res, authOptions);
+      const user = await getUserById(session.user._id);
+      console.log(user);
 
-      if (session.user.role !== "Admin" && session.user.role !== "Manager") {
+      if (user.role !== "Admin" && user.role !== "Manager") {
         return res.status(403).json({
           success: false,
           message: "You are not authorized to invite users",
@@ -71,6 +74,7 @@ export default async function handler(req, res) {
         message: "Successfully sent user invite",
       });
     } catch (e) {
+      console.log(e);
       return res.status(500).json({
         success: false,
         message: e.message,

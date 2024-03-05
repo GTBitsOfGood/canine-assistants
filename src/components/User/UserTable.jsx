@@ -215,27 +215,12 @@ export default function UserTable() {
           onSubmit={(success, statusCode) => {
             if (success) {
               setShowChange(true)
-              toast.custom((t) => (
-                <div
-                  className={`h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-ca-green text-white text-lg font-normal
-                  ${t.visible ? "animate-enter" : "animate-leave"}`}
-                >
-                  <span>User was successfully invited.</span>
-                </div>
-              ));
+              Toast({ success: true, message: "User was successfully invited." })
             } else {
               if (statusCode === 409) {
-                toast.custom(() => (
-                    <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
-                        A user with that email already exists.
-                    </div>
-                ));
+                Toast({ success: false, message: " A user with that email already exists." });
             } else {
-              toast.custom(() => (
-                <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
-                  There was a problem inviting the user, please try again.
-                </div>
-              ));
+              Toast({ success: false, message: "There was a problem inviting the user, please try again." })
             }
             }
           }}
