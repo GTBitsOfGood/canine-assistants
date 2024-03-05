@@ -119,8 +119,7 @@ export default function DogTable({ loading, dogs }) {
       loading={loading}
       cols={dogTableColumns}
       rows={dogs}
-      filter={""}
-      elementsPerPage={10}
+      filter={searchFilter}
       onRowClick={(row, rowIndex) => {
         router.push(`/dogs/${row["_id"]}`);
       }}
