@@ -92,7 +92,7 @@ export default function IndividualDogPage() {
     })
       .catch((err) => {
         setFilteredLogs([]);
-        if (!filtered) {
+        if (!filtered || Object.keys(filters).length === 0) {
           setLogs([]);
         }
       })
@@ -102,7 +102,7 @@ export default function IndividualDogPage() {
           ? []
           : data.data.reverse();
         setFilteredLogs(res);
-        if (!filtered) {
+        if (!filtered || Object.keys(filters).length === 0) {
           setLogs(res);
         }
       }
