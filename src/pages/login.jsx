@@ -126,7 +126,7 @@ export default function Login({ dogs }) {
               type="button"
               className="button-base bg-foreground border-black secondary-button-text w-full h-10 mt-6 py-3"
             >
-              <div className="aspect-square h-7 relative mx-4">
+              <div className="aspect-square h-4 relative mx-4">
                 <Image src={GoogleLogo} alt="Google G logo" fill/>
               </div>
               Sign in with Google

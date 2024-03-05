@@ -83,7 +83,7 @@ export default function Signup({ dogs }) {
   
 
   return (
-    <div className="h-screen flex flex-col items-center justify-between">
+    <div className="h-screen flex flex-col items-center justify-between font-maven-pro">
       <div className="w-screen flex flex-col items-center justify-evenly m-1 overflow-x-hidden">
         <div className="flex items-center flex-col">
           <div className="h-[120px] aspect-[5/2] relative mt-3">
