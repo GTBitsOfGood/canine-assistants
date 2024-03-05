@@ -33,6 +33,19 @@ export default function Login({ dogs }) {
       })
     }
   }
+  const signInWithGoogle = async () => {
+    const res = await signIn("google", { callbackUrl: "/dogs" });
+    if (res && res.status === 200) {
+      router.push('/dogs')
+      return
+    } else {
+      console.log(res)
+      Toast({
+        success: false,
+        message: res.error
+      })
+    }
+  }
 
   return (
     <div className="font-maven-pro h-screen flex flex-col items-center justify-between">

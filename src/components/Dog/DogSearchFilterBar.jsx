@@ -3,7 +3,7 @@ import DropdownMenu, { DropdownMenuOption } from "../Form/DropdownMenu";
 import { consts } from "@/utils/consts";
 import { useRouter } from "next/router";
 
-export default function DogSearchFilterBar({ filters, setFilters, setSearch }) {
+export default function DogSearchFilterBar({ filters, setFilters, setSearch, simplified = false }) {
   const router = useRouter();
 
   return (
@@ -40,7 +40,7 @@ export default function DogSearchFilterBar({ filters, setFilters, setSearch }) {
         ))}
       </DropdownMenu>
 
-      <DropdownMenu
+      {!simplified && <DropdownMenu
         selectedOptions={filters.medical}
         label="Medical Concern"
         submitFilters={(newFilters) => {
@@ -54,9 +54,9 @@ export default function DogSearchFilterBar({ filters, setFilters, setSearch }) {
             name={concern.replaceAll(" ", "").toLowerCase()}
           />
         ))}
-      </DropdownMenu>
+      </DropdownMenu>}
 
-      <DropdownMenu
+      {!simplified && <DropdownMenu
         selectedOptions={filters.behavior}
         label="Behavior Concern"
         submitFilters={(newFilters) => {
@@ -72,7 +72,7 @@ export default function DogSearchFilterBar({ filters, setFilters, setSearch }) {
             name={concern.replaceAll(" ", "").toLowerCase()}
           />
         ))}
-      </DropdownMenu>
+      </DropdownMenu>}
 
       <DropdownMenu
         selectedOptions={filters.recentLogTags}
@@ -92,7 +92,7 @@ export default function DogSearchFilterBar({ filters, setFilters, setSearch }) {
         ))}
       </DropdownMenu>
 
-      <div className="relative">
+      {!simplified && <div className="relative">
         <button
           type="button"
           onClick={() => router.push("/dogs/new")}
@@ -103,7 +103,7 @@ export default function DogSearchFilterBar({ filters, setFilters, setSearch }) {
             Add Dog
           </div>
         </button>
-      </div>
+      </div>}
     </div>
   );
 }

@@ -218,7 +218,7 @@ export default function LogModal({ dogId, userId, log, onClose, onSubmit }) {
       ></div>
       <div
         ref={modalRef}
-        className="modal-shadow-mobile sm:modal-shadow bg-white sm:bg-secondary-background px-5 sm:px-12 py-4 sm:py-9 w-full sm:w-auto h-[90%] sm:h-auto sm:min-h-[70vh] sm:max-h-[95vh] z-10 overflow-auto rounded-t-[50px] sm:rounded-t-none"
+        className="modal-shadow-mobile sm:modal-shadow bg-white sm:bg-secondary-background px-5 sm:px-12 py-4 sm:py-9 w-full sm:w-auto sm:max-h-[85vh] z-10 overflow-auto rounded-t-[50px] sm:rounded-t-none"
       >
         {/* TODO add behavior for dragging downwards to close the modal on mobile */}
         <div className="sm:hidden w-8 h-1 opacity-40 bg-zinc-500 rounded-[100px] mx-auto mb-[12px]" />
@@ -369,7 +369,7 @@ export default function LogModal({ dogId, userId, log, onClose, onSubmit }) {
                 />
               ))}
             </DropdownMenu>
-            <div className="flex flex-wrap justify-end sm:justify-start w-48 mt-[1vh] gap-[1vh] min-h-[8vh]">
+            <div className="flex flex-wrap justify-end sm:justify-start items-start w-48 mt-[1vh] gap-[1vh] min-h-[8vh]">
               {Object.keys(logData.tagsSet).length
                 ? Object.values(logData.tagsSet).map((value, index) => {
                     return (

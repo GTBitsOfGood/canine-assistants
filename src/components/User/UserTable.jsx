@@ -15,6 +15,7 @@ import { consts } from "@/utils/consts";
 import ToggleSwitch from "./ToggleSwitch"
 import ConfirmCancelModal from "../ConfirmCancelModal";
 import { Toast } from "../Toast";
+import { useSession } from "next-auth/react";
 
 /**
  * @returns { React.ReactElement } The UserTable component
@@ -30,6 +31,7 @@ export default function UserTable() {
   const [showModal, setShowModal] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showChange, setShowChange] = useState(false);
+  const { data: session, update } = useSession();
 
   useEffect(() => {  // Pull all user data
     setShowChange(false)
@@ -111,7 +113,9 @@ export default function UserTable() {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to update the user role");
       }
-      
+      if (selectedUserId === session.user.id) {
+        update()
+      }
       Toast({ success: true, message: 'User role updated successfully' });
     } catch (error) {
       console.error(error);
@@ -245,14 +249,6 @@ export default function UserTable() {
         </button>
     </div>
 </div>
-
-
-
-
-
-
-        
-
         <Table  // Data comes in as "users" state
           loading={loading}
           cols={userTableColumns}

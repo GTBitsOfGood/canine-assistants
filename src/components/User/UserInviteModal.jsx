@@ -97,7 +97,7 @@ export default function UserInviteModal({ userId, onClose, onSubmit }) {
       ></div>
       <div
         ref={modalRef}
-        className="modal-shadow-mobile sm:modal-shadow bg-white sm:bg-secondary-background px-5 sm:px-12 py-4 sm:py-9 w-full sm:w-auto h-[75%] sm:h-auto sm:min-h-[55vh] sm:max-h-[75vh] z-10 overflow-auto rounded-t-[50px] sm:rounded-t-none"
+        className="modal-shadow-mobile sm:modal-shadow bg-white sm:bg-secondary-background px-5 sm:px-12 py-4 sm:py-9 w-full sm:w-auto sm:max-h-[75vh] z-10 overflow-auto rounded-t-[50px] sm:rounded-t-none"
 
       >
         {/* TODO add behavior for dragging downwards to close the modal on mobile */}

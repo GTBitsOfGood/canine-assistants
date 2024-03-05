@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Table from "../Table/Table";
-import DogSearchFilterBar from "./DogSearchFilterBar";
 import {
   Bars3BottomLeftIcon,
   CalendarIcon,
@@ -10,61 +9,19 @@ import {
   TagIcon,
 } from "@heroicons/react/24/solid";
 import { Chip, ChipTypeStyles } from "../Chip";
-import TagDisplay from "../TagDisplay";
 import dateUtils from "@/utils/dateutils";
 import stringUtils from "@/utils/stringutils";
 import { useRouter } from "next/router";
-import LoadingAnimation from "../LoadingAnimation";
 import RecentTags from "../RecentTags"
-import { Toast } from "../Toast";
 
 
 /**
  * @returns { React.ReactElement } The DogTable component
  */
-export default function DogTable() {
-  const [searchFilter, setSearchFilter] = useState("");
-  const [data, setData] = useState();
-
-  const [filters, setFilters] = useState({});
-
-  const [loading, setLoading] = useState(true);
-
+export default function DogTable({ loading, dogs }) {
   const router = useRouter();
 
-  useEffect(() => {
-    let search = {};
-    if (filters) {
-      Object.keys(filters)
-        .filter(
-          (category) => category && Object.values(filters[category]).length > 0
-        )
-        .forEach((category) => {
-          search[category] = Object.values(filters[category]);
-        });
-    }
-
-    search.name = searchFilter;
-
-    fetch("/api/dogs/search", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(search),
-    })
-      .catch(() => {
-        setLoading(false);
-        Toast({ success: false, message: "Unable to pull dog data." });
-        setData([]);
-      })
-      .then((res) => res.json())
-      .then((data) => { setData(data); setLoading(false); } );
-  }, [searchFilter, filters]);
-
-  const dogs = data ? data.data : [];
-
-  /**
+    /**
    * The specified columns for the DogTable
    */
   const dogTableColumns = [
@@ -157,56 +114,20 @@ export default function DogTable() {
     },
   ];
 
-  const tags = Object.keys(filters)
-    .map((filterGroup) =>
-      Object.keys(filters[filterGroup]).map((element) =>
-        filterGroup[element] == null ? (
-          <></>
-        ) : (
-          {
-            group: filterGroup,
-            label: filters[filterGroup][element],
-            index: element,
-            type: ChipTypeStyles.Tag,
-          }
-        )
-      )
-    )
-    .flat(1);
-
-  const removeTag = (group, index) => {
-    const newFilters = { ...filters };
-
-    delete newFilters[group][index];
-    setFilters(newFilters);
-  };
   return (
-    <>
-      {<LoadingAnimation animated={false} loadText={false} />}
-      <div className="flex-grow flex-col space-y-6 mb-8">
-        <DogSearchFilterBar
-          filters={filters}
-          setFilters={setFilters}
-          setSearch={setSearchFilter}
-        />
-
-        <TagDisplay tags={tags} removeTag={removeTag} />
-
-        <Table
-          loading={loading}
-          cols={dogTableColumns}
-          rows={dogs}
-          filter={searchFilter}
-          onRowClick={(row, rowIndex) => {
-            router.push(`/dogs/${row["_id"]}`);
-          }}
-          noElements={
-            <div className="flex justify-center bg-white py-16 text-gray-500">
-              No dogs were found.
-            </div>
-          }
-        />
-      </div>
-    </>
+    <Table
+      loading={loading}
+      cols={dogTableColumns}
+      rows={dogs}
+      filter={searchFilter}
+      onRowClick={(row, rowIndex) => {
+        router.push(`/dogs/${row["_id"]}`);
+      }}
+      noElements={
+        <div className="flex justify-center bg-white py-16 text-gray-500">
+          No dogs were found.
+        </div>
+      }
+    />
   );
 }

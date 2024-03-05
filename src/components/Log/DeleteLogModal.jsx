@@ -37,7 +37,7 @@ export default function DeleteLogModal({ logId, title, onClose, onSubmit }) {
   
       <div
         ref={modalRef}
-        className="modal-shadow-mobile sm:modal-shadow bg-white sm:bg-secondary-background px-5 sm:px-12 py-4 sm:py-9 w-full sm:w-auto h-[25%] sm:h-auto sm:min-h-[27vh] sm:max-h-[50vh] z-10 overflow-auto rounded-t-[50px] sm:rounded-t-none"
+        className="modal-shadow-mobile sm:modal-shadow bg-white sm:bg-secondary-background px-5 sm:px-12 py-4 sm:py-9 w-full sm:w-auto max-h-[95vh] sm:max-h-[50vh] z-10 overflow-auto rounded-t-[50px] sm:rounded-t-none"
       >
         <div className="sm:hidden w-8 h-1 opacity-40 bg-zinc-500 rounded-[100px] mx-auto mb-[12px]" />
         <h1 className="mb-[3vh]"> Delete {title}?</h1>
