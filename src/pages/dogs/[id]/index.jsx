@@ -9,7 +9,6 @@ import {
   ChevronLeftIcon,
   PencilSquareIcon,
   TrashIcon,
-  XMarkIcon,
 } from "@heroicons/react/24/solid";
 
 import maleicon from "../../../../public/maleicon.svg";
@@ -44,6 +43,8 @@ export default function IndividualDogPage() {
   const router = useRouter();
   const [data, setData] = useState();
   const [searchQuery, setSearchQuery] = useState("");
+  const [userRole, setUserRole] = useState("");
+  const [hasUnresolvedLogs, setHasUnresolvedLogs] = useState(false);
 
   const [showInfoTab, setShowInfoTab] = useState(true);
   const [showLogModal, setShowLogModal] = useState(false);
@@ -64,6 +65,9 @@ export default function IndividualDogPage() {
   let search = {};
   search.dog = router.query.id;
 
+  const { data: session } = useSession();
+  const user = session?.user;
+
   /**
    * Searches logs using current search query and filters if filtering is requested.
    * Filtering logic is handled on the backend.
@@ -78,7 +82,6 @@ export default function IndividualDogPage() {
         filters[key] = Object.values(filters[key]);
       }
     }
-
     fetch("/api/logs/search", {
       method: "POST",
       headers: {
@@ -108,9 +111,7 @@ export default function IndividualDogPage() {
       }
     );
   }
-  const { data: session } = useSession();
-  const user = session?.user;
-
+  
   useEffect(() => {
     if (data?.association === "Volunteer/Partner") {
       setShowInfoTab(false);
@@ -190,6 +191,17 @@ export default function IndividualDogPage() {
         });
     }
   }, [data]);
+
+  useEffect(() => {
+    setHasUnresolvedLogs(false);
+    if (logs) {
+      logs?.forEach((log) => {
+        if (!log.resolved) {
+          setHasUnresolvedLogs(true);   
+        }
+      }
+    );}
+  }, [logs])
 
   if (!data || !data.success) {
     return <LoadingAnimation />;
@@ -313,7 +325,6 @@ export default function IndividualDogPage() {
   };
 
   // TODO add listener for if user clicks out of dropdown menu to turn back into button
-
   return (
     <div className={`container mx-auto order-b border-gray-300`}>
       {/* Logic for the Log modal */}
@@ -481,9 +492,7 @@ export default function IndividualDogPage() {
                 </div>
               )}
             </>
-          
         </div>
-
         <TabContainer
           logRef={logRef}
           showInfoTab={showInfoTab}
@@ -494,6 +503,8 @@ export default function IndividualDogPage() {
           appliedFilters={appliedFilters}
           setAppliedFilters={setAppliedFilters}
           setSearchQuery={setSearchQuery}
+          hasUnresolvedLogs={hasUnresolvedLogs}
+          role={userRole}
           showFormTab={showFormTab}
           showFormDropdown={showFormDropdown}
           setShowFormDropdown={setShowFormDropdown}

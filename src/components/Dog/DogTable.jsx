@@ -13,15 +13,19 @@ import dateUtils from "@/utils/dateutils";
 import stringUtils from "@/utils/stringutils";
 import { useRouter } from "next/router";
 import RecentTags from "../RecentTags"
+import { Toast } from "../Toast";
+import { useSession } from "next-auth/react";
+import { Tooltip } from 'react-tooltip'
+import UnresolvedDot from "../Log/UnresolvedDot";
 
 
 /**
  * @returns { React.ReactElement } The DogTable component
  */
-export default function DogTable({ loading, dogs }) {
+export default function DogTable({ loading, dogs, userRole }) {
   const router = useRouter();
 
-    /**
+  /**
    * The specified columns for the DogTable
    */
   const dogTableColumns = [
@@ -29,8 +33,13 @@ export default function DogTable({ loading, dogs }) {
       id: "name",
       label: "Name",
       icon: <Bars3BottomLeftIcon />,
-      customRender: (row, name) => {
-        return <span>{name}</span>;
+      customRender: (rowData) => {
+        return <span className="flex flex-row"> 
+                {rowData.hasUnresolved > 0 && userRole === "Manager" 
+            ? <UnresolvedDot rowId={rowData._id} />
+                  : <div className="mx-2"> </div>}
+                {rowData.name}
+               </span>;
       },
     },
     { id: "breed", label: "Breed", icon: <FingerPrintIcon /> },
@@ -115,19 +124,19 @@ export default function DogTable({ loading, dogs }) {
   ];
 
   return (
-    <Table
-      loading={loading}
-      cols={dogTableColumns}
-      rows={dogs}
-      filter={""}
-      onRowClick={(row, rowIndex) => {
-        router.push(`/dogs/${row["_id"]}`);
-      }}
-      noElements={
-        <div className="flex justify-center bg-white py-16 text-gray-500">
-          No dogs were found.
-        </div>
-      }
-    />
+        <Table
+          loading={loading}
+          cols={dogTableColumns}
+          rows={dogs}
+          filter={""}
+          onRowClick={(row, rowIndex) => {
+            router.push(`/dogs/${row["_id"]}`);
+          }}
+          noElements={
+            <div className="flex justify-center bg-white py-16 text-gray-500">
+              No dogs were found.
+            </div>
+          }
+        />
   );
 }

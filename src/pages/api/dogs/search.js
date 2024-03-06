@@ -13,6 +13,7 @@ const dogSchema = z.object({
   medical: z.array(z.enum(consts.concernArray)).optional(),
   other: z.array(z.enum(consts.concernArray)).optional(),
   recentLogTags: z.array(z.enum(consts.tagsArray)).optional(),
+  hasUnresolved: z.number().optional(),
   instructors: z
     .string()
     .refine((id) => {
@@ -42,6 +43,18 @@ const dogSchema = z.object({
 });
 
 export default async function handler(req, res) {
+  if (req.body.ResolutionStatus) {
+    if (req.body.ResolutionStatus.length === 1) {
+      if (req.body.ResolutionStatus[0] === "Resolved") {
+        req.body.hasUnresolved = 0;
+      } else {
+        req.body.hasUnresolved = 1;
+      }
+    } else {
+      delete req.body.hasUnresolved;
+    }
+    delete req.body.ResolutionStatus;
+  }
   const {
     success,
     error,

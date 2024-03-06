@@ -21,6 +21,7 @@ const consts = {
   genderPetArray: ["Female", "Male"],
   genderPersonArray: ["Female", "Male", "Other"],
   concernArray: ["None", "Moderate", "High"],
+  resolveArray: ["Resolved", "Unresolved"],
   locationArray: ["Facility 1", "Facility 2", "Placed"],
   roleArray: ["Service", "Companion"],
   userRoleArray: ["Manager", "Admin", "User"],
@@ -60,6 +61,7 @@ const dogSchema = z.object({
   gender: z.enum(consts.genderPetArray).default("Male"),
   breed: z.string().min(1),
   weight: z.coerce.number(),
+  hasUnresolved: z.number().min(0),
   behavior: z.enum(consts.concernArray).default("None"),
   medical: z.enum(consts.concernArray).default("None"),
   other: z.enum(consts.concernArray).default("None"),
@@ -260,6 +262,7 @@ const computeDefaultValues = (dog) => {
     gender: dog?.gender,
     breed: dog?.breed,
     coatColor: dog?.coatColor,
+    hasUnresolved: dog?.hasUnresolved,
 
     // Birth
     collarColor: dog?.collarColor,
@@ -355,6 +358,12 @@ const logSchema = z.object({
   description: z.string().min(1).optional(),
   resolved: z.boolean(),
   resolution: z.string().min(1).optional(),
+  resolver: z
+    .string()
+    .refine((id) => {
+      return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
+    })
+    .optional(),
   author: z.string().refine((id) => {
     return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
   }),

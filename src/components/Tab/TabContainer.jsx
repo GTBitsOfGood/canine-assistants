@@ -33,6 +33,8 @@ export default function TabContainer({
   appliedFilters,
   setAppliedFilters,
   setSearchQuery,
+  role,
+  hasUnresolvedLogs,
   tags,
   removeTag,
   filteredLogs,
@@ -48,10 +50,10 @@ export default function TabContainer({
   return (
     <div
       ref={logRef}
-      className="mt-8 mb-8 shadow-xl rounded-lg text-md w-full text-left relative overflow-hidden bg-foreground p-8"
+      className="mt-8 mb-8 shadow-xl rounded-lg text-md w-full text-left relative bg-foreground p-8"
     >
       {isEdit ? 
-      <TabSection defaultTab={"information"} isEdit={isEdit}>
+      <TabSection defaultTab={"information"} isEdit={isEdit} role={role}>
         <div label="information">
           <div className="w-full grid grid-cols-3 gap-16">
             {Object.keys(dogInformationSchema).map((category) => (
@@ -99,7 +101,7 @@ export default function TabContainer({
           </div>
         </div> : undefined }
 
-        <div label="logs">
+        <div label="logs" alertIcon={hasUnresolvedLogs}>  {/* make true a dynamic variable */}
           <div className="flex-grow flex-col space-y-4">
             <LogSearchFilterBar
               filters={appliedFilters}

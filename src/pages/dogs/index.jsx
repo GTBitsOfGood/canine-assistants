@@ -8,6 +8,7 @@ import LoadingAnimation from "@/components/LoadingAnimation";
 import { Toast } from "@/components/Toast";
 import DogTable from "@/components/Dog/DogTable";
 import CardDogTable from "@/components/Dog/CardDogTable";
+import { useSession } from "next-auth/react";
 
 /**
  * The main page for displaying Dogs
@@ -27,6 +28,7 @@ export default function DogsPage() {
   const [loading, setLoading] = useState(true);
 
   const [limitedAssociation, setLimitedAssociation] = useState(null);
+  const { data: session } = useSession();
 
   useEffect(() => {
     let search = {};
@@ -58,7 +60,15 @@ export default function DogsPage() {
       .then((data) => { setData(data); setLoading(false); } );
   }, [searchFilter, filters]);
 
-  const dogs = data ? data.data : [];
+  const sortResolution = (data) => {
+    if (!data || !data.data || !Array.isArray(data.data)) {
+      return data;
+    }
+    data.data.sort((a, b) => b.hasUnresolved - a.hasUnresolved);
+    return data;
+  }
+
+  const dogs = data ? (session?.user.role === "Manager" ? sortResolution(data).data : data.data) : [];
 
   const tags = Object.keys(filters)
     .map((filterGroup) =>
@@ -99,6 +109,7 @@ export default function DogsPage() {
               setFilters={setFilters}
               setSearch={setSearchFilter}
               simplified={limitedAssociation}
+              userRole={session?.user.role}
             />
 
             <TagDisplay tags={tags} removeTag={removeTag}  />
@@ -113,6 +124,7 @@ export default function DogsPage() {
             {!loading && !limitedAssociation && <DogTable
                 loading={loading}
                 dogs={dogs}
+                userRole={session?.user.role}
             />}
           </div>
         </div>
