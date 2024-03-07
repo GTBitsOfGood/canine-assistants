@@ -1,6 +1,7 @@
 //import DogTable from "@/components/Dog/DogTable";
 //import CardDogTable from "@/components/Dog/CardDogTable";
 import React, { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import DogSearchFilterBar from "@/components/Dog/DogSearchFilterBar";
 import { ChipTypeStyles } from "@/components/Chip";
 import TagDisplay from "@/components/TagDisplay";
@@ -21,6 +22,7 @@ import CardDogTable from "@/components/Dog/CardDogTable";
 export default function DogsPage() {
   const [searchFilter, setSearchFilter] = useState("");
   const [data, setData] = useState();
+  const [dogs, setDogs] = useState([]);
 
   const [filters, setFilters] = useState({});
 
@@ -28,7 +30,11 @@ export default function DogsPage() {
 
   const [limitedAssociation, setLimitedAssociation] = useState(null);
 
+  const { data: session } = useSession();
+
   useEffect(() => {
+    if (!session || !session.user) return;
+
     let search = {};
     if (filters) {
       Object.keys(filters)
@@ -55,10 +61,19 @@ export default function DogsPage() {
         setData([]);
       })
       .then((res) => res.json())
-      .then((data) => { setData(data); setLoading(false); } );
-  }, [searchFilter, filters]);
-
-  const dogs = data ? data.data : [];
+      .then((data) => {
+        setData(data);
+        setDogs(data ? (session.user.role === "Manager" ? sortResolution(data).data : data.data) : [])
+        setLoading(false);
+        if (session.user.role === "Manager" || session.user.role === "Admin") {
+          setLimitedAssociation(false);
+        } else if (dogs.length > 0) {
+          setLimitedAssociation(dogs[0].association === "Volunteer/Partner");
+        } else if (dogs.length === 0) {
+          setLimitedAssociation(true);
+        }
+      });
+  }, [searchFilter, filters, limitedAssociation, session, dogs]);
 
   const tags = Object.keys(filters)
     .map((filterGroup) =>
@@ -83,10 +98,6 @@ export default function DogsPage() {
     delete newFilters[group][index];
     setFilters(newFilters);
   };
-
-  if (limitedAssociation === null && dogs.length > 0) {
-    setLimitedAssociation(dogs[0].association === "Volunteer/Partner");
-  }
 
   return (
     <div className={`pt-4 container mx-auto`}>
