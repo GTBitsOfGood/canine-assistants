@@ -38,7 +38,7 @@ export default function UserInviteModal({ userId, onClose, onSubmit }) {
   const handleSubmit = (invData) => {
     const formattedData = {
         name: "Invited User",
-        email: invData.email,
+        email: invData.email.toLowerCase(),
         role: Object.values(inviteData.roleSet)[0],
         acceptedInvite: false,
         isActive: true,
