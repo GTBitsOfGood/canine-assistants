@@ -1,5 +1,3 @@
-//import DogTable from "@/components/Dog/DogTable";
-//import CardDogTable from "@/components/Dog/CardDogTable";
 import React, { useEffect, useState } from "react";
 import DogSearchFilterBar from "@/components/Dog/DogSearchFilterBar";
 import { ChipTypeStyles } from "@/components/Chip";
@@ -97,6 +95,7 @@ export default function DogsPage() {
   if (limitedAssociation === null && dogs.length > 0) {
     setLimitedAssociation(dogs[0].association === "Volunteer/Partner");
   }
+  console.log("LIMITED", limitedAssociation)
 
   return (
     <div className={`pt-4 container mx-auto`}>
