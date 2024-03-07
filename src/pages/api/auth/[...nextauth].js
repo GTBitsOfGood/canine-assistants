@@ -109,7 +109,6 @@ export const authOptions = {
   },
   callbacks: {
     async signIn({ user, account }) {
-      console.log("Here2", user, account);
       // const email = user.email
       //   ? user.email.toLowerCase()
       //   : user._doc.email.toLowerCase();
