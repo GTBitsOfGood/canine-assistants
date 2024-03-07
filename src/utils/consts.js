@@ -23,7 +23,12 @@ const consts = {
   concernArray: ["None", "Moderate", "High"],
   locationArray: ["Facility 1", "Facility 2", "Placed"],
   roleArray: ["Service", "Companion"],
-  userRoleArray: ["Admin", "Instructor", "Volunteer/Recipient", "Inactive"],
+  userRoleArray: ["Manager", "Admin", "User"],
+  userAccess: {
+    Manager: "Manager",
+    Admin: "Admin",
+    User: "User",
+  },
   leashArray: ["Leashed", "Off-leash"],
   relationshipArray: [
     "Sibling",
@@ -52,12 +57,12 @@ const consts = {
  */
 const dogSchema = z.object({
   name: z.string().min(1),
-  gender: z.enum(consts.genderPetArray),
+  gender: z.enum(consts.genderPetArray).default("Male"),
   breed: z.string().min(1),
-  weight: z.number(),
-  behavior: z.enum(consts.concernArray),
-  medical: z.enum(consts.concernArray),
-  other: z.enum(consts.concernArray),
+  weight: z.coerce.number(),
+  behavior: z.enum(consts.concernArray).default("None"),
+  medical: z.enum(consts.concernArray).default("None"),
+  other: z.enum(consts.concernArray).default("None"),
   recentLogs: z
     .array(
       z.string().refine((id) => {
@@ -262,6 +267,9 @@ const computeDefaultValues = (dog) => {
     deliveryInformation: dog?.deliveryInformation, // right now set to natural, figure out default value later
     birthOrder: dog?.birthOrder,
 
+    // Weight
+    weight: dog?.weight,
+
     // Family
     litterSize: dog?.litterSize,
     litterComposition: dog?.litterComposition,
@@ -278,7 +286,7 @@ const computeDefaultValues = (dog) => {
     instructors: dog?.instructors?.map((instructor) =>
       instructor._id ? instructor._id : instructor,
     ),
-    caregivers: dog?.caregivers.map((caregiver) =>
+    caregivers: dog?.caregivers?.map((caregiver) =>
       caregiver._id ? caregiver._id : caregiver,
     ),
     // Feeding
@@ -316,7 +324,24 @@ const computeDefaultValues = (dog) => {
  */
 const userUpdateSchema = z.object({
   name: z.string(),
-  role: z.enum(["Admin", "Instructor", "Volunteer/Recipient", "Inactive"]),
+  role: z.enum(consts.userRoleArray),
+  isActive: z.boolean(),
+  acceptedInvite: z.boolean(),
+});
+
+const userRegistrationSchema = z.object({
+  firstName: z.string().min(1).trim(),
+  lastName: z.string().min(1).trim(),
+  email: z.string().email(),
+  password: z.string().min(1), // change min to 8 later
+});
+
+const userInviteSchema = z.object({
+  name: z.string().min(1),
+  email: z.string().email(),
+  role: z.enum(consts.userRoleArray),
+  isActive: z.boolean(),
+  acceptedInvite: z.boolean(),
 });
 
 /**
@@ -328,6 +353,8 @@ const logSchema = z.object({
   tags: z.array(z.enum(consts.tagsArray)).optional(),
   severity: z.enum(consts.concernArray),
   description: z.string().min(1).optional(),
+  resolved: z.boolean(),
+  resolution: z.string().min(1).optional(),
   author: z.string().refine((id) => {
     return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
   }),
@@ -367,14 +394,71 @@ const formSchema = z.object({
   ),
 });
 
+/**
+ * Zod object for validating request bodies for signup
+ */
+const signUpSchema = z
+  .object({
+    name: z.string().min(1, { message: "Please enter a valid name" }).trim(),
+    email: z.string().email({ message: "Please enter a valid email address" }),
+    password: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters" }),
+    confirmPassword: z
+      .string()
+      .min(8, { message: "Password must be at least 8 characters" }),
+  })
+  .refine(
+    (values) => {
+      return values.password === values.confirmPassword;
+    },
+    {
+      message: "Passwords must match!",
+      path: ["confirmPassword"],
+    },
+  );
+
+/**
+ * Zod object for information returned when user with limited association views dog
+ * Used to strip all but the basic details from the dog data
+ */
+const limitedDogSchema = z.object({
+  name: z.string().min(1),
+  gender: z.enum(consts.genderPetArray).default("Male"),
+  breed: z.string().min(1),
+  weight: z.coerce.number(),
+  dateOfBirth: z.coerce.date(),
+  location: z.enum(consts.locationArray),
+  coatColor: z.string().optional(),
+});
+
+/**
+ * New Dog
+ */
+const newDog = {
+  name: "New Dog",
+  gender: "Female",
+  behavior: consts.concernArray[0],
+  medical: consts.concernArray[0],
+  other: consts.concernArray[0],
+  dateOfBirth: new Date("2019-03-15"),
+  maternalDemeanor: [1, 1, 1],
+  location: consts.locationArray[consts.locationArray[0]],
+};
+
 export {
   pages,
   consts,
   dogSchema,
   logSchema,
   userUpdateSchema,
+  userRegistrationSchema,
+  userInviteSchema,
   formSchema,
   formUpdateSchema,
+  signUpSchema,
   dogInformationSchema,
   computeDefaultValues,
+  newDog,
+  limitedDogSchema,
 };

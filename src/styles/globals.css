@@ -5,6 +5,10 @@
 @tailwind components;
 @tailwind utilities;
 
+input[type="text"]:focus {
+  box-shadow: none;
+}
+
 @layer base {
   * {
     padding: 0;
@@ -33,14 +37,113 @@
     @apply text-black;
     @apply font-semibold;
   }
+
+  input[type="radio"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    @apply border-2 border-primary-gray;
+    position: relative;
+    outline: none;
+  }
+
+  input[type="radio"]:focus {
+    @apply ring-ca-pink;
+  }
+
+  input[type="radio"]::before {
+    content: "";
+    position: absolute;
+    top: -1.5px;
+    left: -1.5px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+  }
+
+  input[type="radio"]:checked {
+    background-color: transparent;
+  }
+
+  input[type="radio"]:checked::before {
+    @apply bg-ca-pink;
+  }
+
+  input[type="radio"]:disabled:checked::before {
+    @apply bg-secondary-text;
+  }
 }
 
 @layer components {
+  .drop-shadow {
+    box-shadow: 0 4px 16px 0 rgba(71, 80, 123, 0.12);
+  }
+
   .modal-shadow {
     box-shadow: 0 0 16px 0 rgba(40, 48, 45, 0.16);
   }
 
   .modal-shadow-mobile {
     box-shadow: 2px -2px 3px 0 rgba(0, 0, 0, 0.3);
+  }
+
+  .button-base {
+    @apply flex rounded border px-4 py-2.5 items-center justify-center;
+  }
+
+  .primary-button {
+    @apply bg-ca-pink border-ca-pink-shade;
+  }
+
+  .secondary-button {
+    @apply bg-foreground border-primary-gray;
+  }
+
+  .tertiary-button {
+    @apply bg-secondary-gray border-primary-gray;
+  }
+
+  .disabled-button {
+    @apply bg-primary-gray border-tertiary-gray;
+  }
+
+  .primary-button-text {
+    @apply text-foreground text-base font-medium;
+  }
+
+  .primary-button-plus-icon {
+    @apply text-foreground h-4 w-4 relative;
+  }
+
+  /* Also used for tertiary button text */
+  .secondary-button-text {
+    @apply text-primary-text text-base font-medium;
+  }
+
+  .disabled-button-text {
+    @apply text-tertiary-gray text-base font-medium;
+  }
+
+  .textbox-base {
+    @apply px-4 py-2.5 bg-foreground rounded border text-secondary-text text-lg font-normal focus:border-border-focus-gray focus:ring-0 focus:outline-0;
+  }
+
+  .textbox-border {
+    @apply border-primary-gray;
+  }
+
+  .textbox-error {
+    @apply border-error-red;
+  }
+
+  .text-input {
+    @apply h-11;
+  }
+
+  .text-area {
+    @apply resize-none sm:resize-y min-h-[44px] max-h-[1000px] h-[220px];
   }
 }

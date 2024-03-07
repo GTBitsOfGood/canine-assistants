@@ -37,6 +37,8 @@ npm run secrets:windows # windows
 
 You should be prompted for a master password. Ask your Engineering leadership to continue. Once the password has been verified, your `.env.development.local` file should have been created automatically for you.
 
+If you are unable to use the commands to retrieve the `.env` file, you can download or visit [Bitwarden](https://bitwarden.com/) and login using `product@bitsofgood.org` and the master password. The `.env` file will be available within the vault.
+
 ### Development
 
 To start the Next.js dev server, run:
@@ -44,6 +46,8 @@ To start the Next.js dev server, run:
 ```sh
 npm run dev
 ```
+
+Once authenticated, seed your local database by navigating to `http://localhost:3000/api/seed`.
 
 ### Code Formatting
 

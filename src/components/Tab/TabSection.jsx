@@ -9,8 +9,8 @@ import Tab from "./Tab";
  * @param {{ defaultTab: string, children: ReactNode }}
  * @returns
  */
-export default function TabSection({ defaultTab, children }) {
-  const [activeTab, setActiveTab] = useState("");
+export default function TabSection({ defaultTab, isEdit, children }) {
+  const [activeTab, setActiveTab] = useState(defaultTab);
 
   /**
    * Sets the activeTab to the one just pressed
@@ -26,10 +26,15 @@ export default function TabSection({ defaultTab, children }) {
     setActiveTab(defaultTab);
   }, [defaultTab]);
 
+  if (!Array.isArray(children)) {
+    children = [children];
+  }
+  children = children.filter((x) => x !== undefined)
+
   return (
     <div>
       <div>
-        <ul className="flex -mb-[0.1rem]">
+        <ul className="flex -mb-[0.1rem] drop-shadow h-10">
           {children.map((child) => {
             const { label } = child.props;
 
@@ -37,16 +42,17 @@ export default function TabSection({ defaultTab, children }) {
               <Tab
                 key={label}
                 onTabClick={onTabClick}
-                activeTab={activeTab}
+                activeTab={isEdit ? "information" : activeTab}
                 label={label}
               />
             );
           })}
+          <li className="w-full border-b-4 border-stone-50"></li>
         </ul>
 
         <div className="pt-4">
           {children.map((child) => {
-            if (child.props.label.toLowerCase() !== activeTab.toLowerCase())
+            if (child.props.label.toLowerCase() !== activeTab.toLowerCase() && children.length !== 1)
               return undefined;
 
             return child.props.children;

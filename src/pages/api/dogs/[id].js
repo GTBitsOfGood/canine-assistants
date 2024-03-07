@@ -3,14 +3,48 @@ import {
   deleteDog,
   updateDog,
   getDogById,
+  createDog,
 } from "../../../../server/db/actions/Dog";
-import { dogSchema } from "@/utils/consts";
+import { consts, dogSchema, limitedDogSchema } from "@/utils/consts";
+import { getUserById } from "../../../../server/db/actions/User";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(req, res) {
-  if (req.method == "GET") {
+  if (req.method === "POST") {
+    const { success, error, data } = dogSchema.safeParse(req.body);
+    if (!success) {
+      return res.status(422).send({
+        success: false,
+        message: "The field " + Object.keys(error.format())[1] + " is invalid",
+      });
+    }
+
+    if (data.birthOrder > data.litterSize) {
+      return res.status(422).send({
+        success: false,
+        message: "Dog birth order cannot be greater than litter size",
+      });
+    }
+
+    return createDog(data)
+      .then((id) => {
+        return res.status(201).send({
+          success: true,
+          message: "New dog successfully created!",
+          data: { _id: id },
+        });
+      })
+      .catch((error) => {
+        return res.status(500).send({
+          success: false,
+          message: error.message,
+        });
+      });
+  } else if (req.method == "GET") {
     try {
       const { id } = req.query;
-      const data = await getDogById(id);
+      let data = await getDogById(id);
 
       if (data.length === 0) {
         res.status(404).json({
@@ -20,9 +54,44 @@ export default async function handler(req, res) {
         return;
       }
 
+      const session = await getServerSession(req, res, authOptions);
+      const user = await getUserById(session.user._id);
+      let association = [
+        consts.userAccess.Admin,
+        consts.userAccess.Manager,
+      ].includes(user.role)
+        ? user.role
+        : "Instructor/Caregiver";
+
+      // Only filter keys if association is partner/volunteer and nothing else
+      // Throw an error if there is no association
+      if (
+        ![consts.userAccess.Admin, consts.userAccess.Manager].includes(
+          user.role,
+        ) &&
+        !data.instructors?.some((o) => o._id.equals(user._id)) &&
+        !data.caregivers?.some((o) => o._id.equals(user._id))
+      ) {
+        if (
+          data.partner?.user?.equals(user._id) ||
+          data.volunteer?.equals(user._id)
+        ) {
+          association = "Volunteer/Partner";
+          const image = data.image;
+          data = limitedDogSchema.safeParse(data.toJSON()).data;
+          data._id = id;
+          data.image = image;
+        } else {
+          return res
+            .status(405)
+            .json({ success: false, error: "Not associated with this dog" });
+        }
+      }
+
       return res.status(200).json({
         success: true,
         data: data,
+        association: association,
       });
     } catch (error) {
       res.status(500).json({ success: false, error: error.message });

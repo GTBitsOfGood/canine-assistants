@@ -1,18 +1,19 @@
-import Card from "@/components/Card";
-import userpfpplaceholder from "../../public/userpfpplaceholder.svg";
-
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-
-import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import {
   ExclamationTriangleIcon,
   ExclamationCircleIcon,
 } from "@heroicons/react/24/solid";
-import { consts } from "@/utils/consts";
+
+import Card from "@/components/Card";
+import ConfirmCancelModal from "@/components/ConfirmCancelModal";
+import userpfpplaceholder from "../../public/userpfpplaceholder.svg";
+import { Toast } from "@/components/Toast";
+import { set } from "mongoose";
 
 /**
  * User account management page
@@ -20,36 +21,43 @@ import { consts } from "@/utils/consts";
  * @returns {React.ReactElement} The user account management page
  */
 export default function Account() {
-  const [data, setData] = useState();
   const [editName, setEditName] = useState(false);
   const [name, setName] = useState("");
   const [showDeactivateModal, setShowDeactivateModal] = useState(false);
+  const { data: session, update } = useSession();
 
   const router = useRouter();
-  // TODO: replace with session info
-  const placeholderUser = "653c24c5cc0f21473ff48464";
 
   useEffect(() => {
-    fetch(`/api/users/${placeholderUser}`)
-      .then((res) => res.json())
-      .then((data) => setData(data));
-  }, [router.query]);
-
-  if (!data || data === undefined || !data.success) {
+    if (session) {
+      setName(session.user.name);
+    }
+  }, [session])
+  if (!session || !session.user) {
     return <div>loading</div>;
   }
 
-  const user = data.data;
-
   return (
     <Card cardStyle="mt-16 min-w-fit">
-      {showDeactivateModal ? deactivateModal(user, placeholderUser) : ``}
+      {showDeactivateModal
+        ? ConfirmCancelModal(
+            "Deactivate " + session.user.name + "?",
+            `Select “Confirm” to deactivate ` +
+              session.user.name +
+              ` and remove all access to
+            the Canine Assistants database. This action can only be undone by an
+            administrator.`,
+            () => deactivateModal(),
+            setShowDeactivateModal,
+            showDeactivateModal
+          )
+        : ``}
       <div className="flex flex-row min-w-fit">
         <div className="rounded-full">
           <Image
             height={180}
             width={180}
-            src={user.image || userpfpplaceholder}
+            src={session.user.image || userpfpplaceholder}
             alt="User Placeholder"
           />
         </div>
@@ -81,47 +89,27 @@ export default function Account() {
                         let body = {};
                         body.name = name;
 
-                        fetch("/api/users/" + placeholderUser, {
+                        fetch("/api/users/" + session.user._id, {
                           method: "PATCH",
                           headers: {
                             "Content-Type": "application/json",
                           },
                           body: JSON.stringify(body),
                         })
-                          .then((res) => {
-                            fetch(`/api/users/${placeholderUser}`)
-                              .then((res) => res.json())
-                              .then((data) => setData(data));
+                          .then(async (res) => {
+                            res = await res.json();
+                            
 
-                            if (res.ok) {
-                              toast.custom((t) => (
-                                <div
-                                  className={`h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-ca-green text-white text-lg font-normal
-                                  ${
-                                    t.visible
-                                      ? "animate-enter"
-                                      : "animate-leave"
-                                  }`}
-                                >
-                                  <span className="font-bold">
-                                    Account Name
-                                  </span>
-                                  &nbsp;
-                                  <span> was successfully updated.</span>
-                                </div>
-                              ));
+                            if (res.success) {
+                              console.log("HEREEE")
+                              update({name: name})
+                              Toast({ success: true, bold: name, message: "was successfully updated." });
                               setEditName(!editName);
                             } else {
-                              toast.custom(() => (
-                                <div className="h-12 px-6 py-4 rounded shadow justify-center items-center inline-flex bg-red-600 text-white text-lg font-normal">
-                                  There was a problem updating the account name,
-                                  please try again.
-                                </div>
-                              ));
+                              Toast({ success: false, message: "There was a problem updating the account name, please try again." });
                             }
                           })
-                          .catch((err) => {
-                          });
+                          .catch((err) => {});
                       }}
                     >
                       Save
@@ -138,12 +126,12 @@ export default function Account() {
                 </div>
               ) : (
                 <div className="flex flex-row items-center">
-                  <h1>{user.name}</h1>
+                  <h1>{session.user.name}</h1>
                   <button
                     className="flex flex-row items-center"
                     onClick={() => {
                       setEditName(!editName);
-                      setName(user.name);
+                      setName(session.user.name);
                     }}
                   >
                     <PencilSquareIcon className="ml-4 mr-2 h-4 text-primary-text" />
@@ -159,12 +147,12 @@ export default function Account() {
                 Deactivate
               </button>
             </div>
-            <p className="text-secondary-text">{user.email}</p>
+            <p className="text-secondary-text">{session.user.email}</p>
           </div>
 
           <div>
             <h2>Role</h2>
-            <p className="text-secondary-text">{user.role}</p>
+            <p className="text-secondary-text">{session.user.role}</p>
           </div>
         </div>
       </div>
@@ -172,48 +160,19 @@ export default function Account() {
   );
 
   function deactivateModal() {
-    return (
-      <div>
-        <div className="fixed inset-0 bg-modal-background-gray opacity-60"></div>
-        <Card cardStyle="flex flex-col justify-between fixed z-10 inset-0 mt-32 mx-96 h-fit min-w-fit">
-          <h1>Deactivate {user.name}?</h1>
-          <p className="my-8">
-            Select “Confirm” to deactivate {user.name} and remove all access to
-            the Canine Assistants database. This action can only be undone by an
-            administrator.
-          </p>
-          <div className="flex flex-row justify-end">
-            <button
-              className="flex flex-row h-full w-32 px-4 py-2 mx-4 justify-center border rounded border-primary-gray"
-              onClick={() => setShowDeactivateModal(!showDeactivateModal)}
-            >
-              Cancel
-            </button>
-            <button
-              className="flex flex-row h-full w-32 px-4 py-2 justify-center text-foreground bg-ca-pink border rounded border-ca-pink-shade"
-              onClick={() => {
-                let body = {};
-                body.role = consts.userRoleArray[3];
-                fetch("/api/users/" + placeholderUser, {
-                  method: "PATCH",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(body),
-                })
-                  .then((res) => {
-                    router.push("/login");
-                  })
-                  .catch((err) => {
-                    
-                  });
-              }}
-            >
-              Confirm
-            </button>
-          </div>
-        </Card>
-      </div>
-    );
+    let body = {
+      isActive: false,
+    };
+    fetch("/api/users/" + userId, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    })
+      .then((res) => {
+        router.push("/login");
+      })
+      .catch((err) => {});
   }
 }

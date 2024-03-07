@@ -1,8 +1,17 @@
 import { Types } from "mongoose";
 import { getUserById, updateUser } from "../../../../server/db/actions/User";
 import { userUpdateSchema } from "@/utils/consts";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handler(req, res) {
+  const session = await getServerSession(req, res, authOptions);
+  if (!session) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    });
+  }
   if (req.method == "GET") {
     try {
       const { id } = req.query;
@@ -47,8 +56,12 @@ export default async function handler(req, res) {
       .partial()
       .strict()
       .refine(
-        (data) => data.name || data.role,
-        "Must update either name or role",
+        (data) =>
+          data.name ||
+          data.role ||
+          data.hasOwnProperty("isActive") ||
+          data.hasOwnProperty("acceptedInvite"),
+        "Must update either name, role, status, or invite status.",
       )
       .safeParse(req.body);
 
@@ -75,18 +88,49 @@ export default async function handler(req, res) {
       }
     }
 
-    let updatedUserObject;
-    // TODO: grab user from session
-    const user = {
-      role: "Admin",
-    };
     try {
-      if (user.role === "Admin") {
-        updatedUserObject = await updateUser(req.query.id, data);
-      } else {
-        delete data.role;
-        // TODO: check if the user _id from session == user _id they are trying to update
-        updatedUserObject = await updateUser(req.query.id, data);
+      // Admins and Managers can update any user
+      if (session.user.role === "Admin" || session.user.role === "Manager") {
+        const updatedUserObject = await updateUser(req.query.id, data);
+        if (!updatedUserObject) {
+          return res.status(404).json({
+            success: false,
+            message: "Cannot update user because user does not exist",
+          });
+        }
+        return res.status(200).json({
+          success: true,
+          message: "Sucessfully updated user",
+          data: updatedUserObject,
+        });
+      } else if (data.role) {
+        return res.status(401).json({
+          success: false,
+          message: "You are not authorized to update user role",
+        });
+      }
+      // Users can only update their own name
+      if (session.user._id === req.query.id) {
+        const updateObject = {};
+        if (typeof data.isActive === "boolean") {
+          updateObject.isActive = data.isActive;
+        }
+        if (data.name) {
+          updateObject.name = data.name;
+        }
+        const updatedUserObject = await updateUser(req.query.id, updateObject);
+        console.log(updatedUserObject);
+        if (!updatedUserObject) {
+          return res.status(404).json({
+            success: false,
+            message: "Cannot update user because user does not exist",
+          });
+        }
+        return res.status(200).json({
+          success: true,
+          message: "Sucessfully updated user",
+          data: updatedUserObject,
+        });
       }
     } catch (e) {
       return res.status(500).send({
@@ -94,19 +138,10 @@ export default async function handler(req, res) {
         message: e.message,
       });
     }
-
-    if (!updatedUserObject) {
-      return res.status(404).json({
-        success: false,
-        message: "Cannot update user because user does not exist",
-      });
-    } else {
-      return res.status(200).json({
-        success: true,
-        message: "Sucessfully updated user",
-        data: updatedUserObject,
-      });
-    }
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized",
+    });
   }
   return res.status(405).json({
     success: false,

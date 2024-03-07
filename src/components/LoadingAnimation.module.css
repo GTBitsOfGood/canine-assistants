@@ -1,0 +1,48 @@
+.waves {
+  position: relative;
+  width: 100vw;
+  height: 16vh;
+  margin-bottom: 0px;
+  min-height: 120px;
+  max-height: 170px;
+}
+
+.waveContainer > use {
+  animation: wave-animation 25s cubic-bezier(0.55, 0.5, 0.3, 0.5) infinite;
+}
+
+.waveContainer > use:nth-child(4) {
+    animation-delay: -5s;
+    animation-duration: 20s;
+  }
+
+.waveContainer > use:nth-child(1) {
+  animation-delay: -2s;
+  animation-duration: 7s;
+}
+
+.waveContainer > use:nth-child(2) {
+  animation-delay: -3s;
+  animation-duration: 10s;
+}
+
+.waveContainer > use:nth-child(3) {
+  animation-delay: -4s;
+  animation-duration: 13s;
+}
+
+@keyframes wave-animation {
+  0% {
+    transform: translate3d(-100px, 0, 0);
+  }
+  100% {
+    transform: translate3d(80px, 0, 0);
+  }
+}
+
+@media (max-width: 768px) {
+  .waves {
+    height: 80px;
+    min-height: 80px;
+  }
+}

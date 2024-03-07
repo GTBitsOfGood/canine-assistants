@@ -65,7 +65,7 @@ const Input = React.forwardRef(
         value={getDisplayValue(field.value)}
         ref={ref}
         {...rest}
-        className={`rounded bg-foreground border border-neutral-300 text-neutral-700 text-lg p-1 pl-2 font-normal ${className}`}
+        className={`rounded bg-foreground border border-neutral-300 text-neutral-700 text-lg pl-1 font-normal ${className}`}
       />
     );
   }

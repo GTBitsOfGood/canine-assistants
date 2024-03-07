@@ -1,5 +1,5 @@
 import { MagnifyingGlassIcon, PlusIcon } from "@heroicons/react/24/solid";
-import DropdownMenu, { DropdownMenuOption } from "./DropdownMenu";
+import DropdownMenu, { DropdownMenuOption } from "../Form/DropdownMenu";
 import { consts } from "@/utils/consts";
 
 export default function LogSearchFilterBar({ filters, setFilters, setSearch, addLogFunction }) {
@@ -12,15 +12,14 @@ export default function LogSearchFilterBar({ filters, setFilters, setSearch, add
           </div>
           <input
             type="search"
-            className="w-full h-full rounded bg-foregrund border border-neutral-300 text-neutral-700 text-lg p-2.5 pl-10 font-normal"
+            className="w-full h-full rounded bg-foreground border border-neutral-300 text-neutral-700 text-lg p-2.5 pl-10 font-normal"
             placeholder="Search Logs..."
-            required
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <button type="button" onClick={() => addLogFunction()} className=" px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade justify-start items-center gap-2 flex">
-          <div className="text-foreground h-4 w-4 relative">{<PlusIcon />}</div>
-          <div className="text-foreground text-base font-medium">Add a log</div>
+        <button type="button" onClick={() => addLogFunction()} className="button-base primary-button flex gap-2">
+          <div className="primary-button-plus-icon">{<PlusIcon />}</div>
+          <div className="primary-button-text">Add Log</div>
         </button>
       </div>
       <div className="flex flex-row items-center gap-4">

@@ -1,25 +1,32 @@
-import Layout from "@/components/Layout";
+import Layout from "@/layouts/Layout";
 import "@/styles/globals.css";
 import { SessionProvider } from "next-auth/react";
+import Head from "next/head";
 import { Toaster } from "react-hot-toast";
-import { EditDogProvider } from "@/context/EditDogContext";
 
 export default function App({
   Component,
   pageProps: { session, ...pageProps },
 }) {
   const getLayout = Component.getLayout || ((page) => <Layout>{page}</Layout>);
-                                            
+
   return (
-    <SessionProvider session={session}>
-      {getLayout(
-        <>
-         <EditDogProvider>
+    <>
+      <Head>
+        <title>Canine Assistants</title>
+        <meta
+          name="description"
+          content="Main dashboard page for Canine Assistants."
+        />
+      </Head>
+      <SessionProvider session={session}>
+        {getLayout(
+          <>
             <Toaster />
             <Component {...pageProps} />
-         </EditDogProvider>
-        </>
-      )}
-    </SessionProvider>
+          </>,
+        )}
+      </SessionProvider>
+    </>
   );
 }

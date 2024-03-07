@@ -9,6 +9,7 @@ import { createDog } from "../../../server/db/actions/Dog";
 import Form from "../../../server/db/models/Form";
 import { formMap } from "@/utils/formUtils";
 import { createForm } from "../../../server/db/actions/Form";
+import Account from "../../../server/db/models/Account";
 
 const dogs = [];
 const users = [
@@ -80,7 +81,7 @@ const users = [
     email: "test@gmail.com",
     image: "",
     emailVerified: false,
-    role: "Instructor",
+    role: "User",
   },
 ];
 const logs = [
@@ -92,6 +93,8 @@ const logs = [
     description: "This is a log description",
     author: "",
     dog: "",
+    resolver: null,
+    resolved: false,
   },
   {
     title: "This is a log",
@@ -101,6 +104,8 @@ const logs = [
     description: "This is a log description",
     author: "",
     dog: "",
+    resolver: null,
+    resolved: false,
   },
   {
     title: "This is a log",
@@ -110,6 +115,8 @@ const logs = [
     description: "This is a log description",
     author: "",
     dog: "",
+    resolver: null,
+    resolved: false,
   },
   {
     title: "This is a log",
@@ -119,6 +126,8 @@ const logs = [
     description: "This is a log description",
     author: "",
     dog: "",
+    resolver: null,
+    resolved: false,
   },
   {
     title: "This is a log",
@@ -128,6 +137,8 @@ const logs = [
     description: "This is a log description",
     author: "",
     dog: "",
+    resolver: null,
+    resolved: false,
   },
   {
     title: "This is a log",
@@ -137,6 +148,8 @@ const logs = [
     description: "This is a log description",
     author: "",
     dog: "",
+    resolver: null,
+    resolved: false,
   },
   {
     title: "This is a log",
@@ -146,6 +159,8 @@ const logs = [
     description: "This is a log description",
     author: "",
     dog: "",
+    resolver: null,
+    resolved: false,
   },
   {
     title: "This is a log",
@@ -155,6 +170,8 @@ const logs = [
     description: "This is a log description",
     author: "",
     dog: "",
+    resolver: null,
+    resolved: false,
   },
   {
     title: "This is a log",
@@ -164,6 +181,8 @@ const logs = [
     description: "This is a log description",
     author: "",
     dog: "",
+    resolver: null,
+    resolved: false,
   },
   {
     title: "This is a log",
@@ -173,6 +192,8 @@ const logs = [
     description: "This is a log description",
     author: "",
     dog: "",
+    resolver: null,
+    resolved: false,
   },
   {
     title: "This is a log",
@@ -182,6 +203,8 @@ const logs = [
     description: "This is a log description",
     author: "",
     dog: "",
+    resolver: null,
+    resolved: false,
   },
   {
     title: "This is a log",
@@ -191,6 +214,8 @@ const logs = [
     description: "This is a log description",
     author: "",
     dog: "",
+    resolver: null,
+    resolved: false,
   },
 ];
 const dogNames = [
@@ -335,11 +360,16 @@ const forms = [
 export default async function handler(req, res) {
   if (req.method === "GET") {
     await dbConnect();
-    // delete everythin
-    await User.deleteMany({});
+    // delete everything
+    await User.deleteMany({ email: { $not: { $eq: "test@gmail.com" } } });
+    await User.findOneAndUpdate(
+      { email: "test@gmail.com" },
+      { role: "Manager" },
+    );
     await Log.deleteMany({});
     await Dog.deleteMany({});
     await Form.deleteMany({});
+    await Account.deleteMany({});
 
     // create users
     const userIds = [];
@@ -408,6 +438,7 @@ export default async function handler(req, res) {
           name: dogNames[getRandomInt(0, dogNames.length - 1)],
           disability: disabilities[getRandomInt(0, disabilities.length - 1)],
         },
+        image: "",
       };
 
       dogs[i].instructors = [userIds[0]];
@@ -422,6 +453,7 @@ export default async function handler(req, res) {
     for (let i = 0; i < logs.length; i++) {
       logs[i].dog = dogIds[getRandomInt(0, dogIds.length - 1)];
       logs[i].author = userIds[getRandomInt(0, userIds.length - 1)];
+      // logs[i].resolver = userIds[getRandomInt(0, userIds.length - 1)];
       await createLog(logs[i]);
     }
 

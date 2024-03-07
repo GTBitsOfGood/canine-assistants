@@ -5,27 +5,37 @@ const { Schema } = mongoose;
 const UserSchema = new Schema({
   name: {
     type: String,
-    required: true
+    required: true,
   },
   email: {
     type: String,
-    required: true
+    required: true,
   },
   image: {
     type: String,
   },
   emailVerified: {
     type: Boolean,
-    default: null,
+    default: false,
   },
   role: {
     type: String,
     enum: consts.userRoleArray,
     required: true,
   },
-  passwordHashed: {
-    type: String
-  }
+  passwordHash: {
+    type: String,
+  },
+  isActive: {
+    type: Boolean,
+    default: true,
+    required: true,
+  },
+  acceptedInvite: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
 });
 
 export default mongoose.models?.User ?? mongoose.model("User", UserSchema);

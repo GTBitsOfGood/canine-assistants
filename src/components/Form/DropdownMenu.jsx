@@ -2,13 +2,10 @@ import {
   CheckCircleIcon,
   CheckIcon,
   ChevronDownIcon,
-  StopIcon as StopIconSolid,
 } from "@heroicons/react/24/solid";
-import { StopIcon as StopIconOutline } from "@heroicons/react/24/outline";
 import { useState, useRef, useEffect } from "react";
-import { ChipTypeStyles } from "./Chip";
 import useClickOff from "@/hooks/useClickOff";
-import CircleIcon from "@/components/icons/CircleIcon";
+import CircleIcon from "@/components/icons/CircleIcon"
 
 /**
  * Individual option for Dropdown menu component to be used with a map
@@ -32,7 +29,8 @@ export function DropdownMenuOption({ name, label }) {
  *                    selectedColor: String - either style from ChipTypeStyles or the word "concern"
  *                                            for the concern array ONLY when checkboxes are hidden
  *                    error: Boolean - shows error state when true,
- *                    requiredField: Boolean - when true adds red * after label }
+ *                    requiredField: Boolean - when true adds red * after label
+ *                    disabled: Boolean - if disabled }
  * @returns HTML dropdown menu component
  */
 export default function DropdownMenu({
@@ -43,7 +41,7 @@ export default function DropdownMenu({
   children,
   props,
 }) {
-  const [extended, setExtended] = useState(false);
+  const [extended, setExtended] = useState(props?.extended);
   const [enabledOptions, setEnabledOptions] = useState(selectedOptions || {});
   const dropdownRef = useRef(null);
   const dropdownOptionRefs = useRef([]);
@@ -61,6 +59,11 @@ export default function DropdownMenu({
 
     setEnabledOptions(selectedOptions || []);
   };
+
+  useEffect(() => {
+    setEnabledOptions(selectedOptions || []);
+  }, [selectedOptions]);
+  
 
   const toggleOption = (option, index) => {
     let newEnabledOptions;
@@ -81,16 +84,12 @@ export default function DropdownMenu({
       onFilterSelect(newEnabledOptions);
     }
 
-    if (props?.singleSelect) {
+    if (props?.singleSelect && props?.hideFilterButton) {
       setExtended(false);
     }
 
     if (props?.hideFilterButton) {
       onFilterSelect(newEnabledOptions);
-    }
-
-    if (props?.singleSelect) {
-      setExtended(false);
     }
 
     setEnabledOptions(newEnabledOptions);
@@ -110,7 +109,10 @@ export default function DropdownMenu({
         data-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="false"
-        className={`px-4 py-2.5 m-0 p-0 box-border whitespace-nowrap top-[-1px] bg-white ${
+        disabled={props?.disabled}
+        className={`px-4 py-2.5 m-0 p-0 box-border whitespace-nowrap top-[-1px]
+        ${props?.disabled ? "bg-secondary-gray" : "bg-white"}
+        ${
           extended
             ? "rounded-t border-b-transparent "
             : " rounded"
@@ -161,21 +163,13 @@ export default function DropdownMenu({
                   <>
                     {props?.singleSelect ? (
                       <div className="w-5">
-                        {/* <CircleIcon
-                          className={"border-2 border-neutral-300"}
+                        <CircleIcon
+                          className={"bg-ca-pink"}
                           size={"1.25rem"}
-                          color={""}
-                        /> */}
-                        <CheckCircleIcon className="text-ca-pink h-[1.5385rem] -ml-[0.15rem] " />
+                        />
                       </div>
                     ) : (
-                      // <CircleIcon
-                      //   className={"border-2 border-neutral-300"}
-                      //   size={"1.25rem"}
-                      //   color={""}
-                      // />
                       <div className="flex items-center justify-between mx-1.5 ">
-                        {/* <StopIconOutline className=" h-8 text-primary-gray" /> */}
                         <CheckIcon className="pl-[0.14rem] absolute h-4 text-foreground"/>
                         <div className="w-5 h-5 px-2 py-1.5 bg-ca-pink rounded " />
                       </div>
@@ -218,9 +212,9 @@ export default function DropdownMenu({
               <button
                 type="button"
                 onClick={() => handleSubmit()}
-                className="bg-secondary-gray border border-primary-gray mx-1.5 rounded w-full pt-2 pb-2"
+                className="bg-secondary-gray border border-primary-gray mx-1.5 rounded w-full pt-2 pb-2 font-medium"
             >
-              Apply Filters
+              {props?.filterText ? props.filterText : "Apply Filters"}
             </button>
           </div>
         )}

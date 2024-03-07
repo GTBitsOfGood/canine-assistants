@@ -1,5 +1,3 @@
-import { useRouter } from "next/router";
-
 export const ChipTypeStyles = {
   Tag: "border-neutral-chip-shade bg-neutral-chip",
   "High": "border-high-concern-shade bg-high-concern",
@@ -10,27 +8,17 @@ export const ChipTypeStyles = {
   "Topic": "border-topic-yellow-shade bg-topic-yellow",
 };
 
-export function Chip({ label, type, link = "", styles }) {
-  const router = useRouter();
-
-  const handleClick = (event) => {
-    if (link.length > 0) {
-      event.preventDefault();
-      router.push(link);
-    }
-  };
-
+export function Chip({ label, type, link = "", styles, innerStyles }) {
   return (
     <>
-      <button
-        onClick={handleClick}
-        href="#"
+      <a
+        href={link.length > 0 ? link : "#"}
         className={`${link.length > 0 ? "" : "cursor-default"} big-red-300 max-h-10 inline-flex ${styles}`}
       >
-        <div className={`px-2.5 min-w-[5rem] justify-center border items-center rounded py-2 ${type} flex`}>
-          <div className="text-sm font-medium">{label}</div>
+        <div className={`${innerStyles} px-2.5 min-w-[3.5rem] justify-center border items-center rounded py-1.5 ${type} flex`}>
+          <div className="text-xs font-medium">{label}</div>
         </div>
-      </button>
+      </a>
     </>
   );
 }
