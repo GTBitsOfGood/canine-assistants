@@ -419,6 +419,7 @@ export default function IndividualDogPage() {
                   <div className="flex-col pl-1 text-lg gap-4 inline-flex w-1/2">
                     {dog.location === "Placed" ? (
                       <>
+                        <FormField label={"Location"} keyLabel={"location"} />
                         <FormField label={"Placement"} keyLabel={"placement"} />
                         <FormField
                           label={"Partner"}
