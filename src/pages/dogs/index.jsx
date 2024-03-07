@@ -68,22 +68,15 @@ export default function DogsPage() {
         setData(data);
         setDogs(data ? (session.user.role === "Manager" ? sortResolution(data).data : data.data) : [])
         setLoading(false);
-        if (dogs.length > 0) {
+        if (session.user.role === "Manager" || session.user.role === "Admin") {
+          setLimitedAssociation(false);
+        } else if (dogs.length > 0) {
           setLimitedAssociation(dogs[0].association === "Volunteer/Partner");
         } else if (dogs.length === 0) {
           setLimitedAssociation(true);
         }
       });
   }, [searchFilter, filters, limitedAssociation, session, dogs]);
-
-  // useEffect(() => {
-  //   debugger;
-  //   if (limitedAssociation === null && dogs.length > 0) {
-  //     setLimitedAssociation(dogs[0].association === "Volunteer/Partner");
-  //   } else if (dogs.length === 0) {
-  //     setLimitedAssociation(true);
-  //   }
-  // }, [limitedAssociation, dogs])
 
   const tags = Object.keys(filters)
     .map((filterGroup) =>
