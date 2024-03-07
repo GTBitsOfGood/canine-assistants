@@ -99,11 +99,14 @@ export default function Table({
 
   useEffect(() => {
     setCurrentPage(Math.max(Math.min(currentPage, pageAmount - 1), 0));
-  }, [cols, currentPage, pageAmount]);
+    setElementsToShow(rows
+      ?.filter((row) => row.name.toUpperCase().includes(filter.toUpperCase()))
+      ?.slice(
+        currentPage * elePerPage,
+        currentPage * elePerPage + elePerPage
+      ));
+  }, [cols, currentPage, pageAmount, elePerPage, rows, filter]);
 
-  useEffect(() => {
-    setCurrentPage(0);
-  }, [filter]);
 
   /**
    * Formats each value in the table depending on settings provided
@@ -133,16 +136,6 @@ export default function Table({
     setElePerPage(calc)
     setPageAmount(Math.ceil(( rows?.length || 0 ) / calc));
   })
-
-  useEffect(() => {
-    setElementsToShow(rows
-      ?.filter((row) => row.name.toUpperCase().includes(filter.toUpperCase()))
-      ?.slice(
-        currentPage * elePerPage,
-        currentPage * elePerPage + elePerPage
-      ));
-  }, [elePerPage, rows, currentPage])
-  
 
   return (
     <div className="shadow-xl rounded-lg text-md w-full text-left relative">
