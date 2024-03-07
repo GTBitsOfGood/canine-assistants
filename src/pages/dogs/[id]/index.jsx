@@ -66,7 +66,11 @@ export default function IndividualDogPage() {
   search.dog = router.query.id;
 
   const { data: session } = useSession();
-  const user = session?.user;
+
+  useEffect(() => {
+    if (!session || !session.user) return
+    setUserRole(session.user.role);
+  }, [session])
 
   /**
    * Searches logs using current search query and filters if filtering is requested.
@@ -219,6 +223,7 @@ export default function IndividualDogPage() {
 
   const onEditSubmit = async (data) => {
     // FORMAT DATA FIRST
+    console.log(data)
     const removeUndefinedAndEmpty = (obj) => {
       Object.keys(obj).forEach((key) => {
         if (Array.isArray(obj[key])) {
@@ -429,7 +434,8 @@ export default function IndividualDogPage() {
 
                   <div className="flex-col pl-1 text-lg gap-4 inline-flex w-1/2">
                     {dog.location === "Placed" ? (
-                      <>
+                    <>
+                        <FormField label={"Location"} keyLabel={"location"} />
                         <FormField label={"Placement"} keyLabel={"placement"} />
                         <FormField
                           label={"Partner"}
@@ -473,7 +479,8 @@ export default function IndividualDogPage() {
                     Save
                   </button>
                 </div>
-              ) : (
+            ) : (
+                (userRole === "Manager" || userRole === "Admin" ) && (
                 <div className="grow flex gap-4 justify-end">
                   <div className="flex gap-4">
                     <button
@@ -489,7 +496,8 @@ export default function IndividualDogPage() {
                       <div>Delete</div>
                     </div>
                   </div>
-                </div>
+                  </div>
+                )
               )}
             </>
         </div>

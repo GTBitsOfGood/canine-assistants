@@ -100,6 +100,7 @@ export const authOptions = {
       // const invitedUser = await User.findOne({ email: message.user.email, _id: { $not: { $eq: message.user.id } } });
       // await User.updateOne({ _id: message.user.id }, { acceptedInvite: true, isActive: true, role: invitedUser.role });
       // await User.deleteOne({ _id: invitedUser._id }); // delete the previously invited user
+      await dbConnect();
       await User.updateOne(
         { _id: message.user.id },
         { acceptedInvite: true, isActive: true, role: "User" },

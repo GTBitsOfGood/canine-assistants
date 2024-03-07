@@ -74,9 +74,12 @@ const dogSchema = z.object({
     .default([]),
   parents: z
     .array(
-      z.string().refine((id) => {
-        return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
-      }),
+      z
+        .string()
+        .refine((id) => {
+          return Types.ObjectId.isValid(id) ? new Types.ObjectId(id) : null;
+        })
+        .optional(),
     )
     .optional(),
   dateOfBirth: z.coerce.date(),
@@ -315,6 +318,7 @@ const computeDefaultValues = (dog) => {
     defaults.partner = dog?.partner;
     defaults.placement = dog?.placement;
     defaults.placementCamp = dog?.placementCamp;
+    defaults.location = dog?.location;
   } else {
     defaults.location = dog?.location;
   }

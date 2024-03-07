@@ -20,6 +20,7 @@ import { useSession } from "next-auth/react";
 export default function DogsPage() {
   const [searchFilter, setSearchFilter] = useState("");
   const [data, setData] = useState();
+  const [dogs, setDogs] = useState([]);
 
   const [filters, setFilters] = useState({});
 
@@ -27,8 +28,16 @@ export default function DogsPage() {
 
   const [limitedAssociation, setLimitedAssociation] = useState(null);
   const { data: session } = useSession();
+  const sortResolution = (data) => {
+    if (!data || !data.data || !Array.isArray(data.data)) {
+      return data;
+    }
+    data.data.sort((a, b) => b.hasUnresolved - a.hasUnresolved);
+    return data;
+  }
 
   useEffect(() => {
+    if (!session || !session.user) return
     let search = {};
     if (filters) {
       Object.keys(filters)
@@ -55,18 +64,26 @@ export default function DogsPage() {
         setData([]);
       })
       .then((res) => res.json())
-      .then((data) => { setData(data); setLoading(false); } );
-  }, [searchFilter, filters]);
+      .then((data) => {
+        setData(data);
+        setDogs(data ? (session.user.role === "Manager" ? sortResolution(data).data : data.data) : [])
+        setLoading(false);
+        if (dogs.length > 0) {
+          setLimitedAssociation(dogs[0].association === "Volunteer/Partner");
+        } else if (dogs.length === 0) {
+          setLimitedAssociation(true);
+        }
+      });
+  }, [searchFilter, filters, limitedAssociation, session, dogs]);
 
-  const sortResolution = (data) => {
-    if (!data || !data.data || !Array.isArray(data.data)) {
-      return data;
-    }
-    data.data.sort((a, b) => b.hasUnresolved - a.hasUnresolved);
-    return data;
-  }
-
-  const dogs = data ? (session?.user.role === "Manager" ? sortResolution(data).data : data.data) : [];
+  // useEffect(() => {
+  //   debugger;
+  //   if (limitedAssociation === null && dogs.length > 0) {
+  //     setLimitedAssociation(dogs[0].association === "Volunteer/Partner");
+  //   } else if (dogs.length === 0) {
+  //     setLimitedAssociation(true);
+  //   }
+  // }, [limitedAssociation, dogs])
 
   const tags = Object.keys(filters)
     .map((filterGroup) =>
@@ -92,9 +109,7 @@ export default function DogsPage() {
     setFilters(newFilters);
   };
 
-  if (limitedAssociation === null && dogs.length > 0) {
-    setLimitedAssociation(dogs[0].association === "Volunteer/Partner");
-  }
+  
   console.log("LIMITED", limitedAssociation)
 
   return (
