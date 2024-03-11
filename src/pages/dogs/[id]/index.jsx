@@ -347,7 +347,7 @@ export default function IndividualDogPage() {
 
       <form onSubmit={handleSubmit(onEditSubmit)}>
         <div className="flex gap-8 ">
-          <div className="flex w-[350px] h-[350px] items-center justify-center rounded-lg relative bg-primary-gray overflow-hidden">
+          <div className="flex w-[350px] h-[350px] items-center justify-center rounded-lg relative bg-primary-gray">
           
             {fileParam && fileParam != "" ? (
               isEdit ? (
