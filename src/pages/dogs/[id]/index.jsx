@@ -347,12 +347,22 @@ export default function IndividualDogPage() {
 
       <form onSubmit={handleSubmit(onEditSubmit)}>
         <div className="flex gap-8 ">
-          <div className="flex w-[350px] h-[350px] items-center justify-center rounded-lg relative bg-primary-gray">
+          <div className="flex w-[350px] h-[350px] items-center justify-center rounded-lg relative bg-primary-gray overflow-hidden">
+          
             {fileParam && fileParam != "" ? (
               isEdit ? (
-                <ImageUpload preview={true} setFileParam={setFileParam} previewImage={fileParam} />
+                <ImageUpload preview={true}  setFileParam={setFileParam} previewImage={fileParam} />
               ) : (
-                <Image alt="Dog" width={350} height={350} src={fileParam} />
+              <div style={{ position: 'relative', width: '350px', height: '350px', borderRadius: '10px', overflow: 'hidden' }}>
+                        <Image
+                            alt="Dog"
+                            layout="fill"
+                            objectFit="cover"
+                            src={fileParam}
+                        />
+                    </div>
+
+            
               )
             ) : (
               isEdit ? (
