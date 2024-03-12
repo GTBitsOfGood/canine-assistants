@@ -163,7 +163,7 @@ export default function Account() {
     let body = {
       isActive: false,
     };
-    fetch("/api/users/" + userId, {
+    fetch("/api/users/" + session?.user._id, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -171,7 +171,7 @@ export default function Account() {
       body: JSON.stringify(body),
     })
       .then((res) => {
-        router.push("/login");
+        router.push("/signup");
       })
       .catch((err) => {});
   }
