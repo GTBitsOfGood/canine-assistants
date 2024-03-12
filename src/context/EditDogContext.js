@@ -83,10 +83,6 @@ export function EditDogProvider({ children }) {
       value: user._id,
       label: user.name,
     })),
-    partner: allUsers?.map((user) => ({
-      value: user._id,
-      label: user.name,
-    })),
   };
 
   const dateFields = ["dateOfBirth", "grooming"];

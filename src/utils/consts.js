@@ -91,8 +91,8 @@ const dogSchema = z.object({
   rolePlacedAs: z.enum(consts.roleArray).optional(),
   partner: z
     .object({
-      age: z.number().optional(),
       name: z.string().optional(),
+      age: z.coerce.number().optional(),
       disability: z.string().optional(),
       user: z
         .string()
@@ -305,6 +305,15 @@ const computeDefaultValues = (dog) => {
     grooming: {
       lastBath: dog?.grooming?.lastBath
         ? dateutils.getDateString(new Date(dog.grooming?.lastBath))
+        : dateutils.getDateString(new Date()),
+    },
+
+    placementCamp: {
+      startDate: dog?.placementCamp?.startDate
+        ? new Date(dog?.placementCamp?.startDate).toLocaleDateString()
+        : dateutils.getDateString(new Date()),
+      endDate: dog?.placementCamp?.endDate
+        ? new Date(dog?.placementCamp?.endDate).toLocaleDateString()
         : dateutils.getDateString(new Date()),
     },
   };

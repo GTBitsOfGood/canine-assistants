@@ -446,14 +446,21 @@ export default function IndividualDogPage() {
                       {dog.location === "Placed" ? (
                         <>
                           <FormField label={"Location"} keyLabel={"location"} />
-                          <FormField
-                            label={"Partner"}
-                            keyLabel={"partner.user"}
-                          />
-                          <FormField
-                            label={"Placement Camp"}
-                            keyLabel={"placementCamp"}
-                          />
+                          {!isEdit ? (
+                            <>
+                          <div className="">
+                            Partner: {dog.partner.name}
+                          </div>
+
+                          <div>
+                            Placement Camp: {new Date(dog.placementCamp["startDate"]).toLocaleDateString()} - {new Date(dog.placementCamp["endDate"]).toLocaleDateString()}
+                          </div>
+                          </>
+                          ): (
+                            <>
+                            
+                          </>
+                          )}
                         </>
                       ) : (
                         <>
@@ -469,15 +476,41 @@ export default function IndividualDogPage() {
                     {dog.location === "Placed" ? (
                       <>
                         <FormField label={"Location"} keyLabel={"location"} />
-                        <FormField label={"Placement"} keyLabel={"placement"} />
-                        <FormField
-                          label={"Partner"}
-                          keyLabel={"partner.user"}
+                        
+                          {!isEdit ? (
+                            <>
+                          <div className="">
+                            Partner: {dog.partner.name}, {dog.partner.age}, {dog.partner.disability}
+                          </div>
+
+                          <div>
+                            Placement Camp: {new Date(dog.placementCamp["startDate"]).toLocaleDateString()} - {new Date(dog.placementCamp["endDate"]).toLocaleDateString()}
+                          </div>
+                          </>
+                          ): (
+                            <>
+                            <FormField
+                            label={"Partner Name"}
+                            keyLabel={"partner.name"}
+                          />
+                          <FormField
+                            label={"Partner Age"}
+                            keyLabel={"partner.age"}
+                          />
+                          <FormField
+                            label={"Partner Disability"}
+                            keyLabel={"partner.disability"}
+                          />
+                          <FormField
+                          label={"Placement Camp Start"}
+                          keyLabel={"placementCamp.startDate"}
                         />
                         <FormField
-                          label={"Placement Camp"}
-                          keyLabel={"placementCamp"}
+                          label={"Placement Camp End"}
+                          keyLabel={"placementCamp.endDate"}
                         />
+                          </>
+                          )}
                       </>
                     ) : (
                       <>
