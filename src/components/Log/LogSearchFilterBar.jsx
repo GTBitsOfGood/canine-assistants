@@ -6,7 +6,7 @@ export default function LogSearchFilterBar({ filters, setFilters, setSearch, add
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-row justify-between">
-        <div className="relative items-center flex w-3/4">
+        <div className="relative items-center flex sm:w-3/4 w-full">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3">
             <MagnifyingGlassIcon className="w-4 h-4" />
           </div>

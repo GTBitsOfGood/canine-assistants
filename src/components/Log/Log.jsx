@@ -85,7 +85,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
           :
           <></>}
       {isAuthor &&(
-            <div className="grow flex gap-4 justify-end">
+            <div className="grow flex gap-4 sm:justify-end justify-start mb-2">
         <button
           type="button"
           className="flex justify-center items-center"
@@ -105,7 +105,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
       </div>
       )}
       <div className="flex sm:justify-between flex-col">
-        <div className="flex justify-end sm:flex-row flex-col">
+        <div className="flex justify-end sm:flex-row flex-col mb-1">
           <TagDisplay tags={tags} removeTag={null} />
         </div>
         <div className="flex flex-col">
