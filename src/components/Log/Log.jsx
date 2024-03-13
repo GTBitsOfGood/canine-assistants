@@ -111,13 +111,13 @@ export default function Log({ log, user, onEdit, onDelete }) {
         <div className="flex flex-col">
           <h2>{log.title}</h2>
           <div className="flex sm:flex-row flex-col">
-            <p className="text-secondary-text font-regular w-fit">
+            <p className="text-black font-normal w-fit">
               {"Author: " + authorName}
             </p>
-            <p className="text-secondary-text font-regular sm:mx-5 w-fit">
+            <p className="text-black font-normal sm:mx-5 w-fit">
               {"Date: " + createdAt.toLocaleDateString()}
             </p>
-            <p className="text-secondary-text font-regular w-fit">
+            <p className="text-black font-normal w-fit">
               {"Time: " + createdAt.toLocaleTimeString("en-US")}
             </p>
           </div>
@@ -141,7 +141,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
           </div>
         </div>
       ) : (
-        <p className="min-w-fit pt-4 break-words">{log.description}</p>
+        <p className="text-black font-normal min-w-fit pt-4 break-words">{log.description}</p>
       )}
     </div>
   );

@@ -264,7 +264,7 @@ export default function TabContainer({
           </DropdownMenu></div>
         )}
       {openTab === "Forms" && !isEdit && !showFormDropdown && (
-        <div className="w-[85%] sm:hidden fixed bottom-0 start-12 justify-center mr-8">
+        <div className="w-[85%] sm:hidden fixed bottom-20 start-12 justify-center mr-8">
       <button
         type="button"
         className="px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade w-full z-10 justify-center items-center flex"
@@ -277,7 +277,7 @@ export default function TabContainer({
         </div>
       </button></div>)}
       {openTab === "Logs" && !isEdit && !showLogModal && (
-        <div className="w-[85%] sm:hidden fixed bottom-0 start-12 justify-center">
+        <div className="w-[85%] sm:hidden fixed bottom-20 start-12 justify-center">
       <button
         type="button"
         className="px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade w-full z-10 justify-center items-center flex"
@@ -290,7 +290,7 @@ export default function TabContainer({
         </div>
       </button></div>)}
       {openTab === "Information" && !isEdit && (
-        <div className="w-[85%] sm:hidden fixed bottom-0 start-12 justify-center">
+        <div className="w-[85%] sm:hidden fixed bottom-20 start-12 justify-center">
       <button
         type="button"
         className=" px-12 py-2.5 bg-ca-pink rounded border border-ca-pink-shade w-full z-10 justify-center items-center flex"
