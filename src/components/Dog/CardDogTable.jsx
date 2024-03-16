@@ -15,7 +15,7 @@ export default function CardDogTable({ loading, dogs }) {
   console.log(dogs);
 
   return dogs.length > 0 ? (
-    <div className="grid grid-cols-2 gap-4 relative">
+    <div className="sm:grid flex sm:grid-cols-2 gap-4 sm:relative flex-col items-center">
       {dogs.map((dog) => <DogCard key={dog._id} dog={dog} onClick={() => router.push(`/dogs/${dog._id}`)} />)}
     </div>
   ) : (
@@ -31,10 +31,10 @@ function DogCard({ className, dog, onClick }) {
 
   return (
     <button
-      className={"bg-white shadow p-4 flex rounded-lg text-start " + (className || "")}
+      className={"bg-white shadow-md p-4 flex rounded-lg text-start sm:w-full w-11/12 sm:h-full h-96" + (className || "")}
       onClick={onClick || (() => {})}
     >
-      <div className="flex w-[240px] h-[240px] items-center justify-center rounded-lg bg-primary-gray overflow-hidden">
+      <div className="hidden sm:flex w-[240px] h-[240px] items-center justify-center rounded-lg bg-primary-gray overflow-hidden">
         {dog.image ? <Image alt={dog.name} width={350} height={350} src={dog.image} />
           : <Image width={200} height={200} src={dogplaceholdericon} alt="Dog Placeholder" />
         }

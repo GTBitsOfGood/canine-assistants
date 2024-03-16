@@ -105,15 +105,15 @@ export default function DogsPage() {
 
             {loading && <LoadingAnimation />}
 
-            {!loading && limitedAssociation && <CardDogTable
+            {!loading && <CardDogTable //&& !limitedAssociation
                 loading={loading}
                 dogs={dogs}
             />}
 
-            {!loading && !limitedAssociation && <DogTable
+            {/* {!loading && !limitedAssociation && <DogTable
                 loading={loading}
                 dogs={dogs}
-            />}
+            />} */}
           </div>
         </div>
       </div>
