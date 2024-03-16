@@ -3,6 +3,7 @@ import { getUserById, updateUser } from "../../../../server/db/actions/User";
 import { userUpdateSchema } from "@/utils/consts";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
+import { updateInvitedUser } from "../../../../server/db/actions/InvitedUser";
 
 export default async function handler(req, res) {
   const session = await getServerSession(req, res, authOptions);
@@ -92,7 +93,13 @@ export default async function handler(req, res) {
       // Admins and Managers can update any user
       if (session.user.role === "Admin" || session.user.role === "Manager") {
         const updatedUserObject = await updateUser(req.query.id, data);
-        if (!updatedUserObject) {
+        const updatedInvitedUserObject = await updateInvitedUser(req.query.id, {
+          email: data.email,
+          role: data.role,
+          isActive: data.isActive,
+          acceptedInvite: data.acceptedInvite,
+        });
+        if (!updatedUserObject && !updatedInvitedUserObject) {
           return res.status(404).json({
             success: false,
             message: "Cannot update user because user does not exist",
@@ -101,7 +108,7 @@ export default async function handler(req, res) {
         return res.status(200).json({
           success: true,
           message: "Sucessfully updated user",
-          data: updatedUserObject,
+          data: updatedUserObject || updatedInvitedUserObject,
         });
       } else if (data.role) {
         return res.status(401).json({
@@ -119,8 +126,12 @@ export default async function handler(req, res) {
           updateObject.name = data.name;
         }
         const updatedUserObject = await updateUser(req.query.id, updateObject);
-        console.log(updatedUserObject);
-        if (!updatedUserObject) {
+        const updatedInvitedUserObject = await updateInvitedUser(
+          req.query.id,
+          updateObject,
+        );
+        // console.log(updatedUserObject);
+        if (!updatedUserObject && !updatedInvitedUserObject) {
           return res.status(404).json({
             success: false,
             message: "Cannot update user because user does not exist",
@@ -129,7 +140,7 @@ export default async function handler(req, res) {
         return res.status(200).json({
           success: true,
           message: "Sucessfully updated user",
-          data: updatedUserObject,
+          data: updatedUserObject || updatedInvitedUserObject,
         });
       }
     } catch (e) {

@@ -253,7 +253,7 @@ export default function UserTable() {
         <Table  // Data comes in as "users" state
           loading={loading}
           cols={userTableColumns}
-          rows={users}
+          rows={users.map(user => ({ ...user, name: user.name || "Invited User"}))}
           filter={searchFilter}
           onRowClick={(row, rowIndex) => {
             setSelectedUserId(row["_id"])
