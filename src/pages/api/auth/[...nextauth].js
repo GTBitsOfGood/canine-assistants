@@ -17,6 +17,7 @@ import {
   updateUser,
   getUserById,
   getUsers,
+  getUserByEmail,
 } from "../../../../server/db/actions/User";
 import InvitedUser from "../../../../server/db/models/InvitedUser";
 import {
@@ -123,10 +124,13 @@ export const authOptions = {
   },
   callbacks: {
     async signIn({ user, account }) {
-      // Only fail if the user exists but is not active
-      // If the user doesn't exist, we should return true so that they are created
-      const dbUser = (await getUsers({ email: user.email }))[0];
-      return !(dbUser && !dbUser.isActive);
+      // Only fail if the user exists but is not active,
+      // or if the user doesn't exist and is not invited.
+      // If the user doesn't exist but is invited, we
+      // should return true so that they are created.
+      const dbUser = await getUserByEmail(user.email);
+      const dbInvitedUser = await getInvitedUserByEmail(user.email);
+      return !((dbUser && !dbUser.isActive) || (!dbUser && !dbInvitedUser));
     },
     async jwt({ token, user, trigger }) {
       if (user) {
