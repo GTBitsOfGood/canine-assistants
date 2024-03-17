@@ -1,9 +1,16 @@
 import { Types } from "mongoose";
-import { getUserById, updateUser } from "../../../../server/db/actions/User";
+import {
+  getUserByEmail,
+  getUserById,
+  updateUser,
+} from "../../../../server/db/actions/User";
 import { userUpdateSchema } from "@/utils/consts";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
-import { updateInvitedUser } from "../../../../server/db/actions/InvitedUser";
+import {
+  getInvitedUserByEmail,
+  updateInvitedUser,
+} from "../../../../server/db/actions/InvitedUser";
 
 export default async function handler(req, res) {
   const session = await getServerSession(req, res, authOptions);
@@ -89,17 +96,35 @@ export default async function handler(req, res) {
       }
     }
 
+    const user = await getUserById(session.user._id);
     try {
       // Admins and Managers can update any user
-      if (session.user.role === "Admin" || session.user.role === "Manager") {
-        const updatedUserObject = await updateUser(req.query.id, data);
-        const updatedInvitedUserObject = await updateInvitedUser(req.query.id, {
-          email: data.email,
-          role: data.role,
-          isActive: data.isActive,
-          acceptedInvite: data.acceptedInvite,
-        });
-        if (!updatedUserObject && !updatedInvitedUserObject) {
+      if (user.role === "Admin" || user.role === "Manager") {
+        // If the user id exists in Users, update it and its corresponding InvitedUser
+        // Otherwise, if it exists in InvitedUsers only, update it there only
+        let updatedUserObject = await updateUser(req.query.id, data);
+        if (updatedUserObject) {
+          const invitedUser = await getInvitedUserByEmail(
+            updatedUserObject.email,
+          );
+          if (invitedUser) {
+            await updateInvitedUser(invitedUser._id, {
+              email: data.email,
+              role: data.role,
+              isActive: data.isActive,
+              acceptedInvite: data.acceptedInvite,
+            });
+          }
+        } else {
+          updatedUserObject = await updateInvitedUser(req.query.id, {
+            email: data.email,
+            role: data.role,
+            isActive: data.isActive,
+            acceptedInvite: data.acceptedInvite,
+          });
+        }
+
+        if (!updatedUserObject) {
           return res.status(404).json({
             success: false,
             message: "Cannot update user because user does not exist",
@@ -108,7 +133,7 @@ export default async function handler(req, res) {
         return res.status(200).json({
           success: true,
           message: "Sucessfully updated user",
-          data: updatedUserObject || updatedInvitedUserObject,
+          data: updatedUserObject,
         });
       } else if (data.role) {
         return res.status(401).json({
@@ -117,7 +142,7 @@ export default async function handler(req, res) {
         });
       }
       // Users can only update their own name
-      if (session.user._id === req.query.id) {
+      if (user._id === req.query.id) {
         const updateObject = {};
         if (typeof data.isActive === "boolean") {
           updateObject.isActive = data.isActive;
@@ -125,13 +150,23 @@ export default async function handler(req, res) {
         if (data.name) {
           updateObject.name = data.name;
         }
-        const updatedUserObject = await updateUser(req.query.id, updateObject);
-        const updatedInvitedUserObject = await updateInvitedUser(
-          req.query.id,
-          updateObject,
-        );
-        // console.log(updatedUserObject);
-        if (!updatedUserObject && !updatedInvitedUserObject) {
+
+        let updatedUserObject = await updateUser(req.query.id, updateObject);
+        if (updatedUserObject) {
+          const invitedUser = await getInvitedUserByEmail(
+            updatedUserObject.email,
+          );
+          if (invitedUser) {
+            await updateInvitedUser(invitedUser._id, updateObject);
+          }
+        } else {
+          updatedUserObject = await updateInvitedUser(
+            req.query.id,
+            updateObject,
+          );
+        }
+
+        if (!updatedUserObject) {
           return res.status(404).json({
             success: false,
             message: "Cannot update user because user does not exist",
@@ -140,7 +175,7 @@ export default async function handler(req, res) {
         return res.status(200).json({
           success: true,
           message: "Sucessfully updated user",
-          data: updatedUserObject || updatedInvitedUserObject,
+          data: updatedUserObject,
         });
       }
     } catch (e) {

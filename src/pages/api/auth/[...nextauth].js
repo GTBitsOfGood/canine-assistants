@@ -19,7 +19,10 @@ import {
   getUsers,
 } from "../../../../server/db/actions/User";
 import InvitedUser from "../../../../server/db/models/InvitedUser";
-import { getInvitedUserByEmail } from "../../../../server/db/actions/InvitedUser";
+import {
+  getInvitedUserByEmail,
+  updateInvitedUser,
+} from "../../../../server/db/actions/InvitedUser";
 
 const client = new MongoClient(DB_CONNECTION_STRING);
 
@@ -109,11 +112,13 @@ export const authOptions = {
         await User.deleteOne({ email: message.user.email });
       }
 
-      await updateUser(message.user.id, {
+      const updateObject = {
         role: invitedUser.role,
         acceptedInvite: true,
         isActive: true,
-      });
+      };
+      await updateUser(message.user.id, updateObject);
+      await updateInvitedUser(invitedUser._id, updateObject);
     },
   },
   callbacks: {
