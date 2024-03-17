@@ -5,7 +5,7 @@ export default async function handler(req, res) {
   if (req.method == "GET") {
     try {
       const users = await getUsers();
-      const invitedUsers = await getInvitedUsers();
+      const invitedUsers = await getInvitedUsers({ acceptedInvite: false });
 
       return res.status(200).json({
         success: true,

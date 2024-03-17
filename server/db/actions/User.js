@@ -36,6 +36,15 @@ export async function getUserById(id) {
   }
 }
 
+export async function getUserByEmail(email) {
+  try {
+    await dbConnect();
+    return User.findOne({ email: email });
+  } catch (e) {
+    throw new Error("Unable to get user at this time, please try again.");
+  }
+}
+
 /*
 @param {*} userId ObjectId of log to update
 @param {*} userData Object with log updates

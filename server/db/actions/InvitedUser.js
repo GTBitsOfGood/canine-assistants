@@ -37,6 +37,15 @@ export async function getInvitedUserById(id) {
   }
 }
 
+export async function getInvitedUserByEmail(email) {
+  try {
+    await dbConnect();
+    return InvitedUser.findOne({ email: email });
+  } catch (e) {
+    throw new Error("Unable to get user at this time, please try again.");
+  }
+}
+
 /*
 @param {*} userId ObjectId of log to update
 @param {*} userData Object with log updates
