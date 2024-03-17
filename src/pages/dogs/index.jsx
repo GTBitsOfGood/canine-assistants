@@ -63,7 +63,7 @@ export default function DogsPage() {
       .then((res) => res.json())
       .then((data) => {
         setData(data);
-        setDogs(data ? (session.user.role === "Manager" ? sortResolution(data).data : data.data) : [])
+        setDogs(data.data);
         setLoading(false);
         if (session.user.role === "Manager" || session.user.role === "Admin") {
           setLimitedAssociation(false);
