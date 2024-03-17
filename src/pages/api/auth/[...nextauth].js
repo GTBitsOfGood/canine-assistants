@@ -102,7 +102,7 @@ export const authOptions = {
   pages: {
     signIn: "/login",
     // newUser: "/signup",
-    // error: "/login",
+    error: "/login",
   },
   events: {
     createUser: async (message) => {
