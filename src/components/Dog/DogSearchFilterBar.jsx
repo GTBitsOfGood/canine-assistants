@@ -5,6 +5,9 @@ import { useRouter } from "next/router";
 
 export default function DogSearchFilterBar({ filters, setFilters, setSearch, simplified = false }) {
   const router = useRouter();
+  if (simplified === null) {
+    simplified = true;
+  }
 
   return (
     <div className="flex items-center gap-4">
