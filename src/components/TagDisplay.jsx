@@ -15,7 +15,7 @@ export default function TagDisplay({ tags, removeTag }) {
         tempTagCount += 1;
       }
     })
-    setTagCount(tempTagCount - 1);
+    setTagCount(tempTagCount);
   });
 
   return (
@@ -89,7 +89,7 @@ export default function TagDisplay({ tags, removeTag }) {
             : <></>
           );
         })}
-        {tagCount > 4 && (
+        {tagCount > 3 && (
           <>
           <Chip
           key={tags[2].label}
@@ -202,7 +202,7 @@ export default function TagDisplay({ tags, removeTag }) {
               className="font-bold"
               onClick={() => setShowMore(true)}
             >
-              +{tagCount}
+              +{tagCount-3}
             </button>
         }
         
@@ -250,7 +250,7 @@ export default function TagDisplay({ tags, removeTag }) {
         })}
     </div>
     <div>
-        {tagCount <= 0 ?
+        {tagCount <= 1 ?
         tags.map((tag) => {
           return (
             tag.group == "tag" ?
@@ -348,7 +348,7 @@ export default function TagDisplay({ tags, removeTag }) {
               className="font-bold"
               onClick={() => setShowMore(true)}
             >
-              +{tagCount}
+              +{tagCount-1}
             </button>
         }
       </div>}
