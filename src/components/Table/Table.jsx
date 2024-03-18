@@ -138,7 +138,7 @@ export default function Table({
   })
 
   return (
-    <div className="shadow-xl rounded-lg text-md w-full text-left relative">
+    <div className="shadow-xl rounded-lg text-md w-full text-left relative w-screen overflow-x-scroll">
       <table className="divide-y divide-gray-300 text-md w-full text-left relative">
         <thead className="bg-foreground" ref={headerRef}>
           <TableHeader>

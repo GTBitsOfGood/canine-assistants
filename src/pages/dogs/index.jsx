@@ -90,7 +90,7 @@ export default function DogsPage() {
 
   return (
     <div className={`pt-4 container mx-auto`}>
-      <div className="pt-5 text-gray-800 order-b border-gray-300 flex-grow">
+      <div className="sm:pt-5 text-gray-800 order-b border-gray-300 flex-grow">
         <div className="flex">
           {<LoadingAnimation animated={false} loadText={false} />}
           <div className="flex-grow flex-col space-y-6 mb-8">
