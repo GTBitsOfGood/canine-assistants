@@ -48,9 +48,9 @@ export default function Navbar() {
   useEffect(() => setCurrentPage(router.pathname), [router.pathname]);
 
   return (
-    <div className="flex h-20 bg-foreground items-stretch justify-between gap-4">
+    <div className="flex h-20 bg-foreground items-stretch justify-between gap-4 w-screen">
       <div className="flex gap-4 items-center">
-        <div className="pl-10">
+        <div className="pl-10 invisible sm:visible">
           <Image
             src={CALogo}
             alt="Canine Assistants logo: cartoon dog on rightside of cartoon human"
@@ -69,7 +69,7 @@ export default function Navbar() {
           }
           onClick={() => setCurrentPage(router.pathname)}
         >
-          <div className="text-center text-primary-text text-lg font-semibold px-3">
+          <div className="text-center text-primary-text text-md sm:text-lg font-semibold px-3">
             Dogs
           </div>
         </Link>
@@ -88,7 +88,7 @@ export default function Navbar() {
             }
             onClick={() => setCurrentPage(router.pathname)}
           >
-            <div className="text-center text-primary-text text-lg font-semibold px-3">
+            <div className="text-center text-primary-text text-md sm:text-lg font-semibold px-3 w-max">
               User Management
             </div>
           </Link>

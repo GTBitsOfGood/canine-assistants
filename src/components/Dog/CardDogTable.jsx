@@ -41,7 +41,7 @@ function DogCard({ className, dog, onClick }) {
       </div>
       <div className="pl-8 pr-4 py-4 flex-1 flex justify-between">
         <div className="flex flex-col">
-          <div className="font-bold text-3xl pb-4">{dog.name}</div>
+          <div className="font-bold text-[30px] pb-4">{dog.name}</div>
           {[
             ["Breed", dog.breed],
             ["Age", `${dateUtils.getAge(new Date(dog.dateOfBirth))} years`],
