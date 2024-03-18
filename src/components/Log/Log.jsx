@@ -133,6 +133,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
             <button
               className="font-bold"
               onClick={() => setShowMore(!showMore)}
+              type="button"
             >
               {showMore ? "Show Less" : "Show More"}
             </button>
