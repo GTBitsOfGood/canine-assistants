@@ -54,7 +54,7 @@ export default function TabContainer({
       className="mt-8 mb-8 shadow-xl rounded-lg text-md w-full text-left relative overflow-hidden bg-foreground p-8"
     >
       {isEdit ? 
-      <TabSection defaultTab={"information"} isEdit={isEdit}>
+      <TabSection defaultTab={"information"} isEdit={isEdit} setOpenTab={setOpenTab}>
         <div label="information">
           <div className="w-full grid sm:grid-cols-3 grid-cols-1 gap-16">
             {Object.keys(dogInformationSchema).map((category) => (
@@ -78,9 +78,10 @@ export default function TabContainer({
             </div>
           </div>
         </TabSection> :
+
       <TabSection defaultTab={ showLogTab ? "logs" : (showFormTab ? "forms" : "information") } setOpenTab={setOpenTab}>
         {showInfoTab ? <div label="information">
-          <div className="w-full grid sm:grid-cols-3 grid-cols-1 gap-16">
+          <div className="w-full grid sm:grid-cols-3 grid-cols-1 sm:gap-16 gap-8">
             {Object.keys(dogInformationSchema).map((category) => (
               <div className="col" key={category}>
                 <div className="flex-col space-y-4 text-lg">
