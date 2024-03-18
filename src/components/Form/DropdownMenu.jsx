@@ -118,7 +118,7 @@ export default function DropdownMenu({
             : " rounded"
         } border -mb-[1px] ${
           props?.error ? "border-error-red" : "border-primary-gray"
-        }  items-center gap-2 flex w-48 justify-between`}
+        }  items-center gap-2 flex w-min sm:w-48 justify-between`} // Make dropdowns w-min in mobile
         onClick={() => {
           if (extended) {
             closeMenu();

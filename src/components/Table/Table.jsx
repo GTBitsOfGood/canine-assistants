@@ -42,7 +42,7 @@ function TableColumn({ icon, subLabel, col, style }) {
 
 function TableFooter({ elementsOnPage, rows, paginationFunctions }) {
   return (
-    <div className="flex bg-white justify-between items-center px-6 py-4">
+    <div className="flex bg-white justify-between items-center px-6 py-4 w-[90vw]">
       <div className="text-sm font-medium">
         Showing {elementsOnPage} of {rows?.length ?? 0} Results
       </div>
@@ -138,7 +138,7 @@ export default function Table({
   })
 
   return (
-    <div className="shadow-xl rounded-lg text-md w-full text-left relative w-screen overflow-x-scroll">
+    <div className="shadow-xl rounded-xl sm:rounded-lg text-md text-left relative w-[90vw] overflow-x-auto ml-[5vw] sm:ml-0"> {/** Centering table by setting width to 90vw and margin to 5vw */}
       <table className="divide-y divide-gray-300 text-md w-full text-left relative">
         <thead className="bg-foreground" ref={headerRef}>
           <TableHeader>
