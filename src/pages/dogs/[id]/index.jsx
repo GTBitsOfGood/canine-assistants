@@ -451,10 +451,12 @@ export default function IndividualDogPage() {
                           <div className="">
                             Partner: {dog.partner.name}
                           </div>
-
+                          {dog.placementCamp ? (
                           <div>
                             Placement Camp: {new Date(dog.placementCamp["startDate"]).toLocaleDateString()} - {new Date(dog.placementCamp["endDate"]).toLocaleDateString()}
                           </div>
+                          ):
+                          <div>Placement Camp: N/A</div>}
                           </>
                           ): (
                             <>
@@ -482,10 +484,11 @@ export default function IndividualDogPage() {
                           <div className="">
                             Partner: {dog.partner.name}, {dog.partner.age}, {dog.partner.disability}
                           </div>
-
+                          {dog.placementCamp ? (
                           <div>
                             Placement Camp: {new Date(dog.placementCamp["startDate"]).toLocaleDateString()} - {new Date(dog.placementCamp["endDate"]).toLocaleDateString()}
-                          </div>
+                          </div>)
+                          :<div>Placement Camp: N/A</div>}
                           </>
                           ): (
                             <>
