@@ -164,7 +164,7 @@ export default function TagDisplay({ tags, removeTag }) {
                 }
               /></>
         )}
-        {showMore ? 
+        {tagCount > 3 && showMore &&
           tags.map((tag) => {
             return (
               tag.group == "tag" && tags.indexOf(tag) > 4 ?
@@ -197,14 +197,15 @@ export default function TagDisplay({ tags, removeTag }) {
                 
               </>
             );
-          }):
+          })}
+          {tagCount > 3 && !showMore && (
           <button
               className="font-bold"
               onClick={() => setShowMore(true)}
             >
               +{tagCount-3}
             </button>
-        }
+        )}
         
       </div>
     </div>
