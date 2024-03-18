@@ -448,9 +448,11 @@ export default function IndividualDogPage() {
                           <FormField label={"Location"} keyLabel={"location"} />
                           {!isEdit ? (
                             <>
+                          {dog.partner ? (
                           <div className="">
                             Partner: {dog.partner.name}
-                          </div>
+                          </div>):
+                          <div>Partner: N/A</div>}
                           {dog.placementCamp ? (
                           <div>
                             Placement Camp: {new Date(dog.placementCamp["startDate"]).toLocaleDateString()} - {new Date(dog.placementCamp["endDate"]).toLocaleDateString()}
@@ -481,9 +483,11 @@ export default function IndividualDogPage() {
                         
                           {!isEdit ? (
                             <>
+                          {dog.partner ? (
                           <div className="">
                             Partner: {dog.partner.name}, {dog.partner.age}, {dog.partner.disability}
-                          </div>
+                          </div>)
+                          : <div>Partner: N/A</div>}
                           {dog.placementCamp ? (
                           <div>
                             Placement Camp: {new Date(dog.placementCamp["startDate"]).toLocaleDateString()} - {new Date(dog.placementCamp["endDate"]).toLocaleDateString()}
