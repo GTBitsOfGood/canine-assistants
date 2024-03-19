@@ -10,7 +10,7 @@ export default function DogSearchFilterBar({ filters, setFilters, setSearch, sim
   }
 
   return (
-    <div className="flex justify-center items-center gap-4 w-screen sm:w-full flex-wrap sm:flex-nowrap px-[15px]">
+    <div className="flex justify-center items-center gap-2 w-screen sm:w-full flex-wrap sm:flex-nowrap px-[15px]">
       <div className="relative grow justify-start items-center hidden sm:flex">
         <div className="absolute inset-y-0 left-0 flex items-center pl-3">
           <MagnifyingGlassIcon className="w-4 h-4" />
@@ -49,8 +49,8 @@ export default function DogSearchFilterBar({ filters, setFilters, setSearch, sim
           </div>
         </button>
       </div>}
-      <div className="flex flex-row items-center gap-4">
-        <div className="text-neutral-700 text-xs sm:text-sm font-medium">Filter by</div>
+      <div className="flex flex-row items-center gap-2 sm:gap-4">
+        <div className="text-neutral-700 text-xs sm:tet-sm font-medium">Filter by</div>
 
         <DropdownMenu
           selectedOptions={filters.location}

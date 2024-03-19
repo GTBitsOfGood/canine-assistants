@@ -127,7 +127,7 @@ export default function DropdownMenu({
           }
         }}
       >
-        <div className="text-primary-text text-sm font-medium">
+        <div className="text-primary-text text-xs sm:text-sm font-medium">
           {label}
           {props?.requiredField ? (
             <span className="text-error-red">*</span>
