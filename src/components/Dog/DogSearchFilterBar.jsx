@@ -24,7 +24,7 @@ export default function DogSearchFilterBar({ filters, setFilters, setSearch, sim
         />
       </div>
 
-      <div className="relative w-[150px] grow justify-start items-center sm:hidden flex">
+      <div className={`relative w-[150px] grow justify-start items-center sm:hidden flex ${simplified ? 'w-full' : ''}`}>
         <div className="absolute inset-y-0 left-0 flex items-center pl-3">
           <MagnifyingGlassIcon className="w-4 h-4" />
         </div>

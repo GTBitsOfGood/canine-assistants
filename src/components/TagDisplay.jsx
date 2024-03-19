@@ -8,7 +8,7 @@ export default function TagDisplay({ tags, removeTag }) {
       
       <div className="flex sm:w-full flex-row flex-center items-center flex-wrap gap-1">
       {removeTag ? (
-        <div className="text-xs font-medium mx-1">
+        <div className={`text-xs font-medium mx-1 sm:flex ${tags.length === 0 ? "hidden" : "flex"}`}>
           Filters applied: {tags.length === 0 ? "None" : ""}
         </div>
       ) : (
