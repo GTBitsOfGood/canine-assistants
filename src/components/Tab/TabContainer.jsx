@@ -51,7 +51,7 @@ export default function TabContainer({
   return (
     <div
       ref={logRef}
-      className="mt-8 mb-8 shadow-xl rounded-lg text-md w-full text-left relative overflow-hidden bg-foreground p-8"
+      className="mt-8 mb-8 shadow-xl rounded-lg text-md w-full text-left relative bg-foreground p-8"
     >
       {isEdit ? 
       <TabSection defaultTab={"information"} isEdit={isEdit} setOpenTab={setOpenTab}>
@@ -278,7 +278,7 @@ export default function TabContainer({
         </div>
       </button></div>)}
       {openTab === "Logs" && !isEdit && !showLogModal && (
-        <div className="w-[85%] sm:hidden fixed bottom-20 start-12 justify-center">
+        <div className="sm:hidden fixed bottom-5 start-8 end-8 justify-center">
       <button
         type="button"
         className="px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade w-full z-10 justify-center items-center flex"
@@ -291,10 +291,10 @@ export default function TabContainer({
         </div>
       </button></div>)}
       {openTab === "Information" && !isEdit && (
-        <div className="w-[85%] sm:hidden fixed bottom-20 start-12 justify-center">
+        <div className="sm:hidden fixed bottom-5 start-8 end-8 justify-center">
       <button
         type="button"
-        className=" px-12 py-2.5 bg-ca-pink rounded border border-ca-pink-shade w-full z-10 justify-center items-center flex"
+        className="px-12 py-2.5 bg-ca-pink rounded border border-ca-pink-shade w-full z-10 justify-center items-center flex"
         onClick={() => {
           setIsEdit(true);
         }}
