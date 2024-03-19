@@ -16,7 +16,7 @@ export default function TablePaginator({ paginationFunctions }) {
 
   return (
     <ul className="justify-center inline-flex text-md ml-0 md:ml-12 ">
-      <li className="invisible md:visible" style={{ paddingLeft: "0.5rem" }}>
+      <li style={{ paddingLeft: "0.5rem" }}>
         <div
           className={`p-2 flex justify-center items-center w-[0.5rem] h-[0.5rem]`}
         >
@@ -32,7 +32,7 @@ export default function TablePaginator({ paginationFunctions }) {
         </div>
       </li>
 
-      <li className="invisible md:visible" style={{ paddingLeft: "0.5rem" }}>
+      <li style={{ paddingLeft: "0.5rem" }}>
         <div
           className={`p-2 flex justify-center items-center w-[0.5rem] h-[0.5rem]`}
         >
@@ -59,7 +59,7 @@ export default function TablePaginator({ paginationFunctions }) {
         </li>
       }
 
-      <li className="invisible md:visible" style={{ paddingLeft: "0.5rem" }}>
+      <li style={{ paddingLeft: "0.5rem" }}>
         <div
           className={`p-2 flex justify-center items-center w-[0.5rem] h-[0.5rem]`}
         >
@@ -74,7 +74,7 @@ export default function TablePaginator({ paginationFunctions }) {
         </div>
       </li>
 
-      <li className="invisible md:visible" style={{ paddingLeft: "0.5rem" }}>
+      <li style={{ paddingLeft: "0.5rem" }}>
         <div
           className={`p-2 flex justify-center items-center w-[0.5rem] h-[0.5rem]`}
         >

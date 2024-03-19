@@ -234,7 +234,7 @@ export default function UserTable() {
       ) : null}
 
       <LoadingAnimation animated={false} loadText={false} />
-      <div className="flex-grow flex-col space-y-6 mb-8">
+      <div className="flex-grow flex-col space-y-6">
       <div className="flex justify-between items-center">
     <div className="flex-grow mr-10 md:mr-20 lg:mr-40" style={{ flexBasis: '75%' }}> {/* Adjust the margin-right (mr-4) as needed */}
         <UserSearchBar setSearch={setSearchFilter} />

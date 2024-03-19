@@ -93,7 +93,7 @@ export default function DogsPage() {
       <div className="sm:pt-5 text-gray-800 order-b border-gray-300 flex-grow">
         <div className="flex">
           {<LoadingAnimation animated={false} loadText={false} />}
-          <div className="flex-grow flex-col space-y-6 mb-8">
+          <div className="flex-grow flex-col space-y-6">
             <DogSearchFilterBar
               filters={filters}
               setFilters={setFilters}

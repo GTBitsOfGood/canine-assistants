@@ -4,7 +4,9 @@ import stringUtils from "@/utils/stringutils";
 
 export default function TagDisplay({ tags, removeTag }) {
   return (
-    <div className="flex items-center gap-1 flex-wrap w-screen sm:w-full pl-2">
+    <div className="flex gap-1 flex-row flex-wrap w-screen sm:w-full pl-2">
+      
+      <div className="flex sm:w-full flex-row flex-center items-center flex-wrap gap-1">
       {removeTag ? (
         <div className="text-xs font-medium mx-1">
           Filters applied: {tags.length === 0 ? "None" : ""}
@@ -12,7 +14,6 @@ export default function TagDisplay({ tags, removeTag }) {
       ) : (
         <></>
       )}
-      <div className="flex flex-row flex-wrap gap-1">
         {tags.map((tag) => {
           return (
             <Chip

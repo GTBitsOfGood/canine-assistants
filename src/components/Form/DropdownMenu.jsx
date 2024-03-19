@@ -139,7 +139,7 @@ export default function DropdownMenu({
       </button>
 
       <div
-        className={(extended ? "" : "hidden") + " absolute w-full z-50"}
+        className={(extended ? "" : "hidden") + " absolute min-width-min sm:w-full z-50"}
         aria-labelledby="dropdownMenu"
       >
         {children.map((option, index) => {
@@ -212,7 +212,7 @@ export default function DropdownMenu({
               <button
                 type="button"
                 onClick={() => handleSubmit()}
-                className="bg-secondary-gray border border-primary-gray mx-1.5 rounded w-full pt-2 pb-2 font-medium"
+                className="bg-secondary-gray border border-primary-gray mx-1.5 rounded w-full p-2 sm:pl-0 sm:pr-0 font-medium"
             >
               {props?.filterText ? props.filterText : "Apply Filters"}
             </button>
