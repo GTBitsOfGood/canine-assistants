@@ -110,7 +110,7 @@ export default function DogsPage() {
                 dogs={dogs}
             />}
 
-            {!loading &&  !limitedAssociation && <DogTable
+            {!loading && !limitedAssociation && <DogTable
                 loading={loading}
                 dogs={dogs}
             />}

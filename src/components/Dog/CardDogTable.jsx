@@ -38,7 +38,7 @@ function DogCard({ className, dog, onClick }) {
 
   return (
     <button
-      className={"bg-white shadow-md p-4 flex rounded-lg text-start sm:w-full w-11/12 sm:h-full h-[191px]" + (className || "")}
+      className={"z-10 bg-white shadow-md p-4 flex rounded-lg text-start sm:w-full w-11/12 sm:h-full h-[191px]" + (className || "")}
       onClick={onClick || (() => {})}
     >
       <div className="hidden sm:flex w-[240px] h-[240px] items-center justify-center rounded-lg bg-primary-gray overflow-hidden">
