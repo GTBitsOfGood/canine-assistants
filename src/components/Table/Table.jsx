@@ -25,7 +25,7 @@ function TableColumn({ icon, subLabel, col, style }) {
   return (
     <th
       id={col.id}
-      className={`${style} text-primary-text font-semibold py-3 px-5 gap-2 sm:w-[90vw]`}
+      className={`${style} text-primary-text font-semibold py-1.5 sm:py-3 px-5 gap-2 sm:w-[90vw]`}
     >
       <div className="items-center inline-flex gap-3 justify-start p-1 w-max">
         <div className="h-4 w-4 relative">{icon}</div>
@@ -42,7 +42,7 @@ function TableColumn({ icon, subLabel, col, style }) {
 
 function TableFooter({ elementsOnPage, rows, paginationFunctions }) {
   return (
-    <div className="flex bg-white justify-between items-center px-6 py-4 w-[90vw] sm:w-full mt-5 sm:mt-0 rounded-lg sm:rounded-none border-gray-300 border-[1px] sm:border-0">
+    <div className="flex bg-white justify-between items-center px-6 py-4 w-[90vw] sm:w-full mt-2 sm:mt-0 rounded-lg sm:rounded-none border-gray-300 border-[1px] sm:border-0">
       <div className="text-sm font-medium flex">
         <div className="sm:flex sm:mr-1 hidden">Showing</div> {elementsOnPage} of {rows?.length ?? 0} Results
       </div>
@@ -138,7 +138,7 @@ export default function Table({
   })
 
   return (
-    <div className="sm:rounded-lg text-md text-left relative sm:w-full w-[95vw] ml-[5vw] sm:ml-0 sm:w-"> {/** Centering table by setting width to 90vw and margin to 5vw */}
+    <div className="sm:rounded-lg text-md text-left relative sm:w-full w-[95vw] ml-[5vw] sm:ml-0"> {/** Centering table by setting width to 90vw and margin to 5vw */}
       <div className="overflow-x-auto w-[95vw] sm:w-full overflow-y-hidden shadow-xl rounded-tl-lg rounded-bl-lg border-gray-300 border-[1px] sm:border-0 sm:rounded-none">
         <table className="divide-y divide-gray-300 text-md text-left relative">
           <thead className="bg-foreground" ref={headerRef}>
