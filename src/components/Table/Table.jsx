@@ -42,7 +42,7 @@ function TableColumn({ icon, subLabel, col, style }) {
 
 function TableFooter({ elementsOnPage, rows, paginationFunctions }) {
   return (
-    <div className="flex bg-white justify-between items-center px-6 py-4 w-[90vw] mt-5 sm:mt-0 rounded-lg sm:rounded-none border-gray-300 border-[1px] sm:border-0">
+    <div className="flex bg-white justify-between items-center px-6 py-4 w-[90vw] sm:w-full mt-5 sm:mt-0 rounded-lg sm:rounded-none border-gray-300 border-[1px] sm:border-0">
       <div className="text-sm font-medium flex">
         <div className="sm:flex sm:mr-1 hidden">Showing</div> {elementsOnPage} of {rows?.length ?? 0} Results
       </div>
@@ -138,8 +138,8 @@ export default function Table({
   })
 
   return (
-    <div className="shadow-xl rounded-lg sm:rounded-lg text-md text-left relative sm:w-[90vw] w-[95vw] ml-[5vw] sm:ml-0 sm:w-full"> {/** Centering table by setting width to 90vw and margin to 5vw */}
-      <div className="overflow-x-auto w-[95vw] sm:w-[90vw] overflow-y-hidden shadow-xl rounded-lg border-gray-300 border-[1px] sm:border-0 sm:rounded-none">
+    <div className="sm:rounded-lg text-md text-left relative sm:w-full w-[95vw] ml-[5vw] sm:ml-0 sm:w-"> {/** Centering table by setting width to 90vw and margin to 5vw */}
+      <div className="overflow-x-auto w-[95vw] sm:w-full overflow-y-hidden shadow-xl rounded-tl-lg rounded-bl-lg border-gray-300 border-[1px] sm:border-0 sm:rounded-none">
         <table className="divide-y divide-gray-300 text-md text-left relative">
           <thead className="bg-foreground" ref={headerRef}>
             <TableHeader>

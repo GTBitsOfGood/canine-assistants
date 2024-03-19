@@ -10,7 +10,7 @@ export default function DogSearchFilterBar({ filters, setFilters, setSearch, sim
   }
 
   return (
-    <div className="flex items-center gap-4 w-screen sm:w-[90vw] flex-wrap px-[10px]">
+    <div className="flex justify-center items-center gap-4 w-screen sm:w-full flex-wrap sm:flex-nowrap px-[15px]">
       <div className="relative grow justify-start items-center hidden sm:flex">
         <div className="absolute inset-y-0 left-0 flex items-center pl-3">
           <MagnifyingGlassIcon className="w-4 h-4" />
