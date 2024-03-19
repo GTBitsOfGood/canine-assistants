@@ -114,6 +114,14 @@ export default function DogTable({ loading, dogs }) {
     },
   ];
 
+  if (dogs.length == 0) {
+    return (
+      <div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '20px', marginTop: '40px' }}>
+        No dogs were found
+      </div>
+    );
+  }
+
   return (
     <Table
       loading={loading}

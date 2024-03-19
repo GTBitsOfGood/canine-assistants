@@ -12,6 +12,15 @@ const nextConfig = {
     ],
     domains: ["f004.backblazeb2.com"],
   },
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/dogs",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

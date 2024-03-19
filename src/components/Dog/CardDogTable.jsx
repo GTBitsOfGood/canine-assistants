@@ -12,14 +12,13 @@ import dogplaceholdericon from "../../../public/dogplaceholdericon.svg";
  */
 export default function CardDogTable({ loading, dogs }) {
   const router = useRouter();
-  console.log(dogs);
 
   return dogs.length > 0 ? (
     <div className="sm:grid flex sm:grid-cols-2 gap-4 sm:relative flex-col items-center">
       {dogs.map((dog) => <DogCard key={dog._id} dog={dog} onClick={() => router.push(`/dogs/${dog._id}`)} />)}
     </div>
   ) : (
-    <div>
+    <div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '20px', marginTop: '40px' }}> {/* Adjust margin as needed */}
       No dogs were found
     </div>
   );
