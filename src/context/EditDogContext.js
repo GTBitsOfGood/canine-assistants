@@ -85,7 +85,7 @@ export function EditDogProvider({ children }) {
     })),
   };
 
-  const dateFields = ["dateOfBirth", "grooming"];
+  const dateFields = ["dateOfBirth", "grooming", "placementCamp"];
 
   const contextValues = {
     isEdit,
