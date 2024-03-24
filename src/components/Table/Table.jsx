@@ -138,9 +138,9 @@ export default function Table({
   })
 
   return (
-    <div className="sm:rounded-lg text-md text-left relative sm:w-full w-[95vw] ml-[5vw] sm:ml-0"> {/** Centering table by setting width to 90vw and margin to 5vw */}
+    <div className="sm:rounded-lg text-base text-left relative sm:w-full w-[95vw] ml-[5vw] sm:ml-0"> {/** Centering table by setting width to 90vw and margin to 5vw */}
       <div className="overflow-x-auto w-[95vw] sm:w-full overflow-y-hidden shadow-xl rounded-tl-lg rounded-bl-lg border-gray-300 border-[1px] sm:border-0 sm:rounded-none">
-        <table className="divide-y divide-gray-300 text-md text-left relative">
+        <table className="divide-y divide-gray-300 text-base text-left relative">
           <thead className="bg-foreground" ref={headerRef}>
             <TableHeader>
               {cols.map((col) => (
