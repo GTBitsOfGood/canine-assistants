@@ -96,7 +96,7 @@ export default function Form({ mode }) {
   const name = dog.data.name;
 
   return (
-    <div>
+    <div className="bg-foreground rounded-lg modal-shadow border border-primary-gray py-12 px-24 my-8">
       {showCancelModal
         ? ConfirmCancelModal(
             "Discard all changes?",
@@ -106,7 +106,7 @@ export default function Form({ mode }) {
             showCancelModal
           )
         : ``}
-      <div className="py-6 flex items-center">
+      <div className="flex items-center mb-6">
         <ChevronLeftIcon className="w-4 mr-2" />
         <Link href={`/dogs/${router.query.id}?showFormTab=true`} className="text-lg text-secondary-text">
           Return to {name}
@@ -114,13 +114,13 @@ export default function Form({ mode }) {
       </div>
       {mode != formActions.NEW ? (
         <div>
-          <div className="flex gap-4 pb-2 text-base font-normal">
+          <div className="flex gap-4 text-base font-normal mb-6">
             <span>Created by: {formData.user.name}</span>
             <span>Last Updated: {dateutils.displayDateAndTime(formData.updatedAt)}</span>
           </div>
         </div>
       ) : null}
-      <h1 className="mb-6">{title}</h1>
+      <h1 className="text-primary-text mb-6">{title}</h1>
       <div className="flex flex-col w-full">
         <form
           onSubmit={handleSubmit((data) => {
