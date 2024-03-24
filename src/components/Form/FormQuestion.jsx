@@ -3,11 +3,13 @@ import { formActions } from "@/utils/formUtils";
 
 export default function FormQuestion(formObj, index, register, errors, mode) {
   return (
-    <div className="flex flex-col mb-5" key={formObj.question}>
+    <div
+      className="flex flex-col mb-7 bg-secondary-gray py-4 px-12 rounded-lg border border-primary-gray modal-shadow"
+      key={formObj.question}>
       {formObj.question == "(place for notes)" ? (
         ``
       ) : (
-        <p className="text-lg font-normal mb-2 pr-4 text-primary-text">
+        <p className="text-xl font-normal mb-2.5 pr-4 text-primary-text">
           {formObj.question}
         </p>
       )}
@@ -15,7 +17,7 @@ export default function FormQuestion(formObj, index, register, errors, mode) {
         <div className="mb-4">
           <textarea
             disabled={mode == formActions.VIEW}
-            className={`flex min-w-96 w-3/4 h-60 pl-2 rounded text-primary-text text-lg font-normal ${
+            className={`flex min-w-96 w-full lg:w-3/4 textbox-base text-area ${
               errors[index]
                 ? `border-2 border-error-red`
                 : `border border-primary-gray`
@@ -56,8 +58,8 @@ export default function FormQuestion(formObj, index, register, errors, mode) {
             })}
           </div>
           {errors[index] && (
-            <div className="flex flex-row items-center text-error-red">
-              <ExclamationCircleIcon className="mr-2 h-4" /> Please select an
+            <div className="flex flex-row items-center text-primary-text text-lg font-normal mt-1">
+              <ExclamationCircleIcon className="mr-2 h-5" /> Please select an
               answer choice
             </div>
           )}

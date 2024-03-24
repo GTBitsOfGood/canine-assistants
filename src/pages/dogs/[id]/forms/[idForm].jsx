@@ -3,7 +3,8 @@ import { formActions } from "@/utils/formUtils";
 
 export default function FormPage() {
   return (
-    <div className="mx-32">
+    // TODO don't forget to update div styles when mobile
+    <div className="mx-12">
       <Form mode={formActions.VIEW} />
     </div>
   )
