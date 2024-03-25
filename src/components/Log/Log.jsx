@@ -174,7 +174,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
 
         <div className="flex space-between">
           <div className="flex">
-            {userRole === "Manager" && !log.resolved && <UnresolvedDot/>} {/*using session workaround*/}
+            {user.role === "Manager" && !log.resolved ? <UnresolvedDot/> : <div className="ml-4"></div>}
             <Chip
               key={"ResolvedChip"}
               label={log.resolved ? "Resolved" : "Unresolved"}
