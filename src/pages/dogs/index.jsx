@@ -1,6 +1,5 @@
-//import DogTable from "@/components/Dog/DogTable";
-//import CardDogTable from "@/components/Dog/CardDogTable";
 import React, { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import DogSearchFilterBar from "@/components/Dog/DogSearchFilterBar";
 import { ChipTypeStyles } from "@/components/Chip";
 import TagDisplay from "@/components/TagDisplay";
@@ -28,7 +27,16 @@ export default function DogsPage() {
 
   const [limitedAssociation, setLimitedAssociation] = useState(null);
 
+  const { data: session } = useSession();
+  const [ userRole, setUserRole ] = useState("User");
+
   useEffect(() => {
+    if (session) {
+      setUserRole(session.user.role);
+    } else {
+      return;
+    }
+
     let search = {};
     if (filters) {
       Object.keys(filters)
@@ -55,10 +63,17 @@ export default function DogsPage() {
         setData([]);
       })
       .then((res) => res.json())
-      .then((data) => { setData(data); setLoading(false); } );
-  }, [searchFilter, filters]);
+      .then((data) => {
+        setData(data);
+        setLoading(false);
+      });
+  }, [ searchFilter, filters, session ]);
 
-  const dogs = data ? data.data : [];
+  const dogs = data && userRole ? (
+    userRole === "Manager" ?
+      data.data.sort((a, b) => b.hasUnresolved - a.hasUnresolved) :
+      data.data
+  ) : []
 
   const tags = Object.keys(filters)
     .map((filterGroup) =>
@@ -99,6 +114,7 @@ export default function DogsPage() {
               setFilters={setFilters}
               setSearch={setSearchFilter}
               simplified={limitedAssociation}
+              userRole={userRole}
             />
 
             <TagDisplay tags={tags} removeTag={removeTag}  />
@@ -113,6 +129,7 @@ export default function DogsPage() {
             {!loading && !limitedAssociation && <DogTable
                 loading={loading}
                 dogs={dogs}
+                userRole={userRole}
             />}
           </div>
         </div>

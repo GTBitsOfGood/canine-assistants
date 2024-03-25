@@ -13,15 +13,16 @@ import dateUtils from "@/utils/dateutils";
 import stringUtils from "@/utils/stringutils";
 import { useRouter } from "next/router";
 import RecentTags from "../RecentTags"
+import { Tooltip } from "react-tooltip";
 
 
 /**
  * @returns { React.ReactElement } The DogTable component
  */
-export default function DogTable({ loading, dogs }) {
+export default function DogTable({ loading, dogs, userRole }) {
   const router = useRouter();
 
-    /**
+  /**
    * The specified columns for the DogTable
    */
   const dogTableColumns = [
@@ -29,8 +30,22 @@ export default function DogTable({ loading, dogs }) {
       id: "name",
       label: "Name",
       icon: <Bars3BottomLeftIcon />,
-      customRender: (row, name) => {
-        return <span>{name}</span>;
+      customRender: (rowData) => {
+        return <span className="flex flex-row">
+          {rowData.hasUnresolved > 0 && userRole === "Manager"
+            ? <div className="flex items-center">
+                <span data-tooltip-id={rowData._id + "R"} className="mr-2 text-red-600"> ● </span>
+                <Tooltip
+                  place = "bottom"
+                  content = {"Unresolved Log"}
+                  id={rowData._id + "R"}
+                  style={{ borderRadius: "1", color: "#121212", fontFamily: "Maven Pro", padding: "4px 7px", backgroundColor: "#FFF"}}
+                  border= "1px solid #D4D4D4"
+                />
+              </div>
+            : <div className="mx-2"> </div>}
+          {rowData.name}
+        </span>;
       },
     },
     { id: "breed", label: "Breed", icon: <FingerPrintIcon /> },

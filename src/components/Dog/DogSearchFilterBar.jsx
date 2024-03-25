@@ -3,7 +3,7 @@ import DropdownMenu, { DropdownMenuOption } from "../Form/DropdownMenu";
 import { consts } from "@/utils/consts";
 import { useRouter } from "next/router";
 
-export default function DogSearchFilterBar({ filters, setFilters, setSearch, simplified = false }) {
+export default function DogSearchFilterBar({ filters, setFilters, setSearch, simplified = false, userRole }) {
   const router = useRouter();
   if (simplified === null) {
     simplified = true;
@@ -24,6 +24,28 @@ export default function DogSearchFilterBar({ filters, setFilters, setSearch, sim
         />
       </div>
       <div className="text-neutral-700 text-sm font-medium">Filter by</div>
+
+      {userRole === "Manager" ?
+        <DropdownMenu
+          selectedOptions={filters.ResolutionStatus}
+          label="Resolve Status"
+          submitFilters={(newFilters) => {
+            if (newFilters !== undefined) {
+              setFilters({ ...filters, ResolutionStatus: newFilters});
+            }
+          }}
+        >
+          {consts.resolveArray.map((concern, index) => (
+            <DropdownMenuOption
+              key={index}
+              label={concern}
+              name={concern.replaceAll(" ", "").toLowerCase()}
+            />
+          ))}
+        </DropdownMenu>
+        :
+        <></>
+      }
 
       <DropdownMenu
         selectedOptions={filters.location}
