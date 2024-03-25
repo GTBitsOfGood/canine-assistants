@@ -5,7 +5,7 @@ import Log from "../../../server/db/models/Log";
 import Dog from "../../../server/db/models/Dog";
 import { createLog } from "../../../server/db/actions/Log";
 import { consts } from "@/utils/consts";
-import { createDog, updateHasUnresolved } from "../../../server/db/actions/Dog";
+import { createDog } from "../../../server/db/actions/Dog";
 import Form from "../../../server/db/models/Form";
 import { formMap } from "@/utils/formUtils";
 import { createForm } from "../../../server/db/actions/Form";
@@ -378,7 +378,7 @@ export default async function handler(req, res) {
       const id = await createUser(user);
       userIds.push(id.toString());
     }
-
+    console.log("HERE1");
     // create dogs
     const dogIds = [];
     const dogCount = 100;
@@ -450,14 +450,14 @@ export default async function handler(req, res) {
 
       dogIds.push(id.toString());
     }
-
+    console.log("HERE2");
     // create logs
     for (let i = 0; i < logs.length; i++) {
       logs[i].dog = dogIds[getRandomInt(0, dogIds.length - 1)];
       logs[i].author = userIds[getRandomInt(0, userIds.length - 1)];
       await createLog(logs[i]);
     }
-
+    console.log("HERE3");
     // create forms
     for (let i = 0; i < forms.length; i++) {
       forms[i].dog = dogIds[getRandomInt(0, dogIds.length - 1)];
@@ -476,6 +476,7 @@ export default async function handler(req, res) {
       }
       await createForm(forms[i]);
     }
+    console.log("HERE4");
 
     return res.send("Successfully seeded db");
   }
