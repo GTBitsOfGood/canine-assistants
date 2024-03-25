@@ -26,7 +26,7 @@ const formTitleMap = {
   MonthlyPlaced: "Monthly Check-In",
   MonthlyUnplaced: "Monthly Check-In (Unplaced)",
   VolunteerInteraction: "Volunteer Interaction",
-}
+};
 
 /**
  * Validates each array element in the responses array
@@ -47,7 +47,10 @@ const validateForm = (type, responses) => {
   for (let i = 0; i < responses.length; i++) {
     let choicesArray = formTemplate[i]["choices"];
     if (choicesArray.length) {
-      if (!choicesArray.includes(responses[i]["answer"])) {
+      if (
+        !choicesArray.includes(responses[i]["answer"]) &&
+        formTemplate[i]["required"]
+      ) {
         return {
           success: false,
           message: `Array element invalid at index ${i}. Expected one of [

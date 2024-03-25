@@ -15,7 +15,9 @@ export default function FormQuestion(formObj, index, register, errors, mode) {
         ``
       ) : (
         <p className="text-xl font-normal mb-2.5 pr-4 text-primary-text">
-          {formObj.questionNumber != 0 ? `${formObj.questionNumber}. ` : "" }{formObj.question}
+          {formObj.questionNumber != 0 ? `${formObj.questionNumber}. ` : ""}
+          {formObj.question}
+          {formObj.required && mode != formActions.VIEW ? <span className="text-error-red">*</span> : ""}
         </p>
       )}
       {formObj.choices.length == 0 ? (
@@ -33,13 +35,12 @@ export default function FormQuestion(formObj, index, register, errors, mode) {
               : "Additional notes go here..."
             }
             {...register(`${index}`, {
-              required: formObj.question !== "(place for notes)",
+              required: formObj.required,
             })}
           />
           {errors[index] && (
             <div className="flex flex-row items-center text-error-red">
-              <ExclamationCircleIcon className="mr-2 h-4" /> Please enter valid
-              text
+              <ExclamationCircleIcon className="mr-2 h-4" />Please respond to this question
             </div>
           )}
         </div>
@@ -52,7 +53,7 @@ export default function FormQuestion(formObj, index, register, errors, mode) {
                   <input
                     disabled={mode == formActions.VIEW}
                     type="radio"
-                    {...register(`${index}`, { required: true })}
+                    {...register(`${index}`, { required: formObj.required })}
                     value={choice}
                     checked={mode == formActions.VIEW ? choice == formObj.answer : undefined}
                     className={`mr-1 ${ errors[index] ?  "!outline-error-red !border-error-red !ring-0" : "" }`}
@@ -64,8 +65,7 @@ export default function FormQuestion(formObj, index, register, errors, mode) {
           </div>
           {errors[index] && (
             <div className="flex flex-row items-center text-primary-text text-lg font-normal mt-1">
-              <ExclamationCircleIcon className="mr-2 h-5" /> Please select an
-              answer choice
+              <ExclamationCircleIcon className="mr-2 h-5" />Please select an answer choice
             </div>
           )}
         </div>
