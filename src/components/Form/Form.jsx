@@ -101,16 +101,16 @@ export default function Form({ mode }) {
         ? ConfirmCancelModal(
             "Discard all changes?",
             "Select “Cancel” to continue editing. Select “Confirm” to delete all of your changes. This action cannot be undone.",
-            () => router.push("/dogs/" + router.query.id),
+            () => router.push("/dogs/" + router.query.id + "?showFormTab=true"),
             setShowCancelModal,
             showCancelModal
           )
         : ``}
       <div className="flex items-center mb-6">
         <ChevronLeftIcon className="w-4 mr-2" />
-        <Link href={`/dogs/${router.query.id}?showFormTab=true`} className="text-lg text-secondary-text">
+        <button className="text-lg text-secondary-text" onClick={() => setShowCancelModal(!showCancelModal)}>
           Return to {name}
-        </Link>
+        </button>
       </div>
       {mode != formActions.NEW ? (
         <div>
@@ -153,7 +153,7 @@ export default function Form({ mode }) {
           {mode == formActions.VIEW ? (
             ``
           ) : (
-            <div className="flex flex-row justify-end my-14">
+            <div className="flex flex-row justify-end mt-14 mb-6">
               <button
                 className="flex flex-row h-full w-32 px-4 py-2 mx-4 justify-center border rounded border-primary-gray bg-foreground text-primary-text text-base font-medium"
                 onClick={() => setShowCancelModal(!showCancelModal)}
