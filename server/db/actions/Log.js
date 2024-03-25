@@ -1,6 +1,7 @@
 import dbConnect from "../dbConnect";
 import Log from "../models/Log";
 import Dog from "../models/Dog";
+import { updateHasUnresolved } from "./Dog";
 
 export async function getLogs(filter = {}) {
   try {
@@ -30,6 +31,7 @@ export async function createLog(logData) {
   const log = new Log(logData);
   try {
     await log.save();
+    await updateHasUnresolved(logData.dog, 1);
   } catch (e) {
     throw new Error(e);
     //throw new Error("Unable to create log");
@@ -85,14 +87,26 @@ Updates a log
 @param {*} logData Object with log updates
 */
 export async function updateLog(logId, logData) {
+  let log;
   try {
     await dbConnect();
+    log = await Log.findById(logId);
   } catch (e) {
     throw new Error("Unable to update log, please try again");
   }
 
+  // Update hasUnresolved attribute on dog if resolved status changes
   try {
-    return await Log.findByIdAndUpdate({ _id: logId }, logData, {
+    if (logData.resolved !== undefined) {
+      if (logData.resolved && !log.resolved) {
+        // resolving so decrease unresolved
+        await updateHasUnresolved(log.dog, -1);
+      } else if (!logData.resolved && log.resolved) {
+        // unresolving so increase unresolved
+        await updateHasUnresolved(log.dog, 1);
+      }
+    }
+    return await Log.findByIdAndUpdate(logId, logData, {
       returnDocument: "after",
     });
   } catch (e) {
@@ -113,6 +127,11 @@ export async function deleteLog(logId) {
 
     if (!deletedLog) {
       throw new Error("Invalid log ID");
+    }
+
+    if (!deletedLog.resolved) {
+      // if unresolved, decrease unresolved count
+      await updateHasUnresolved(deletedLog.dog, -1);
     }
 
     const dog = deletedLog.dog;

@@ -69,10 +69,16 @@ export default function ResolveLogModal({ log, onClose, onSubmit }) {
       },
       body: JSON.stringify(formattedData),
     })
+      .then((res) => res.json())
       .then((res) => {
-        onSubmit(true, "add");
-        onClose();
-        setSaving(false);
+        if (res.success) {
+          onSubmit(true, "add");
+          onClose();
+          setSaving(false);
+        } else {
+          setSaving(false);
+          onSubmit(false);
+        }
       })
       .catch((err) => {
         setSaving(false);

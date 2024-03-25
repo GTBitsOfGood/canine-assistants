@@ -454,7 +454,6 @@ export default async function handler(req, res) {
     for (let i = 0; i < logs.length; i++) {
       logs[i].dog = dogIds[getRandomInt(0, dogIds.length - 1)];
       logs[i].author = userIds[getRandomInt(0, userIds.length - 1)];
-      await updateHasUnresolved(logs[i].dog, 1);
       await createLog(logs[i]);
     }
 

@@ -10,7 +10,16 @@ import { Toast } from "../Toast";
 import RecentTags from "../RecentTags";
 import { Chip } from "../Chip";
 import { useSession } from "next-auth/react";
+import UnresolvedDot from "./UnresolvedDot";
 
+/**
+ * Log component for dogs
+ * @param {*} log log object
+ * @param {*} user log object
+ * @param {*} onEdit function that is called when the log needs to be closed
+ * @param {*} onDelete function that is called when the user tries to save the log
+ * @returns the modal component
+ */
 export default function Log({ log, user, onEdit, onDelete }) {
   const [showMore, setShowMore] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -165,8 +174,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
 
         <div className="flex space-between">
           <div className="flex">
-          
-          <div className="mx-1 text-red-600 text-xl">{userRole === "Manager" && !log.resolved ? "●" : "⠀"}</div>    {/*using session workaround*/}
+            {userRole === "Manager" && !log.resolved && <UnresolvedDot/>} {/*using session workaround*/}
             <Chip
               key={"ResolvedChip"}
               label={log.resolved ? "Resolved" : "Unresolved"}

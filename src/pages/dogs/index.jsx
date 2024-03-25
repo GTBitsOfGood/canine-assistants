@@ -28,7 +28,7 @@ export default function DogsPage() {
   const [limitedAssociation, setLimitedAssociation] = useState(null);
 
   const { data: session } = useSession();
-  const [ userRole, setUserRole ] = useState("User");
+  const [ userRole, setUserRole ] = useState();
 
   useEffect(() => {
     if (session) {
@@ -73,7 +73,7 @@ export default function DogsPage() {
     userRole === "Manager" ?
       data.data.sort((a, b) => b.hasUnresolved - a.hasUnresolved) :
       data.data
-  ) : []
+  ) : [];
 
   const tags = Object.keys(filters)
     .map((filterGroup) =>

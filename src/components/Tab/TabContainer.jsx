@@ -53,7 +53,7 @@ export default function TabContainer({
       className="mt-8 mb-8 shadow-xl rounded-lg text-md w-full text-left relative bg-foreground p-8"
     >
       {isEdit ? 
-      <TabSection defaultTab={"information"} isEdit={isEdit}>
+      <TabSection defaultTab={"information"} isEdit={isEdit} role={role}>
         <div label="information">
           <div className="w-full grid grid-cols-3 gap-16">
             {Object.keys(dogInformationSchema).map((category) => (
