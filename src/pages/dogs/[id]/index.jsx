@@ -59,6 +59,9 @@ export default function IndividualDogPage() {
   const [fileParam, setFileParam] = useState(null);
 
   const [changeInLogs, setChangeInLogs] = useState(false);
+
+  const [userRole, setUserRole] = useState(null);
+
   const logRef = useRef(null);
 
   let search = {};
@@ -108,14 +111,25 @@ export default function IndividualDogPage() {
       }
     );
   }
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const user = session?.user;
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetch(`/api/users/${session?.user._id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setUserRole(data?.data?.role);
+        });
+    }
+  }, [session?.user, status]);
 
   useEffect(() => {
     if (data?.association === "Volunteer/Partner") {
       setShowInfoTab(false);
       setShowLogTab(true);
     } 
+    console.log(data)
   }, [data])
 
   const { setIsEdit, isEdit, handleSubmit, reset, getValues, errors } =
