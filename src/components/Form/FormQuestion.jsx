@@ -39,8 +39,8 @@ export default function FormQuestion(formObj, index, register, errors, mode) {
             })}
           />
           {errors[index] && (
-            <div className="flex flex-row items-center text-error-red">
-              <ExclamationCircleIcon className="mr-2 h-4" />Please respond to this question
+            <div className="flex flex-row items-center text-primary-text text-lg font-normal mt-1">
+              <ExclamationCircleIcon className="mr-2 h-5" />Please respond to this question
             </div>
           )}
         </div>
