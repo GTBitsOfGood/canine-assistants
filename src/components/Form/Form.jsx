@@ -125,7 +125,7 @@ export default function Form({ mode }) {
         <form
           onSubmit={handleSubmit((data) => {
             form.responses = Object.values(data).map((response) => {
-              return { answer: response };
+              return { answer: response ? response : "" };
             });
             fetch("/api/forms", {
               method: "POST",
