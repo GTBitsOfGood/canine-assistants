@@ -1,4 +1,5 @@
 import stringUtils from "@/utils/stringutils";
+import UnresolvedDot from "../Log/UnresolvedDot";
 
 /**
  * A modular Tab used in a TabSection
@@ -17,7 +18,7 @@ export default function Tab({ role, activeTab, label, alertIcon, onTabClick }) {
       onClick={onTabClick}
     >
       <div className="flex flex-row">
-        <div className="mx-1 text-red-600 text-xl">{alertIcon && role === "Manager" ? "●" : ""}</div>
+        {(role === "Manager" && alertIcon) && <UnresolvedDot tooltip={false}/>}
         <div>{stringUtils.upperFirstLetter(label)}</div>
       </div>
       
