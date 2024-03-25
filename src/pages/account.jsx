@@ -31,7 +31,8 @@ export default function Account() {
   const router = useRouter();
 
   useEffect(() => {
-    fetch(`/api/users/${session?.user._id}`)
+    if (update != "loading") {
+      fetch(`/api/users/${session?.user._id}`)
       .then((res) => res.json())
       .then((data) => {
 
@@ -39,7 +40,8 @@ export default function Account() {
         setRole(data?.data?.role);
         setName(data?.data?.name);
       });
-  }, [session?.user])
+    }
+  }, [session?.user, update])
   if (!session || !session.user) {
     return <div>loading</div>;
   }
