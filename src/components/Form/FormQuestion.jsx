@@ -4,13 +4,18 @@ import { formActions } from "@/utils/formUtils";
 export default function FormQuestion(formObj, index, register, errors, mode) {
   return (
     <div
-      className="flex flex-col mb-7 bg-secondary-gray py-4 px-12 rounded-lg border border-primary-gray modal-shadow"
-      key={formObj.question}>
+      className={`flex flex-col mb-7 bg-secondary-gray py-4 px-12
+        ${formObj.questionNumber == 0 ?
+          " border-x border-x-primary-gray border-b border-b-primary-gray rounded-b-lg form-bottom-shadow -mt-10 pt-6"
+        : " rounded-lg border border-primary-gray modal-shadow"}
+      `}
+      key={formObj.question}
+    >
       {formObj.question == "(place for notes)" ? (
         ``
       ) : (
         <p className="text-xl font-normal mb-2.5 pr-4 text-primary-text">
-          {formObj.question}
+          {formObj.questionNumber != 0 ? `${formObj.questionNumber}. ` : "" }{formObj.question}
         </p>
       )}
       {formObj.choices.length == 0 ? (
