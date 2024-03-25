@@ -358,6 +358,7 @@ const forms = [
 ];
 
 export default async function handler(req, res) {
+  console.log("THIS IS RUNNING");
   if (req.method === "GET") {
     await dbConnect();
     // delete everything
