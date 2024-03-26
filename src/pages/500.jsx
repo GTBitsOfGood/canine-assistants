@@ -8,7 +8,7 @@ export default function Custom500() {
   return (
     <div class="flex flex-col justify-center content-center" style={{height: "90vh", width: "100%"}}>
       <div className="bg-white content-center shadow gap-4 flex rounded-lg text-start" style={{height: "74%", padding: "0px 103px", boxShadow: "0px 0px 16px 0px rgba(40, 48, 45, 0.16)"}}>
-        <Image src={errorimage} width={314} style={{ marginRight: 54 }} />
+        <Image src={errorimage} style={{width: "20%", marginRight: "5%"}} />
         <div className="flex flex-col justify-center content-start">
         <p className="font-bold text-ca-pink not-italic leading-4" style={{fontSize: 200, lineHeight: 1}}>500</p>
         <p className="font-semibold text-4xl not-italic">Ruh-Roh. It looks like Fido is confused.</p>
