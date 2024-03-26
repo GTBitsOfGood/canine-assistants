@@ -96,7 +96,7 @@ export default function Form({ mode }) {
   const name = dog.data.name;
 
   return (
-    <div className="bg-foreground rounded-lg modal-shadow border border-primary-gray py-12 px-24 my-8">
+    <div className="bg-foreground rounded-lg modal-shadow border border-primary-gray p-4 sm:py-12 sm:px-24 my-4 sm:my-8">
       {showCancelModal
         ? ConfirmCancelModal(
             "Discard all changes?",
@@ -106,7 +106,7 @@ export default function Form({ mode }) {
             showCancelModal
           )
         : ``}
-      <div className="flex items-center mb-6">
+      <div className="flex items-center mb-4 sm:mb-6">
         <ChevronLeftIcon className="w-4 mr-2" />
         <button className="text-lg text-secondary-text" onClick={() => setShowCancelModal(!showCancelModal)}>
           Return to {name}
@@ -114,13 +114,13 @@ export default function Form({ mode }) {
       </div>
       {mode != formActions.NEW ? (
         <div>
-          <div className="flex gap-4 text-base font-normal mb-6">
+          <div className="flex flex-col sm:flex-row gap-x-4 gap-y-1 text-base text-primary-text font-normal mb-4 sm:mb-6">
             <span>Created by: {formData.user.name}</span>
             <span>Last Updated: {dateutils.displayDateAndTime(formData.updatedAt)}</span>
           </div>
         </div>
       ) : null}
-      <h1 className="text-primary-text mb-6">{title}</h1>
+      <h1 className="text-primary-text mb-6 text-3xl">{title}</h1>
       <div className="flex flex-col w-full">
         <form
           onSubmit={handleSubmit((data) => {
@@ -153,7 +153,7 @@ export default function Form({ mode }) {
           {mode == formActions.VIEW ? (
             ``
           ) : (
-            <div className="flex flex-row justify-end mt-14 mb-6">
+            <div className="flex flex-row justify-end mt-8 sm:mt-14 mb-6">
               <button
                 className="flex flex-row h-full w-32 px-4 py-2 mx-4 justify-center border rounded border-primary-gray bg-foreground text-primary-text text-base font-medium"
                 onClick={() => setShowCancelModal(!showCancelModal)}
