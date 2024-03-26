@@ -67,7 +67,7 @@ export default function DogsPage() {
         setData([]);
       })
       .then((res) => res.json())
-      .then((data) => { console.log(data); setData(data); setLoading(false); } );
+      .then((data) => { setData(data); setLoading(false); } );
   }, [searchFilter, filters]);
 
   const dogs = data ? data.data : [];
