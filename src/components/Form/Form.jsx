@@ -1,5 +1,4 @@
 import { useRouter } from "next/router";
-import Link from "next/link";
 import { useSession } from "next-auth/react";
 
 import { useState, useEffect } from "react";
@@ -8,6 +7,7 @@ import { useForm } from "react-hook-form";
 import ConfirmCancelModal from "../ConfirmCancelModal";
 import FormQuestion from "./FormQuestion";
 import { Toast } from "../Toast";
+import LoadingAnimation from "../LoadingAnimation";
 
 import {
   MONTHLY_PLACED_FORM,
@@ -60,7 +60,7 @@ export default function Form({ mode }) {
   }, [ router ]);
 
   if (!router.query || !dog || dog === undefined || !dog.success || (mode != formActions.NEW && (!router.query || !formData || formData == undefined))) {
-    return <div>loading</div>;
+    return <LoadingAnimation />
   }
 
   const formType = formMap[router.query.type]
