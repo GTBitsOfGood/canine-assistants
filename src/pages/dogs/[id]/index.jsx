@@ -59,6 +59,9 @@ export default function IndividualDogPage() {
   const [fileParam, setFileParam] = useState(null);
 
   const [changeInLogs, setChangeInLogs] = useState(false);
+
+  const [userRole, setUserRole] = useState(null);
+
   const logRef = useRef(null);
 
   let search = {};
@@ -108,14 +111,18 @@ export default function IndividualDogPage() {
       }
     );
   }
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const user = session?.user;
+
 
   useEffect(() => {
     if (data?.association === "Volunteer/Partner") {
       setShowInfoTab(false);
       setShowLogTab(true);
     } 
+    if (data?.association) {
+      setUserRole(data.association)
+    }
   }, [data])
 
   const { setIsEdit, isEdit, handleSubmit, reset, getValues, errors } =
@@ -466,6 +473,8 @@ export default function IndividualDogPage() {
               ) : (
                 <div className="grow flex gap-4 justify-end">
                   <div className="flex gap-4">
+
+                  {(userRole === "Admin" || userRole === "Manager" || userRole === "Instructor/Caregiver") && 
                     <button
                       type="button"
                       className="flex justify-center items-center space-x-2 h-min"
@@ -474,11 +483,16 @@ export default function IndividualDogPage() {
                       <PencilSquareIcon className="h-5" />
                       <div>Edit</div>
                     </button>
+                    }
+
+                    {(userRole === "Admin" || userRole === "Manager") && 
                     <div className="flex justify-center items-center space-x-2 h-min">
                       <TrashIcon className="h-5" />
                       <div>Delete</div>
                     </div>
+                    }
                   </div>
+                  
                 </div>
               )}
             </>
