@@ -1,17 +1,16 @@
 import UserTable from "@/components/User/UserTable";
 import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
+import { useSessionManager } from "@/utils/SessionManager";
 
 /**
  * The main page for user management
  *
  * @returns {React.ReactElement} The User management page
  */
-export default function UsersPage() {
-
+function UsersPage({ session }) {
 
   // Ensuring that only Admins and Managers can view this page
-  const { data: session, status } = useSession();
   const [userRole, setUserRole] = useState(null);
   
 
@@ -23,14 +22,9 @@ export default function UsersPage() {
       });
   }, [session?.user]);
 
-  if (status === "loading" || !userRole) {
-    return <div className="p-10 text-center">Loading...</div>;
-  }
-
   if (userRole && userRole !== "Admin" && userRole !== "Manager") {
     return <div className="p-10 text-center">You must be an Admin or Manager to access this page.</div>
   }
-
 
   return (
     <div className={`pt-4 container mx-auto`}>
@@ -42,3 +36,5 @@ export default function UsersPage() {
     </div>
   );
 }
+
+export default () => useSessionManager(UsersPage);

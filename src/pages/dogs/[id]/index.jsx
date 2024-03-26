@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 
 import { useEffect, useState, useRef } from "react";
 import { useSession } from "next-auth/react";
+import { useSessionManager } from "@/utils/SessionManager";
 
 import {
   ChevronLeftIcon,
@@ -544,6 +545,7 @@ export default function IndividualDogPage() {
   );
 }
 
+
 IndividualDogPage.getLayout = function getLayout(page) {
   return (
     <Layout>
@@ -551,3 +553,4 @@ IndividualDogPage.getLayout = function getLayout(page) {
     </Layout>
   );
 };
+

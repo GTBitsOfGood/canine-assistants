@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useSessionManager } from "@/utils/SessionManager";
 
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import {
@@ -13,14 +14,14 @@ import Card from "@/components/Card";
 import ConfirmCancelModal from "@/components/ConfirmCancelModal";
 import userpfpplaceholder from "../../public/userpfpplaceholder.svg";
 import { Toast } from "@/components/Toast";
-import { set } from "mongoose";
+
 
 /**
  * User account management page
  *
  * @returns {React.ReactElement} The user account management page
  */
-export default function Account() {
+function Account() {
   const [editName, setEditName] = useState(false);
   const [name, setName] = useState("");
   const [showDeactivateModal, setShowDeactivateModal] = useState(false);
@@ -176,3 +177,5 @@ export default function Account() {
       .catch((err) => {});
   }
 }
+
+export default () => useSessionManager(Account);

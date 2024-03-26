@@ -1,10 +1,12 @@
 import Form from "@/components/Form/Form";
 import { formActions } from "@/utils/formUtils";
+import { useSessionManager } from "@/utils/SessionManager";
 
-export default function FormPage() {
+function FormPage() {
   return (
     <div className="mx-32">
       <Form mode={formActions.VIEW} />
     </div>
   )
 }
+export default () => useSessionManager(FormPage);

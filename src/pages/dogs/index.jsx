@@ -9,6 +9,7 @@ import LoadingAnimation from "@/components/LoadingAnimation";
 import { Toast } from "@/components/Toast";
 import DogTable from "@/components/Dog/DogTable";
 import CardDogTable from "@/components/Dog/CardDogTable";
+import { useSessionManager } from "@/utils/SessionManager";
 
 /**
  * The main page for displaying Dogs
@@ -19,7 +20,7 @@ import CardDogTable from "@/components/Dog/CardDogTable";
 /**
  * @returns { React.ReactElement } The DogTable component
  */
-export default function DogsPage() {
+function DogsPage({ session }) {
   const [searchFilter, setSearchFilter] = useState("");
   const [data, setData] = useState();
 
@@ -29,8 +30,6 @@ export default function DogsPage() {
 
   const [limitedAssociation, setLimitedAssociation] = useState(null);
   const [userRole, setUserRole] = useState(null);
-
-  const { data: session, status } = useSession();
 
   useEffect(() => {
     fetch(`/api/users/${session?.user._id}`)
@@ -67,7 +66,7 @@ export default function DogsPage() {
         setData([]);
       })
       .then((res) => res.json())
-      .then((data) => { console.log(data); setData(data); setLoading(false); } );
+      .then((data) => { setData(data); setLoading(false); } );
   }, [searchFilter, filters]);
 
   const dogs = data ? data.data : [];
@@ -153,3 +152,5 @@ export default function DogsPage() {
     </div>
   );
 }
+
+export default () => useSessionManager(DogsPage);
