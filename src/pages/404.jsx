@@ -8,7 +8,7 @@ export default function Custom404() {
   return (
     <div class="flex flex-col justify-center content-center" style={{height: "90vh", width: "100%"}}>
       <div class="flex content-center bg-white gap-4 px-8 shadow rounded-lg text-start" style={{height: "74%", boxShadow: "0px 0px 16px 0px rgba(40, 48, 45, 0.16)"}}>
-        <Image src={errorimage} width={544} />
+        <Image src={errorimage} style={{width: "35%"}}/>
         <div className="flex flex-col justify-center content-start">
           <p className="font-bold text-ca-pink not-italic leading-4" style={{fontSize: 200, lineHeight: 1}}>404</p>
           <p className="font-semibold text-4xl not-italic">Ruh-Roh. It looks like Fido got lost.</p>
