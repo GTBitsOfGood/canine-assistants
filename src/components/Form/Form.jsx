@@ -108,7 +108,16 @@ export default function Form({ mode }) {
         : ``}
       <div className="flex items-center mb-4 sm:mb-6">
         <ChevronLeftIcon className="w-4 mr-2" />
-        <button className="text-lg text-secondary-text" onClick={() => setShowCancelModal(!showCancelModal)}>
+        <button
+          className="text-lg text-secondary-text"
+          onClick={() => {
+            if (mode != formActions.VIEW) {
+              setShowCancelModal(!showCancelModal);
+            } else {
+              router.push("/dogs/" + router.query.id + "?showFormTab=true");
+            }
+          }}
+        >
           Return to {name}
         </button>
       </div>
