@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-
+import { useState } from "react";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { DocumentIcon } from "@heroicons/react/24/outline";
 
@@ -21,6 +21,7 @@ export default function TabContainer({
   logRef,
   showInfoTab,
   setShowLogModal,
+  showLogModal,
   showFormTab,
   showFormDropdown,
   setShowFormDropdown,
@@ -37,6 +38,7 @@ export default function TabContainer({
   removeTag,
   filteredLogs,
   isEdit,
+  setIsEdit,
   onEditLog,
   onDeleteLog
 }) {
@@ -44,6 +46,7 @@ export default function TabContainer({
 
   const { data: session } = useSession();
   const user = session?.user;
+  const [openTab, setOpenTab] = useState("Information");
 
   return (
     <div
@@ -53,7 +56,7 @@ export default function TabContainer({
       {isEdit ? 
       <TabSection defaultTab={"information"} isEdit={isEdit}>
         <div label="information">
-          <div className="w-full grid grid-cols-3 gap-16">
+          <div className="w-full grid sm:grid-cols-3 grid-cols-1 gap-16">
             {Object.keys(dogInformationSchema).map((category) => (
               <div className="col" key={category}>
                 <div className="flex-col space-y-4 text-lg">
@@ -75,9 +78,9 @@ export default function TabContainer({
             </div>
           </div>
         </TabSection> :
-      <TabSection defaultTab={ showLogTab ? "logs" : (showFormTab ? "forms" : "information") }>
+      <TabSection defaultTab={ showLogTab ? "logs" : (showFormTab ? "forms" : "information") } setOpenTab={setOpenTab}>
         {showInfoTab ? <div label="information">
-          <div className="w-full grid grid-cols-3 gap-16">
+          <div className="w-full grid sm:grid-cols-3 grid-cols-1 gap-16">
             {Object.keys(dogInformationSchema).map((category) => (
               <div className="col" key={category}>
                 <div className="flex-col space-y-4 text-lg">
@@ -133,10 +136,14 @@ export default function TabContainer({
             </div>
           </div>
         </div>
+        
 
-        <div label="forms">
+        <div label="forms" >
+        
           <div className="flex justify-end">
+
             {showFormDropdown ? (
+              <div className="sm:flex hidden">
               <DropdownMenu
                 label={"Select Form Type"}
                 props={{
@@ -167,13 +174,13 @@ export default function TabContainer({
                   label={formTitleMap.VolunteerInteraction}
                   name={formTitleMap.VolunteerInteraction}
                 />
-              </DropdownMenu>
+              </DropdownMenu></div>
             ) : (
               <button
                 type="button"
-                className="px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade justify-start items-center flex"
+                className="px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade justify-center items-center sm:flex hidden"
                 onClick={() => {
-                  setShowFormDropdown(true);
+                  setShowFormDropdown(true); console.log(showLogTab);
                 }}
               >
                 <div className="text-foreground h-4 w-4 relative">
@@ -221,6 +228,86 @@ export default function TabContainer({
           </div>
         </div>
       </TabSection> }
+      
+        {openTab == "Forms" && !isEdit && showFormDropdown && (
+          <div className="w-3/4 fixed bottom-40 flex z-10 justify-center sm:hidden">
+          <DropdownMenu
+            label={"Select Form Type"}
+            props={{
+              singleSelect: true,
+              extended: true,
+              filterText: "Add Form",
+            }}
+            submitFilters={(type) => {
+              let formType;
+              if (type[0]) {
+                formType =
+                  dog.location == "Placed"
+                    ? "MonthlyPlaced"
+                    : "MonthlyUnplaced";
+              } else {
+                formType = "VolunteerInteraction";
+              }
+              router.push(`${dog._id}/forms/new?type=${formType}`);
+            }}
+          >
+            <DropdownMenuOption
+              index={0}
+              label={formTitleMap.MonthlyPlaced}
+              name={formTitleMap.MonthlyPlaced}
+            />
+            <DropdownMenuOption
+              index={1}
+              label={formTitleMap.VolunteerInteraction}
+              name={formTitleMap.VolunteerInteraction}
+            />
+          </DropdownMenu></div>
+        )}
+      {openTab === "Forms" && !isEdit && !showFormDropdown && (
+      <button
+        type="button"
+        className="px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade w-3/4 z-10 fixed bottom-0 justify-center items-center sm:hidden flex"
+        onClick={() => {
+          setShowFormDropdown(true); console.log(openTab);
+        }}
+      >
+        <div className="text-foreground h-4 w-4 relative sm:flex hidden">
+          {<PlusIcon />}
+        </div>
+        <div className="text-foreground text-base font-medium">
+          {"Add Form"}
+        </div>
+      </button>)}
+      {openTab === "Logs" && !isEdit && !showLogModal && (
+      <button
+        type="button"
+        className="px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade w-3/4 z-10 fixed bottom-0 justify-center items-center sm:hidden flex"
+        onClick={() => {
+          setShowLogModal(true);
+        }}
+      >
+        <div className="text-foreground h-4 w-4 relative sm:flex hidden">
+          {<PlusIcon />}
+        </div>
+        <div className="text-foreground text-base font-medium">
+          {"Add Log"}
+        </div>
+      </button>)}
+      {openTab === "Information" && !isEdit && (
+      <button
+        type="button"
+        className="px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade w-3/4 z-10 fixed bottom-0 justify-center items-center sm:hidden flex"
+        onClick={() => {
+          setIsEdit(true);
+        }}
+      >
+        <div className="text-foreground h-4 w-4 relative sm:flex hidden">
+          {<PlusIcon />}
+        </div>
+        <div className="text-foreground text-base font-medium">
+          {"Edit Information"}
+        </div>
+      </button>)}
     </div> 
   );
 }

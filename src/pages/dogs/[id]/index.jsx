@@ -315,7 +315,7 @@ export default function IndividualDogPage() {
   // TODO add listener for if user clicks out of dropdown menu to turn back into button
 
   return (
-    <div className={`container mx-auto order-b border-gray-300`}>
+    <div className={`container sm:mx-auto ml-12 order-b border-gray-300`}>
       {/* Logic for the Log modal */}
       {showLogModal ? (
         <>
@@ -347,7 +347,7 @@ export default function IndividualDogPage() {
 
       <form onSubmit={handleSubmit(onEditSubmit)}>
         <div className="flex gap-8 ">
-          <div className="flex w-[350px] h-[350px] items-center justify-center rounded-lg relative bg-primary-gray">
+          <div className="sm:flex w-[350px] h-[350px] items-center justify-center rounded-lg relative bg-primary-gray hidden">
             {fileParam && fileParam != "" ? (
               isEdit ? (
                 <ImageUpload preview={true} setFileParam={setFileParam} previewImage={fileParam} />
@@ -367,7 +367,7 @@ export default function IndividualDogPage() {
             )}
           </div>
             <> 
-              <div className="flex-col gap-4 inline-flex w-7/12">
+              <div className="flex-col gap-4 inline-flex w-full sm:w-7/12">
                 {/* Logic for showing information at top when not editing it */}
                 {!isEdit && (
                   <>
@@ -389,17 +389,45 @@ export default function IndividualDogPage() {
 
                           <div>{dog.gender ?? "N/A"}</div>
                         </div>
+                        
+                      </div>
+                      <div className="sm:hidden justify-center items-center space-x-2 flex ">
+                        <TrashIcon className="h-5" />
+                        <div>Delete</div>
                       </div>
                     </div>
 
-                    <div className="pl-1 font-bold text-3xl pb-4 pt-2">
+                    <div className="hidden pl-1 font-bold text-3xl pb-4 pt-2 sm:flex">
                       {dog.name}
                     </div>
                   </>
                 )}
+                
+                <div className={!isEdit ? "flex pl-1 justify-center w-full font-bold text-3xl pb-4 pt-2 sm:hidden":"flex pl-1 w-full font-bold text-3xl pb-4 pt-2 sm:hidden"}>
+                      {!isEdit? dog.name: "Edit Dog"}
+                </div>
+                {!isEdit && (
+                <div className="flex items-center mx-9 sm:hidden">
+                  <div className=" flex  w-[350px] h-[350px] items-center justify-center rounded-lg relative bg-primary-gray sm:hidden">
+                    {fileParam && fileParam != "" ? (
+                      
+                        <Image alt="Dog" width={350} height={350} src={fileParam} />
+                      
+                    ) : (
+                      
+                        <Image
+                          priority
+                          src={dogplaceholdericon}
+                          alt="Dog Placeholder"
+                        />
+                      
+                    )}
+                  </div>
+                </div>)}
+                
 
                 <div className="flex space-x-16">
-                  <div className="flex-col pl-1 text-lg gap-4 inline-flex w-1/2">
+                  <div className={!isEdit? "flex-col pl-1 text-lg sm:gap-4 gap-2 inline-flex w-1/2": "flex-col pl-1 text-lg sm:gap-4 gap-2 sm:inline-flex sm:w-1/2 w-full hidden"}>
                     {isEdit && (
                       <FormField
                         className="h-min pl-1 font-bold text-3xl"
@@ -413,10 +441,34 @@ export default function IndividualDogPage() {
                     <FormField label={"Sex"} keyLabel={"gender"} />
                     <FormField label={"Breed"} keyLabel={"breed"} />
                     <FormField label={"Coat Color"} keyLabel={"coatColor"} />
-                    <FormField label={"Weight (lbs)"} keyLabel={"weight"} />
+                    <div className="hidden sm:flex">
+                      <FormField label={"Weight (lbs)"} keyLabel={"weight"} />
+                    </div>
+                    <div className="flex-col inline-flex gap-2 sm:hidden">
+                      {dog.location === "Placed" ? (
+                        <>
+                          <FormField label={"Location"} keyLabel={"location"} />
+                          <FormField
+                            label={"Partner"}
+                            keyLabel={"partner.user"}
+                          />
+                          <FormField
+                            label={"Placement Camp"}
+                            keyLabel={"placementCamp"}
+                          />
+                        </>
+                      ) : (
+                        <>
+                          <FormField label={"Location"} keyLabel={"location"} />
+                          <FormField label={"Instructor"} keyLabel={"instructors"} />
+                        </>
+                      )}
+                    </div>
+                    
                   </div>
+                  
 
-                  <div className="flex-col pl-1 text-lg gap-4 inline-flex w-1/2">
+                  <div className="hidden flex-col pl-1 text-lg gap-4 w-1/2 sm:inline-flex">
                     {dog.location === "Placed" ? (
                       <>
                         <FormField label={"Location"} keyLabel={"location"} />
@@ -437,11 +489,138 @@ export default function IndividualDogPage() {
                     )}
                   </div>
                 </div>
+                {isEdit && (
+                    <div className="flex flex-col text-lg gap-4 w-full justify-start sm:hidden">
+                          <div>
+                            <div>Name</div>
+                            <FormField label={"Name"} keyLabel={"name"} showLabel={false}/>
+                          </div>
+                          <div>
+                            <div>Date of Birth</div>
+                            <FormField label={"Birth Date"} keyLabel={"dateOfBirth"} showLabel={false}/>
+                          </div>
+                          <div>
+                            <div>Time of Birth</div>
+                            <FormField label={"Birth Time"} keyLabel={"dateOfBirth"} showLabel={false}/>
+                          </div>
+                          <div>
+                            <div>Breed</div>
+                            <FormField label={"Breed"} keyLabel={"breed"} showLabel={false}/>
+                          </div>
+                          <div>
+                            <div>Photo</div>
+                            <ImageUpload preview={false} setFileParam={setFileParam} />
+                          </div>
+                          <div>
+                            <div>Sex</div>
+                            <FormField label={"Sex"} keyLabel={"gender"} showLabel={false}/>
+                          </div>
+                          <div>
+                            <div>Current Location</div>
+                            <FormField label={"Location"} keyLabel={"location"} showLabel={false}/>
+                          </div>
+                          <div className="h-min font-bold text-xl">Birth Information</div>
+                          <div>
+                            <div>Coat Color</div>
+                            <FormField label={"Coat Color"} keyLabel={"coatColor"} showLabel={false}/>
+                          </div>
+                          <div>
+                          <div>Collar Color</div>
+                          <FormField label={"Collar Color"} keyLabel={"collarColor"} showLabel={false}/>
+                          </div>
+                          <div>
+                          <div>Delivery Information</div>
+                          <FormField label={"Delivery Information"} keyLabel={"deliveryInformation"} showLabel={false}/>
+                          </div>
+                          <div>
+                          <div>Name of Mother</div>
+                          <FormField label={"Mother"} keyLabel={"parents.1"} showLabel={false}/>
+                          </div>
+                          <div>
+                          <div>Breed of Mother</div>
+                          <FormField label={"Mother"} keyLabel={"parents.1"} showLabel={false}/>
+                          </div>
+                          <div>
+                          <div>Name of Father</div>
+                          <FormField label={"Father"} keyLabel={"parents.0"} showLabel={false}/>
+                          </div>
+                          <div>
+                          <div>Breed of Father</div>
+                          <FormField label={"Father"} keyLabel={"parents.0"} showLabel={false}/>
+                          </div>
+                          <div>
+                          <div>Litter Size</div>
+                          <FormField label={"Litter Size"} keyLabel={"litterSize"} showLabel={false}/>
+                          </div>
+                          <div>
+                          <div>Litter Composition</div>
+                          <FormField label={"Litter Composition"} keyLabel={"litterComposition"} showLabel={false}/>
+                          </div>
+                          <div>
+                          <div>Birth Order</div>
+                          <FormField label={"Birth Order"} keyLabel={"birthOrder"} showLabel={false}/>
+                          </div>
+                          <div>
+                          <div>Supplemental Feeding</div>
+                          <FormField label={"Supplemental Feeding"} keyLabel={"supplementalFeeding"} showLabel={false}/>
+                          </div>
+                          <div>
+                          <div>Maternal Demeanor Prior to Whelping</div>
+                          <FormField label={"Prior to Whelping"} keyLabel={"maternalDemeanor.0"} showLabel={false}/>
+                          </div>
+                          <div>
+                          <div>Maternal Demeanor During Whelping</div>
+                          <FormField label={"During Whelping"} keyLabel={"maternalDemeanor.1"} showLabel={false}/>
+                          </div>
+                          <div>
+                          <div>Maternal Demeanor Subsequent to Whelping</div>
+                          <FormField label={"Subqequent to Whelping"} keyLabel={"maternalDemeanor.2"} showLabel={false}/>
+                          </div>
+                          
+                          <div className="h-min font-bold text-xl">Care Information</div>
+                          <div>
+                          <div>Housing</div>
+                          <FormField label={"Placement"} keyLabel={"housing.place"} showLabel={false}/>
+                          </div>
+                          <div>
+                          <div>Instructor</div>
+                          <FormField label={"Instructor"} keyLabel={"instructors"} showLabel={false}/>
+                          </div>
+                          <div>
+                          <div>{"Primary Caregiver(s)"}</div>
+                          <FormField label={"Primary Caregiver(s)"} keyLabel={"caregivers"} showLabel={false}/>
+                          </div>
+                          <div>
+                          <div>Primary Toileting Area</div>
+                          <FormField label={"Primary Toileting Area"} keyLabel={"toiletArea"} showLabel={false}/>
+                          </div>
+                          <div>
+                          <div>Feeding Amount</div>
+                          <FormField label={"Amount"} keyLabel={"feeding.amount"} showLabel={false}/>
+                          </div>
+                          <div>
+                          <div>First Meal</div>
+                          <FormField label={"First Meal"} keyLabel={"feeding.firstmeal"} showLabel={false}/>
+                          </div>
+                          <div>
+                          <div>Second Meal</div>
+                          <FormField label={"Second Meal"} keyLabel={"feeding.secondmeal"} showLabel={false}/>
+                          </div>
+                          <div>
+                          <div>Third Meal</div>
+                          <FormField label={"Third Meal"} keyLabel={"feeding.thirdmeal"} showLabel={false}/>
+                          </div>
+                          <div className="invisible pb-8"></div>
+                        
+                    
+                    </div>
+                    )}
               </div>
 
               {/* Logic for showing Save and Cancel buttons or Edit and Delete buttons depending on if editing */}
               {isEdit ? (
-                <div className="grow flex gap-4 justify-end items-center h-min">
+                <>
+                <div className="grow sm:flex gap-4 justify-end items-center h-min hidden">
                   <button
                     type="button"
                     className="flex justify-center space-x-2 h-min py-1 px-8 border-2 bg-white border-gray-200 rounded"
@@ -463,12 +642,38 @@ export default function IndividualDogPage() {
                     Save
                   </button>
                 </div>
+                <div className="fixed w-full justify-center flex bottom-0 z-10 gap-4 sm:hidden">
+                  <button
+                    type="button"
+                    className=" py-1 px-8 border-2 bg-white border-gray-200 rounded"
+                    onClick={() => {
+                      reset();
+                      if (router.route === "/dogs/new") {
+                        router.push("/dogs");
+                      } else {
+                        setIsEdit((isEdit) => !isEdit);
+                      }
+                    }}
+                  >
+                    Discard Changes
+                  </button>
+                  <button
+                    className="flex justify-center bg-pink-800 text-white py-1 px-9 border-2 rounded"
+                    type="submit"
+                  >
+                    Save
+                  </button>
+                </div>
+                </>
               ) : (
-                <div className="grow flex gap-4 justify-end">
+                <>
+                
+                
+                <div className="grow sm:flex gap-4 justify-center hidden">
                   <div className="flex gap-4">
                     <button
                       type="button"
-                      className="flex justify-center items-center space-x-2 h-min"
+                      className="sm:flex justify-center items-center space-x-2 h-min hidden"
                       onClick={() => setIsEdit((isEdit) => !isEdit)}
                     >
                       <PencilSquareIcon className="h-5" />
@@ -480,16 +685,18 @@ export default function IndividualDogPage() {
                     </div>
                   </div>
                 </div>
+                </>
               )}
             </>
           
         </div>
-
+        <div className={!isEdit ?"flex": "sm:flex hidden"}>
         <TabContainer
           logRef={logRef}
           showInfoTab={showInfoTab}
           showLogTab={showLogTab}
           setShowLogModal={setShowLogModal}
+          showLogModal={showLogModal}
           logs={logs}
           dog={dog}
           appliedFilters={appliedFilters}
@@ -505,6 +712,7 @@ export default function IndividualDogPage() {
           filteredLogs={filteredLogs}
           dogInformationSchema={dogInformationSchema}
           isEdit = {isEdit}
+          setIsEdit={setIsEdit}
           onEditLog={(success) => {
 
             if (success) {
@@ -517,7 +725,7 @@ export default function IndividualDogPage() {
               setChangeInLogs(true);
             }
           }}
-        />
+        /></div>
       </form>
     </div>
   );

@@ -5,7 +5,6 @@ import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import DeleteLogModal from "./DeleteLogModal";
 import LogModal from "./LogModal";
 import { Toast } from "../Toast";
-import RecentTags from "../RecentTags";
 
 export default function Log({ log, user, onEdit, onDelete }) {
   const [showMore, setShowMore] = useState(false);
@@ -105,14 +104,17 @@ export default function Log({ log, user, onEdit, onDelete }) {
         </button>
       </div>
       )}
-      <div className="flex justify-between">
+      <div className="flex sm:justify-between flex-col">
+        <div className="flex justify-end sm:flex-row flex-col">
+          <TagDisplay tags={tags} removeTag={null} />
+        </div>
         <div className="flex flex-col">
           <h2>{log.title}</h2>
-          <div className="flex flex-row">
+          <div className="flex sm:flex-row flex-col">
             <p className="text-secondary-text font-regular w-fit">
               {"Author: " + authorName}
             </p>
-            <p className="text-secondary-text font-regular mx-5 w-fit">
+            <p className="text-secondary-text font-regular sm:mx-5 w-fit">
               {"Date: " + createdAt.toLocaleDateString()}
             </p>
             <p className="text-secondary-text font-regular w-fit">
@@ -120,7 +122,6 @@ export default function Log({ log, user, onEdit, onDelete }) {
             </p>
           </div>
         </div>
-        <RecentTags tags={tags} />
       </div>
       {log.description.length > 250 ? (
         <div className="max-w-fit">

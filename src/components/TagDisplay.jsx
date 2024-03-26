@@ -4,7 +4,7 @@ import stringUtils from "@/utils/stringutils";
 
 export default function TagDisplay({ tags, removeTag }) {
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex sm:items-center gap-1 sm:flex-row flex-col items-start">
       {removeTag ? (
         <div className="text-sm font-medium mr-1">
           Filters applied: {tags.length === 0 ? "None" : ""}

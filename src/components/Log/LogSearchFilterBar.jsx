@@ -17,12 +17,12 @@ export default function LogSearchFilterBar({ filters, setFilters, setSearch, add
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <button type="button" onClick={() => addLogFunction()} className="button-base primary-button flex gap-2">
-          <div className="primary-button-plus-icon">{<PlusIcon />}</div>
+        <button type="button" onClick={() => addLogFunction()} className="button-base primary-button sm:flex gap-2 hidden">
+          <div className="primary-button-plus-icon sm:flex hidden">{<PlusIcon />}</div>
           <div className="primary-button-text">Add Log</div>
         </button>
       </div>
-      <div className="flex flex-row items-center gap-4">
+      <div className="flex flex-col sm:flex-row  items-start sm:items-center gap-4">
         <div className="text-neutral-700 text-sm font-medium">Filter by</div>
 
         <DropdownMenu
