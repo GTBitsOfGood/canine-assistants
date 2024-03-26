@@ -126,6 +126,7 @@ export default function DogsPage() {
               setFilters={setFilters}
               setSearch={setSearchFilter}
               simplified={limitedAssociation}
+              userRole={userRole}
             />
 
             <TagDisplay tags={tags} removeTag={removeTag}  />

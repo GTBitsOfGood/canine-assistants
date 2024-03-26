@@ -114,22 +114,15 @@ export default function IndividualDogPage() {
   const { data: session, status } = useSession();
   const user = session?.user;
 
-  useEffect(() => {
-    if (status === "authenticated") {
-      fetch(`/api/users/${session?.user._id}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setUserRole(data?.data?.role);
-        });
-    }
-  }, [session?.user, status]);
 
   useEffect(() => {
     if (data?.association === "Volunteer/Partner") {
       setShowInfoTab(false);
       setShowLogTab(true);
     } 
-    console.log(data)
+    if (data?.association) {
+      setUserRole(data.association)
+    }
   }, [data])
 
   const { setIsEdit, isEdit, handleSubmit, reset, getValues, errors } =

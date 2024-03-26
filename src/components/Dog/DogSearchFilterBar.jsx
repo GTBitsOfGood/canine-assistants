@@ -3,7 +3,7 @@ import DropdownMenu, { DropdownMenuOption } from "../Form/DropdownMenu";
 import { consts } from "@/utils/consts";
 import { useRouter } from "next/router";
 
-export default function DogSearchFilterBar({ filters, setFilters, setSearch, simplified = false }) {
+export default function DogSearchFilterBar({ filters, setFilters, setSearch, simplified = false, userRole }) {
   const router = useRouter();
   if (simplified === null) {
     simplified = true;
@@ -95,7 +95,7 @@ export default function DogSearchFilterBar({ filters, setFilters, setSearch, sim
         ))}
       </DropdownMenu>
 
-      {!simplified && <div className="relative">
+      {!simplified && (userRole == "Manager" || userRole == "Admin") && <div className="relative">
         <button
           type="button"
           onClick={() => router.push("/dogs/new")}
