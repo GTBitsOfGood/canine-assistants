@@ -25,9 +25,9 @@ function TableColumn({ icon, subLabel, col, style }) {
   return (
     <th
       id={col.id}
-      className={`${style} text-primary-text font-semibold py-3 px-5 gap-2`}
+      className={`${style} text-primary-text font-semibold py-1.5 sm:py-3 px-5 gap-2 sm:w-[90vw]`}
     >
-      <div className="items-center inline-flex gap-3 justify-start p-1">
+      <div className="items-center inline-flex gap-3 justify-start p-1 w-max">
         <div className="h-4 w-4 relative">{icon}</div>
         <div className="flex-col items-center">
           {subLabel && (
@@ -42,9 +42,9 @@ function TableColumn({ icon, subLabel, col, style }) {
 
 function TableFooter({ elementsOnPage, rows, paginationFunctions }) {
   return (
-    <div className="flex bg-white justify-between items-center px-6 py-4">
-      <div className="text-sm font-medium">
-        Showing {elementsOnPage} of {rows?.length ?? 0} Results
+    <div className="flex bg-white justify-between items-center px-6 py-4 w-[90vw] sm:w-full mt-2 sm:mt-0 rounded-lg sm:rounded-none border-gray-300 border-[1px] sm:border-0">
+      <div className="text-sm font-medium flex">
+        <div className="sm:flex sm:mr-1 hidden">Showing</div> {elementsOnPage} of {rows?.length ?? 0} Results
       </div>
       <div>
         <TablePaginator paginationFunctions={paginationFunctions} />
@@ -138,75 +138,78 @@ export default function Table({
   })
 
   return (
-    <div className="shadow-xl rounded-lg text-md w-full text-left relative">
-      <table className="divide-y divide-gray-300 text-md w-full text-left relative">
-        <thead className="bg-foreground" ref={headerRef}>
-          <TableHeader>
-            {cols.map((col) => (
-              <TableColumn
-                key={col.id}
-                subLabel={col.subLabel}
-                icon={col.icon}
-                col={col}
-                style={col.style}
-              />
-            ))}
-          </TableHeader>
-        </thead>
-        <tbody>
-          {loading
-            ? Array(elePerPage)
-                .fill(null)
-                .map((x, i) => (
-                  <tr key={i} className={`border-b ${i % 2 === 0 ? ALTERNATING_ROW_COLOR_1 : ALTERNATING_ROW_COLOR_2}`}>
-                    {cols.map((col, i) => (
-                      <td key={i}>
-                        <div className="py-3 px-6 flex space-x-4 text-sm animate-pulse">
-                          <div className="flex-1 py-1 space-y-6">
-                            <div className="space-y-3">
-                              <div className="grid grid-cols-1 gap-4">
-                                <div className="rounded-full bg-slate-200 h-4 col-span-1"></div>
+    <div className="sm:rounded-lg text-base text-left relative sm:w-full w-[95vw] ml-[5vw] sm:ml-0"> {/** Centering table by setting width to 90vw and margin to 5vw */}
+      <div className="overflow-x-auto w-[95vw] sm:w-full overflow-y-hidden shadow-xl rounded-tl-lg rounded-bl-lg border-gray-300 border-[1px] sm:border-0 sm:rounded-none">
+        <table className="divide-y divide-gray-300 text-base text-left relative">
+          <thead className="bg-foreground" ref={headerRef}>
+            <TableHeader>
+              {cols.map((col) => (
+                <TableColumn
+                  key={col.id}
+                  subLabel={col.subLabel}
+                  icon={col.icon}
+                  col={col}
+                  style={col.style}
+                />
+              ))}
+            </TableHeader>
+          </thead>
+          <tbody>
+            {loading
+              ? Array(elePerPage)
+                  .fill(null)
+                  .map((x, i) => (
+                    <tr key={i} className={`border-b ${i % 2 === 0 ? ALTERNATING_ROW_COLOR_1 : ALTERNATING_ROW_COLOR_2}`}>
+                      {cols.map((col, i) => (
+                        <td key={i}>
+                          <div className="py-3 px-6 flex space-x-4 text-sm animate-pulse">
+                            <div className="flex-1 py-1 space-y-6">
+                              <div className="space-y-3">
+                                <div className="grid grid-cols-1 gap-4">
+                                  <div className="rounded-full bg-slate-200 h-4 col-span-1"></div>
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </td>
-                    ))}
-                  </tr>
-                ))
-            : elementsToShow.map((row, i) => {
-                return (
-                  <tr
-                    key={i}
-                    onClick={() => onRowClick(row, i * (currentPage + 1))}
-                    className={`${
-                      onRowClick ? "h-14 cursor-pointer hover:bg-gray-100" : ""
-                    } text-gray-600 border-b ${
-                      i % 2 === 0
-                        ? ALTERNATING_ROW_COLOR_1
-                        : ALTERNATING_ROW_COLOR_2
-                    }`}
-                  >
-                    {cols.map((col, i) => {
-                      return (
-                        <td key={i}>
-                          <div className="flex items-center h-[3.85rem] px-6 text-sm">
-                            {formatColumnValue(
-                              row,
-                              row[col.id],
-                              col.type,
-                              col.customRender
-                            )}
-                          </div>
                         </td>
-                      );
-                    })}
-                  </tr>
-                );
-              })}
-        </tbody>
-        <tfoot></tfoot>
-      </table>
+                      ))}
+                    </tr>
+                  ))
+              : elementsToShow.map((row, i) => {
+                  return (
+                    <tr
+                      key={i}
+                      onClick={() => onRowClick(row, i * (currentPage + 1))}
+                      className={`${
+                        onRowClick ? "h-14 cursor-pointer hover:bg-gray-100" : ""
+                      } text-gray-600 border-b ${
+                        i % 2 === 0
+                          ? ALTERNATING_ROW_COLOR_1
+                          : ALTERNATING_ROW_COLOR_2
+                      }`}
+                    >
+                      {cols.map((col, i) => {
+                        return (
+                          <td key={i}>
+                            <div className="flex items-center h-[3.85rem] px-6 text-sm">
+                              {formatColumnValue(
+                                row,
+                                row[col.id],
+                                col.type,
+                                col.customRender
+                              )}
+                            </div>
+                          </td>
+                        );
+                      })}
+                    </tr>
+                  );
+                })}
+          </tbody>
+          <tfoot></tfoot>
+        </table>
+      </div>
+      
       <div ref={footerRef}>
         <TableFooter
           elementsOnPage={elementsToShow ? elementsToShow.length : 0}

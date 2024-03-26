@@ -10,8 +10,8 @@ export default function DogSearchFilterBar({ filters, setFilters, setSearch, sim
   }
 
   return (
-    <div className="flex items-center gap-4">
-      <div className="relative grow justify-start items-center flex">
+    <div className="flex justify-start sm:justify-center items-center gap-2 w-screen sm:w-full flex-wrap sm:flex-nowrap px-[15px]">
+      <div className="relative grow justify-start items-center hidden sm:flex">
         <div className="absolute inset-y-0 left-0 flex items-center pl-3">
           <MagnifyingGlassIcon className="w-4 h-4" />
         </div>
@@ -23,25 +23,55 @@ export default function DogSearchFilterBar({ filters, setFilters, setSearch, sim
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-      <div className="text-neutral-700 text-sm font-medium">Filter by</div>
 
-      <DropdownMenu
-        selectedOptions={filters.location}
-        label="Location"
-        submitFilters={(newFilters) => {
-          if (newFilters !== undefined) {
-            setFilters({ ...filters, location: newFilters });
-          }
-        }}
-      >
-        {consts.locationArray.map((concern, index) => (
-          <DropdownMenuOption
-            key={index}
-            label={concern}
-            name={concern.replaceAll(" ", "").toLowerCase()}
-          />
-        ))}
-      </DropdownMenu>
+      <div className={`relative w-[150px] grow justify-start items-center sm:hidden flex ${simplified ? 'w-full' : ''}`}>
+        <div className="absolute inset-y-0 left-0 flex items-center pl-3">
+          <MagnifyingGlassIcon className="w-4 h-4" />
+        </div>
+        <input
+          type="search"
+          className="w-full h-full rounded bg-foreground border border-neutral-300 text-neutral-700 text-sm p-2 pl-10 font-normal"
+          placeholder="Search"
+          required
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
+
+      {!simplified && <div className="relative">
+        <button
+          type="button"
+          onClick={() => router.push("/dogs/new")}
+          className="sm:hidden px-4 py-1.5 -mb-[1px] top-[-1px] bg-ca-pink rounded border border-ca-pink-shade justify-start items-center gap-2 flex"
+        >
+          <div className="text-foreground h-4 w-4 relative">{<PlusIcon />}</div>
+          <div className="text-foreground text-sm font-medium">
+            Add Dog
+          </div>
+        </button>
+      </div>}
+      <div className="flex flex-row items-center gap-2 sm:gap-4">
+        <div className="text-neutral-700 text-xs sm:tet-sm font-medium">Filter by</div>
+
+        <DropdownMenu
+          selectedOptions={filters.location}
+          label="Location"
+          className="w-2"
+          submitFilters={(newFilters) => {
+            if (newFilters !== undefined) {
+              setFilters({ ...filters, location: newFilters });
+            }
+          }}
+        >
+          {consts.locationArray.map((concern, index) => (
+            <DropdownMenuOption
+              key={index}
+              label={concern}
+              name={concern.replaceAll(" ", "").toLowerCase()}
+            />
+          ))}
+        </DropdownMenu>
+      </div>
+      
 
       {!simplified && <DropdownMenu
         selectedOptions={filters.medical}
@@ -99,7 +129,7 @@ export default function DogSearchFilterBar({ filters, setFilters, setSearch, sim
         <button
           type="button"
           onClick={() => router.push("/dogs/new")}
-          className=" px-4 py-2.5 -mb-[1px] top-[-1px] bg-ca-pink rounded border border-ca-pink-shade justify-start items-center gap-2 flex"
+          className="sm:flex hidden px-4 py-2.5 -mb-[1px] top-[-1px] bg-ca-pink rounded border border-ca-pink-shade justify-start items-center gap-2"
         >
           <div className="text-foreground h-4 w-4 relative">{<PlusIcon />}</div>
           <div className="text-foreground text-sm font-medium">

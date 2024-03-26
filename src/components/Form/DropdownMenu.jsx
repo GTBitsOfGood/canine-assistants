@@ -118,7 +118,7 @@ export default function DropdownMenu({
             : " rounded"
         } border -mb-[1px] ${
           props?.error ? "border-error-red" : "border-primary-gray"
-        }  items-center gap-2 flex w-48 justify-between`}
+        }  items-center gap-2 flex w-min sm:w-48 justify-between`} // Make dropdowns w-min in mobile
         onClick={() => {
           if (extended) {
             closeMenu();
@@ -127,7 +127,7 @@ export default function DropdownMenu({
           }
         }}
       >
-        <div className="text-primary-text text-sm font-medium">
+        <div className="text-primary-text text-xs sm:text-sm font-medium">
           {label}
           {props?.requiredField ? (
             <span className="text-error-red">*</span>
@@ -139,7 +139,7 @@ export default function DropdownMenu({
       </button>
 
       <div
-        className={(extended ? "" : "hidden") + " absolute w-full z-50"}
+        className={(extended ? "" : "hidden") + " absolute min-width-min sm:w-full z-50"}
         aria-labelledby="dropdownMenu"
       >
         {children.map((option, index) => {
@@ -148,7 +148,7 @@ export default function DropdownMenu({
               ref={(ref) => {
                 if (ref) dropdownOptionRefs.current[index] = ref;
               }}
-              className={`w-full px-3 pb-4 whitespace-nowrap bg-white border-x border-primary-gray justify-start items-center gap-2 inline-flex`}
+              className={`w-full sm:px-3 px-2 pb-4 whitespace-nowrap bg-white border-x border-primary-gray justify-start items-center gap-2 inline-flex`}
               href="#"
               key={index}
             >
@@ -197,7 +197,7 @@ export default function DropdownMenu({
                 )}
               </button>
               {props?.hideCheckboxes ? null : (
-                <div className={`text-primary-text text-sm font-medium`}>
+                <div className={`text-primary-text text-[10px] sm:text-sm font-medium`}>
                   {option}
                 </div>
               )}
@@ -208,11 +208,11 @@ export default function DropdownMenu({
         {props?.hideFilterButton ? (
           <div className="justify-center w-full pt-1 pb-4 whitespace-nowrap bg-white border-x border-b rounded-b border-neutral-300 items-center gap-2 inline-flex"></div>
         ) : (
-          <div className="justify-center w-full px-3 pt-2 pb-4 whitespace-nowrap bg-white border-x border-b rounded-b border-neutral-300 items-center gap-2 inline-flex">
+          <div className="justify-center w-full px-2 sm:px-3 pt-2 pb-4 whitespace-nowrap bg-white border-x border-b rounded-b border-neutral-300 items-center gap-2 inline-flex">
               <button
                 type="button"
                 onClick={() => handleSubmit()}
-                className="bg-secondary-gray border border-primary-gray mx-1.5 rounded w-full pt-2 pb-2 font-medium"
+                className="bg-secondary-gray border border-primary-gray mx-1.5 rounded w-full p-2 sm:pl-0 sm:pr-0 font-medium text-[10px] sm:text-base"
             >
               {props?.filterText ? props.filterText : "Apply Filters"}
             </button>

@@ -48,16 +48,16 @@ export default function Navbar() {
   useEffect(() => setCurrentPage(router.pathname), [router.pathname]);
 
   return (
-    <div className="flex h-20 bg-foreground items-stretch justify-between gap-4">
+    <div className="flex sm:h-20 bg-foreground items-stretch justify-between gap-4 w-screen h-[50px]">
       <div className="flex gap-4 items-center">
-        <div className="pl-10">
+        <div className="pl-10 hidden sm:flex">
           <Image
             src={CALogo}
             alt="Canine Assistants logo: cartoon dog on rightside of cartoon human"
             width={270}
           />
         </div>
-
+        <div className="sm:hidden flex w-1"/>
         <Link
           href="/dogs"
           className={
@@ -69,7 +69,7 @@ export default function Navbar() {
           }
           onClick={() => setCurrentPage(router.pathname)}
         >
-          <div className="text-center text-primary-text text-lg font-semibold px-3">
+          <div className="text-center text-primary-text text-md sm:text-lg font-semibold px-3">
             Dogs
           </div>
         </Link>
@@ -88,7 +88,7 @@ export default function Navbar() {
             }
             onClick={() => setCurrentPage(router.pathname)}
           >
-            <div className="text-center text-primary-text text-lg font-semibold px-3">
+            <div className="text-center text-primary-text text-md sm:text-lg font-semibold px-3 w-max">
               User Management
             </div>
           </Link>
@@ -107,7 +107,7 @@ export default function Navbar() {
           }
         >
           <div className="flex items-center justify-center">
-            <div className="w-10 h-10 overflow-hidden rounded-full relative">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 overflow-hidden rounded-full relative">
               <Image
                 src={userImage || userpfpplaceholder}
                 alt="Profile"

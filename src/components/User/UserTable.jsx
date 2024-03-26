@@ -234,14 +234,14 @@ export default function UserTable() {
       ) : null}
 
       <LoadingAnimation animated={false} loadText={false} />
-      <div className="flex-grow flex-col space-y-6 mb-8">
-      <div className="flex justify-between items-center">
-    <div className="flex-grow mr-10 md:mr-20 lg:mr-40" style={{ flexBasis: '75%' }}> {/* Adjust the margin-right (mr-4) as needed */}
+      <div className="flex-grow flex-col space-y-6">
+      <div className="flex justify-between items-center px-4 w-[90-vw]">
+    <div className="flex-grow mr-4 md:mr-20 lg:mr-40" style={{ flexBasis: '75%' }}> {/* Adjust the margin-right (mr-4) as needed */}
         <UserSearchBar setSearch={setSearchFilter} />
     </div>
     <div className="flex-none">
         <button
-            className="flex px-4 py-1.5 justify-center items-center button-base primary-button gap-2"
+            className="flex px-4 py-1.5 justify-center items-center button-base primary-button gap-2 text-lg"
             style={{ width: 'fit-content' }}
             onClick={() => setShowInviteModal(true)}
         >
