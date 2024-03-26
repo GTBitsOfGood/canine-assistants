@@ -187,7 +187,7 @@ export default function DropdownMenu({
                 color={""}
               />
             ) : (
-                <div className="mx-1.5  w-5 h-5 px-2 py-1.5 bg-white rounded border-2 border-neutral-300" />
+                <div className="mx-1.5 w-5 h-5 px-2 py-1.5 bg-white rounded border-2 border-neutral-300" />
             )
         )}
         <div className={`text-primary-text text-sm font-medium pl-2 text-left flex-grow`}>
@@ -200,7 +200,7 @@ export default function DropdownMenu({
 
 
         {props?.hideFilterButton ? (
-          <div className="justify-center w-full pt-1 pb-4 whitespace-nowrap bg-white border-x border-b rounded-b border-neutral-300 items-center gap-2 inline-flex"></div>
+          <div className="border-b"></div>
         ) : (
           <div className="justify-center w-full px-3 pt-2 pb-4 whitespace-nowrap bg-white border-x border-b rounded-b border-neutral-300 items-center gap-2 inline-flex">
               <button
