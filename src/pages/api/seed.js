@@ -5,7 +5,7 @@ import Log from "../../../server/db/models/Log";
 import Dog from "../../../server/db/models/Dog";
 import { createLog } from "../../../server/db/actions/Log";
 import { consts } from "@/utils/consts";
-import { createDog, updateHasUnresolved } from "../../../server/db/actions/Dog";
+import { createDog } from "../../../server/db/actions/Dog";
 import Form from "../../../server/db/models/Form";
 import { formMap } from "@/utils/formUtils";
 import { createForm } from "../../../server/db/actions/Form";
