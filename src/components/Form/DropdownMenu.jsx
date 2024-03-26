@@ -2,6 +2,7 @@ import {
   CheckCircleIcon,
   CheckIcon,
   ChevronDownIcon,
+  ChevronUpIcon,
 } from "@heroicons/react/24/solid";
 import { useState, useRef, useEffect } from "react";
 import useClickOff from "@/hooks/useClickOff";
@@ -134,7 +135,11 @@ export default function DropdownMenu({
           ) : null}
         </div>
         <div className="w-4">
-          <ChevronDownIcon className="fill-primary-text" />
+        {extended ? (
+            <ChevronUpIcon className="fill-primary-text" />
+          ) : (
+            <ChevronDownIcon className="fill-primary-text" />
+          )}
         </div>
       </button>
 
