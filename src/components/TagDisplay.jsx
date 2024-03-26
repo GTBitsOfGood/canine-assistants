@@ -220,8 +220,7 @@ export default function TagDisplay({ tags, removeTag }) {
       <div className="flex gap-2">
         {tags.map((tag) => {
           return (
-            tag.group == "severity" || tag.group == "topic" ?
-            
+            tag.group == "severity" || tag.group == "topic" || tag.group == "tags" ?
               <Chip
                 key={tag.label}
                 label={
