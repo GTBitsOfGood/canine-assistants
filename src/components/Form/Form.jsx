@@ -145,7 +145,7 @@ export default function Form({ mode }) {
             }).then((res) => {
               if (res.ok) {
                 Toast({ success: true, bold: "New Form", message: "was successfully added." });
-                router.push("/dogs/" + router.query.id);
+                router.push("/dogs/" + router.query.id + "?showFormTab=true");
               } else {
                 Toast({ success: false, message: "There was a problem submitting the form, please try again." });
               }
