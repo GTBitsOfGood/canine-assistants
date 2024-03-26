@@ -61,7 +61,7 @@ const dogSchema = z.object({
   gender: z.enum(consts.genderPetArray).default("Male"),
   breed: z.string().min(1),
   weight: z.coerce.number(),
-  hasUnresolved: z.number().min(0),
+  hasUnresolved: z.number().min(0).default(0),
   behavior: z.enum(consts.concernArray).default("None"),
   medical: z.enum(consts.concernArray).default("None"),
   other: z.enum(consts.concernArray).default("None"),
