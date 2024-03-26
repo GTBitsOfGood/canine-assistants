@@ -1,19 +1,15 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useRouter } from "next/router";
 
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import {
-  ExclamationTriangleIcon,
   ExclamationCircleIcon,
 } from "@heroicons/react/24/solid";
 
 import Card from "@/components/Card";
-import ConfirmCancelModal from "@/components/ConfirmCancelModal";
 import userpfpplaceholder from "../../public/userpfpplaceholder.svg";
 import { Toast } from "@/components/Toast";
-import { set } from "mongoose";
 
 /**
  * User account management page
@@ -23,10 +19,7 @@ import { set } from "mongoose";
 export default function Account() {
   const [editName, setEditName] = useState(false);
   const [name, setName] = useState("");
-  const [showDeactivateModal, setShowDeactivateModal] = useState(false);
   const { data: session, update } = useSession();
-
-  const router = useRouter();
 
   useEffect(() => {
     if (session) {
@@ -39,19 +32,6 @@ export default function Account() {
 
   return (
     <Card cardStyle="mt-16 min-w-fit">
-      {showDeactivateModal
-        ? ConfirmCancelModal(
-            "Deactivate " + session.user.name + "?",
-            `Select “Confirm” to deactivate ` +
-              session.user.name +
-              ` and remove all access to
-            the Canine Assistants database. This action can only be undone by an
-            administrator.`,
-            () => deactivateModal(),
-            setShowDeactivateModal,
-            showDeactivateModal
-          )
-        : ``}
       <div className="flex flex-row min-w-fit">
         <div className="rounded-full">
           <Image
@@ -101,7 +81,6 @@ export default function Account() {
                             
 
                             if (res.success) {
-                              console.log("HEREEE")
                               update({name: name})
                               Toast({ success: true, bold: name, message: "was successfully updated." });
                               setEditName(!editName);
@@ -139,13 +118,6 @@ export default function Account() {
                   </button>
                 </div>
               )}
-              <button
-                className="flex flex-row h-10 px-4 py-2 mx-4 items-center bg-secondary-gray border rounded border-primary-gray"
-                onClick={() => setShowDeactivateModal(!showDeactivateModal)}
-              >
-                <ExclamationTriangleIcon className="mr-2 h-4 text-primary-text" />
-                Deactivate
-              </button>
             </div>
             <p className="text-secondary-text">{session.user.email}</p>
           </div>
@@ -159,20 +131,4 @@ export default function Account() {
     </Card>
   );
 
-  function deactivateModal() {
-    let body = {
-      isActive: false,
-    };
-    fetch("/api/users/" + userId, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
-    })
-      .then((res) => {
-        router.push("/login");
-      })
-      .catch((err) => {});
-  }
 }
