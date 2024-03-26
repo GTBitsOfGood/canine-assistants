@@ -130,7 +130,7 @@ export default function IndividualDogPage() {
       setShowInfoTab(false);
       setShowLogTab(true);
     } 
-    console.log(data)
+    
   }, [data])
 
   const { setIsEdit, isEdit, handleSubmit, reset, getValues, errors } =
@@ -482,7 +482,6 @@ export default function IndividualDogPage() {
                 <div className="grow flex gap-4 justify-end">
                   <div className="flex gap-4">
 
-                  {(userRole === "Admin" || userRole === "Manager" || userRole === "Instructor/Caregiver") && 
                     <button
                       type="button"
                       className="flex justify-center items-center space-x-2 h-min"
@@ -491,14 +490,10 @@ export default function IndividualDogPage() {
                       <PencilSquareIcon className="h-5" />
                       <div>Edit</div>
                     </button>
-                    }
-
-                    {(userRole === "Admin" || userRole === "Manager") && 
                     <div className="flex justify-center items-center space-x-2 h-min">
                       <TrashIcon className="h-5" />
                       <div>Delete</div>
                     </div>
-                    }
                   </div>
                   
                 </div>
