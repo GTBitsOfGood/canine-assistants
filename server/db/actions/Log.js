@@ -131,7 +131,7 @@ export async function deleteLog(logId) {
 
     if (!deletedLog.resolved) {
       // if unresolved, decrease unresolved count
-      await updateHasUnresolved(deletedLog.dog, -1);
+      await updateHasUnresolved(deletedLog.dog._id, -1);
     }
 
     const dog = deletedLog.dog;
