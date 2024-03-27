@@ -39,7 +39,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
   };
 
   return (
-    <div className="bg-primary-background p-4 my-4 max-w-md sm:max-w-none w-full">
+    <div className="bg-primary-background p-4 my-4 max-w-full sm:max-w-none w-full">
 
     {showEditModal ? (
         <>
