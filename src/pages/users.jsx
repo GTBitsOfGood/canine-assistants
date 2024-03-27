@@ -1,5 +1,4 @@
 import UserTable from "@/components/User/UserTable";
-import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
 import { useSessionManager } from "@/utils/SessionManager";
 
