@@ -69,10 +69,7 @@ export default function UserTable({ userRole }) {
   }, [showChange]);
 
   useEffect(() => {
-    console.log("HERE")
-    console.log(userRole)
     if (userRole === "Admin") {
-      console.log("HERE2")
       setRoleSelect(consts.limitedUserAccess);
     }
   }, [userRole]);
@@ -93,6 +90,10 @@ export default function UserTable({ userRole }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isActive: status }),
       });
+      if (response.status == 400) {
+        Toast({ success: false, message: `Cannot deactivate Manager as it would result in fewer than two active managers` });
+        return;
+      }
       if (!response.ok) throw new Error("Failed to update the user role");
       const updatedUsers = users.map(user => 
         user._id === userId ? { ...user, isActive: status } : user
@@ -131,7 +132,12 @@ export default function UserTable({ userRole }) {
       Toast({ success: true, message: 'User role updated successfully' });
     } catch (error) {
       console.error(error);
-      Toast({ success: false, message: `Error updating user role: ${error.message}` });
+      if (error.message == "Cannot change role from Manager as it would result in fewer than two active managers.") {
+        Toast({ success: false, message: `${error.message}` });
+      } else {
+        Toast({ success: false, message: `Error updating user role: ${error.message}` });
+      }
+      
     }
   };
 

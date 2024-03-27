@@ -1,5 +1,9 @@
 import { Types } from "mongoose";
-import { getUserById, updateUser } from "../../../../server/db/actions/User";
+import {
+  checkTwoActiveManagers,
+  getUserById,
+  updateUser,
+} from "../../../../server/db/actions/User";
 import { userUpdateSchema } from "@/utils/consts";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
@@ -91,6 +95,30 @@ export default async function handler(req, res) {
     try {
       // Admins and Managers can update any user
       if (session.user.role === "Admin" || session.user.role === "Manager") {
+        const currentUser = await getUserById(req.query.id);
+
+        if (
+          currentUser.role == "Manager" &&
+          !(data.hasOwnProperty("isActive") && data.isActive === true)
+        ) {
+          // Logic for making sure Admins can't edit a Manager's role
+          // Currently not working
+          // if (session.user.role === "Admin") {
+          //   return res.status(400).json({
+          //     success: false,
+          //     message: "Admins cannot change the roles of Managers",
+          //   });
+          // }
+
+          const managerCheck = await checkTwoActiveManagers();
+          if (managerCheck.status == 200) {
+            return res.status(400).json({
+              success: false,
+              message:
+                "Cannot change role from Manager as it would result in fewer than two active managers.",
+            });
+          }
+        }
         const updatedUserObject = await updateUser(req.query.id, data);
         if (!updatedUserObject) {
           return res.status(404).json({
