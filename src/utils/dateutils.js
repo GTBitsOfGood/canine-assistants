@@ -3,7 +3,7 @@ const getAge = (date) => {
   const ageYrs = new Date(ageRaw).getFullYear() - 1970;
   if (ageYrs < 1) {
     const ageMonths = new Date(ageRaw).getMonth();
-    return ageMonths === 0 ? "0 months" : `${ageMonths} months`;
+    return ageMonths === 0 ? "< 1 month" : `${ageMonths} months`;
   }
   return `${ageYrs} ${ageYrs !== 1 ? "years" : "year"}`;
 };
