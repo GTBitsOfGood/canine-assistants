@@ -22,17 +22,26 @@ import { set } from "mongoose";
  */
 export default function Account() {
   const [editName, setEditName] = useState(false);
-  const [name, setName] = useState("");
+  const [name, setName] = useState("User");
+  const [role, setRole] = useState("User");
+  const [image, setImage] = useState(userpfpplaceholder);
   const [showDeactivateModal, setShowDeactivateModal] = useState(false);
   const { data: session, update } = useSession();
 
   const router = useRouter();
 
   useEffect(() => {
-    if (session) {
-      setName(session.user.name);
+    if (update != "loading") {
+      fetch(`/api/users/${session?.user._id}`)
+      .then((res) => res.json())
+      .then((data) => {
+
+        setImage(data?.data?.image);
+        setRole(data?.data?.role);
+        setName(data?.data?.name);
+      });
     }
-  }, [session])
+  }, [session?.user, update])
   if (!session || !session.user) {
     return <div>loading</div>;
   }
@@ -41,9 +50,9 @@ export default function Account() {
     <Card cardStyle="mt-16 min-w-fit">
       {showDeactivateModal
         ? ConfirmCancelModal(
-            "Deactivate " + session.user.name + "?",
+            "Deactivate " + name + "?",
             `Select “Confirm” to deactivate ` +
-              session.user.name +
+              name +
               ` and remove all access to
             the Canine Assistants database. This action can only be undone by an
             administrator.`,
@@ -57,7 +66,7 @@ export default function Account() {
           <Image
             height={180}
             width={180}
-            src={session.user.image || userpfpplaceholder}
+            src={image || userpfpplaceholder}
             alt="User Placeholder"
           />
         </div>
@@ -126,12 +135,12 @@ export default function Account() {
                 </div>
               ) : (
                 <div className="flex flex-row items-center">
-                  <h1>{session.user.name}</h1>
+                  <h1>{name}</h1>
                   <button
                     className="flex flex-row items-center"
                     onClick={() => {
                       setEditName(!editName);
-                      setName(session.user.name);
+                      setName(name);
                     }}
                   >
                     <PencilSquareIcon className="ml-4 mr-2 h-4 text-primary-text" />
@@ -152,7 +161,7 @@ export default function Account() {
 
           <div>
             <h2>Role</h2>
-            <p className="text-secondary-text">{session.user.role}</p>
+            <p className="text-secondary-text">{role}</p>
           </div>
         </div>
       </div>
