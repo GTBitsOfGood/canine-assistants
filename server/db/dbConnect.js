@@ -2,9 +2,16 @@ import mongoose from "mongoose";
 
 export const DB_URL = process.env.DB_URL;
 export const DB_NAME = process.env.DB_NAME;
-export const DB_CONNECTION_STRING = `${DB_URL}${DB_NAME}?retryWrites=true&w=majority`
+export const DB_CONNECTION_STRING = `${DB_URL}${DB_NAME}?retryWrites=true&w=majority`;
 export const DB_OPTS = {
   bufferCommands: false,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  maxPoolSize: 1,
+  minPoolSize: 1,
+  socketTimeoutMS: 10000,
+  serverSelectionTimeoutMS: 10000,
+  maxIdleTimeMS: 10000,
 };
 
 if (!DB_URL || !DB_NAME) {
@@ -30,12 +37,10 @@ async function dbConnect() {
   }
 
   if (!cached.promise) {
-
-
     cached.promise = mongoose
       .connect(DB_CONNECTION_STRING, DB_OPTS)
       .then((mongoose) => {
-        mongoose.set('debug', process.env.NODE_ENV === 'development')
+        mongoose.set("debug", process.env.NODE_ENV === "development");
 
         return mongoose;
       });
