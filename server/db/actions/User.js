@@ -34,6 +34,38 @@ export async function getUserById(id) {
   }
 }
 
+export async function checkTwoActiveManagers() {
+  try {
+    await dbConnect();
+
+    // Query to find active managers
+    const activeManagers = await User.find({
+      isActive: true,
+      role: "Manager",
+      acceptedInvite: true,
+    });
+
+    // Check if there are two or less active managers
+    if (activeManagers.length <= 2) {
+      return {
+        status: 200,
+        message: "There are two or less active managers.",
+      };
+    } else {
+      return {
+        status: 400,
+        message: "There are more than two active managers.",
+      };
+    }
+  } catch (e) {
+    return {
+      status: 500,
+      message:
+        "Error occurred while checking for active managers: " + e.message,
+    };
+  }
+}
+
 /*
 @param {*} userId ObjectId of log to update
 @param {*} userData Object with log updates

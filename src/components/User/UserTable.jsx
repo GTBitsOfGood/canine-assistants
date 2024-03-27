@@ -21,7 +21,7 @@ import { useSession } from "next-auth/react";
  * @returns { React.ReactElement } The UserTable component
  */
 
-export default function UserTable() {
+export default function UserTable({ userRole }) {
   const [searchFilter, setSearchFilter] = useState("");
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -31,6 +31,9 @@ export default function UserTable() {
   const [showModal, setShowModal] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [showChange, setShowChange] = useState(false);
+
+  const [roleSelect, setRoleSelect] = useState(consts.userAccess);
+
   const { data: session, update } = useSession();
 
   useEffect(() => {  // Pull all user data
@@ -65,6 +68,12 @@ export default function UserTable() {
     
   }, [showChange]);
 
+  useEffect(() => {
+    if (userRole === "Admin") {
+      setRoleSelect(consts.limitedUserAccess);
+    }
+  }, [userRole]);
+
   const handleToggle = (userId, currentStatus) => {  // Active/Inactive toggle handling, opens confirmation modal
     if (currentStatus === "Active") {
       setUserToDeactivate(userId);
@@ -81,6 +90,10 @@ export default function UserTable() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isActive: status }),
       });
+      if (response.status == 400) {
+        Toast({ success: false, message: `Cannot deactivate Manager as it would result in fewer than two active managers` });
+        return;
+      }
       if (!response.ok) throw new Error("Failed to update the user role");
       const updatedUsers = users.map(user => 
         user._id === userId ? { ...user, isActive: status } : user
@@ -95,8 +108,8 @@ export default function UserTable() {
   };
 
   const applyRole = async (role) => {  // PATCH sent when role is changed through dropdown menu
-    console.log(role, consts.userAccess)
-    if (!consts.userAccess.hasOwnProperty(Object.values(role)[0])) {
+    console.log(role, roleSelect)
+    if (!roleSelect.hasOwnProperty(Object.values(role)[0])) {
       Toast({ success: false, message: "Invalid user ID or role" });
       return;
     }
@@ -119,7 +132,12 @@ export default function UserTable() {
       Toast({ success: true, message: 'User role updated successfully' });
     } catch (error) {
       console.error(error);
-      Toast({ success: false, message: `Error updating user role: ${error.message}` });
+      if (error.message == "Cannot change role from Manager as it would result in fewer than two active managers.") {
+        Toast({ success: false, message: `${error.message}` });
+      } else {
+        Toast({ success: false, message: `Error updating user role: ${error.message}` });
+      }
+      
     }
   };
 
@@ -162,17 +180,17 @@ export default function UserTable() {
             <DropdownMenu
               submitFilters={(selectedRole) => {
                 applyRole(selectedRole)
-                rowData.role=consts.userAccess[selectedRole[0]]
+                rowData.role=roleSelect[selectedRole[0]]
                 setShowChange(true)
               }}
               label={rowData.role}
               props={{
                 singleSelect: true,
                 filterText: "Apply Role",
-                disabled: session && (session.user._id === rowData._id)
+                disabled: session && ((session.user._id === rowData._id) || userRole == "Admin" && rowData.role == "Manager")
               }}
             >
-              {Object.values(consts.userAccess).map((role, index) => (
+              {Object.values(roleSelect).map((role, index) => (
                 <DropdownMenuOption
                   key={index}
                   label={role}
@@ -214,6 +232,7 @@ export default function UserTable() {
       {showInviteModal ? (
         <>
           <UserInviteModal
+          userRole={userRole}
           onClose={() => {
             setShowInviteModal(false);
           }}
