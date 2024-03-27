@@ -181,7 +181,7 @@ export default function TabContainer({
                 type="button"
                 className="px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade justify-center items-center sm:flex hidden"
                 onClick={() => {
-                  setShowFormDropdown(true); console.log(showLogTab);
+                  setShowFormDropdown(true);
                 }}
               >
                 <div className="text-foreground h-4 w-4 relative">
@@ -265,16 +265,16 @@ export default function TabContainer({
           </DropdownMenu></div>
         )}
       {openTab === "Forms" && !isEdit && !showFormDropdown && (
-        <div className="w-[85%] sm:hidden fixed bottom-20 start-12 justify-center mr-8">
+        <div className="sm:hidden fixed bottom-5 start-8 end-8 justify-center">
       <button
         type="button"
         className="px-4 py-2.5 bg-ca-pink rounded border border-ca-pink-shade w-full z-10 justify-center items-center flex"
         onClick={() => {
-          setShowFormDropdown(true); console.log(openTab);
+          setShowFormDropdown(true);
         }}
       >
         <div className="text-foreground text-base font-medium">
-          {"Add Form"}
+          Add Form
         </div>
       </button></div>)}
       {openTab === "Logs" && !isEdit && !showLogModal && (
