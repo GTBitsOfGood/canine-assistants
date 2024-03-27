@@ -43,7 +43,7 @@ function DogCard({ className, dog, onClick }) {
           <div className="font-bold text-3xl pb-4">{dog.name}</div>
           {[
             ["Breed", dog.breed],
-            ["Age", `${dateUtils.getAge(new Date(dog.dateOfBirth))} years`],
+            ["Age", `${dateUtils.getAge(new Date(dog.dateOfBirth))}`],
             ["Coat Color", dog.coatColor],
             ["Location", dog.location]
           ].map(([label, value], i) => (
