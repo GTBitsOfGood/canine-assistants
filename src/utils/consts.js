@@ -24,8 +24,13 @@ const consts = {
   locationArray: ["Facility 1", "Facility 2", "Placed"],
   roleArray: ["Service", "Companion"],
   userRoleArray: ["Manager", "Admin", "User"],
+  limitedUserRoleArray: ["Admin", "User"],
   userAccess: {
     Manager: "Manager",
+    Admin: "Admin",
+    User: "User",
+  },
+  limitedUserAccess: {
     Admin: "Admin",
     User: "User",
   },

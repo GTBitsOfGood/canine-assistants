@@ -10,11 +10,13 @@ import DropdownMenu, { DropdownMenuOption } from "../Form/DropdownMenu";
  * @param {*} onSubmit 
  * @returns the modal component
  */
-export default function UserInviteModal({ userId, onClose, onSubmit }) {
-
+export default function UserInviteModal({ userRole, onClose, onSubmit }) {
 
   const [saving, setSaving] = useState(false);
   const [label, setLabel] = useState("Select Role");
+
+  const [userRoleArray, setUserRoleArray] = useState(consts.userRoleArray)
+  
   const modalRef = useRef(null);
 
   const [inviteData, setInviteData] = useState({
@@ -26,6 +28,12 @@ export default function UserInviteModal({ userId, onClose, onSubmit }) {
     email: false,
     role: false,
   });
+
+  useEffect(() => {
+    if (userRole === "Admin") {
+      setUserRoleArray(consts.limitedUserRoleArray);
+    }
+  }, [userRole]);
 
   useEffect(() => {
     setLabel(Object.values(inviteData.roleSet)[0]);
@@ -156,7 +164,7 @@ export default function UserInviteModal({ userId, onClose, onSubmit }) {
                 }
               }}
             >
-              {consts.userRoleArray.map((role, index) => (
+              {userRoleArray.map((role, index) => (
                 <DropdownMenuOption
                   key={index}
                   label={role}
