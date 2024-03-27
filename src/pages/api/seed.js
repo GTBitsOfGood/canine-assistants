@@ -380,7 +380,7 @@ export default async function handler(req, res) {
 
     // create dogs
     const dogIds = [];
-    const dogCount = 100;
+    const dogCount = 50;
 
     for (let i = 0; i < dogCount; i++) {
       dogs[i] = {
@@ -450,31 +450,31 @@ export default async function handler(req, res) {
     }
 
     // create logs
-    for (let i = 0; i < logs.length; i++) {
-      logs[i].dog = dogIds[getRandomInt(0, dogIds.length - 1)];
-      logs[i].author = userIds[getRandomInt(0, userIds.length - 1)];
-      // logs[i].resolver = userIds[getRandomInt(0, userIds.length - 1)];
-      await createLog(logs[i]);
-    }
+    // for (let i = 0; i < logs.length; i++) {
+    //   logs[i].dog = dogIds[getRandomInt(0, dogIds.length - 1)];
+    //   logs[i].author = userIds[getRandomInt(0, userIds.length - 1)];
+    //   // logs[i].resolver = userIds[getRandomInt(0, userIds.length - 1)];
+    //   await createLog(logs[i]);
+    // }
 
-    // create forms
-    for (let i = 0; i < forms.length; i++) {
-      forms[i].dog = dogIds[getRandomInt(0, dogIds.length - 1)];
-      forms[i].user = userIds[getRandomInt(0, userIds.length - 1)];
+    // // create forms
+    // for (let i = 0; i < forms.length; i++) {
+    //   forms[i].dog = dogIds[getRandomInt(0, dogIds.length - 1)];
+    //   forms[i].user = userIds[getRandomInt(0, userIds.length - 1)];
 
-      const formTemplate = formMap[forms[i].type];
-      for (let j = 0; j < formTemplate.length; j++) {
-        forms[i].responses.push({
-          answer:
-            formTemplate[i].choices.length > 0
-              ? formTemplate[i].choices[
-                  getRandomInt(0, formTemplate[i].choices.length - 1)
-                ]
-              : "Long answer",
-        });
-      }
-      await createForm(forms[i]);
-    }
+    //   const formTemplate = formMap[forms[i].type];
+    //   for (let j = 0; j < formTemplate.length; j++) {
+    //     forms[i].responses.push({
+    //       answer:
+    //         formTemplate[i].choices.length > 0
+    //           ? formTemplate[i].choices[
+    //               getRandomInt(0, formTemplate[i].choices.length - 1)
+    //             ]
+    //           : "Long answer",
+    //     });
+    //   }
+    //   await createForm(forms[i]);
+    // }
 
     return res.send("Successfully seeded db");
   }
