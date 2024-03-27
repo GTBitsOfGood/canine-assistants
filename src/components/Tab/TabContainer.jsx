@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { DocumentIcon } from "@heroicons/react/24/outline";
 
@@ -27,6 +27,7 @@ export default function TabContainer({
   setShowFormDropdown,
   forms,
   formTitleMap,
+  role,
   dog,
   logs,
   dogInformationSchema,
@@ -34,6 +35,7 @@ export default function TabContainer({
   appliedFilters,
   setAppliedFilters,
   setSearchQuery,
+  hasUnresolvedLogs,
   tags,
   removeTag,
   filteredLogs,
@@ -43,9 +45,16 @@ export default function TabContainer({
   onDeleteLog
 }) {
   const router = useRouter();
+  const [user, setUser] = useState(null);
 
-  const { data: session } = useSession();
-  const user = session?.user;
+  // remove later
+  const { data: session, status } = useSession();
+  useEffect(() => {
+    if (!session || !session.user || status === "loading") {
+      return;
+    }
+    setUser(session.user);
+  }, [session, status])
   const [openTab, setOpenTab] = useState("Information");
 
   return (
@@ -54,7 +63,7 @@ export default function TabContainer({
       className="mt-8 mb-8 shadow-xl rounded-lg text-md w-full text-left relative bg-foreground p-8"
     >
       {isEdit ? 
-      <TabSection defaultTab={"information"} isEdit={isEdit} setOpenTab={setOpenTab}>
+      <TabSection defaultTab={"information"} isEdit={isEdit} role={role} setOpenTab={setOpenTab}>
         <div label="information">
           <div className="w-full grid sm:grid-cols-3 grid-cols-1 gap-16">
             {Object.keys(dogInformationSchema).map((category) => (
@@ -103,7 +112,7 @@ export default function TabContainer({
           </div>
         </div> : undefined }
 
-        <div label="logs">
+        <div label="logs" alertIcon={hasUnresolvedLogs}>  {/* make true a dynamic variable */}
           <div className="flex-grow flex-col space-y-4">
             <LogSearchFilterBar
               filters={appliedFilters}

@@ -9,7 +9,7 @@ import Tab from "./Tab";
  * @param {{ defaultTab: string, children: ReactNode }}
  * @returns
  */
-export default function TabSection({ defaultTab, isEdit, children, setOpenTab }) {
+export default function TabSection({ defaultTab, isEdit, children, role, setOpenTab }) {
   const [activeTab, setActiveTab] = useState(defaultTab);
 
   /**
@@ -18,9 +18,9 @@ export default function TabSection({ defaultTab, isEdit, children, setOpenTab })
    * @param {React.MouseEvent<HTMLButtonElement>} e The event fired
    */
   const onTabClick = (e) => {
-    setActiveTab(e.target.innerText);
+    const tabLabel = e.target.textContent
+    setActiveTab(tabLabel.includes("●") ? "Logs" : tabLabel)  //excludes "●" if it exists
     setOpenTab(e.target.innerText);
-    
   };
 
   useEffect(() => {
@@ -36,16 +36,18 @@ export default function TabSection({ defaultTab, isEdit, children, setOpenTab })
   return (
     <div>
       <div>
-        <ul className="flex -mb-[0.1rem] drop-shadow h-10">
+        <ul className="flex -mb-[0.1rem] h-10 drop-shadow-md	">
           {children.map((child) => {
-            const { label } = child.props;
+            const { label, alertIcon } = child.props;
 
             return (
               <Tab
+                role={role}
                 key={label}
                 onTabClick={onTabClick}
                 activeTab={isEdit ? "information" : activeTab}
                 label={label}
+                alertIcon={alertIcon}
               />
             );
           })}
