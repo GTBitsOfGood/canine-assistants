@@ -143,70 +143,64 @@ export default function DropdownMenu({
         aria-labelledby="dropdownMenu"
       >
         {children.map((option, index) => {
-          return (
-            <div
-              ref={(ref) => {
-                if (ref) dropdownOptionRefs.current[index] = ref;
-              }}
-              className={`w-full px-3 pb-4 whitespace-nowrap bg-white border-x border-primary-gray justify-start items-center gap-2 inline-flex`}
-              href="#"
-              key={index}
-            >
-              <button
-                onClick={() => {
-                  toggleOption(option, index);
-                }}
-                className="relative  p-0 m-0 flex items-center"
-                type="button"
-              >
-                {enabledOptions[index] !== undefined ? (
-                  <>
-                    {props?.singleSelect ? (
-                      <div className="w-5">
-                        <CircleIcon
-                          className={"bg-ca-pink"}
-                          size={"1.25rem"}
-                        />
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-between mx-1.5 ">
-                        <CheckIcon className="pl-[0.14rem] absolute h-4 text-foreground"/>
-                        <div className="w-5 h-5 px-2 py-1.5 bg-ca-pink rounded " />
-                      </div>
-                    )}
-                  </>
-                ) : props?.hideCheckboxes ? (
-                  <div className="px-2 py-1.5 bg-white rounded-lg border border-primary-gray justify-center items-start">
-                    <div className="text-primary-text text-sm font-medium">
-                      {option}
-                    </div>
-                  </div>
-                ) : (
-                    props?.singleSelect ? (
-                      <CircleIcon
-                        className={"border-2 border-neutral-300"}
-                        size={"1.25rem"}
-                        color={""}
-                      />
-                    ) : (
-                        <>
-                        <div className="mx-1.5  w-5 h-5 px-2 py-1.5 bg-white rounded border-2 border-neutral-300" />
-                      </>
-                    )
-                  
-                )}
-              </button>
-              {props?.hideCheckboxes ? null : (
-                <div className={`text-primary-text text-sm font-medium`}>
-                  {option}
-                </div>
-              )}
+  return (
+    <div
+      ref={(ref) => {
+        if (ref) dropdownOptionRefs.current[index] = ref;
+      }}
+      className={`w-full px-3 pb-4 whitespace-nowrap bg-white border-x border-primary-gray justify-start items-center gap-2 inline-flex`}
+      href="#"
+      key={index}
+    >
+      <button
+        onClick={() => {
+          toggleOption(option, index);
+        }}
+        className="relative p-0 m-0 flex w-full items-center"
+        type="button"
+      >
+        {enabledOptions[index] !== undefined ? (
+          <>
+            {props?.singleSelect ? (
+              <CircleIcon
+                className={"bg-ca-pink"}
+                size={"1.25rem"}
+              />
+            ) : (
+              <div className="flex items-center justify-between mx-1.5 ">
+                <CheckIcon className="pl-[0.14rem] absolute h-4 text-foreground"/>
+                <div className="w-5 h-5 px-2 py-1.5 bg-ca-pink rounded " />
+              </div>
+            )}
+          </>
+        ) : props?.hideCheckboxes ? (
+          <div className="px-2 py-1.5 bg-white rounded-lg border border-primary-gray justify-center items-start">
+            <div className="text-primary-text text-sm font-medium">
+              {option}
             </div>
-          );
-        })}
+          </div>
+        ) : (
+            props?.singleSelect ? (
+              <CircleIcon
+                className={"border-2 border-neutral-300"}
+                size={"1.25rem"}
+                color={""}
+              />
+            ) : (
+                <div className="mx-1.5 w-5 h-5 px-2 py-1.5 bg-white rounded border-2 border-neutral-300" />
+            )
+        )}
+        <div className={`text-primary-text text-sm font-medium pl-2 text-left flex-grow`}>
+          {option.props.label}
+        </div>
+      </button>
+    </div>
+  );
+})}
+
 
         {props?.hideFilterButton ? (
-          <div className="justify-center w-full pt-1 pb-4 whitespace-nowrap bg-white border-x border-b rounded-b border-neutral-300 items-center gap-2 inline-flex"></div>
+          <div className="border-b"></div>
         ) : (
           <div className="justify-center w-full px-3 pt-2 pb-4 whitespace-nowrap bg-white border-x border-b rounded-b border-neutral-300 items-center gap-2 inline-flex">
               <button
