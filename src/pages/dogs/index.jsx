@@ -4,10 +4,12 @@ import React, { useEffect, useState } from "react";
 import DogSearchFilterBar from "@/components/Dog/DogSearchFilterBar";
 import { ChipTypeStyles } from "@/components/Chip";
 import TagDisplay from "@/components/TagDisplay";
+import { useSession } from "next-auth/react";
 import LoadingAnimation from "@/components/LoadingAnimation";
 import { Toast } from "@/components/Toast";
 import DogTable from "@/components/Dog/DogTable";
 import CardDogTable from "@/components/Dog/CardDogTable";
+import { useSessionManager } from "@/utils/SessionManager";
 
 /**
  * The main page for displaying Dogs
@@ -18,7 +20,7 @@ import CardDogTable from "@/components/Dog/CardDogTable";
 /**
  * @returns { React.ReactElement } The DogTable component
  */
-export default function DogsPage() {
+function DogsPage({ session }) {
   const [searchFilter, setSearchFilter] = useState("");
   const [data, setData] = useState();
 
@@ -27,6 +29,15 @@ export default function DogsPage() {
   const [loading, setLoading] = useState(true);
 
   const [limitedAssociation, setLimitedAssociation] = useState(null);
+  const [userRole, setUserRole] = useState(null);
+
+  useEffect(() => {
+    fetch(`/api/users/${session?.user._id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setUserRole(data?.data?.role);
+      });
+  }, [session?.user]);
 
   useEffect(() => {
     let search = {};
@@ -88,6 +99,21 @@ export default function DogsPage() {
     setLimitedAssociation(dogs[0].association === "Volunteer/Partner");
   }
 
+  if (userRole === "User" && dogs.length == 0) {
+    return (
+      <div className={`pt-4 container mx-auto`}>
+        <div className="pt-5 text-gray-800 order-b border-gray-300 flex-grow">
+        <div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '20px', marginTop: '40px' }}> {/* Adjust margin as needed */}
+                No dogs found.
+                  </div>
+                  {<LoadingAnimation animated={false} loadText={false} />}
+                  </div>
+                  </div>
+                  
+                  
+                  )
+  }
+
   return (
     <div className={`pt-4 container mx-auto`}>
       <div className="pt-5 text-gray-800 order-b border-gray-300 flex-grow">
@@ -110,13 +136,21 @@ export default function DogsPage() {
                 dogs={dogs}
             />}
 
-            {!loading && !limitedAssociation && <DogTable
-                loading={loading}
-                dogs={dogs}
-            />}
+          {!loading && !limitedAssociation ? (
+              dogs.length === 0 ? (
+                <div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '20px' }}> 
+                No dogs found.
+                  </div>
+              ) : (
+                  <DogTable loading={loading} dogs={dogs} />
+              )
+          ) : null}
+
           </div>
         </div>
       </div>
     </div>
   );
 }
+
+export default () => useSessionManager(DogsPage);

@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 
 import { useEffect, useState, useRef } from "react";
 import { useSession } from "next-auth/react";
+import { useSessionManager } from "@/utils/SessionManager";
 
 import {
   ChevronLeftIcon,
@@ -59,6 +60,9 @@ export default function IndividualDogPage() {
   const [fileParam, setFileParam] = useState(null);
 
   const [changeInLogs, setChangeInLogs] = useState(false);
+
+  const [userRole, setUserRole] = useState(null);
+
   const logRef = useRef(null);
 
   let search = {};
@@ -108,14 +112,25 @@ export default function IndividualDogPage() {
       }
     );
   }
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const user = session?.user;
+
+  useEffect(() => {
+    if (status === "authenticated") {
+      fetch(`/api/users/${session?.user._id}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setUserRole(data?.data?.role);
+        });
+    }
+  }, [session?.user, status]);
 
   useEffect(() => {
     if (data?.association === "Volunteer/Partner") {
       setShowInfoTab(false);
       setShowLogTab(true);
     } 
+    
   }, [data])
 
   const { setIsEdit, isEdit, handleSubmit, reset, getValues, errors } =
@@ -706,6 +721,7 @@ export default function IndividualDogPage() {
                 
                 <div className="grow sm:flex gap-4 justify-center hidden">
                   <div className="flex gap-4">
+
                     <button
                       type="button"
                       className="sm:flex justify-center items-center space-x-2 h-min hidden"
@@ -719,6 +735,7 @@ export default function IndividualDogPage() {
                       <div>Delete</div>
                     </div>
                   </div>
+                  
                 </div>
                 </>
               )}
@@ -766,6 +783,7 @@ export default function IndividualDogPage() {
   );
 }
 
+
 IndividualDogPage.getLayout = function getLayout(page) {
   return (
     <Layout>
@@ -773,3 +791,4 @@ IndividualDogPage.getLayout = function getLayout(page) {
     </Layout>
   );
 };
+
