@@ -5,7 +5,6 @@ import { PencilSquareIcon } from "@heroicons/react/24/solid";
 import DeleteLogModal from "./DeleteLogModal";
 import LogModal from "./LogModal";
 import { Toast } from "../Toast";
-import RecentTags from "../RecentTags";
 
 export default function Log({ log, user, onEdit, onDelete }) {
   const [showMore, setShowMore] = useState(false);
@@ -40,7 +39,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
   };
 
   return (
-    <div className="bg-primary-background p-4 my-4 w-full">
+    <div className="bg-primary-background p-4 my-4 max-w-full sm:max-w-none w-full">
 
     {showEditModal ? (
         <>
@@ -86,7 +85,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
           :
           <></>}
       {isAuthor &&(
-            <div className="grow flex gap-4 justify-end">
+            <div className="grow flex gap-4 sm:justify-end justify-start mb-2">
         <button
           type="button"
           className="flex justify-center items-center"
@@ -105,22 +104,24 @@ export default function Log({ log, user, onEdit, onDelete }) {
         </button>
       </div>
       )}
-      <div className="flex justify-between">
+      <div className="flex sm:justify-between flex-col">
+        <div className="flex justify-end sm:flex-row flex-col mb-1">
+          <TagDisplay tags={tags} removeTag={null} />
+        </div>
         <div className="flex flex-col">
           <h2>{log.title}</h2>
-          <div className="flex flex-row">
-            <p className="text-secondary-text font-regular w-fit">
+          <div className="flex sm:flex-row flex-col">
+            <p className="text-black font-normal w-fit">
               {"Author: " + authorName}
             </p>
-            <p className="text-secondary-text font-regular mx-5 w-fit">
+            <p className="text-black font-normal sm:mx-5 w-fit">
               {"Date: " + createdAt.toLocaleDateString()}
             </p>
-            <p className="text-secondary-text font-regular w-fit">
+            <p className="text-black font-normal w-fit">
               {"Time: " + createdAt.toLocaleTimeString("en-US")}
             </p>
           </div>
         </div>
-        <RecentTags tags={tags} />
       </div>
       {log.description.length > 250 ? (
         <div className="max-w-fit">
@@ -140,7 +141,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
           </div>
         </div>
       ) : (
-        <p className="min-w-fit pt-4 break-words">{log.description}</p>
+        <p className="text-black font-normal min-w-fit pt-4 break-words">{log.description}</p>
       )}
     </div>
   );

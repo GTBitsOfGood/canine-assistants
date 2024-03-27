@@ -9,7 +9,7 @@ import Tab from "./Tab";
  * @param {{ defaultTab: string, children: ReactNode }}
  * @returns
  */
-export default function TabSection({ defaultTab, isEdit, children }) {
+export default function TabSection({ defaultTab, isEdit, children, setOpenTab }) {
   const [activeTab, setActiveTab] = useState(defaultTab);
 
   /**
@@ -19,6 +19,8 @@ export default function TabSection({ defaultTab, isEdit, children }) {
    */
   const onTabClick = (e) => {
     setActiveTab(e.target.innerText);
+    setOpenTab(e.target.innerText);
+    
   };
 
   useEffect(() => {
