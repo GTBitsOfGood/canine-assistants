@@ -7,10 +7,10 @@ import LogModal from "./LogModal";
 import ResolveLogModal from "./ResolveLogModal";
 import ResolvedLogModal from "./ResolvedLogModal";
 import { Toast } from "../Toast";
-import RecentTags from "../RecentTags";
 import { Chip } from "../Chip";
 import { useSession } from "next-auth/react";
 import UnresolvedDot from "./UnresolvedDot";
+import TagDisplay from "../TagDisplay";
 
 /**
  * Log component for dogs
@@ -31,10 +31,12 @@ export default function Log({ log, user, onEdit, onDelete }) {
   const [authorName, setAuthorName] = useState("N/A");
   const [userRole, setUserRole] = useState("")
 
-  const { data: session } = useSession();
-
+  // remove later
   const fetchUserInfo = async () => {  // to get around finnicky session roles
     try {
+      if (user == null || user == undefined) {
+        return;
+      }
       const response = await fetch(`/api/users/${user?._id}`);
       if (response.ok) {
         const resolverData = await response.json();
@@ -81,7 +83,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
 
 
   return (
-    <div className="bg-primary-background p-4 my-4 w-full pb-6">
+    <div className="bg-primary-background p-4 my-4 max-w-full sm:max-w-none w-full">
 
     {showEditModal ? (
         <>
@@ -123,8 +125,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
         }}>
 
       </DeleteLogModal>
-      :
-      <></>}
+      : null}
 
     {showResolveModal ? (
         <>
@@ -171,8 +172,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
         </>
       ) : null}
       
-
-        <div className="flex space-between">
+        <div className="flex space-between gap-2">
           <div className="flex">
             {user.role === "Manager" && !log.resolved ? <UnresolvedDot/> : <div className="ml-4"></div>}
             <Chip
@@ -183,7 +183,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
           </div>
           
 
-          <div className="grow flex gap-4 justify-end">
+          <div className="grow flex gap-4 sm:justify-end justify-start mb-2">
             {/*using session workaround*/}
             {userRole === "Manager"  
               ? <button
@@ -227,23 +227,24 @@ export default function Log({ log, user, onEdit, onDelete }) {
           </div>
         </div>
         
-
-      <div className="flex justify-between">
+      <div className="flex sm:justify-between flex-col">
+        <div className="flex justify-end sm:flex-row flex-col mb-1 ml-4">
+          <TagDisplay tags={tags} removeTag={null} />
+        </div>
         <div className="flex flex-col ml-5">
           <h2>{log.title}</h2>
-          <div className="flex flex-row">
-            <p className="text-secondary-text font-regular w-fit">
+          <div className="flex sm:flex-row flex-col">
+            <p className="text-black font-normal w-fit">
               {"Author: " + authorName}
             </p>
-            <p className="text-secondary-text font-regular mx-5 w-fit">
+            <p className="text-black font-normal sm:mx-5 w-fit">
               {"Date: " + createdAt.toLocaleDateString()}
             </p>
-            <p className="text-secondary-text font-regular w-fit">
-              {"Time: " + createdAt.toLocaleTimeString("en-US").split(':').slice(0, 2).join(':')}{createdAt.toLocaleTimeString("en-US").split(' ')[1]}
+            <p className="text-black font-normal w-fit">
+              {"Time: " + createdAt.toLocaleTimeString("en-US")}
             </p>
           </div>
         </div>
-        <RecentTags tags={tags} />
       </div>
       {log.description.length > 250 ? (
         <div className="max-w-fit ml-5">
@@ -263,7 +264,7 @@ export default function Log({ log, user, onEdit, onDelete }) {
           </div>
         </div>
       ) : (
-        <p className="min-w-fit pt-4 break-words ml-5">{log.description}</p>
+        <p className="text-black font-normal min-w-fit pt-4 break-words ml-5">{log.description}</p>
       )}
     </div>
   );
