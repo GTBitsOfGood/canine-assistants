@@ -48,7 +48,7 @@ export default function DogTable({ loading, dogs, userRole }) {
 
         return (
           <span>
-            {age} {age !== 1 ? "years" : "year"}
+            {age}
           </span>
         );
       },
