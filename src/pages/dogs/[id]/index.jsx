@@ -3,14 +3,11 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 
 import { useEffect, useState, useRef } from "react";
-import { useSession } from "next-auth/react";
-import { useSessionManager } from "@/utils/SessionManager";
 
 import {
   ChevronLeftIcon,
   PencilSquareIcon,
   TrashIcon,
-  XMarkIcon,
 } from "@heroicons/react/24/solid";
 
 import maleicon from "../../../../public/maleicon.svg";
@@ -112,15 +109,13 @@ export default function IndividualDogPage({ session }) {
       }
     );
   }
-
-  const user = session?.user;
+    const user = session?.user;
 
       fetch(`/api/users/${session?.user._id}`)
         .then((res) => res.json())
         .then((data) => {
           setUserRole(data?.data?.role);
         });
-
 
   useEffect(() => {
     if (data?.association === "Volunteer/Partner") {

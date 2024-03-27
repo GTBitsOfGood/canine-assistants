@@ -3,8 +3,8 @@ import IndividualDogPage from "./[id]";
 import Layout from "@/layouts/Layout";
 import { useSessionManager } from "@/utils/SessionManager";
 
-function NewDogPage({}) {
-  return <IndividualDogPage />;
+function NewDogPage({ session }) {
+  return <IndividualDogPage session={session} />;
 }
 
 export default () => useSessionManager(NewDogPage);

@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import DogSearchFilterBar from "@/components/Dog/DogSearchFilterBar";
 import { ChipTypeStyles } from "@/components/Chip";
 import TagDisplay from "@/components/TagDisplay";
-import { useSession } from "next-auth/react";
 import LoadingAnimation from "@/components/LoadingAnimation";
 import { Toast } from "@/components/Toast";
 import DogTable from "@/components/Dog/DogTable";
