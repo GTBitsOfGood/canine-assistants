@@ -13,6 +13,7 @@ export function useSessionManager(WrappedComponent, props) {
       setShouldRender(false); // Don't render the WrappedComponent during loading
     } else if (status === 'unauthenticated' || session === null) {
         console.log("User status is: " + status)
+        setShouldRender(false);
         router.push('/login'); // Redirect to /login
     } else {
       setShouldRender(true); // Render the WrappedComponent when session is loaded

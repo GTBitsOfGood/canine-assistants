@@ -41,7 +41,7 @@ import { Toast } from "@/components/Toast";
  * Displays information about specific dog including Logs and Forms
  * @returns {React.ReactElement} The individual Dog page
  */
-export default function IndividualDogPage() {
+export default function IndividualDogPage({ session }) {
   const router = useRouter();
   const [data, setData] = useState();
   const [searchQuery, setSearchQuery] = useState("");
@@ -112,18 +112,15 @@ export default function IndividualDogPage() {
       }
     );
   }
-  const { data: session, status } = useSession();
+
   const user = session?.user;
 
-  useEffect(() => {
-    if (status === "authenticated") {
       fetch(`/api/users/${session?.user._id}`)
         .then((res) => res.json())
         .then((data) => {
           setUserRole(data?.data?.role);
         });
-    }
-  }, [session?.user, status]);
+
 
   useEffect(() => {
     if (data?.association === "Volunteer/Partner") {

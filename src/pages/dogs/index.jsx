@@ -31,13 +31,12 @@ function DogsPage({ session }) {
   const [limitedAssociation, setLimitedAssociation] = useState(null);
   const [userRole, setUserRole] = useState(null);
 
-  useEffect(() => {
-    fetch(`/api/users/${session?.user._id}`)
+  fetch(`/api/users/${session?.user._id}`)
       .then((res) => res.json())
       .then((data) => {
         setUserRole(data?.data?.role);
-      });
-  }, [session?.user]);
+    });
+
 
   useEffect(() => {
     let search = {};
