@@ -24,7 +24,7 @@ export default function TagDisplay({ tags, removeTag }) {
               label={
                 <div className="flex gap-2 items-center">
                   <span>
-                    <strong>{stringUtils.toUpperEveryWord(tag.group)}</strong>{" "}
+                    <strong>{stringUtils.toUpperEveryWord(tag.group).replace(/([A-Z])/g, ' $1').trim()}</strong>{" "}
                     {tag.label}
                   </span>
                   {removeTag ? (
@@ -84,7 +84,7 @@ export default function TagDisplay({ tags, removeTag }) {
                 label={
                   <div className="flex gap-2 items-center">
                     <span>
-                      <strong>{stringUtils.toUpperEveryWord(tag.group)}</strong>{" "}
+                      <strong>{stringUtils.toUpperEveryWord(tag.group).replace(/([A-Z])/g, ' $1').trim()}</strong>{" "}
                       {tag.label}
                     </span>
                     {removeTag ? (
