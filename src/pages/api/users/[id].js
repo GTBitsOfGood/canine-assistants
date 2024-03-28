@@ -1,8 +1,16 @@
 import { Types } from "mongoose";
-import { getUserById, updateUser } from "../../../../server/db/actions/User";
+import {
+  getUserByEmail,
+  getUserById,
+  updateUser,
+} from "../../../../server/db/actions/User";
 import { userUpdateSchema } from "@/utils/consts";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
+import {
+  getInvitedUserByEmail,
+  updateInvitedUser,
+} from "../../../../server/db/actions/InvitedUser";
 
 export default async function handler(req, res) {
   const session = await getServerSession(req, res, authOptions);
@@ -88,10 +96,18 @@ export default async function handler(req, res) {
       }
     }
 
+    const user = await getUserById(session.user._id);
     try {
       // Admins and Managers can update any user
-      if (session.user.role === "Admin" || session.user.role === "Manager") {
-        const updatedUserObject = await updateUser(req.query.id, data);
+      if (user.role === "Admin" || user.role === "Manager") {
+        // If the user id exists in Users, update it and its corresponding InvitedUser
+        // Otherwise, if it exists in InvitedUsers only, update it there only
+        let updatedUserObject = await updateUser(req.query.id, data);
+
+        if (!updatedUserObject) {
+          updatedUserObject = await updateInvitedUser(req.query.id, data);
+        }
+
         if (!updatedUserObject) {
           return res.status(404).json({
             success: false,
@@ -110,7 +126,7 @@ export default async function handler(req, res) {
         });
       }
       // Users can only update their own name
-      if (session.user._id === req.query.id) {
+      if (user._id === req.query.id) {
         const updateObject = {};
         if (typeof data.isActive === "boolean") {
           updateObject.isActive = data.isActive;
@@ -118,8 +134,16 @@ export default async function handler(req, res) {
         if (data.name) {
           updateObject.name = data.name;
         }
-        const updatedUserObject = await updateUser(req.query.id, updateObject);
-        console.log(updatedUserObject);
+
+        let updatedUserObject = await updateUser(req.query.id, updateObject);
+
+        if (!updatedUserObject) {
+          updatedUserObject = await updateInvitedUser(
+            req.query.id,
+            updateObject,
+          );
+        }
+
         if (!updatedUserObject) {
           return res.status(404).json({
             success: false,

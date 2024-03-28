@@ -4,6 +4,7 @@ import { createUser } from "../../../../server/db/actions/User";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
 import { getUserById } from "../../../../server/db/actions/User";
+import { createInvitedUser } from "../../../../server/db/actions/InvitedUser";
 
 export default async function handler(req, res) {
   if (req.method == "GET") {
@@ -54,18 +55,16 @@ export default async function handler(req, res) {
       }
 
       try {
-        await createUser({
-          name: name,
+        await createInvitedUser({
           email: email,
           role: role,
           acceptedInvite: acceptedInvite,
           isActive: isActive,
-          emailVerified: false,
         });
       } catch (e) {
         return res.status(500).json({
           success: false,
-          message: "Unable to create user, please try again.",
+          message: "Unable to create invited user, please try again.",
         });
       }
 

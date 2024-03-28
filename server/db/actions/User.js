@@ -1,6 +1,8 @@
 import dbConnect from "../dbConnect";
+import InvitedUser from "../models/InvitedUser";
 import User from "../models/User";
 import bcrypt, { hash } from "bcrypt";
+import { getInvitedUserByEmail, updateInvitedUser } from "./InvitedUser";
 
 export async function createUser(data) {
   await dbConnect();
@@ -34,6 +36,15 @@ export async function getUserById(id) {
   }
 }
 
+export async function getUserByEmail(email) {
+  try {
+    await dbConnect();
+    return User.findOne({ email: email });
+  } catch (e) {
+    throw new Error("Unable to get user at this time, please try again.");
+  }
+}
+
 /*
 @param {*} userId ObjectId of log to update
 @param {*} userData Object with log updates
@@ -46,9 +57,17 @@ export async function updateUser(userId, userData) {
   }
 
   try {
-    return await User.findByIdAndUpdate(userId, userData, {
+    const user = await User.findByIdAndUpdate(userId, userData, {
       returnDocument: "after",
     });
+    // Implicitly update invited user as well
+    if (user) {
+      const invitedUser = await getInvitedUserByEmail(user?.email);
+      if (invitedUser) {
+        await updateInvitedUser(invitedUser._id, userData);
+      }
+    }
+    return user;
   } catch (e) {
     throw new Error("Unable to update user");
   }
@@ -65,7 +84,7 @@ export async function signup(email, password, name) {
     throw new Error("Unable to update user, please try again.");
   }
 
-  let user = await User.findOne({ email });
+  let user = await InvitedUser.findOne({ email });
 
   if (!user) {
     return {
@@ -74,36 +93,38 @@ export async function signup(email, password, name) {
     };
   }
 
-  if (user && user.acceptedInvite) {
+  if (!user.isActive) {
+    return {
+      status: 403,
+      message: "Your account is inactive. Please contact an admin.",
+    };
+  }
+
+  if (user.acceptedInvite) {
     return {
       status: 400,
       message: "User has already signed up. Please log in instead.",
     };
   }
 
-  bcrypt.hash(password + email, 10, async function (err, hash) {
-    if (err) {
-      return {
-        status: 500,
-        message: "Error hashing password.",
-      };
-    } else {
-      try {
-        user = await User.findByIdAndUpdate(
-          user.id,
-          { name: name, passwordHash: hash, acceptedInvite: true },
-          {
-            returnDocument: "after",
-          },
-        );
-      } catch (e) {
-        return {
-          status: 500,
-          message: "Unable to verify user, please try again.",
-        };
-      }
-    }
-  });
+  const hash = await bcrypt.hash(password + email, 10);
+  try {
+    await updateInvitedUser(user.id, { acceptedInvite: true });
+    user = await createUser({
+      name: name,
+      passwordHash: hash,
+      acceptedInvite: true,
+      email: user.email,
+      role: user.role,
+      isActive: user.isActive,
+    });
+  } catch (e) {
+    return {
+      status: 500,
+      message: "Unable to verify user, please try again.",
+    };
+  }
+
   return {
     status: 200,
     message: "User has been signed up.",

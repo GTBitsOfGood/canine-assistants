@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { signIn } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ExclamationCircleIcon } from '@heroicons/react/24/solid';
 
 import CALogo from "public/ca-logo.svg";
@@ -18,6 +18,18 @@ import { Toast } from "@/components/Toast";
 export default function Login({ dogs }) {
   const [ errors, setErrors ] = useState({ email: false, password: false });
   const router = useRouter();
+
+  // NextAuth errors passed as a URL param (i.e. Google login errors) should be handled here
+  useEffect(() => {
+    if (!router.isReady) return;
+    const { error } = router.query;
+    if (error) {
+      Toast({
+        success: false,
+        message: "User is not invited or account is inactive. Please contact an admin."
+      });
+    }
+  }, [router.isReady]);
 
   const onSubmitForm = async (event) => {
     event.preventDefault(true);

@@ -35,7 +35,7 @@ export default function UserTable() {
 
   useEffect(() => {  // Pull all user data
     setShowChange(false)
-    fetch("/api/users")
+    fetch("/api/users/all")
     .catch(() => {
       setLoading(false);
       Toast({ success: false, message: "Unable to pull user data." });
@@ -43,7 +43,7 @@ export default function UserTable() {
     })
       .then((res) => res.json())
       .then((data) => {
-        const sortedData = data?.data.sort((a, b) => {
+        const sortedData = data?.data.users.concat(data?.data.invitedUsers).sort((a, b) => {
           
           const getPriority = (entry) => {
               if (entry.acceptedInvite && entry.isActive) return 1;
@@ -253,7 +253,7 @@ export default function UserTable() {
         <Table  // Data comes in as "users" state
           loading={loading}
           cols={userTableColumns}
-          rows={users}
+          rows={users.map(user => ({ ...user, name: user.name || "Invited User"}))}
           filter={searchFilter}
           onRowClick={(row, rowIndex) => {
             setSelectedUserId(row["_id"])
