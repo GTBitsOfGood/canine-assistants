@@ -103,25 +103,9 @@ export default async function handler(req, res) {
         // If the user id exists in Users, update it and its corresponding InvitedUser
         // Otherwise, if it exists in InvitedUsers only, update it there only
         let updatedUserObject = await updateUser(req.query.id, data);
-        if (updatedUserObject) {
-          const invitedUser = await getInvitedUserByEmail(
-            updatedUserObject.email,
-          );
-          if (invitedUser) {
-            await updateInvitedUser(invitedUser._id, {
-              email: data.email,
-              role: data.role,
-              isActive: data.isActive,
-              acceptedInvite: data.acceptedInvite,
-            });
-          }
-        } else {
-          updatedUserObject = await updateInvitedUser(req.query.id, {
-            email: data.email,
-            role: data.role,
-            isActive: data.isActive,
-            acceptedInvite: data.acceptedInvite,
-          });
+
+        if (!updatedUserObject) {
+          updatedUserObject = await updateInvitedUser(req.query.id, data);
         }
 
         if (!updatedUserObject) {
@@ -152,14 +136,8 @@ export default async function handler(req, res) {
         }
 
         let updatedUserObject = await updateUser(req.query.id, updateObject);
-        if (updatedUserObject) {
-          const invitedUser = await getInvitedUserByEmail(
-            updatedUserObject.email,
-          );
-          if (invitedUser) {
-            await updateInvitedUser(invitedUser._id, updateObject);
-          }
-        } else {
+
+        if (!updatedUserObject) {
           updatedUserObject = await updateInvitedUser(
             req.query.id,
             updateObject,

@@ -2,7 +2,7 @@ import dbConnect from "../dbConnect";
 import InvitedUser from "../models/InvitedUser";
 import User from "../models/User";
 import bcrypt, { hash } from "bcrypt";
-import { updateInvitedUser } from "./InvitedUser";
+import { getInvitedUserByEmail, updateInvitedUser } from "./InvitedUser";
 
 export async function createUser(data) {
   await dbConnect();
@@ -57,9 +57,17 @@ export async function updateUser(userId, userData) {
   }
 
   try {
-    return await User.findByIdAndUpdate(userId, userData, {
+    const user = await User.findByIdAndUpdate(userId, userData, {
       returnDocument: "after",
     });
+    // Implicitly update invited user as well
+    if (user) {
+      const invitedUser = await getInvitedUserByEmail(user?.email);
+      if (invitedUser) {
+        await updateInvitedUser(invitedUser._id, userData);
+      }
+    }
+    return user;
   } catch (e) {
     throw new Error("Unable to update user");
   }
