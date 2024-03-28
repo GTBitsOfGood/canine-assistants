@@ -34,7 +34,16 @@ function DogCard({ className, dog, onClick }) {
       onClick={onClick || (() => {})}
     >
       <div className="flex w-[240px] h-[240px] items-center justify-center rounded-lg bg-primary-gray overflow-hidden">
-        {dog.image ? <Image alt={dog.name} width={350} height={350} src={dog.image} />
+        {dog.image ? 
+         <div style={{ position: 'relative', width: '240px', height: '240px', borderRadius: '10px', overflow: 'hidden' }}>
+         <Image
+             alt={dog.name}
+             layout="fill"
+             objectFit="cover"
+             src={dog.image}
+         />
+     </div>
+        
           : <Image width={200} height={200} src={dogplaceholdericon} alt="Dog Placeholder" />
         }
       </div>

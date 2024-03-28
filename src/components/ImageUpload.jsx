@@ -32,7 +32,15 @@ export default function ImageUpload({ preview, setFileParam, previewImage }) {
     <div className="flex flex-col justify-center align-center items-center">
       <div>
         {previewFile ? (
-          <Image src={previewFile} width={350} height={350}/>
+                        <div style={{ position: 'relative', width: '350px', height: '350px', borderRadius: '10px', overflow: 'hidden' }}>
+                        <Image
+                            alt="Dog"
+                            layout="fill"
+                            objectFit="cover"
+                            src={previewFile}
+                        />
+                    </div>
+          
         ) : (
           <div className="bg-primary-gray">
             <Image src={dogplaceholdericon} />
