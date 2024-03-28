@@ -13,15 +13,15 @@ import dateUtils from "@/utils/dateutils";
 import stringUtils from "@/utils/stringutils";
 import { useRouter } from "next/router";
 import RecentTags from "../RecentTags"
-
+import UnresolvedDot from "../Log/UnresolvedDot";
 
 /**
  * @returns { React.ReactElement } The DogTable component
  */
-export default function DogTable({ loading, dogs }) {
+export default function DogTable({ loading, dogs, userRole }) {
   const router = useRouter();
 
-    /**
+  /**
    * The specified columns for the DogTable
    */
   const dogTableColumns = [
@@ -29,8 +29,13 @@ export default function DogTable({ loading, dogs }) {
       id: "name",
       label: "Name",
       icon: <Bars3BottomLeftIcon />,
-      customRender: (row, name) => {
-        return <span>{name}</span>;
+      customRender: (rowData) => {
+        return <span className="flex flex-row"> 
+          {rowData.hasUnresolved > 0 && userRole === "Manager"
+            ? <UnresolvedDot rowId={rowData._id} />
+            : <div className="mx-2"> </div>}
+          {rowData.name}
+        </span>;
       },
     },
     { id: "breed", label: "Breed", icon: <FingerPrintIcon /> },
@@ -113,6 +118,14 @@ export default function DogTable({ loading, dogs }) {
       },
     },
   ];
+
+  if (dogs.length == 0) {
+    return (
+      <div style={{ textAlign: 'center', fontWeight: 'bold', fontSize: '20px', marginTop: '40px' }}>
+        No dogs were found
+      </div>
+    );
+  }
 
   return (
     <Table

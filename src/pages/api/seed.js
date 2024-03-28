@@ -397,6 +397,7 @@ export default async function handler(req, res) {
         dateOfBirth: new Date("2019-03-15"),
         litterSize: 8,
         birthOrder: 2,
+        hasUnresolved: 0,
         parents: [],
         maternalDemeanor: [
           getRandomInt(1, 5),
@@ -453,7 +454,6 @@ export default async function handler(req, res) {
     for (let i = 0; i < logs.length; i++) {
       logs[i].dog = dogIds[getRandomInt(0, dogIds.length - 1)];
       logs[i].author = userIds[getRandomInt(0, userIds.length - 1)];
-      // logs[i].resolver = userIds[getRandomInt(0, userIds.length - 1)];
       await createLog(logs[i]);
     }
 

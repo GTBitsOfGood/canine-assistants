@@ -32,7 +32,7 @@ export default function Login({ dogs }) {
     }
 
     const response = await signIn('credentials', {
-      email: event.target.email.value,
+      email: event.target.email.value.toLowerCase(),
       password: event.target.password.value,
       redirect: false
     });

@@ -1,4 +1,5 @@
 import { createLog, getLogs } from "../../../../server/db/actions/Log";
+import { getDogById } from "../../../../server/db/actions/Dog";
 import { logSchema } from "@/utils/consts";
 
 export default async function handler(req, res) {
@@ -15,6 +16,7 @@ export default async function handler(req, res) {
     let logId;
     try {
       logId = await createLog(data);
+      const dog = getDogById(req.query.dog);
     } catch (e) {
       res.status(500).json({
         success: false,

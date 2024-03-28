@@ -54,7 +54,7 @@ export default function Signup({ dogs }) {
     e.preventDefault(true);
     try {
       const response = await signIn('signup', {
-        email: data.email,
+        email: data.email.toLowerCase(),
         password: data.password,
         name: data.name,
         redirect: false

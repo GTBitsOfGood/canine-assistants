@@ -248,3 +248,21 @@ async function validateDogData(dogData) {
     }
   }
 }
+
+export async function updateHasUnresolved(dogId, changeAmount) {
+  try {
+    await dbConnect();
+    const dog = await Dog.findById(dogId);
+    if (!dog) {
+      throw new Error("Dog not found");
+    }
+
+    dog.hasUnresolved = dog.hasUnresolved + changeAmount;
+
+    await updateDog(dogId, dog);
+
+    return dog.hasUnresolved;
+  } catch (error) {
+    throw new Error(error);
+  }
+}

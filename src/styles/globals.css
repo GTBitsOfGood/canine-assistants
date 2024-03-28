@@ -90,6 +90,13 @@ input[type="text"]:focus {
     box-shadow: 2px -2px 3px 0 rgba(0, 0, 0, 0.3);
   }
 
+  .form-bottom-shadow {
+    box-shadow:
+      16px 8px 16px -16px rgba(40, 48, 45, 0.16),
+      -16px 8px 16px -16px rgba(40, 48, 45, 0.16),
+      0px 16px 16px -16px rgba(40, 48, 45, 0.16);
+  }
+
   .button-base {
     @apply flex rounded border px-4 py-2.5 items-center justify-center;
   }

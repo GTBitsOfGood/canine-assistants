@@ -9,8 +9,8 @@ export default function ConfirmCancelModal(
 ) {
   return (
     <div>
-      <div className="fixed inset-0 bg-modal-background-gray opacity-60"></div>
-      <Card cardStyle="flex flex-col justify-between fixed z-10 inset-0 mt-32 mx-96 h-fit min-w-fit">
+      <div className="fixed inset-0 bg-modal-background-gray opacity-60" onClick={() => setShowModal(!showModal)}></div>
+      <Card cardStyle="flex flex-col justify-between fixed z-10 inset-0 mt-32 mx-4 sm:mx-auto h-fit sm:min-w-[30%] sm:max-w-[40%]">
         <h1>{titleText}</h1>
         <p className="my-8">{mainText}</p>
         <div className="flex flex-row justify-end">

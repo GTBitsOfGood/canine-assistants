@@ -40,7 +40,7 @@ export default function FormField({
   return (
     <div>
       <div className="flex whitespace-nowrap items-center">
-        {label && <label className="pr-2">{label + ": "}</label>}
+        {label && showLabel && <label className="pr-2">{label + ": "}</label>}
         <div className="w-full">
           <FormInput
             keyLabel={keyLabel}

@@ -411,7 +411,7 @@ export default function LogModal({ dogId, userId, log, onClose, onSubmit }) {
             <button
               type="button"
               onClick={onClose}
-              className="button-base secondary-button flex w-full sm:w-32 h-10"
+              className="button-base bg-secondary-gray flex w-full sm:w-32 h-10"
             >
             <div className="secondary-button-text" >
               Cancel
